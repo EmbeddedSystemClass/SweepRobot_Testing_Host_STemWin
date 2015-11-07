@@ -89,13 +89,13 @@ extern "C" {     /* Make sure we have C-declarations in C++ programs */
 *
 **********************************************************************
 */
-#define CONTROL_SIZE_X    80
-#define CONTROL_SIZE_Y    61
+#define CONTROL_SIZE_X    131
+#define CONTROL_SIZE_Y    100
 #define INFO_SIZE_Y       65
-#define BUTTON_SIZE_X     32
-#define BUTTON_SIZE_Y     20
-#define PROGBAR_SIZE_X    66
-#define PROGBAR_SIZE_Y    12
+#define BUTTON_SIZE_X     64
+#define BUTTON_SIZE_Y     40
+#define PROGBAR_SIZE_X    110
+#define PROGBAR_SIZE_Y    20
 #define TEXT_SIZE_X       69
 #define TEXT_SIZE_Y       7
 #define SHOW_PROGBAR_AT   100
@@ -125,7 +125,7 @@ extern "C" {     /* Make sure we have C-declarations in C++ programs */
 #endif
 
 #ifndef   SHOW_GUIDEMO_COLORBAR
-  #define SHOW_GUIDEMO_COLORBAR          (1)
+  #define SHOW_GUIDEMO_COLORBAR          (0)
 #endif
 
 #ifndef   SHOW_GUIDEMO_CURSOR
@@ -149,27 +149,27 @@ extern "C" {     /* Make sure we have C-declarations in C++ programs */
 #endif
 
 #ifndef   SHOW_GUIDEMO_ICONVIEW
-  #define SHOW_GUIDEMO_ICONVIEW          (0)
+  #define SHOW_GUIDEMO_ICONVIEW          (1)
 #endif
 
 #ifndef   SHOW_GUIDEMO_RADIALMENU
-  #define SHOW_GUIDEMO_RADIALMENU        (1)
+  #define SHOW_GUIDEMO_RADIALMENU        (0)
 #endif
 
 #ifndef   SHOW_GUIDEMO_VSCREEN
-  #define SHOW_GUIDEMO_VSCREEN           (1)
+  #define SHOW_GUIDEMO_VSCREEN           (0)
 #endif
 
 #ifndef   SHOW_GUIDEMO_AUTOMOTIVE
-  #define SHOW_GUIDEMO_AUTOMOTIVE        (1)
+  #define SHOW_GUIDEMO_AUTOMOTIVE        (0)
 #endif
 
 #ifndef   SHOW_GUIDEMO_TRANSPARENTDIALOG
-  #define SHOW_GUIDEMO_TRANSPARENTDIALOG (1)
+  #define SHOW_GUIDEMO_TRANSPARENTDIALOG (0)
 #endif
 
 #ifndef   SHOW_GUIDEMO_AATEXT
-  #define SHOW_GUIDEMO_AATEXT            (1)
+  #define SHOW_GUIDEMO_AATEXT            (0)
 #endif
 
 #ifndef   SHOW_GUIDEMO_BARGRAPH
@@ -189,7 +189,7 @@ extern "C" {     /* Make sure we have C-declarations in C++ programs */
 #endif
 
 #ifndef   SHOW_GUIDEMO_IMAGEFLOW
-  #define SHOW_GUIDEMO_IMAGEFLOW         (0)
+  #define SHOW_GUIDEMO_IMAGEFLOW         (1)
 #endif
 
 /*********************************************************************

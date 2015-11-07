@@ -14,46 +14,36 @@
 #include "includes.h"
 #include "memdev.h"
 #include "key.h"
+#include "WM.h"
 
-//START任务
-//设置任务的优先级
+#include "SweepRobot_Remote_controllerDLG.h"
+
 #define START_TASK_PRIO				0
-//任务堆栈大小
 #define START_STK_SIZE			  128
-//任务堆栈
 OS_STK	START_TASK_STK[START_STK_SIZE];
-//start_task任务
 void start_task(void *pdata);
 
-//TOUCH任务
-//设置任务优先级
 #define TOUCH_TASK_PRIO				2
-//任务堆栈大小
 #define TOUCH_STK_SIZE				128
-//任务堆栈
 OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
-//touch任务
 void touch_task(void *pdata);
 
-//LED0任务
-//设置任务优先级
 #define LED0_TASK_PRIO 				3
-//任务堆栈大小
 #define LED0_STK_SIZE					64
-//任务堆栈
 OS_STK LED0_TASK_STK[LED0_STK_SIZE];
-//led0任务
 void led0_task(void *pdata);
 
-//EMWINDEMO任务
-//设置任务优先级
 #define EMWINDEMO_TASK_PRIO		4
-//任务堆栈大小
 #define EMWINDEMO_STK_SIZE		2048
-//任务堆栈
 OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
-//emwindemo_task任务
 void emwin_maintask(void *pdata);
+
+#define KEY_TASK_PRIO					5
+#define KEY_STK_SIZE					256
+OS_STK KEY_TASK_STK[KEY_STK_SIZE];
+void key_task(void *pdata);
+
+WM_HWIN hWinEJE_SweepRobot_test_System;
 
 int main(void)
 {
@@ -80,6 +70,12 @@ int main(void)
 							(OS_STK*)&START_TASK_STK[START_STK_SIZE-1], 	//任务堆栈栈顶
 							START_TASK_PRIO);  														//任务优先级
 	OSStart();  																							//开启UCOS
+							
+	while(1){
+		
+	}
+	
+	return -1;
 }
 
 //START任务
@@ -93,26 +89,31 @@ void start_task(void *pdata)
 	OSStatInit(); 																						//初始化统计任务
 	OS_ENTER_CRITICAL();  																		//进入临界区,关闭中断
 
-	OSTaskCreate(emwin_maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWINDEMO_TASK_PRIO);  	//WMEINDEMO任务优
-	OSTaskCreate(touch_task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO); 									//触摸屏任务
-	OSTaskCreate(led0_task,(void*)0,(OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE-1],LED0_TASK_PRIO); 											//LED0任务
+	OSTaskCreate(emwin_maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWINDEMO_TASK_PRIO);
+	OSTaskCreate(touch_task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
+	OSTaskCreate(led0_task,(void*)0,(OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE-1],LED0_TASK_PRIO);
+	OSTaskCreate(key_task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
 
 	OSTaskSuspend(OS_PRIO_SELF); //挂起start任务
 	OS_EXIT_CRITICAL();  //退出临界区,开中断
 }
 
-//EMWINDEMO任务
 void emwin_maintask(void *pdata)
 {
-//	WM_SetCreateFlags(WM_CF_MEMDEV);
+	GUI_Init();
+	WM_SetCreateFlags(WM_CF_MEMDEV);
+
+//	hWinEJE_SweepRobot_test_System = CreateEJE_SweepRobot_test_System();
+	CreateSweepRobot_Remote_controller();
 	while(1)
 	{
 		//_DemoMemDev();
-		MainTask();
+//		MainTask();
+		GUI_Exec();
+		OSTimeDly(50);
 	}
 }
 
-//TOUCH任务
 void touch_task(void *pdata)
 {
 	while(1)
@@ -122,7 +123,6 @@ void touch_task(void *pdata)
 	}
 }
 
-//LED0任务
 void led0_task(void *pdata)
 {
 	while(1)
@@ -130,4 +130,11 @@ void led0_task(void *pdata)
 		LED0 = !LED0;
 		OSTimeDlyHMSM(0,0,0,500);//延时500ms
 	}
+}
+
+void key_task(void *pdata)
+{
+	while(1){
+		
+	}		
 }
