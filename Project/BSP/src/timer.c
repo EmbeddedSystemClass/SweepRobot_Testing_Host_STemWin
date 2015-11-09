@@ -23,7 +23,7 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 	
 	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
 	
-	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);
+	TIM_ITConfig(TIM3,TIM_IT_Update,DISABLE);
 	TIM_Cmd(TIM3,DISABLE);
 	
 	NVIC_InitStructure.NVIC_IRQChannel=TIM3_IRQn; //¶¨Ê±Æ÷3ÖÐ¶Ï

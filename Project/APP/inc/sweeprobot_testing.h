@@ -24,6 +24,11 @@
 
 #include "EJE_SweepRobot_test_SystemDLG.h"
 
+#include "sweeprobot_testing_conf.h"
+
+extern u8 usartRxFlag;
+extern int usartRxNum;
+
 void OS_Task_Create(void);
 
 #endif
