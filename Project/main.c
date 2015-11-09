@@ -1,22 +1,24 @@
-#include "sys.h"
+#include "includes.h"
+
 #include "delay.h"
 #include "usart.h"
-#include "sram.h"
 #include "malloc.h"
-#include "ILI93xx.h"
-#include "led.h"
-#include "timer.h"
-#include "touch.h"
-#include "GUI.h"
+
 #include "ff.h"
 #include "exfuns.h"
 #include "w25qxx.h"
+
+#include "sram.h"
+#include "ILI93xx.h"
+#include "timer.h"
+#include "touch.h"
+#include "led.h"
 #include "key.h"
+
+#include "GUI.h"
 #include "WM.h"
+#include "MULTIEDIT.h"
 
-#include "includes.h"
-
-#include "SweepRobot_Remote_controllerDLG.h"
 #include "EJE_SweepRobot_test_SystemDLG.h"
 
 #define START_TASK_PRIO				0
@@ -48,6 +50,11 @@ static void Test_task(void *pdata);
 #define LED0_STK_SIZE					64
 OS_STK LED0_TASK_STK[LED0_STK_SIZE];
 static void led0_task(void *pdata);
+
+#define KEYMSG_Q_NUM	1
+#define DATAMSG_Q_NUM	4
+OS_Q KEY_Msg;
+OS_Q DATA_Msg;
 
 static u8 gkeyCode = 0;
 static u8 gkeyCodeGetFinishFlag = 0;
@@ -112,10 +119,12 @@ void emwin_maintask(void *pdata)
 	WM_SetCreateFlags(WM_CF_MEMDEV);
 	
 	hWinEJE_SweepRobot_test_System = CreateEJE_SweepRobot_test_System();
-//	CreateSweepRobot_Remote_controller();
 	while(1)
 	{
-//		MainTask();
+		if(USART_RX_STA & (0x8000) ){
+			printf("%s\r\n",USART_RX_BUF);
+			USART_RX_STA = 0;
+		}
 		GUI_Exec();
 		OSTimeDly(50);
 	}
@@ -159,28 +168,34 @@ void Test_task(void *pdata)
 				case 1:
 					Progbar_Set_Value(10);
 					printf("RWHEEL->SPEED=10\r\n");
-					Edit_Set_Text("RWHEEL->SPEED=10");
+					printf("LWHEEL->SPEED=10\r\n");
+					MultiEdit_Set_Text("RWHEEL->SPEED=10\r\n");
+                    MultiEdit_Set_Text("LWHEEL->SPEED=10\r\n");
+                    Checkbox_Set_State(ID_CHECKBOX_0, 1);
 					gkeyCode = 0;
 					gkeyCodeGetFinishFlag = 0;
 					break;
 				case 2:
 					Progbar_Set_Value(20);
 					printf("RWHEEL->SPEED=20\r\n");
-					Edit_Set_Text("RWHEEL->SPEED=20");
+					MultiEdit_Set_Text("RWHEEL->SPEED=20");
+                    Checkbox_Set_State(ID_CHECKBOX_1, 1);
 					gkeyCode = 0;
 					gkeyCodeGetFinishFlag = 0;
 					break;
 				case 3:
 					Progbar_Set_Value(30);
 					printf("RWHEEL->SPEED=30\r\n");
-					Edit_Set_Text("RWHEEL->SPEED=30");
+					MultiEdit_Set_Text("RWHEEL->SPEED=30");
+                    Checkbox_Set_State(ID_CHECKBOX_2, 1);
 					gkeyCode = 0;
 					gkeyCodeGetFinishFlag = 0;
 					break;
 				case 4:
 					Progbar_Set_Value(0);
 					printf("RWHEEL->SPEED=0\r\n");
-					Edit_Set_Text("RWHEEL->SPEED=0");
+					MultiEdit_Set_Text("RWHEEL->SPEED=0");
+                    Checkbox_Set_State(ID_CHECKBOX_3, 1);
 					gkeyCode = 0;
 					gkeyCodeGetFinishFlag = 0;
 					break;

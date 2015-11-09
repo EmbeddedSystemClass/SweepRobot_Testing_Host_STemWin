@@ -32,24 +32,6 @@
 *
 **********************************************************************
 */
-#define ID_FRAMEWIN_0  (GUI_ID_USER + 0x00)
-#define ID_BUTTON_0  (GUI_ID_USER + 0x01)
-#define ID_PROGBAR_0  (GUI_ID_USER + 0x02)
-#define ID_EDIT_0  (GUI_ID_USER + 0x03)
-#define ID_CHECKBOX_0  (GUI_ID_USER + 0x04)
-#define ID_CHECKBOX_1  (GUI_ID_USER + 0x05)
-#define ID_CHECKBOX_2  (GUI_ID_USER + 0x06)
-#define ID_CHECKBOX_3  (GUI_ID_USER + 0x07)
-#define ID_CHECKBOX_4  (GUI_ID_USER + 0x08)
-#define ID_CHECKBOX_5  (GUI_ID_USER + 0x09)
-#define ID_CHECKBOX_6  (GUI_ID_USER + 0x0A)
-#define ID_CHECKBOX_7  (GUI_ID_USER + 0x0B)
-#define ID_CHECKBOX_8  (GUI_ID_USER + 0x0C)
-#define ID_CHECKBOX_9  (GUI_ID_USER + 0x0D)
-#define ID_CHECKBOX_10  (GUI_ID_USER + 0x0E)
-#define ID_CHECKBOX_11  (GUI_ID_USER + 0x0F)
-#define ID_BUTTON_1  (GUI_ID_USER + 0x10)
-
 
 // USER START (Optionally insert additional defines)
 WM_HWIN hWinEJE_SweepRobot_test_System;
@@ -71,9 +53,9 @@ WM_HWIN hWinEJE_SweepRobot_test_System;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "START", ID_BUTTON_0, 505, 345, 120, 100, 0, 0x0, 0 },
-  { PROGBAR_CreateIndirect, "Progbar", ID_PROGBAR_0, 10, 425, 480, 20, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "Msg Edit", ID_EDIT_0, 11, 29, 480, 380, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect,   "START", ID_BUTTON_0, 505, 345, 120, 100, 0, 0x0, 0 },
+  { PROGBAR_CreateIndirect,  "Progbar", ID_PROGBAR_0, 10, 425, 480, 20, 0, 0x0, 0 },
+  { MULTIEDIT_CreateIndirect, "Msg Multiedit", ID_MULTIEDIT_0, 11, 29, 480, 380, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "cbxWheel Test", ID_CHECKBOX_0, 505, 30, 200, 20, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "cbxSBrush Test", ID_CHECKBOX_1, 505, 55, 200, 20, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "cbxMBrush Test", ID_CHECKBOX_2, 505, 80, 200, 20, 0, 0x0, 0 },
@@ -135,11 +117,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     //
-    // Initialization of 'Msg Edit'
+    // Initialization of 'Msg Multiedit'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, "Waiting for Start");
-    EDIT_SetFont(hItem, GUI_FONT_32B_ASCII);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MULTIEDIT_0);
+    MULTIEDIT_SetText(hItem, "Waiting for Start");
+    MULTIEDIT_SetFont(hItem, GUI_FONT_32B_ASCII);
     //
     // Initialization of 'cbxWheel Test'
     //
@@ -244,7 +226,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_EDIT_0: // Notifications sent by 'Msg Edit'
+    case ID_MULTIEDIT_0: // Notifications sent by 'Msg Multiedit'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
@@ -537,17 +519,26 @@ void Progbar_Set_Value(u8 progbarValue)
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
-void Checkbox_Set_State(u8 checkboxState)
-{
-	
-}
-
-void Edit_Set_Text(char *s)
+void Checkbox_Set_State(u16 checkboxId , u8 checkboxState)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_EDIT_0);
-	EDIT_SetText(hItem, s);
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+  CHECKBOX_SetState(hItem, checkboxState);
 }
+
+void MultiEdit_Set_Text(char *s)
+{
+	WM_HWIN hItem;
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+	MULTIEDIT_SetText(hItem, s);
+}
+
+//void MultiEdit_Set_CursorCharPos(int x, int y)
+//{
+//  WM_HWIN hItem;
+//  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+//  MULTIEDIT_SetCursorCharPos(hItem, x, y);
+//}
 
 // USER END
 
