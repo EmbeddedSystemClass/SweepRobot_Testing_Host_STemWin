@@ -25,6 +25,7 @@ int main(void)
 	W25QXX_Init();
 	LED_Init();
 	KEY_Init();
+  TIM3_Int_Init(9999,168-1);
 	FSMC_SRAM_Init();
 
 	mem_init(SRAMIN);

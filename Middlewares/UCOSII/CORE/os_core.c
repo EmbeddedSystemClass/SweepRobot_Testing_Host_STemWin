@@ -1641,8 +1641,6 @@ void  OS_Sched (void)
     OS_CPU_SR  cpu_sr = 0u;
 #endif
 
-
-
     OS_ENTER_CRITICAL();
     if (OSIntNesting == 0u) {                          /* Schedule only if all ISRs done and ...       */
         if (OSLockNesting == 0u) {                     /* ... scheduler is not locked                  */

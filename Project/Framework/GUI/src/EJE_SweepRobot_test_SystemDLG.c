@@ -87,16 +87,16 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 *       _onValueChangedDialog
 */
-static void _onValueChangedDialog(WM_HWIN hDlg, int Id)
-{
-	if( Id == ID_CHECKBOX_0){
-		
-	}else if ( Id == ID_CHECKBOX_1 ){
-		
-	}else{
-		
-	}
-}
+//static void _onValueChangedDialog(WM_HWIN hDlg, int Id)
+//{
+//	if( Id == ID_CHECKBOX_0){
+//		
+//	}else if ( Id == ID_CHECKBOX_1 ){
+//		
+//	}else{
+//		
+//	}
+//}
 
 /*********************************************************************
 *
@@ -131,6 +131,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     MULTIEDIT_SetFont(hItem, GUI_FONT_32B_ASCII);
     MULTIEDIT_SetAutoScrollV(hItem,1);
     MULTIEDIT_SetWrapWord(hItem);
+    MULTIEDIT_SetBufferSize(hItem, 1024);
     //
     // Initialization of 'cbxWheel Test'
     //
@@ -546,6 +547,13 @@ void Checkbox_Set_Color(int checkboxId, GUI_COLOR checkboxcolor)
   CHECKBOX_SetTextColor(hItem, checkboxcolor);
 }
 
+void Checkbox_Set_TextAlign(int checkboxId, int align)
+{
+  WM_HWIN hItem;
+  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+  CHECKBOX_SetTextAlign(hItem, align);
+}
+
 void MultiEdit_Set_Text(char *s)
 {
 	WM_HWIN hItem;
@@ -553,12 +561,12 @@ void MultiEdit_Set_Text(char *s)
 	MULTIEDIT_SetText(hItem, s);
 }
 
-//void MultiEdit_Set_CursorCharPos(int x, int y)
-//{
-//  WM_HWIN hItem;
-//  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
-//  MULTIEDIT_SetCursorCharPos(hItem, x, y);
-//}
+void MultiEdit_Add_Text(char *s)
+{
+    WM_HWIN hItem;
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+	MULTIEDIT_AddText(hItem, s);
+}
 
 // USER END
 

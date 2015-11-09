@@ -132,7 +132,7 @@ void USART1_IRQHandler(void)
 #endif
 } 
 
-s8 USART_CmdArrayToString(char *src_array, char* *dest_str)
+s8 USART_RxArrayToString(char *src_array, char* *dest_str)
 {
   *dest_str = (char *)mymalloc(SRAMEX ,(sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
 //    *dest_str = (char *)mymalloc(SRAMEX ,(sizeof(char))*(usartRxLen+1) );
@@ -143,6 +143,26 @@ s8 USART_CmdArrayToString(char *src_array, char* *dest_str)
   mymemset(*dest_str, 0, (sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
   strncpy(*dest_str, src_array, (USART_RX_STA&USART_CNT_MASK) );
     
+  return 0;
+}
+
+s8 USART_RxArrayToNumber(char *src_array, int *dest_num)
+{
+  u8 i;
+  
+  *dest_num = 0;
+  
+  for(i=0;i<(USART_RX_STA&USART_CNT_MASK);i++){
+    if( ('0' <= (src_array[i])) && ('9' >= (src_array[i]) ) ){
+      if(i){
+        *dest_num *= 10;
+      }
+      *dest_num += (src_array[i] - '0');
+    }else{
+      return -1;
+    }
+  }
+  
   return 0;
 }
 

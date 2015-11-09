@@ -83,7 +83,9 @@ void Progbar_Set_Value(u8 progbarValue);
 void Checkbox_Set_Text(int checkboxId, char *string);
 void Checkbox_Set_State(int checkboxId , unsigned int checkboxState);
 void Checkbox_Set_Color(int checkboxId, GUI_COLOR checkboxcolor);
+void Checkbox_Set_TextAlign(int checkboxId, int align);
 void MultiEdit_Set_Text(char *s);
+void MultiEdit_Add_Text(char *s);
 //void MultiEdit_Set_CursorCharPos(int x, int y);
 // USER END
 

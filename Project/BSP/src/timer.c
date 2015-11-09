@@ -1,6 +1,7 @@
 #include "timer.h"
 #include "led.h"
 #include "GUI.h"
+#include "usart.h"
 
 //通用定时器3中断初始化
 //arr：自动重装值。
@@ -22,8 +23,8 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 	
 	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
 	
-	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE); //允许定时器3更新中断
-	TIM_Cmd(TIM3,ENABLE); //使能定时器3
+	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);
+	TIM_Cmd(TIM3,DISABLE);
 	
 	NVIC_InitStructure.NVIC_IRQChannel=TIM3_IRQn; //定时器3中断
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x01; //抢占优先级1
@@ -39,6 +40,7 @@ void TIM3_IRQHandler(void)
 	if(TIM_GetITStatus(TIM3,TIM_IT_Update)==SET) //溢出中断
 	{
 		//OS_TimeMS++;
+    printf("tim3_int\r\n");
 	}
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位
 }
