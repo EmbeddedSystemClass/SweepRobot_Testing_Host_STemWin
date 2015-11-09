@@ -11,39 +11,46 @@
 #include "ff.h"
 #include "exfuns.h"
 #include "w25qxx.h"
-#include "includes.h"
-#include "memdev.h"
 #include "key.h"
 #include "WM.h"
 
+#include "includes.h"
+
 #include "SweepRobot_Remote_controllerDLG.h"
+#include "EJE_SweepRobot_test_SystemDLG.h"
 
 #define START_TASK_PRIO				0
 #define START_STK_SIZE			  128
 OS_STK	START_TASK_STK[START_STK_SIZE];
-void start_task(void *pdata);
+static void start_task(void *pdata);
 
 #define TOUCH_TASK_PRIO				2
 #define TOUCH_STK_SIZE				128
 OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
-void touch_task(void *pdata);
+static void touch_task(void *pdata);
 
-#define LED0_TASK_PRIO 				3
-#define LED0_STK_SIZE					64
-OS_STK LED0_TASK_STK[LED0_STK_SIZE];
-void led0_task(void *pdata);
+#define KEY_TASK_PRIO					3
+#define KEY_STK_SIZE					256
+OS_STK KEY_TASK_STK[KEY_STK_SIZE];
+static void key_task(void *pdata);
 
 #define EMWINDEMO_TASK_PRIO		4
 #define EMWINDEMO_STK_SIZE		2048
 OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
-void emwin_maintask(void *pdata);
+static void emwin_maintask(void *pdata);
 
-#define KEY_TASK_PRIO					5
-#define KEY_STK_SIZE					256
-OS_STK KEY_TASK_STK[KEY_STK_SIZE];
-void key_task(void *pdata);
+#define TEST_TASK_PRIO				5
+#define TEST_STK_SIZE					128
+OS_STK TEST_TASK_STK[TEST_STK_SIZE];
+static void Test_task(void *pdata);
 
-WM_HWIN hWinEJE_SweepRobot_test_System;
+#define LED0_TASK_PRIO 				10
+#define LED0_STK_SIZE					64
+OS_STK LED0_TASK_STK[LED0_STK_SIZE];
+static void led0_task(void *pdata);
+
+static u8 gkeyCode = 0;
+static u8 gkeyCodeGetFinishFlag = 0;
 
 int main(void)
 {
@@ -63,18 +70,18 @@ int main(void)
 	exfuns_init();																						//为fatfs文件系统分配内存
 	f_mount(fs[0],"0:",1);																		//挂载SD卡
 	f_mount(fs[1],"1:",1);																		//挂载FLASH
-	TP_Init();																								//初始化触摸屏
-	OSInit();  																								//初始化UCOS
-	OSTaskCreate(start_task,  																//start_task任务
-							(void*)0,    																	//参数
-							(OS_STK*)&START_TASK_STK[START_STK_SIZE-1], 	//任务堆栈栈顶
-							START_TASK_PRIO);  														//任务优先级
-	OSStart();  																							//开启UCOS
-							
+	TP_Init();
+	OSInit();
+	OSTaskCreate(start_task,
+							(void*)0,
+							(OS_STK*)&START_TASK_STK[START_STK_SIZE-1],
+							START_TASK_PRIO);
+	OSStart();
+
 	while(1){
-		
+
 	}
-	
+
 	return -1;
 }
 
@@ -93,6 +100,7 @@ void start_task(void *pdata)
 	OSTaskCreate(touch_task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
 	OSTaskCreate(led0_task,(void*)0,(OS_STK*)&LED0_TASK_STK[LED0_STK_SIZE-1],LED0_TASK_PRIO);
 	OSTaskCreate(key_task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
+	OSTaskCreate(Test_task,(void*)0,(OS_STK*)&TEST_TASK_STK[TEST_STK_SIZE-1],TEST_TASK_PRIO);
 
 	OSTaskSuspend(OS_PRIO_SELF); //挂起start任务
 	OS_EXIT_CRITICAL();  //退出临界区,开中断
@@ -102,12 +110,11 @@ void emwin_maintask(void *pdata)
 {
 	GUI_Init();
 	WM_SetCreateFlags(WM_CF_MEMDEV);
-
-//	hWinEJE_SweepRobot_test_System = CreateEJE_SweepRobot_test_System();
-	CreateSweepRobot_Remote_controller();
+	
+	hWinEJE_SweepRobot_test_System = CreateEJE_SweepRobot_test_System();
+//	CreateSweepRobot_Remote_controller();
 	while(1)
 	{
-		//_DemoMemDev();
 //		MainTask();
 		GUI_Exec();
 		OSTimeDly(50);
@@ -119,7 +126,7 @@ void touch_task(void *pdata)
 	while(1)
 	{
 		GUI_TOUCH_Exec();
-		OSTimeDlyHMSM(0,0,0,5);//延时5ms
+		OSTimeDlyHMSM(0,0,0,5);
 	}
 }
 
@@ -128,13 +135,61 @@ void led0_task(void *pdata)
 	while(1)
 	{
 		LED0 = !LED0;
-		OSTimeDlyHMSM(0,0,0,500);//延时500ms
+		OSTimeDlyHMSM(0,0,0,500);
 	}
 }
 
 void key_task(void *pdata)
 {
 	while(1){
-		
-	}		
+		if(gkeyCode){
+			gkeyCodeGetFinishFlag = 1;
+		}else{
+			gkeyCode = KEY_Scan(0);
+		}
+		OSTimeDlyHMSM(0,0,0,5);
+	}
+}
+
+void Test_task(void *pdata)
+{
+	while(1){
+		if(gkeyCodeGetFinishFlag == 1){
+			switch(gkeyCode){
+				case 1:
+					Progbar_Set_Value(10);
+					printf("RWHEEL->SPEED=10\r\n");
+					Edit_Set_Text("RWHEEL->SPEED=10");
+					gkeyCode = 0;
+					gkeyCodeGetFinishFlag = 0;
+					break;
+				case 2:
+					Progbar_Set_Value(20);
+					printf("RWHEEL->SPEED=20\r\n");
+					Edit_Set_Text("RWHEEL->SPEED=20");
+					gkeyCode = 0;
+					gkeyCodeGetFinishFlag = 0;
+					break;
+				case 3:
+					Progbar_Set_Value(30);
+					printf("RWHEEL->SPEED=30\r\n");
+					Edit_Set_Text("RWHEEL->SPEED=30");
+					gkeyCode = 0;
+					gkeyCodeGetFinishFlag = 0;
+					break;
+				case 4:
+					Progbar_Set_Value(0);
+					printf("RWHEEL->SPEED=0\r\n");
+					Edit_Set_Text("RWHEEL->SPEED=0");
+					gkeyCode = 0;
+					gkeyCodeGetFinishFlag = 0;
+					break;
+				default:
+					gkeyCode = 0;
+					gkeyCodeGetFinishFlag = 0;
+					break;
+			}
+		}
+		OSTimeDlyHMSM(0,0,0, 500);
+	}
 }

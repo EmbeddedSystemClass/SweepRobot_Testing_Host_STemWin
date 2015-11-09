@@ -21,7 +21,7 @@
 // USER START (Optionally insert additional includes)
 // USER END
 
-#include "DIALOG.h"
+#include "EJE_SweepRobot_test_SystemDLG.h"
 
 #include "usart.h"
 #include "led.h"
@@ -33,25 +33,26 @@
 **********************************************************************
 */
 #define ID_FRAMEWIN_0  (GUI_ID_USER + 0x00)
-#define ID_BUTTON_0  (GUI_ID_USER + 0x02)
-#define ID_PROGBAR_0  (GUI_ID_USER + 0x03)
-#define ID_EDIT_0  (GUI_ID_USER + 0x04)
-#define ID_CHECKBOX_0  (GUI_ID_USER + 0x05)
-#define ID_CHECKBOX_1  (GUI_ID_USER + 0x06)
-#define ID_CHECKBOX_2  (GUI_ID_USER + 0x07)
-#define ID_CHECKBOX_3  (GUI_ID_USER + 0x08)
-#define ID_CHECKBOX_4  (GUI_ID_USER + 0x09)
-#define ID_CHECKBOX_5  (GUI_ID_USER + 0x0A)
-#define ID_CHECKBOX_6  (GUI_ID_USER + 0x0B)
-#define ID_CHECKBOX_7  (GUI_ID_USER + 0x0C)
-#define ID_CHECKBOX_8  (GUI_ID_USER + 0x0D)
-#define ID_CHECKBOX_9  (GUI_ID_USER + 0x0E)
-#define ID_CHECKBOX_10  (GUI_ID_USER + 0x0F)
-#define ID_CHECKBOX_11  (GUI_ID_USER + 0x10)
-#define ID_BUTTON_1  (GUI_ID_USER + 0x11)
+#define ID_BUTTON_0  (GUI_ID_USER + 0x01)
+#define ID_PROGBAR_0  (GUI_ID_USER + 0x02)
+#define ID_EDIT_0  (GUI_ID_USER + 0x03)
+#define ID_CHECKBOX_0  (GUI_ID_USER + 0x04)
+#define ID_CHECKBOX_1  (GUI_ID_USER + 0x05)
+#define ID_CHECKBOX_2  (GUI_ID_USER + 0x06)
+#define ID_CHECKBOX_3  (GUI_ID_USER + 0x07)
+#define ID_CHECKBOX_4  (GUI_ID_USER + 0x08)
+#define ID_CHECKBOX_5  (GUI_ID_USER + 0x09)
+#define ID_CHECKBOX_6  (GUI_ID_USER + 0x0A)
+#define ID_CHECKBOX_7  (GUI_ID_USER + 0x0B)
+#define ID_CHECKBOX_8  (GUI_ID_USER + 0x0C)
+#define ID_CHECKBOX_9  (GUI_ID_USER + 0x0D)
+#define ID_CHECKBOX_10  (GUI_ID_USER + 0x0E)
+#define ID_CHECKBOX_11  (GUI_ID_USER + 0x0F)
+#define ID_BUTTON_1  (GUI_ID_USER + 0x10)
 
 
 // USER START (Optionally insert additional defines)
+WM_HWIN hWinEJE_SweepRobot_test_System;
 // USER END
 
 /*********************************************************************
@@ -70,22 +71,22 @@
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "START", ID_BUTTON_0, 645, 220, 130, 100, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "START", ID_BUTTON_0, 505, 345, 120, 100, 0, 0x0, 0 },
   { PROGBAR_CreateIndirect, "Progbar", ID_PROGBAR_0, 10, 425, 480, 20, 0, 0x0, 0 },
   { EDIT_CreateIndirect, "Msg Edit", ID_EDIT_0, 11, 29, 480, 380, 0, 0x64, 0 },
-  { CHECKBOX_CreateIndirect, "cbxWheel Test", ID_CHECKBOX_0, 515, 30, 100, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxSBrush Test", ID_CHECKBOX_1, 515, 55, 100, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxMBrush Test", ID_CHECKBOX_2, 515, 80, 100, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxFan Test", ID_CHECKBOX_3, 515, 105, 80, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxIFRD Test", ID_CHECKBOX_4, 515, 130, 100, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxCollision Test", ID_CHECKBOX_5, 515, 155, 140, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxWheelFloat Test", ID_CHECKBOX_6, 515, 180, 140, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxAshTray Test", ID_CHECKBOX_7, 515, 205, 120, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxUniWheel Test", ID_CHECKBOX_8, 515, 230, 120, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxKey Test", ID_CHECKBOX_9, 515, 255, 100, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxIRDA Test", ID_CHECKBOX_10, 515, 280, 100, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxBuzzer Test", ID_CHECKBOX_11, 515, 305, 100, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 645, 348, 130, 100, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxWheel Test", ID_CHECKBOX_0, 505, 30, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxSBrush Test", ID_CHECKBOX_1, 505, 55, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxMBrush Test", ID_CHECKBOX_2, 505, 80, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxFan Test", ID_CHECKBOX_3, 505, 105, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxIFRD Test", ID_CHECKBOX_4, 505, 130, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxCollision Test", ID_CHECKBOX_5, 505, 155, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxWheelFloat Test", ID_CHECKBOX_6, 505, 180, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxAshTray Test", ID_CHECKBOX_7, 505, 205, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxUniWheel Test", ID_CHECKBOX_8, 505, 230, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxKey Test", ID_CHECKBOX_9, 505, 255, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxIRDA Test", ID_CHECKBOX_10, 505, 280, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "cbxBuzzer Test", ID_CHECKBOX_11, 505, 305, 200, 20, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 655, 345, 120, 100, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -99,6 +100,21 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 // USER START (Optionally insert additional static code)
 // USER END
+
+/*********************************************************************
+*
+*       _onValueChangedDialog
+*/
+static void _onValueChangedDialog(WM_HWIN hDlg, int Id)
+{
+	if( Id == ID_CHECKBOX_0){
+		
+	}else if ( Id == ID_CHECKBOX_1 ){
+		
+	}else{
+		
+	}
+}
 
 /*********************************************************************
 *
@@ -122,86 +138,92 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Msg Edit'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, "123");
-    EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+    EDIT_SetText(hItem, "Waiting for Start");
+    EDIT_SetFont(hItem, GUI_FONT_32B_ASCII);
     //
     // Initialization of 'cbxWheel Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
-    CHECKBOX_SetText(hItem, "Wheel Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "Wheel");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+		CHECKBOX_SetState(hItem, CHECKBOX_BI_ACTIV_CHECKED);
     //
     // Initialization of 'cbxSBrush Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_1);
-    CHECKBOX_SetText(hItem, "SBrush Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "SBrush");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxMBrush Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_2);
-    CHECKBOX_SetText(hItem, "MBrush Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "MBrush");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxFan Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_3);
-    CHECKBOX_SetText(hItem, "Fan Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "Fan");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxIFRD Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_4);
-    CHECKBOX_SetText(hItem, "IFRD Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "IFRD");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxCollision Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_5);
-    CHECKBOX_SetText(hItem, "Collision Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "Collision");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxWheelFloat Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_6);
-    CHECKBOX_SetText(hItem, "WheelFloat Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "WheelFloat");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxAshTray Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_7);
-    CHECKBOX_SetText(hItem, "AshTray Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "AshTray");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxUniWheel Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_8);
-    CHECKBOX_SetText(hItem, "UniWheel Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "UniWheel");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxKey Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_9);
-    CHECKBOX_SetText(hItem, "Key Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "Key");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxIRDA Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_10);
-    CHECKBOX_SetText(hItem, "IRDA Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "IRDA");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxBuzzer Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_11);
-    CHECKBOX_SetText(hItem, "Buzzer Test");
-    CHECKBOX_SetFont(hItem, GUI_FONT_16B_ASCII);
+    CHECKBOX_SetText(hItem, "Buzzer");
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'STOP'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     // USER START (Optionally insert additional code for further widget initialization)
+		//
+		// Initialization of 'PROGBAR'
+		//
+		hItem = WM_GetDialogItem(pMsg->hWin, ID_PROGBAR_0);
+		PROGBAR_SetValue(hItem, 50);
     // USER END
     break;
   case WM_NOTIFY_PARENT:
@@ -216,10 +238,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-				printf("LWHEEL->SPEED=30\r\n");
-				printf("RWHEEL->SPEED=30\r\n");
-				LED0 = 0;
-				LED1 = 0;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -468,10 +486,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-				printf("LWHEEL->SPEED=0\r\n");
-				printf("RWHEEL->SPEED=0\r\n");
-				LED0 = 1;
-				LED1 = 1;
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -479,6 +493,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     // USER START (Optionally insert additional code for further Ids)
+		case ID_PROGBAR_0:
+			switch(NCode) {
+				case WM_NOTIFICATION_VALUE_CHANGED:
+					
+					break;
+			}
+			break;
     // USER END
     }
     break;
@@ -509,6 +530,25 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void) {
 }
 
 // USER START (Optionally insert additional public code)
+void Progbar_Set_Value(u8 progbarValue)
+{
+	WM_HWIN hItem;
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_PROGBAR_0);
+	PROGBAR_SetValue(hItem, progbarValue);
+}
+
+void Checkbox_Set_State(u8 checkboxState)
+{
+	
+}
+
+void Edit_Set_Text(char *s)
+{
+	WM_HWIN hItem;
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_EDIT_0);
+	EDIT_SetText(hItem, s);
+}
+
 // USER END
 
 /*************************** End of file ****************************/

@@ -91,8 +91,8 @@ void delay_us(u32 nus)
 
 #ifdef CPU_CFG_CRITICAL_METHOD  //使用UCOSIII
 	OSSchedUnlock(&err);		//开启ucos调度 		
-#else							//否则UCOSII
-	OSSchedUnlock();			//开启ucos调度 
+#else											//否则UCOSII
+	OSSchedUnlock();				//开启ucos调度 
 #endif									    
 }
 
