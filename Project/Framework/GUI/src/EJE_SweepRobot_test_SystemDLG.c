@@ -52,23 +52,23 @@ WM_HWIN hWinEJE_SweepRobot_test_System;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect,   "START", ID_BUTTON_0, 505, 345, 120, 100, 0, 0x0, 0 },
-  { PROGBAR_CreateIndirect,  "Progbar", ID_PROGBAR_0, 10, 425, 480, 20, 0, 0x0, 0 },
+  { FRAMEWIN_CreateIndirect,  "EJE_SweepRobot_test_System", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect,    "START", ID_BUTTON_0, 505, 345, 120, 100, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect,    "STOP", ID_BUTTON_1, 655, 345, 120, 100, 0, 0x0, 0 },
+  { PROGBAR_CreateIndirect,   "Progbar", ID_PROGBAR_0, 10, 425, 480, 20, 0, 0x0, 0 },
   { MULTIEDIT_CreateIndirect, "Msg Multiedit", ID_MULTIEDIT_0, 11, 29, 480, 380, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxWheel Test", ID_CHECKBOX_0, 505, 30, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxSBrush Test", ID_CHECKBOX_1, 505, 55, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxMBrush Test", ID_CHECKBOX_2, 505, 80, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxFan Test", ID_CHECKBOX_3, 505, 105, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxIFRD Test", ID_CHECKBOX_4, 505, 130, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxCollision Test", ID_CHECKBOX_5, 505, 155, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxWheelFloat Test", ID_CHECKBOX_6, 505, 180, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxAshTray Test", ID_CHECKBOX_7, 505, 205, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxUniWheel Test", ID_CHECKBOX_8, 505, 230, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxKey Test", ID_CHECKBOX_9, 505, 255, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxIRDA Test", ID_CHECKBOX_10, 505, 280, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "cbxBuzzer Test", ID_CHECKBOX_11, 505, 305, 200, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 655, 345, 120, 100, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxWheel Test", ID_CHECKBOX_0, 505, 30, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxSBrush Test", ID_CHECKBOX_1, 505, 55, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxMBrush Test", ID_CHECKBOX_2, 505, 80, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxFan Test", ID_CHECKBOX_3, 505, 105, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxIFRD Test", ID_CHECKBOX_4, 505, 130, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxCollision Test", ID_CHECKBOX_5, 505, 155, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxWheelFloat Test", ID_CHECKBOX_6, 505, 180, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxAshTray Test", ID_CHECKBOX_7, 505, 205, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxUniWheel Test", ID_CHECKBOX_8, 505, 230, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxKey Test", ID_CHECKBOX_9, 505, 255, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxIRDA Test", ID_CHECKBOX_10, 505, 280, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxBuzzer Test", ID_CHECKBOX_11, 505, 305, 200, 20, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -116,19 +116,28 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
+    //
+    // Initialization of 'STOP'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
     // Initialization of 'Msg Multiedit'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MULTIEDIT_0);
     MULTIEDIT_SetText(hItem, "Waiting for Start");
     MULTIEDIT_SetFont(hItem, GUI_FONT_32B_ASCII);
+    MULTIEDIT_SetAutoScrollV(hItem,1);
+    MULTIEDIT_SetWrapWord(hItem);
     //
     // Initialization of 'cbxWheel Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_0);
     CHECKBOX_SetText(hItem, "Wheel");
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
-		CHECKBOX_SetState(hItem, CHECKBOX_BI_ACTIV_CHECKED);
+    CHECKBOX_SetDefaultSkin(CHECKBOX_SKIN_FLEX);
     //
     // Initialization of 'cbxSBrush Test'
     //
@@ -195,17 +204,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_11);
     CHECKBOX_SetText(hItem, "Buzzer");
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
-    //
-    // Initialization of 'STOP'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
-    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     // USER START (Optionally insert additional code for further widget initialization)
 		//
 		// Initialization of 'PROGBAR'
 		//
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_PROGBAR_0);
 		PROGBAR_SetValue(hItem, 50);
+    PROGBAR_SetBarColor(hItem, 0, GUI_BLUE);
+    PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX);
     // USER END
     break;
   case WM_NOTIFY_PARENT:
@@ -519,11 +525,25 @@ void Progbar_Set_Value(u8 progbarValue)
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
-void Checkbox_Set_State(u16 checkboxId , u8 checkboxState)
+void Checkbox_Set_Text(int checkboxId, char *string)
+{
+  WM_HWIN hItem;
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+  CHECKBOX_SetText(hItem, string);
+}
+
+void Checkbox_Set_State(int checkboxId , unsigned int checkboxState)
 {
 	WM_HWIN hItem;
 	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
   CHECKBOX_SetState(hItem, checkboxState);
+}
+
+void Checkbox_Set_Color(int checkboxId, GUI_COLOR checkboxcolor)
+{
+  WM_HWIN hItem;
+	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+  CHECKBOX_SetTextColor(hItem, checkboxcolor);
 }
 
 void MultiEdit_Set_Text(char *s)

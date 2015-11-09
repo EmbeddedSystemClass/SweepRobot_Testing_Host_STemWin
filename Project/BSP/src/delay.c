@@ -1,16 +1,11 @@
 #include "delay.h"
 #include "sys.h"
-////////////////////////////////////////////////////////////////////////////////// 	 
-//如果使用ucos,则包括下面的头文件即可.
+
 #if SYSTEM_SUPPORT_UCOS
-#include "includes.h"					//ucos 使用	  
+#include "includes.h"
 #endif
 
-//修改说明
-//V1.1修改说明
-//增加了对UCOSIII的支持
-////////////////////////////////////////////////////////////////////////////////// 
-#ifdef CPU_CFG_CRITICAL_METHOD   //如CPU_CFG_CRITICAL_METHOD被定义了说明使用了UCOSIII
+#ifdef CPU_CFG_CRITICAL_METHOD
 #define OS_CRITICAL_METHOD
 #define OS_TICKS_PER_SEC  OSCfg_TickRate_Hz
 #define OS_TRUE OS_STATE_OS_RUNNING
@@ -89,10 +84,10 @@ void delay_us(u32 nus)
 		}  
 	};
 
-#ifdef CPU_CFG_CRITICAL_METHOD  //使用UCOSIII
-	OSSchedUnlock(&err);		//开启ucos调度 		
-#else											//否则UCOSII
-	OSSchedUnlock();				//开启ucos调度 
+#ifdef CPU_CFG_CRITICAL_METHOD
+	OSSchedUnlock(&err);
+#else
+	OSSchedUnlock();
 #endif									    
 }
 
@@ -169,40 +164,5 @@ void delay_ms(u16 nms)
 	}
 	if(remain)delay_xms(remain);	
 }
+
 #endif
-			 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

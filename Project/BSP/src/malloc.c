@@ -154,7 +154,7 @@ void *mymalloc(u8 memx,u32 size)
   u32 offset;  									      
 	offset=mem_malloc(memx,size);  	   				   
   if(offset==0XFFFFFFFF)return NULL;  
-  else return (void*)((u32)mallco_dev.membase[memx]+offset);  
+  else return (void*)((u32)mallco_dev.membase[memx]+offset);
 }  
 
 //重新分配内存(外部调用)
