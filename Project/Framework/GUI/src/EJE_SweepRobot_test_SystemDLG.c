@@ -22,6 +22,7 @@
 // USER END
 
 #include "EJE_SweepRobot_test_SystemDLG.h"
+#include "eje_logo.h"
 
 #include "usart.h"
 #include "led.h"
@@ -35,6 +36,8 @@
 
 // USER START (Optionally insert additional defines)
 WM_HWIN hWinEJE_SweepRobot_test_System;
+
+#define ID_IMAGE_0_IMAGE_0 0x00
 // USER END
 
 /*********************************************************************
@@ -58,18 +61,19 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { PROGBAR_CreateIndirect,   "Progbar", ID_PROGBAR_0, 10, 425, 480, 20, 0, 0x0, 0 },
   { MULTIEDIT_CreateIndirect, "Msg Multiedit", ID_MULTIEDIT_0, 11, 29, 480, 380, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect,  "cbxWheel Test", ID_CHECKBOX_0, 505, 30, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxSBrush Test", ID_CHECKBOX_1, 505, 55, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxMBrush Test", ID_CHECKBOX_2, 505, 80, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxFan Test", ID_CHECKBOX_3, 505, 105, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxIFRD Test", ID_CHECKBOX_4, 505, 130, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxCollision Test", ID_CHECKBOX_5, 505, 155, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxWheelFloat Test", ID_CHECKBOX_6, 505, 180, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxAshTray Test", ID_CHECKBOX_7, 505, 205, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxUniWheel Test", ID_CHECKBOX_8, 505, 230, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxKey Test", ID_CHECKBOX_9, 505, 255, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxIRDA Test", ID_CHECKBOX_10, 505, 280, 200, 20, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxBuzzer Test", ID_CHECKBOX_11, 505, 305, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxBrush Test", ID_CHECKBOX_1, 505, 55, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxFan Test", ID_CHECKBOX_3, 505, 80, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxIFRD Test", ID_CHECKBOX_4, 505, 105, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxCollision Test", ID_CHECKBOX_5, 505, 130, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxWheelFloat Test", ID_CHECKBOX_6, 505, 155, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxAshTray Test", ID_CHECKBOX_7, 505, 180, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxUniWheel Test", ID_CHECKBOX_8, 505, 205, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxKey Test", ID_CHECKBOX_9, 505, 230, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxIRDA Test", ID_CHECKBOX_10, 505, 255, 200, 20, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect,  "cbxBuzzer Test", ID_CHECKBOX_11, 505, 280, 200, 20, 0, 0x0, 0 },
+  { IMAGE_CreateIndirect,     "ImageLOGO", ID_IMAGE_0, 620, 10, 159, 53, 0, IMAGE_CF_MEMDEV, 0 },
   // USER START (Optionally insert additional widgets)
+  { TEXT_CreateIndirect,      "CPU Load", ID_TEXT_0, 680, 10, 100, 30, 0, 0x0, 0 },
   // USER END
 };
 
@@ -100,10 +104,25 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 /*********************************************************************
 *
+*       _GetImageById
+*/
+static const void * _GetImageById(U32 Id, U32 * pSize) {
+  switch (Id) {
+  case ID_IMAGE_0_IMAGE_0:
+    *pSize = sizeof(bmeje_logo.pData);
+    return (const void *)bmeje_logo.pData;
+  }
+  return NULL;
+}
+
+/*********************************************************************
+*
 *       _cbDialog
 */
 static void _cbDialog(WM_MESSAGE * pMsg) {
+  const void * pData;
   WM_HWIN hItem;
+  U32     FileSize;
   int     NCode;
   int     Id;
   // USER START (Optionally insert additional variables)
@@ -143,14 +162,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'cbxSBrush Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_1);
-    CHECKBOX_SetText(hItem, "SBrush");
+    CHECKBOX_SetText(hItem, "Brush");
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
-    //
-    // Initialization of 'cbxMBrush Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_2);
-    CHECKBOX_SetText(hItem, "MBrush");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+//    //
+//    // Initialization of 'cbxMBrush Test'
+//    //
+//    hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_2);
+//    CHECKBOX_SetText(hItem, "MBrush");
+//    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
     // Initialization of 'cbxFan Test'
     //
@@ -210,9 +229,19 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		// Initialization of 'PROGBAR'
 		//
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_PROGBAR_0);
-		PROGBAR_SetValue(hItem, 50);
-    PROGBAR_SetBarColor(hItem, 0, GUI_BLUE);
     PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX);
+    //
+    //Initialization of 'TEXT'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+    TEXT_SetFont(hItem, &GUI_Font16_ASCII);
+    TEXT_SetText(hItem, "CPU Load");
+    //
+    // Initialization of 'Image'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_0);
+    pData = _GetImageById(ID_IMAGE_0_IMAGE_0, &FileSize);
+    IMAGE_SetBMP(hItem, pData, FileSize);
     // USER END
     break;
   case WM_NOTIFY_PARENT:
@@ -287,24 +316,24 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_CHECKBOX_2: // Notifications sent by 'cbxMBrush Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
+//    case ID_CHECKBOX_2: // Notifications sent by 'cbxMBrush Test'
+//      switch(NCode) {
+//      case WM_NOTIFICATION_CLICKED:
+//        // USER START (Optionally insert code for reacting on notification message)
+//        // USER END
+//        break;
+//      case WM_NOTIFICATION_RELEASED:
+//        // USER START (Optionally insert code for reacting on notification message)
+//        // USER END
+//        break;
+//      case WM_NOTIFICATION_VALUE_CHANGED:
+//        // USER START (Optionally insert code for reacting on notification message)
+//        // USER END
+//        break;
+//      // USER START (Optionally insert additional code for further notification handling)
+//      // USER END
+//      }
+//      break;
     case ID_CHECKBOX_3: // Notifications sent by 'cbxFan Test'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -566,6 +595,13 @@ void MultiEdit_Add_Text(char *s)
     WM_HWIN hItem;
 	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
 	MULTIEDIT_AddText(hItem, s);
+}
+
+void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor)
+{
+  WM_HWIN hItem;
+  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+  MULTIEDIT_SetTextColor(hItem, MULTIEDIT_CI_EDIT, multieditTextColor);
 }
 
 // USER END

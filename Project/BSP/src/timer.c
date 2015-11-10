@@ -3,6 +3,11 @@
 #include "GUI.h"
 #include "usart.h"
 
+#include "stm32f4xx_it.h"
+
+static void TIM3_ISR(void);
+static void TIM4_ISR(void);
+
 //通用定时器3中断初始化
 //arr：自动重装值。
 //psc：时钟预分频数
@@ -31,18 +36,14 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03; //子优先级3
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-	
+  
+  plat_int_reg_cb(STM32F4xx_INT_TIM3, TIM3_ISR);
 }
 
-//定时器3中断服务函数
-void TIM3_IRQHandler(void)
+void TIM3_ISR(void)
 {
-	if(TIM_GetITStatus(TIM3,TIM_IT_Update)==SET) //溢出中断
-	{
-		//OS_TimeMS++;
-    printf("tim3_int\r\n");
-	}
-	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位
+  //OS_TimeMS++;
+  printf("tim3_int\r\n");
 }
 
 //通用定时器4中断初始化
@@ -65,8 +66,8 @@ void TIM4_Int_Init(u16 arr,u16 psc)
 	
 	TIM_TimeBaseInit(TIM4,&TIM_TimeBaseInitStructure);
 	
-	TIM_ITConfig(TIM4,TIM_IT_Update,ENABLE); //允许定时器3更新中断
-	TIM_Cmd(TIM4,ENABLE); //使能定时器3
+	TIM_ITConfig(TIM4,TIM_IT_Update,DISABLE);
+	TIM_Cmd(TIM4,DISABLE);
 	
 	NVIC_InitStructure.NVIC_IRQChannel=TIM4_IRQn; //定时器4中断
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x02; //抢占优先级1
@@ -74,16 +75,24 @@ void TIM4_Int_Init(u16 arr,u16 psc)
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	
+  plat_int_reg_cb(STM32F4xx_INT_TIM4, TIM4_ISR);
 }
 
-//定时器4中断服务函数
-void TIM4_IRQHandler(void)
+void TIM4_ISR(void)
 {
-	if(TIM_GetITStatus(TIM4,TIM_IT_Update)==SET) //溢出中断
-	{
-		TIM_ClearITPendingBit(TIM4,TIM_IT_Update);  //清除中断标志位
 		GUI_TOUCH_Exec();
-		//tp_dev.scan(0);
-		//GUI_TOUCH_StoreUnstable(tp_dev.x[0],tp_dev.y[0]);
-	}
+//    tp_dev.scan(0);
+//    GUI_TOUCH_StoreUnstable(tp_dev.x[0],tp_dev.y[0]); 
 }
+
+////定时器4中断服务函数
+//void TIM4_IRQHandler(void)
+//{
+//	if(TIM_GetITStatus(TIM4,TIM_IT_Update)==SET) //溢出中断
+//	{
+//		TIM_ClearITPendingBit(TIM4,TIM_IT_Update);  //清除中断标志位
+//		GUI_TOUCH_Exec();
+//		//tp_dev.scan(0);
+//		//GUI_TOUCH_StoreUnstable(tp_dev.x[0],tp_dev.y[0]);
+//	}
+//}

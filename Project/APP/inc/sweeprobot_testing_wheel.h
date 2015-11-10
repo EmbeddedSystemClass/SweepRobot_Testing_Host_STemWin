@@ -1,9 +1,8 @@
-#ifndef __SWEEPROBOT_TESTING_WHEEL_H
-#define __SWEEPROBOT_TESTING_WHEEL_H
+#ifndef __SWEEPROBOT_TEST_WHEEL_H
+#define __SWEEPROBOT_TEST_WHEEL_H
 
-#include "EJE_SweepRobot_test_SystemDLG.h"
 #include "sweeprobot_testing.h"
 
-void SweepRobot_Testing_Wheel(void *pdata);
+void SweepRobot_Wheel_Test_Task(void *pdata);
 
 #endif

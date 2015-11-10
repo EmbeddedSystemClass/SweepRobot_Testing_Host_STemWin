@@ -1076,6 +1076,61 @@
               <FileType>1</FileType>
               <FilePath>.\APP\src\sweeprobot_testing_sbrush.c</FilePath>
             </File>
+            <File>
+              <FileName>sweeprobot_testing_mbrush.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_mbrush.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_fan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_fan.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_ifrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_collision.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_collision.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_wheel_float.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_ash_tray.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_uniwheel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_irda.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_irda.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_rgb_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2169,6 +2224,61 @@
               <FileName>sweeprobot_testing_sbrush.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\APP\src\sweeprobot_testing_sbrush.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_mbrush.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_mbrush.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_fan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_fan.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_ifrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_collision.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_collision.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_wheel_float.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_ash_tray.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_uniwheel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_irda.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_irda.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_rgb_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
             </File>
           </Files>
         </Group>

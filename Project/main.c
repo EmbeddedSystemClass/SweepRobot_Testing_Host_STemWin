@@ -15,6 +15,8 @@
 
 #include "sweeprobot_testing.h"
 
+#include "GUIDEMO.h"
+
 int main(void)
 {
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
@@ -40,10 +42,10 @@ int main(void)
 	OS_Task_Create();
 	OSStart();
 
+  /* XXX: should never get here */
 	while(1){
     
 	}
 
 	return -1;
 }
-

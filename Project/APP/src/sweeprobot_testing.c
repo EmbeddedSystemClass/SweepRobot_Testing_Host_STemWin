@@ -1,45 +1,14 @@
 #include "sweeprobot_testing.h"
+#include "sweeprobot_testing_conf.h"
+
+#include "usart.h"
 #include "stm32f4xx_it.h"
-
-#define START_TASK_PRIO				0
-#define START_STK_SIZE			  128
-OS_STK	START_TASK_STK[START_STK_SIZE];
-
-#define TOUCH_TASK_PRIO				3
-#define TOUCH_STK_SIZE				128
-OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
-
-#define KEY_TASK_PRIO					4
-#define KEY_STK_SIZE					256
-OS_STK KEY_TASK_STK[KEY_STK_SIZE];
-
-#define TEST_TASK_PRIO        5
-#define TEST_STK_SIZE         2048
-OS_STK TEST_TASK_STK[TEST_STK_SIZE];
-
-#define SWRB_TEST_TASK_PRIO   6
-#define SWRB_TEST_STK_SIZE    2048
-OS_STK SWRB_TEST_TASK_STK[SWRB_TEST_STK_SIZE];
-
-#define USART_TASK_PRIO       7
-#define USART_STK_SIZE        256
-OS_STK USART_TASK_STK[USART_STK_SIZE];
-
-#define EMWINDEMO_TASK_PRIO		8
-#define EMWINDEMO_STK_SIZE		2048
-OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
-
-#define LED_TASK_PRIO 				10
-#define LED_STK_SIZE					64
-OS_STK LED_TASK_STK[LED_STK_SIZE];
-
-#define KEYMSG_Q_NUM	1
-#define DATAMSG_Q_NUM	4
-OS_Q KEY_Msg;
-OS_Q DATA_Msg;
 
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
+
+u32 swrbTestStateMap = 0;
+u32 lastSwrbTestStateMap = 0;
 
 static u8 gkeyCode = 0;
 static u8 gkeyCodeGetFinishFlag = 0;
@@ -50,8 +19,35 @@ static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
 static void Key_Task(void *pdata);
 static void Usart_Task(void *pdata);
-static void Test_Task(void *pdata);
-static void SweepRobot_Test_Start(void *pdata);
+static void SWRB_Test_Ctrl_Task(void *pdata);
+//static void SweepRobot_Test_Start(void *pdata);
+//static void TIM3_ISR(void);
+
+OS_STK START_TASK_STK[START_STK_SIZE];
+OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
+OS_STK KEY_TASK_STK[KEY_STK_SIZE];
+OS_STK USART_TASK_STK[USART_STK_SIZE];
+OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
+OS_STK LED_TASK_STK[LED_STK_SIZE];
+OS_STK SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE];
+OS_STK SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE];
+OS_STK SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE];
+OS_STK SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE];
+OS_STK SWRB_IFRD_TEST_TASK_STK[SWRB_IFRD_TEST_STK_SIZE];
+OS_STK SWRB_COLLISION_TEST_TASK_STK[SWRB_COLLISION_TEST_STK_SIZE];
+OS_STK SWRB_WHEEL_FLOAT_TEST_TASK_STK[SWRB_WHEEL_FLOAT_TEST_STK_SIZE];
+OS_STK SWRB_ASH_TRAY_TEST_TASK_STK[SWRB_ASH_TRAY_TEST_STK_SIZE];
+OS_STK SWRB_UNIWHEEL_TEST_TASK_STK[SWRB_UNIWHEEL_TEST_STK_SIZE];
+OS_STK SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE];
+OS_STK SWRB_IRDA_TEST_TASK_STK[SWRB_IRDA_TEST_STK_SIZE];
+OS_STK SWRB_BUZZER_TEST_TASK_STK[SWRB_BUZZER_TEST_STK_SIZE];
+OS_STK SWRB_RGB_LED_TEST_TASK_STK[SWRB_RGB_LED_TEST_STK_SIZE];
+
+OS_EVENT TEST_EVT;
+
+
+OS_Q KEY_Msg;
+OS_Q USART_Msg;
 
 void OS_Task_Create(void)
 {
@@ -63,6 +59,8 @@ void OS_Task_Create(void)
 
 void Start_Task(void *pdata)
 {
+  u8 i;
+  
 	OS_CPU_SR cpu_sr;
 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
@@ -76,12 +74,25 @@ void Start_Task(void *pdata)
 	OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
 	OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
   OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
-	OSTaskCreate(SweepRobot_Test_Start,(void*)0,(OS_STK*)&SWRB_TEST_TASK_STK[SWRB_TEST_STK_SIZE-1],SWRB_TEST_TASK_PRIO);
-  OSTaskCreate(Test_Task,(void*)0,(OS_STK*)&TEST_TASK_STK[TEST_STK_SIZE-1],TEST_TASK_PRIO);
-
-  OSTaskSuspend(TEST_TASK_PRIO);
-	OSTaskSuspend(OS_PRIO_SELF);
+  OSTaskCreate(SWRB_Test_Ctrl_Task,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
+	OSTaskCreate(SweepRobot_Wheel_Test_Task,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Brush_Test_Task,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Fan_Test_Task,(void*)0,(OS_STK*)&SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE-1],SWRB_FAN_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_IFRD_Test_Task,(void*)0,(OS_STK*)&SWRB_IFRD_TEST_TASK_STK[SWRB_IFRD_TEST_STK_SIZE-1],SWRB_IFRD_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Collision_Test_Task,(void*)0,(OS_STK*)&SWRB_COLLISION_TEST_TASK_STK[SWRB_COLLISION_TEST_STK_SIZE-1],SWRB_COLLISION_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Wheel_Float_Test_Task,(void*)0,(OS_STK*)&SWRB_WHEEL_FLOAT_TEST_TASK_STK[SWRB_WHEEL_FLOAT_TEST_STK_SIZE-1],SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Ash_Tray_Test_Task,(void*)0,(OS_STK*)&SWRB_ASH_TRAY_TEST_TASK_STK[SWRB_ASH_TRAY_TEST_STK_SIZE-1],SWRB_ASH_TRAY_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_UniWheel_Test_Task,(void*)0,(OS_STK*)&SWRB_UNIWHEEL_TEST_TASK_STK[SWRB_UNIWHEEL_TEST_STK_SIZE-1],SWRB_UNIWHEEL_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Key_Test_Task,(void*)0,(OS_STK*)&SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE-1],SWRB_KEY_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_IrDA_Test_Task,(void*)0,(OS_STK*)&SWRB_IRDA_TEST_TASK_STK[SWRB_IRDA_TEST_STK_SIZE-1],SWRB_IRDA_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_Buzzer_Test_Task,(void*)0,(OS_STK*)&SWRB_BUZZER_TEST_TASK_STK[SWRB_BUZZER_TEST_STK_SIZE-1],SWRB_BUZZER_TEST_TASK_PRIO);
+  OSTaskCreate(SweepRobot_RGB_LED_Test_Task,(void*)0,(OS_STK*)&SWRB_RGB_LED_TEST_TASK_STK[SWRB_RGB_LED_TEST_STK_SIZE-1],SWRB_RGB_LED_TEST_TASK_PRIO);
+  
+  for(i=SWRB_WHEEL_TEST_TASK_PRIO;i<SWRB_TEST_TASK_BOUND;i++){
+    OSTaskSuspend(i);
+  }
 	OS_EXIT_CRITICAL();
+  OSTaskDel(OS_PRIO_SELF);
 }
 
 void emWin_Maintask(void *pdata)
@@ -89,7 +100,12 @@ void emWin_Maintask(void *pdata)
   GUI_Init();
   WM_SetCreateFlags(WM_CF_MEMDEV);
 
+//  MainTask();
+
   hWinEJE_SweepRobot_test_System = CreateEJE_SweepRobot_test_System();
+
+  MultiEdit_Add_Text("PUSH KEY0 TO START\r\n");
+  MultiEdit_Set_Text("READY FOR TESTING\r\n");
 
   while(1)
   {
@@ -131,65 +147,50 @@ void Key_Task(void *pdata)
 void Usart_Task(void *pdata)
 {
   static char *usartRxStr;
-  
+
   while(1){
     if(USART_RX_STA & (0x8000) ){
 //      printf("%s\r\n",USART_RX_BUF);
       USART_RxArrayToString(USART_RX_BUF, &usartRxStr);
       USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum);
       usartRxFlag = 1;
-      MultiEdit_Add_Text(usartRxStr);
+//      MultiEdit_Add_Text(usartRxStr);
 //      printf("%d\r\n",usartRxNum);
       USART_RX_STA = 0;
 		}
-    OSTimeDlyHMSM(0,0,0,20);
+    OSTimeDlyHMSM(0,0,0,5);
   }
 }
 
-void Test_Task(void *pdata)
+void SWRB_Test_Ctrl_Task(void *pdata)
 {
 	while(1){
     if(gkeyCodeGetFinishFlag == 1){
       switch(gkeyCode){
         case 1:
-          Progbar_Set_Value(10);
-          printf("RWHEEL->SPEED=10\r\n");
-          printf("LWHEEL->SPEED=10\r\n");
-          MultiEdit_Add_Text("RWHEEL->SPEED=10\r\n");
-          MultiEdit_Add_Text("LWHEEL->SPEED=10\r\n");
-          Checkbox_Set_State(ID_CHECKBOX_0, 1);
-          Checkbox_Set_Color(ID_CHECKBOX_0, GUI_RED);
-          Checkbox_Set_Text(ID_CHECKBOX_0, "WHEEL ERROR\r\n");
+          printf("TEST->ON\r\n");
+          MultiEdit_Set_Text("SWEEPROBOT TEST START!\r\n");
+          OSTaskResume(SWRB_WHEEL_TEST_TASK_PRIO);
           gkeyCode = 0;
           gkeyCodeGetFinishFlag = 0;
           break;
         case 2:
-          Progbar_Set_Value(20);
-          printf("RWHEEL->SPEED=20\r\n");
-          MultiEdit_Add_Text("RWHEEL->SPEED=20\r\n");
-          Checkbox_Set_State(ID_CHECKBOX_1, 1);
-          Checkbox_Set_Color(ID_CHECKBOX_1, GUI_RED);
-          Checkbox_Set_Text(ID_CHECKBOX_1, "SBRUSH ERROR\r\n");
-          OSTaskCreate(SweepRobot_Test_Start,(void*)0,(OS_STK*)SWRB_TEST_TASK_STK[SWRB_TEST_STK_SIZE-1],SWRB_TEST_TASK_PRIO);
-          OSTaskSuspend(TEST_TASK_PRIO);
+          printf("TEST->OFF\r\n");
+          MultiEdit_Set_Text("TEST OFF\r\n");
           gkeyCode = 0;
           gkeyCodeGetFinishFlag = 0;
           break;
         case 3:
-          Progbar_Set_Value(30);
-          printf("RWHEEL->SPEED=30\r\n");
-          MultiEdit_Add_Text("RWHEEL->SPEED=30\r\n");
-          Checkbox_Set_State(ID_CHECKBOX_2, 1);
+          printf("TEST->ON\r\n");
+          MultiEdit_Set_Text("TEST ON\r\n");
           gkeyCode = 0;
           gkeyCodeGetFinishFlag = 0;
           break;
         case 4:
-          Progbar_Set_Value(0);
-          printf("RWHEEL->SPEED=0\r\n");
           printf("LWHEEL->SPEED=0\r\n");
-          MultiEdit_Add_Text("RWHEEL->SPEED=0\r\n");
-          MultiEdit_Add_Text("LWHEEL->SPEED=0\r\n");
-          Checkbox_Set_State(ID_CHECKBOX_3, 1);
+          printf("RWHEEL->SPEED=0\r\n");
+          MultiEdit_Set_Text("TEST PAUSED\r\n");
+          OSTaskSuspend(SWRB_WHEEL_TEST_TASK_PRIO);
           gkeyCode = 0;
           gkeyCodeGetFinishFlag = 0;
           break;
@@ -199,20 +200,22 @@ void Test_Task(void *pdata)
           break;
       }
     }
-    OSTimeDlyHMSM(0,0,0, 100);
+    OSTimeDlyHMSM(0,0,0,50);
   }
 }
 
+/*
 void SweepRobot_Test_Start(void *pdata)
 {
   OS_CPU_SR cpu_sr;
-  
-  plat_int_reg_cb(
-  
+
+  plat_int_reg_cb(STM32F4xx_INT_TIM3, TIM3_ISR);
+
   while(1){
     if(gkeyCodeGetFinishFlag == 1){
       switch(gkeyCode){
         case 1:
+          TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
           TIM_Cmd(TIM3,ENABLE);
           gkeyCode = 0;
           gkeyCodeGetFinishFlag = 0;
@@ -226,7 +229,7 @@ void SweepRobot_Test_Start(void *pdata)
           break;
         case 3:
           OS_ENTER_CRITICAL();
-          OSTaskResume(TEST_TASK_PRIO);
+          OSTaskResume(TEST_CTRL_TASK_PRIO);
           OSTaskDel(OS_PRIO_SELF);
           OS_EXIT_CRITICAL();
           gkeyCode = 0;
@@ -236,6 +239,7 @@ void SweepRobot_Test_Start(void *pdata)
           OS_ENTER_CRITICAL();
           OSTaskCreate(Led_Task,(void*)0,(OS_STK*)LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
           OS_EXIT_CRITICAL();
+          TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
           TIM_Cmd(TIM3,DISABLE);
           gkeyCode = 0;
           gkeyCodeGetFinishFlag = 0;
@@ -249,8 +253,4 @@ void SweepRobot_Test_Start(void *pdata)
     OSTimeDlyHMSM(0,0,0,20);
   }
 }
-
-void TIM3_ISR(void)
-{
-  printf("tim3_int\r\n");
-}
+*/

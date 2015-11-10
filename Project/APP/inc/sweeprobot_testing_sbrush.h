@@ -1,8 +1,8 @@
 #ifndef __SWEEPROBOT_TESTING_SBRUSH_H
 #define __SWEEPROBOT_TESTING_SBRUSH_H
 
-#include "EJE_SweepRobot_test_SystemDLG.h"
+#include "sweeprobot_testing.h"
 
-void SweepRobot_Testing_SBrush(void *pdata);
+void SweepRobot_SBrush_Test_Task(void *pdata);
 
 #endif

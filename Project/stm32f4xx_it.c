@@ -150,10 +150,10 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval : None
   */
-void PendSV_Handler(void)
-{
-//    stm32f4xx_int_cb_tbl[STM32F4xx_INT_PENDSV]();
-}
+//void PendSV_Handler(void)
+//{
+////    stm32f4xx_int_cb_tbl[STM32F4xx_INT_PENDSV]();
+//}
 
 /*******************************************************************************
 * 函数名称  : SysTickHandler (1ms中断一次)
