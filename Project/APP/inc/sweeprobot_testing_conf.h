@@ -13,6 +13,7 @@
 #include "sweeprobot_testing_key.h"
 #include "sweeprobot_testing_buzzer.h"
 #include "sweeprobot_testing_rgb_led.h"
+#include "sweeprobot_testing_charge.h"
 
 void OS_Task_Create(void);
 

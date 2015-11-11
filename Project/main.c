@@ -19,24 +19,23 @@
 
 int main(void)
 {
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	delay_init(168);
 	uart_init(115200);
 	TFTLCD_Init();
-  TP_Init();
 	W25QXX_Init();
 	LED_Init();
 	KEY_Init();
-  TIM3_Int_Init(9999,168-1);
+    TIM3_Int_Init(9999,168-1);
 	FSMC_SRAM_Init();
 
 	mem_init(SRAMIN);
 	mem_init(SRAMEX);
 	mem_init(SRAMCCM);
 
-	exfuns_init();																						//为fatfs文件系统分配内存
-	f_mount(fs[0],"0:",1);																		//挂载SD卡
-	f_mount(fs[1],"1:",1);																		//挂载FLASH
+	exfuns_init();
+	f_mount(fs[0],"0:",1);
+	f_mount(fs[1],"1:",1);
 
 	OSInit();
 	OS_Task_Create();
@@ -44,7 +43,7 @@ int main(void)
 
   /* XXX: should never get here */
 	while(1){
-    
+
 	}
 
 	return -1;

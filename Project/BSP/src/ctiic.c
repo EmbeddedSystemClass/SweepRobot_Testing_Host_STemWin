@@ -1,39 +1,36 @@
 #include "ctiic.h"
-#include "delay.h"
+#include "delay.h"	 
 
 //控制I2C速度的延时
 void CT_Delay(void)
 {
-	delay_us(5);
+	delay_us(2);
 } 
-
-//初始化IIC
+//电容触摸芯片IIC接口初始化
 void CT_IIC_Init(void)
-{
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOF,ENABLE); //开启GPIOB时钟
+{			
+  GPIO_InitTypeDef  GPIO_InitStructure;	
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0; //PB0引脚设置
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;  //输出
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; 
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //推挽输出
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //上拉
-	GPIO_Init(GPIOB,&GPIO_InitStructure); //GPIOF11设置
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOF, ENABLE);//使能GPIOB,F时钟
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11; //PF11引脚设置
-	GPIO_Init(GPIOF,&GPIO_InitStructure); //GPIOF11设置
-	
-	CT_IIC_SCL = 1;
-	CT_IIC_SDA = 1;
-}
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;//PB0设置为推挽输出
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//输出模式
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+  GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化
+		
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;//PF11设置推挽输出
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//输出模式
+	GPIO_Init(GPIOF, &GPIO_InitStructure);//初始化	
 
+}
 //产生IIC起始信号
 void CT_IIC_Start(void)
 {
 	CT_SDA_OUT();     //sda线输出
 	CT_IIC_SDA=1;	  	  
 	CT_IIC_SCL=1;
-	delay_us(20);
+	delay_us(30);
  	CT_IIC_SDA=0;//START:when CLK is high,DATA change form high to low 
 	CT_Delay();
 	CT_IIC_SCL=0;//钳住I2C总线，准备发送或接收数据 
@@ -43,10 +40,10 @@ void CT_IIC_Stop(void)
 {
 	CT_SDA_OUT();//sda线输出
 	CT_IIC_SCL=1;
-	delay_us(20);
+	delay_us(30);
 	CT_IIC_SDA=0;//STOP:when CLK is high DATA change form low to high
 	CT_Delay();
-	CT_IIC_SDA=1;//发送I2C总线结束信号 
+	CT_IIC_SDA=1;//发送I2C总线结束信号  
 }
 //等待应答信号到来
 //返回值：1，接收应答失败
@@ -57,6 +54,7 @@ u8 CT_IIC_Wait_Ack(void)
 	CT_SDA_IN();      //SDA设置为输入  
 	CT_IIC_SDA=1;	   
 	CT_IIC_SCL=1;
+	CT_Delay();
 	while(CT_READ_SDA)
 	{
 		ucErrTime++;
@@ -65,7 +63,7 @@ u8 CT_IIC_Wait_Ack(void)
 			CT_IIC_Stop();
 			return 1;
 		} 
-		delay_us(1);
+		CT_Delay();
 	}
 	CT_IIC_SCL=0;//时钟输出0 	   
 	return 0;  
@@ -119,11 +117,12 @@ u8 CT_IIC_Read_Byte(unsigned char ack)
 {
 	u8 i,receive=0;
  	CT_SDA_IN();//SDA设置为输入
-    for(i=0;i<8;i++ )
-	{
-        CT_IIC_SCL=0; 	    	   
-		delay_us(30);
-		CT_IIC_SCL=1;	
+	delay_us(30);
+	for(i=0;i<8;i++ )
+	{ 
+		CT_IIC_SCL=0; 	    	   
+		CT_Delay();
+		CT_IIC_SCL=1;	 
 		receive<<=1;
 		if(CT_READ_SDA)receive++;   
 	}	  				 
@@ -131,3 +130,31 @@ u8 CT_IIC_Read_Byte(unsigned char ack)
 	else CT_IIC_Ack(); //发送ACK   
  	return receive;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

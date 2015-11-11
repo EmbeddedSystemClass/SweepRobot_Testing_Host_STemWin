@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>.\BSP\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Lib\ARM;..\Middlewares\STemWinLibrary522\inc;..\Middlewares\STemWinLibrary522\Config;..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc;..\Middlewares\FATFS\exfuns;..\Middlewares\FATFS\src;..\Middlewares\FONTS\inc;..\Middlewares\UCOSII\CONFIG;..\Middlewares\UCOSII\CORE;..\Middlewares\UCOSII\PORT;..\Libraries\CMSIS\Devices\ST;..\Libraries\STM32F4xx_Ext\inc;..\Project;.\Framework\GUI\inc;.\APP\inc</IncludePath>
+              <IncludePath>.\BSP\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Lib\ARM;..\Middlewares\STemWinLibrary522\inc;..\Middlewares\STemWinLibrary522\Config;..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc;..\Middlewares\FATFS\exfuns;..\Middlewares\FATFS\src;..\Middlewares\FONTS\inc;..\Middlewares\UCOSII\CONFIG;..\Middlewares\UCOSII\CORE;..\Middlewares\UCOSII\PORT;..\Libraries\CMSIS\Devices\ST;..\Libraries\STM32F4xx_Ext\inc;..\Project;.\Framework\GUI\inc;.\APP\inc;.\Framework\GUI\res\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -520,6 +520,16 @@
               <FileName>EJE_SweepRobot_test_SystemDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Framework\GUI\src\EJE_SweepRobot_test_SystemDLG.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Freamwork\gui\res</GroupName>
+          <Files>
+            <File>
+              <FileName>eje_logo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\res\src\eje_logo.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -832,139 +842,9 @@
           <GroupName>Middlewares\stemwin_demo</GroupName>
           <Files>
             <File>
-              <FileName>GUIDEMO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO.c</FilePath>
-            </File>
-            <File>
               <FileName>GUIDEMO.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc\GUIDEMO.h</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_AntialiasedText.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_AntialiasedText.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Automotive.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Automotive.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_BarGraph.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_BarGraph.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Bitmap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Bitmap.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_ColorBar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_ColorBar.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Conf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Conf.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Cursor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Cursor.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Fading.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Fading.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Graph.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Graph.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_IconView.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_IconView.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_ImageFlow.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_ImageFlow.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Intro.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Intro.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Listview.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Listview.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_RadialMenu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_RadialMenu.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Resource.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Resource.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Skinning.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Skinning.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Speed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Speed.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Speedometer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Speedometer.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Start.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Touch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_TransparentDialog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_TransparentDialog.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Treeview.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Treeview.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_VScreen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_VScreen.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_WashingMachine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_WashingMachine.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_ZoomAndRotate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_ZoomAndRotate.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1072,14 +952,9 @@
               <FilePath>.\APP\src\sweeprobot_testing_wheel.c</FilePath>
             </File>
             <File>
-              <FileName>sweeprobot_testing_sbrush.c</FileName>
+              <FileName>sweeprobot_testing_brush.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_sbrush.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_mbrush.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_mbrush.c</FilePath>
+              <FilePath>.\APP\src\sweeprobot_testing_brush.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_fan.c</FileName>
@@ -1673,6 +1548,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Freamwork\gui\res</GroupName>
+          <Files>
+            <File>
+              <FileName>eje_logo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\res\src\eje_logo.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Libararies\dsp_lib</GroupName>
           <Files>
             <File>
@@ -1981,139 +1866,9 @@
           <GroupName>Middlewares\stemwin_demo</GroupName>
           <Files>
             <File>
-              <FileName>GUIDEMO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO.c</FilePath>
-            </File>
-            <File>
               <FileName>GUIDEMO.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc\GUIDEMO.h</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_AntialiasedText.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_AntialiasedText.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Automotive.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Automotive.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_BarGraph.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_BarGraph.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Bitmap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Bitmap.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_ColorBar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_ColorBar.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Conf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Conf.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Cursor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Cursor.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Fading.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Fading.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Graph.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Graph.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_IconView.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_IconView.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_ImageFlow.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_ImageFlow.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Intro.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Intro.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Listview.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Listview.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_RadialMenu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_RadialMenu.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Resource.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Resource.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Skinning.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Skinning.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Speed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Speed.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Speedometer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Speedometer.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Start.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Touch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_TransparentDialog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_TransparentDialog.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_Treeview.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_Treeview.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_VScreen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_VScreen.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_WashingMachine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_WashingMachine.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIDEMO_ZoomAndRotate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\src\GUIDEMO_ZoomAndRotate.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2221,14 +1976,9 @@
               <FilePath>.\APP\src\sweeprobot_testing_wheel.c</FilePath>
             </File>
             <File>
-              <FileName>sweeprobot_testing_sbrush.c</FileName>
+              <FileName>sweeprobot_testing_brush.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_sbrush.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_mbrush.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_mbrush.c</FilePath>
+              <FilePath>.\APP\src\sweeprobot_testing_brush.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_fan.c</FileName>

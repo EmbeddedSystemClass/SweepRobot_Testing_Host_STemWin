@@ -1803,8 +1803,6 @@ void  OS_TaskStat (void *p_arg)
     OS_CPU_SR  cpu_sr = 0u;
 #endif
 
-
-
     p_arg = p_arg;                               /* Prevent compiler warning for not using 'p_arg'     */
     while (OSStatRdy == OS_FALSE) {
         OSTimeDly(2u * OS_TICKS_PER_SEC / 10u);  /* Wait until statistic task is ready                 */

@@ -4,19 +4,6 @@
 #include "usart.h"
 #include "delay.h" 
 #include "string.h" 
-#include "ILI93xx.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//4.3寸电容触摸屏-GT9147 驱动代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/5/7
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 
 
 //GT9147配置参数表
 //第一个字节为版本号(0X60),必须保证新的版本号大于等于GT9147内部
@@ -113,14 +100,14 @@ u8 GT9147_Init(void)
 	u8 temp[5]; 
 	GPIO_InitTypeDef  GPIO_InitStructure;	
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOC, ENABLE);//使能GPIOB,C时钟
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOC, ENABLE);//使能GPIOB,C时钟
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 ;//PB1设置为上拉输入
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;//输入模式
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
-	GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 ;//PB1设置为上拉输入
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;//输入模式
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+  GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化
 		
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;//PC13设置为推挽输出
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//输出模式
@@ -169,24 +156,15 @@ u8 GT9147_Scan(u8 mode)
 	u8 i=0;
 	u8 res=0;
 	u8 temp;
-	u8 tempsta;
- 	static u8 t=0;//控制查询间隔,从而降低CPU占用率   
+	static u8 t=0;//控制查询间隔,从而降低CPU占用率   
 	t++;
 	if((t%10)==0||t<10)//空闲时,每进入10次CTP_Scan函数才检测1次,从而节省CPU使用率
 	{
-		GT9147_RD_Reg(GT_GSTID_REG,&mode,1);	//读取触摸点的状态  
- 		if(mode&0X80&&((mode&0XF)<6))
-		{
-			temp=0;
-			GT9147_WR_Reg(GT_GSTID_REG,&temp,1);//清标志 		
-		}		
+		GT9147_RD_Reg(GT_GSTID_REG,&mode,1);//读取触摸点的状态  
 		if((mode&0XF)&&((mode&0XF)<6))
 		{
-			temp=0XFF<<(mode&0XF);		//将点的个数转换为1的位数,匹配tp_dev.sta定义 
-			tempsta=tp_dev.sta;			//保存当前的tp_dev.sta值
+			temp=0XFF<<(mode&0XF);//将点的个数转换为1的位数,匹配tp_dev.sta定义 
 			tp_dev.sta=(~temp)|TP_PRES_DOWN|TP_CATH_PRES; 
-			tp_dev.x[4]=tp_dev.x[0];	//保存触点0的数据
-			tp_dev.y[4]=tp_dev.y[0];
 			for(i=0;i<5;i++)
 			{
 				if(tp_dev.sta&(1<<i))	//触摸有效?
@@ -205,21 +183,13 @@ u8 GT9147_Scan(u8 mode)
 				}			
 			} 
 			res=1;
-			if(tp_dev.x[0]>lcddev.width||tp_dev.y[0]>lcddev.height)//非法数据(坐标超出了)
-			{ 
-				if((mode&0XF)>1)		//有其他点有数据,则复第二个触点的数据到第一个触点.
-				{
-					tp_dev.x[0]=tp_dev.x[1];
-					tp_dev.y[0]=tp_dev.y[1];
-					t=0;				//触发一次,则会最少连续监测10次,从而提高命中率
-				}else					//非法数据,则忽略此次数据(还原原来的)  
-				{
-					tp_dev.x[0]=tp_dev.x[4];
-					tp_dev.y[0]=tp_dev.y[4];
-					mode=0X80;		
-					tp_dev.sta=tempsta;	//恢复tp_dev.sta
-				}
-			}else t=0;					//触发一次,则会最少连续监测10次,从而提高命中率
+			if(tp_dev.x[0]==0 && tp_dev.y[0]==0)mode=0;	//读到的数据都是0,则忽略此次数据
+			t=0;		//触发一次,则会最少连续监测10次,从而提高命中率
+		}
+ 		if(mode&0X80&&((mode&0XF)<6))
+		{
+			temp=0;
+			GT9147_WR_Reg(GT_GSTID_REG,&temp,1);//清标志 		
 		}
 	}
 	if((mode&0X8F)==0X80)//无触摸点按下
