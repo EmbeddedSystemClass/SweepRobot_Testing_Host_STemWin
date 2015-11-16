@@ -148,7 +148,7 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
             }
             Checkbox_Set_State(ID_CHECKBOX_WHEEL_FLOAT, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_RED);
-            Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERROR");
+            Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
             Progbar_Set_Value( (u8)( ( (float)(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO-3) / (float)(SWRB_TEST_TASK_PRIO_BOUND-4))*100) );
 
             OS_ENTER_CRITICAL();

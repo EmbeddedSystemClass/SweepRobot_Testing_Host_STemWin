@@ -36,7 +36,7 @@ u8 exfuns_init(void)
 	ftemp = (FIL*)mymalloc(SRAMIN,sizeof(FIL));			//为ftemp申请内存空间
 	fatbuf = (u8*)mymalloc(SRAMIN,512);					//为fatbuf申请内存空间
 	if(fs[0]&&fs[1]&&file&&ftemp&&fatbuf)return 0;  //申请有一个失败,即失败.
-	else return 1;	
+	else return 1;
 }
 
 //将小写字母转为大写字母,如果是数字,则保持不变
@@ -86,7 +86,7 @@ u8 f_typetell(u8 *fname)
 			}
 		}
 	}
-	return 0XFF;//没找到	
+	return 0XFF;//没找到
 }
 
 //得到磁盘剩余容量
