@@ -44,10 +44,10 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
     SweepRobot_Ash_Tray_Test_Ctrl_Init();
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_ASH_TRAY_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_ASH_TRAY_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>ASH TRAY TEST<<<\r\n");
             printf("SENSOR->IFRD_LED=0\r\n");
@@ -55,7 +55,7 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
             SweepRobot_Ash_Tray_Test_Ins_Ctrl_On();
         }
         
-        if(swrbTestTaskCnt > 1){
+        if(gSwrbTestTaskCnt > 1){
             if(!ashTrayIns.validFlag){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("WHEEL_FLOAT->READ=0\r\n");
@@ -71,10 +71,10 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
                     }
                 }
                 if(ashTrayIns.value){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_ASH_TRAY_INS_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_ASH_TRAY_INS_POS);
                     ashTrayIns.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_ASH_TRAY_INS_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_ASH_TRAY_INS_POS);
                     ashTrayIns.validCnt = 0;
                 }
                 if(ashTrayIns.validCnt > 5){
@@ -88,7 +88,7 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
         }
     
         if(!ashTrayLvl.validFlag){
-            if(swrbTestTaskCnt%2){
+            if(gSwrbTestTaskCnt%2){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("SENSOR->READ=15\r\n");
                     OSTimeDlyHMSM(0,0,0,6);
@@ -121,10 +121,10 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
                 printf("SENSOR->IFRD_LED=0\r\n");
 
                 if(ashTrayLvl.offValue - ashTrayLvl.onValue > SWRB_ASH_TRAY_LVL_VALID_THRESHOLD){
-                    swrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
+                    gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
                     ashTrayLvl.validCnt++;
                 }else{
-                    swrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
+                    gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
                     ashTrayLvl.validCnt = 0;
                 }
                 
@@ -135,9 +135,9 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
         }
 
         if(ashTrayIns.validFlag && ashTrayLvl.validFlag){
-            swrbTestTaskCnt = 0;
+            gSwrbTestTaskCnt = 0;
             SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             printf("SENSOR->IFRD_LED=0\r\n");
             Checkbox_Set_State(ID_CHECKBOX_ASH_TRAY, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_BLUE);
@@ -156,14 +156,14 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
             OS_EXIT_CRITICAL();
         }
 
-        if(swrbTestTaskCnt > 20){
-            swrbTestTaskCnt = 0;
+        if(gSwrbTestTaskCnt > 20){
+            gSwrbTestTaskCnt = 0;
             SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             MultiEdit_Set_Text_Color(GUI_RED);
-            if(swrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK)
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK)
                 MultiEdit_Add_Text("ERROR->ASH TRAY INS\r\n");
-            if(swrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK)
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK)
                 MultiEdit_Add_Text("ERROR->ASH TRAY LVL\r\n");
             Checkbox_Set_State(ID_CHECKBOX_ASH_TRAY, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_RED);

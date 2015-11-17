@@ -8,16 +8,18 @@
 #include "malloc.h"
 
 #include "ff.h"
-#include "exfuns.h"
+#include "exfans.h"
 #include "w25qxx.h"
 #include "fattester.h"
 
 #include "sram.h"
+#include "RTC.h"
 #include "ILI93xx.h"
 #include "timer.h"
 #include "touch.h"
 #include "led.h"
 #include "key.h"
+#include "sdio_SDcard.h"
 
 #include "GUI.h"
 #include "WM.h"
@@ -89,6 +91,12 @@ enum SWRB_TEST_STATE{
   SWRB_TEST_STATE_BOUND,
 };
 
+enum SWRB_TEST_MODE{
+    SWRB_TEST_MODE_IDLE,
+    SWRB_TEST_MODE_PAUSE,
+    SWRB_TEST_MODE_RUN,
+};
+
 #define SWRB_TEST_FAULT_WHEEL_MASK            0x00000003
 #define SWRB_TEST_FAULT_WHEEL_L_MASK          0x00000001
 #define SWRB_TEST_FAULT_WHEEL_R_MASK          0x00000002
@@ -138,6 +146,13 @@ enum SWRB_TEST_STATE{
 #define SWRB_TEST_FAULT_BUZZER_MASK           0x20000000
 
 #define SWRB_TEST_FAULT_RGB_LED_MASK          0x40000000
+
+enum SWRB_TEST_DATA_POS{
+    SWRB_TEST_DATA_DUT_SN_POS,
+    SWRB_TEST_DATA_WHEEL_L_SPEED_POS,
+    SWRB_TEST_DATA_WHEEL_R_SPEED_POS,
+    
+};
 
 enum SWRB_TEST_TASK_PRIO{
 
@@ -196,16 +211,19 @@ enum SWRB_TEST_TASK_PRIO{
 extern u8 usartRxFlag;
 extern int usartRxNum;
 
-extern u8 swrbTestRuningTaskPrio;
-extern u32 swrbTestStateMap;
+extern u8 gSwrbTestMode;
+extern u8 gSwrbTestRuningTaskPrio;
+extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
-extern u16 swrbTestAcquiredData[];
-extern u16 swrbTestTaskCnt;
+extern u32 gSwrbTestDUTSerialNum;
+extern u16 gSwrbTestAcquiredData[];
+extern u16 gSwrbTestTaskCnt;
 
 void OS_Task_Create(void);
 
 void SweepRobot_TestStartProc(void);
 void SweepRobot_TestPauseProc(void);
+void SweepRobot_TestSetProc(void);
 void SweepRobot_TestStopProc(void);
 void SweepRobot_TestExitProc(void);
 

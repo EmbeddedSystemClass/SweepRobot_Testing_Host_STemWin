@@ -44,10 +44,10 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
     SweepRobot_Wheel_Float_Test_Init();
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
         
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_WHEEL_FLOAT_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_WHEEL_FLOAT_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>WHEEL FLOAT TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -60,7 +60,7 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
             rWheelFloat.validFlag = 0;
         }
         
-        if(swrbTestTaskCnt > 1){
+        if(gSwrbTestTaskCnt > 1){
             if(!lWheelFloat.validFlag){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("WHEEL_FLOAT->READ=0\r\n");
@@ -76,10 +76,10 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
                     }
                 }
                 if(lWheelFloat.value){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_FLOAT_L_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_FLOAT_L_POS);
                     lWheelFloat.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_WHEEL_FLOAT_L_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_FLOAT_L_POS);
                     lWheelFloat.validCnt = 0;
                 }
                 if(lWheelFloat.validCnt > 5){
@@ -102,10 +102,10 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
                     }
                 }
                 if(rWheelFloat.value){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_FLOAT_R_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_FLOAT_R_POS);
                     rWheelFloat.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_WHEEL_FLOAT_R_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_FLOAT_R_POS);
                     rWheelFloat.validCnt = 0;
                 }
                 if(rWheelFloat.validCnt > 5){
@@ -114,9 +114,9 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
             }
             
             if(lWheelFloat.validFlag && rWheelFloat.validFlag){
-                swrbTestTaskCnt = 0;
+                gSwrbTestTaskCnt = 0;
                 SweepRobot_Wheel_Float_Ctrl_Off();
-                Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
                 Checkbox_Set_State(ID_CHECKBOX_WHEEL_FLOAT, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
@@ -135,15 +135,15 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
             }
         }
     
-        if(swrbTestTaskCnt > 20){
-            swrbTestTaskCnt = 0;
+        if(gSwrbTestTaskCnt > 20){
+            gSwrbTestTaskCnt = 0;
             SweepRobot_Wheel_Float_Ctrl_Off();
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             MultiEdit_Set_Text_Color(GUI_RED);
-            if(swrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
                 MultiEdit_Add_Text("ERROR->WHEEL FLOAT L\r\n");
             }
-            if(swrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
                 MultiEdit_Add_Text("ERROR->WHEEL FLOAT R\r\n");
             }
             Checkbox_Set_State(ID_CHECKBOX_WHEEL_FLOAT, 1);

@@ -14,10 +14,10 @@ void SweepRobot_Fan_Test_Task(void *pdata)
     u8 i;
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>FAN TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -27,7 +27,7 @@ void SweepRobot_Fan_Test_Task(void *pdata)
             fan.validFlag = 0;
         }
 
-        if(swrbTestTaskCnt > 5){
+        if(gSwrbTestTaskCnt > 5){
             for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                 printf("FAN->READ\r\n");
                 OSTimeDlyHMSM(0,0,0,6);
@@ -43,10 +43,10 @@ void SweepRobot_Fan_Test_Task(void *pdata)
                 }
             }
             if(SWRB_TEST_FAN_CUR_LOW_BOUND < fan.current &&  SWRB_TEST_FAN_CUR_HIGH_BOUND > fan.current){
-                swrbTestStateMap &= ~(1<<SWRB_TEST_FAN_POS);
+                gSwrbTestStateMap &= ~(1<<SWRB_TEST_FAN_POS);
                 fan.validCnt++;
             }else{
-                swrbTestStateMap |= (1<<SWRB_TEST_FAN_POS);
+                gSwrbTestStateMap |= (1<<SWRB_TEST_FAN_POS);
                 fan.validCnt = 0;
             }
             
@@ -56,8 +56,8 @@ void SweepRobot_Fan_Test_Task(void *pdata)
             }
 
             if(fan.validFlag){
-                swrbTestTaskCnt = 0;
-                Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+                gSwrbTestTaskCnt = 0;
+                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
                 Checkbox_Set_State(ID_CHECKBOX_FAN, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
@@ -76,9 +76,9 @@ void SweepRobot_Fan_Test_Task(void *pdata)
             }
         }
 
-    if(swrbTestTaskCnt > 20){
-      swrbTestTaskCnt = 0;
-      Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+    if(gSwrbTestTaskCnt > 20){
+      gSwrbTestTaskCnt = 0;
+      Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
       printf("FAN->SPEED=0\r\n");
       MultiEdit_Set_Text_Color(GUI_RED);
       MultiEdit_Add_Text("ERROR->FAN\r\n");

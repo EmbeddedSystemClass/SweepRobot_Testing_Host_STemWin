@@ -3,17 +3,21 @@
 
 #include "usart.h"
 #include "stm32f4xx_it.h"
+#include <stdio.h>
+#include <string.h>
 
 #define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  200
 
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
-u32 swrbTestStateMap = 0;
+u8 gSwrbTestMode = 0;
+u32 gSwrbTestStateMap = 0;
 u32 lastSwrbTestStateMap = 0;
-u16 swrbTestTaskCnt = 0;
-u8 swrbTestRuningTaskPrio = 0;
-u16 swrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
+u16 gSwrbTestTaskCnt = 0;
+u8 gSwrbTestRuningTaskPrio = 0;
+u32 gSwrbTestDUTSerialNum = 0;
+u16 gSwrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
 
 static u8 gkeyCode = 0;
 static u8 gkeyCodeGetFinishFlag = 0;
@@ -173,7 +177,7 @@ void Usart_Task(void *pdata)
     //      printf("%d\r\n",usartRxNum);
             USART_RX_STA = 0;
             /* Resume usart data query task immediately */
-            OSTimeDlyResume(swrbTestRuningTaskPrio);
+            OSTimeDlyResume(gSwrbTestRuningTaskPrio);
         }
         OSTimeDlyHMSM(0,0,0,5);
     }
@@ -192,43 +196,53 @@ void SWRB_Test_Ctrl_Task(void *pdata)
 {
     SweepRobot_TestInitProc();
 
-	while(1){
+    while(1){
     if(gkeyCodeGetFinishFlag == 1){
-      switch(gkeyCode){
-        /* TEST START/RESUME PRESSED*/
-        case 1:
-          SweepRobot_TestStartProc();
-          break;
-        /* TEST PAUSE PRESSED */
-        case 2:
-          SweepRobot_TestPauseProc();
-          break;
-        /* TEST STOP PRESSED */
-        case 3:
-          SweepRobot_TestStopProc();
-          break;
-        /* TEST EXIT PRESSED */
-        case 4:
-          SweepRobot_TestExitProc();
-          break;
-        default:
-          gkeyCode = 0;
-          gkeyCodeGetFinishFlag = 0;
-          break;
-      }
+        switch(gkeyCode){
+            /* TEST START/RESUME PRESSED*/
+            case 1:
+                if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+                    SweepRobot_TestStartProc();
+                }else{
+                    SweepRobot_TestPauseProc();
+                }
+                break;
+            /* TEST PAUSE PRESSED */
+            case 2:
+                if(gSwrbTestMode == SWRB_TEST_MODE_IDLE)
+                    SweepRobot_TestSetProc();
+                break;
+            /* TEST STOP PRESSED */
+            case 3:
+                if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
+                    SweepRobot_TestStopProc();
+                break;
+            /* TEST EXIT PRESSED */
+            case 4:
+                if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE)
+                    SweepRobot_TestExitProc();
+                break;
+            default:
+                gkeyCode = 0;
+                gkeyCodeGetFinishFlag = 0;
+            break;
+        }
     }
     OSTimeDlyHMSM(0,0,0,50);
-  }
+    }
 }
 
 void SweepRobot_TestStartProc(void)
 {
     OS_CPU_SR cpu_sr;
 
+    gSwrbTestMode = SWRB_TEST_MODE_RUN;
+    
+    Button_Set_Text(ID_BUTTON_START, "PAUSE");
     printf("TEST->ON\r\n");
     MultiEdit_Set_Text("\r\n");
     OS_ENTER_CRITICAL();
-    OSTaskResume(swrbTestRuningTaskPrio);
+    OSTaskResume(gSwrbTestRuningTaskPrio);
     OS_EXIT_CRITICAL();
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;
@@ -237,9 +251,12 @@ void SweepRobot_TestStartProc(void)
 void SweepRobot_TestPauseProc(void)
 {
     OS_CPU_SR cpu_sr;
+    
+    gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
+    Button_Set_Text(ID_BUTTON_START, "START");
     OS_ENTER_CRITICAL();
-    OSTaskSuspend(swrbTestRuningTaskPrio);
+    OSTaskSuspend(gSwrbTestRuningTaskPrio);
     OS_EXIT_CRITICAL();
     printf("LWHEEL->SPEED=0\r\n");
     printf("RWHEEL->SPEED=0\r\n");
@@ -255,12 +272,20 @@ void SweepRobot_TestPauseProc(void)
     gkeyCodeGetFinishFlag = 0;  
 }
 
+void SweepRobot_TestSetProc(void)
+{
+    
+}
+
 void SweepRobot_TestStopProc(void)
 {
     OS_CPU_SR cpu_sr;
-
+    
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    
+    Button_Set_Text(ID_BUTTON_START, "START");
     OS_ENTER_CRITICAL();
-    OSTaskSuspend(swrbTestRuningTaskPrio);
+    OSTaskSuspend(gSwrbTestRuningTaskPrio);
     OS_EXIT_CRITICAL();
     SweepRobot_TestInitProc();
     gkeyCode = 0;
@@ -270,9 +295,11 @@ void SweepRobot_TestStopProc(void)
 void SweepRobot_TestExitProc(void)
 {
     OS_CPU_SR cpu_sr;
+    
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     OS_ENTER_CRITICAL();
-    OSTaskSuspend(swrbTestRuningTaskPrio);
+    OSTaskSuspend(gSwrbTestRuningTaskPrio);
     OS_EXIT_CRITICAL();
     SweepRobot_TestInitProc();
     printf("TEST->OFF\r\n");
@@ -317,9 +344,9 @@ void SweepRobot_TestInitProc(void)
     MultiEdit_Set_Text("TEST STOPED\r\n");
     MultiEdit_Add_Text("PRESS KEY0 TO RESTART TEST\r\n");
 
-    swrbTestTaskCnt = 0;
-    swrbTestStateMap = 0;
-    swrbTestRuningTaskPrio = SWRB_TEST_START_TASK_BOUND+1;
+    gSwrbTestTaskCnt = 0;
+    gSwrbTestStateMap = 0;
+    gSwrbTestRuningTaskPrio = SWRB_TEST_START_TASK_BOUND+4;
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;
 }

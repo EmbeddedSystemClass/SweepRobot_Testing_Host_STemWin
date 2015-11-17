@@ -74,7 +74,7 @@ void SweepRobot_IrDA_Test_Tx_SendCmd(u8 code)
 
 void SweepRobot_IrDA_Test_Task(void *pdata)
 {
-    static u16 swrbTestTaskCnt = 0;
+    static u16 gSwrbTestTaskCnt = 0;
     static IRDA_TestTypeDef IrDA[SWRB_TEST_IRDA_CHAN_NUM];
     OS_CPU_SR cpu_sr;
 
@@ -83,10 +83,10 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
     SweepRobot_IrDA_Test_Tx_Init();
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_IRDA_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_IRDA_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>IRDA TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -98,7 +98,7 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
             }
         }
 
-        if(swrbTestTaskCnt > 1){
+        if(gSwrbTestTaskCnt > 1){
             for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
                 if(!IrDA[j].validFlag){
                     printf("IRDA->ON=%d\r\n",j);
@@ -131,15 +131,15 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
                     }
                     
                     if(IrDA[j].validFlag){
-                        swrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+j));
+                        gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+j));
                     }else{
-                        swrbTestStateMap |= (1<<(SWRB_TEST_IRDA_B_POS+j));
+                        gSwrbTestStateMap |= (1<<(SWRB_TEST_IRDA_B_POS+j));
                     }
                 }
             }
             
             if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
-                swrbTestTaskCnt = 0;
+                gSwrbTestTaskCnt = 0;
                 Checkbox_Set_State(ID_CHECKBOX_IRDA, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA OK");
@@ -157,23 +157,23 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
             }
         }
 
-        if(swrbTestTaskCnt > 20){
-            swrbTestTaskCnt = 0;
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+        if(gSwrbTestTaskCnt > 20){
+            gSwrbTestTaskCnt = 0;
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             MultiEdit_Set_Text_Color(GUI_RED);
-            if(swrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
                 MultiEdit_Add_Text("ERROR->IRDA_B\r\n");
             }
-            if(swrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
                 MultiEdit_Add_Text("ERROR->IRDA_L\r\n");
             }
-            if(swrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
                 MultiEdit_Add_Text("ERROR->IRDA_FL\r\n");
             }
-            if(swrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
                 MultiEdit_Add_Text("ERROR->IRDA_FR\r\n");
             }
-            if(swrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
                 MultiEdit_Add_Text("ERROR->IRDA_R\r\n");
             }
             Checkbox_Set_State(ID_CHECKBOX_IRDA, 1);

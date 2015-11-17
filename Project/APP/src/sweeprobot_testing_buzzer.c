@@ -5,29 +5,29 @@
 
 void SweepRobot_Buzzer_Test_Task(void *pdata)
 {
-  static u16 swrbTestTaskCnt = 0;
+  static u16 gSwrbTestTaskCnt = 0;
   OS_CPU_SR cpu_sr;
   
-  swrbTestRuningTaskPrio = SWRB_BUZZER_TEST_TASK_PRIO;
+  gSwrbTestRuningTaskPrio = SWRB_BUZZER_TEST_TASK_PRIO;
   
   MultiEdit_Set_Text_Color(GUI_BLACK);
   MultiEdit_Add_Text(">>>BUZZER TEST<<<\r\n");
   OSTimeDlyHMSM(0,0,2,0);
   
   while(1){
-    swrbTestTaskCnt++;
+    gSwrbTestTaskCnt++;
     
-    if(swrbTestTaskCnt == 20){
+    if(gSwrbTestTaskCnt == 20){
       printf("BUZZER->ON=1\r\n");
-    }else if(swrbTestTaskCnt == 60){
+    }else if(gSwrbTestTaskCnt == 60){
       printf("BUZZER->ON=2\r\n");
-    }else if(swrbTestTaskCnt == 100){
+    }else if(gSwrbTestTaskCnt == 100){
       printf("BUZZER->ON=3\r\n");
     }
     
-    if(swrbTestTaskCnt > 140){
-      swrbTestTaskCnt = 0;
-      Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+    if(gSwrbTestTaskCnt > 140){
+      gSwrbTestTaskCnt = 0;
+      Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
       MultiEdit_Set_Text_Color(GUI_RED);
       MultiEdit_Add_Text("ERROR->BUZZER\r\n");
       Checkbox_Set_State(ID_CHECKBOX_BUZZER, 1);

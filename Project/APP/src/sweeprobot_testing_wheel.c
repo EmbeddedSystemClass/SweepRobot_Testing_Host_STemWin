@@ -13,10 +13,10 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
     u8 i;
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_WHEEL_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_WHEEL_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>WHEEL TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -30,7 +30,7 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
             rWheel.validFlag = 0;
         }
 
-        if(swrbTestTaskCnt > 4){
+        if(gSwrbTestTaskCnt > 4){
             if(!lWheel.validFlag){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("LWHEEL->READ\r\n");
@@ -46,10 +46,10 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
                     }
                 }
                 if(0<lWheel.speed && 50>lWheel.speed){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_L_STATE_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_L_STATE_POS);
                     lWheel.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_WHEEL_L_STATE_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_L_STATE_POS);
                     lWheel.validCnt = 0;
                 }
                 
@@ -74,10 +74,10 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
                     }
                 }
                 if(0<rWheel.speed && 50>rWheel.speed){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_R_STATE_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_R_STATE_POS);
                     rWheel.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_WHEEL_R_STATE_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_R_STATE_POS);
                     rWheel.validCnt = 0;
                 }
                 
@@ -88,10 +88,10 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
             }
           
             if(lWheel.validFlag && rWheel.validFlag ){
-                swrbTestTaskCnt = 0;
-                swrbTestAcquiredData[SWRB_TEST_WHEEL_L_STATE_POS] = lWheel.speed;
-                swrbTestAcquiredData[SWRB_TEST_WHEEL_R_STATE_POS] = rWheel.speed;
-                Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+                gSwrbTestTaskCnt = 0;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = lWheel.speed;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = rWheel.speed;
+                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
                 MultiEdit_Add_Text("WHEEL OK\r\n");
                 Checkbox_Set_State(ID_CHECKBOX_WHEEL, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_BLUE);
@@ -110,16 +110,16 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
             }
         }
 
-        if(20 < swrbTestTaskCnt){
-            swrbTestTaskCnt = 0;
-            swrbTestAcquiredData[SWRB_TEST_WHEEL_L_STATE_POS] = lWheel.speed;
-            swrbTestAcquiredData[SWRB_TEST_WHEEL_R_STATE_POS] = rWheel.speed;
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+        if(20 < gSwrbTestTaskCnt){
+            gSwrbTestTaskCnt = 0;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = lWheel.speed;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = rWheel.speed;
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             printf("LWHEEL->SPEED=0\r\n");
             printf("RWHEEL->SPEED=0\r\n");
-            if(swrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK)
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK)
                 MultiEdit_Add_Text("ERROR->LEFT WHEEL\r\n");
-            if(swrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK)
+            if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK)
                 MultiEdit_Add_Text("ERROR->RIGHT WHEEL\r\n");
             Checkbox_Set_State(ID_CHECKBOX_WHEEL, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_RED);

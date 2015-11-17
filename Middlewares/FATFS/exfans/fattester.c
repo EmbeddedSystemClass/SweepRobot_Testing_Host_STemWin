@@ -1,7 +1,7 @@
 #include "fattester.h"
 #include "sdio_sdcard.h"
 #include "usart.h"
-#include "exfuns.h"
+#include "exfans.h"
 #include "malloc.h"
 #include "ff.h"
 #include "string.h"

@@ -15,12 +15,12 @@ static u8 swrbChargeTestStateMap = 0;
 #define SWRB_TEST_FAULT_CHARGE_CUR_MASK     0x01
 #define SWRB_TEST_FAULT_CHARGE_VOL_MASK     0x02
 
-#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     0
+#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     100
 #define SWRB_TEST_CHARGE_CUR_LOW_BOUND      0
 
 #define SWRB_TEST_CHARGE_OC_THRESHOLD       0
 
-#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     0
+#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     100
 #define SWRB_TEST_CHARGE_VOL_LOW_BOUND      0
 
 #define SWRB_TEST_CHARGE_OV_THRESHOLD       0
@@ -58,10 +58,10 @@ void SweepRobot_Charge_Test_Task(void *pdata)
     SweepRobot_Charge_Test_Init();
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>CHARGE TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -75,7 +75,7 @@ void SweepRobot_Charge_Test_Task(void *pdata)
             charge.volValidFlag = 0;
         }
 
-        if(swrbTestStateMap > 1){
+        if(gSwrbTestStateMap > 1){
             if(!charge.curValidFlag){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("CHARGE->READ=1\r\n");
@@ -91,7 +91,7 @@ void SweepRobot_Charge_Test_Task(void *pdata)
                     }
                 }
 
-                if(SWRB_TEST_CHARGE_CUR_LOW_BOUND < charge.current && SWRB_TEST_CHARGE_CUR_HIGH_BOUND > charge.current){
+                if( SWRB_TEST_CHARGE_CUR_LOW_BOUND<charge.current && SWRB_TEST_CHARGE_CUR_HIGH_BOUND>charge.current ){
                     swrbChargeTestStateMap &= ~(1<<SWRB_TEST_CHARGE_CUR_POS);
                     charge.curValidCnt++;
                 }else{
@@ -133,7 +133,7 @@ void SweepRobot_Charge_Test_Task(void *pdata)
             }
 
             if(charge.curValidFlag && charge.volValidFlag){
-                swrbTestTaskCnt = 0;
+                gSwrbTestTaskCnt = 0;
                 printf("CHARGE->OFF\r\n");
                 SweepRobot_Charge_24V_Off();
                 Edit_Set_Value(ID_EDIT_HEX, swrbChargeTestStateMap);
@@ -155,8 +155,8 @@ void SweepRobot_Charge_Test_Task(void *pdata)
             }
         }
 
-        if(swrbTestTaskCnt > 20){
-            swrbTestTaskCnt = 0;
+        if(gSwrbTestTaskCnt > 20){
+            gSwrbTestTaskCnt = 0;
             printf("CHARGE->OFF\r\n");
             SweepRobot_Charge_24V_Off();
             if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK)

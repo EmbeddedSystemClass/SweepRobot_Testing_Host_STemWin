@@ -12,10 +12,10 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
     u8 i=0;
   
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_UNIWHEEL_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_UNIWHEEL_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>UNIWHEEL TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -27,7 +27,7 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
         }
         
         if(!uniwheel.validFlag){
-            if(swrbTestTaskCnt%2){
+            if(gSwrbTestTaskCnt%2){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("SENSOR->READ=8\r\n");
                     OSTimeDlyHMSM(0,0,0,6);
@@ -59,10 +59,10 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
                 printf("SENSOR->IFRD_LED=0\r\n");
           
                 if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_VALID_THRESHOLD){
-                    swrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
+                    gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
                     uniwheel.validCnt++;
                 }else{
-                    swrbTestStateMap |= ( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
+                    gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
                     uniwheel.validCnt = 0;
                 }
                 
@@ -73,8 +73,8 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
         }
 
         if(uniwheel.validFlag){
-            swrbTestTaskCnt = 0;
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+            gSwrbTestTaskCnt = 0;
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             printf("SENSOR->IFRD_LED=0\r\n");
             Checkbox_Set_State(ID_CHECKBOX_UNIWHEEL, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_BLUE);
@@ -92,9 +92,9 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
             OS_EXIT_CRITICAL();
         }
     
-        if(swrbTestTaskCnt > 20){
-            swrbTestTaskCnt = 0;
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+        if(gSwrbTestTaskCnt > 20){
+            gSwrbTestTaskCnt = 0;
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             MultiEdit_Set_Text_Color(GUI_RED);
             MultiEdit_Add_Text("ERROR->UNIWHEEL\r\n");
             Checkbox_Set_State(ID_CHECKBOX_UNIWHEEL, 1);

@@ -65,8 +65,8 @@
 
 // USER START (Optionally insert additional defines)
 #define ID_BUTTON_START           ID_BUTTON_1
-#define ID_BUTTON_STOP            ID_BUTTON_2
-#define ID_BUTTON_PAUSE           ID_BUTTON_3
+#define ID_BUTTON_SET             ID_BUTTON_2
+#define ID_BUTTON_STOP            ID_BUTTON_3
 #define ID_BUTTON_EXIT            ID_BUTTON_4
 #define ID_GRAPH_CURVE            ID_GRAPH_0
 
@@ -145,6 +145,7 @@ extern WM_HWIN hWinEJE_SweepRobot_test_System;
 WM_HWIN CreateEJE_SweepRobot_test_System(void);
 
 // USER START (Optionally insert additional public code)
+void Button_Set_Text(int buttonId, char *str);
 void Progbar_Set_Value(int progbarValue);
 void Edit_Set_Value(int editId, long editValue);
 void Checkbox_Set_Text(int checkboxId, char *string);

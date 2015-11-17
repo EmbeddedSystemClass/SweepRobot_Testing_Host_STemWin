@@ -24,10 +24,10 @@ void SweepRobot_Brush_Test_Task(void *pdata)
     u8 i;
   
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestRuningTaskPrio = SWRB_BRUSH_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestRuningTaskPrio = SWRB_BRUSH_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>BRUSH TEST<<<\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -42,7 +42,7 @@ void SweepRobot_Brush_Test_Task(void *pdata)
             rBrush.validFlag = 0;
         }
 
-        if(swrbTestTaskCnt > 5){
+        if(gSwrbTestTaskCnt > 5){
             if(!lBrush.validFlag){
                 for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
                     printf("LBRUSH->READ\r\n");
@@ -58,10 +58,10 @@ void SweepRobot_Brush_Test_Task(void *pdata)
                     }
                 }
                 if(SWRB_TEST_LBRUSH_CUR_LOW_BOUND<lBrush.current && SWRB_TEST_LBRUSH_CUR_HIGH_BOUND>lBrush.current){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_BRUSH_L_STATE_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_BRUSH_L_STATE_POS);
                     lBrush.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_BRUSH_L_STATE_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_BRUSH_L_STATE_POS);
                     lBrush.validCnt=0;
                 }
                 
@@ -86,10 +86,10 @@ void SweepRobot_Brush_Test_Task(void *pdata)
                     }
                 }
                 if(SWRB_TEST_RBRUSH_CUR_LOW_BOUND<rBrush.current && SWRB_TEST_RBRUSH_CUR_HIGH_BOUND>rBrush.current){  
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_BRUSH_R_STATE_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_BRUSH_R_STATE_POS);
                     rBrush.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_BRUSH_R_STATE_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_BRUSH_R_STATE_POS);
                     rBrush.validCnt=0;
                 }
                 
@@ -114,10 +114,10 @@ void SweepRobot_Brush_Test_Task(void *pdata)
                     }
                 }
                 if(SWRB_TEST_MBRUSH_CUR_LOW_BOUND<mBrush.current &&  SWRB_TEST_MBRUSH_CUR_HIGH_BOUND>mBrush.current){
-                    swrbTestStateMap &= ~(1<<SWRB_TEST_BRUSH_M_STATE_POS);
+                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_BRUSH_M_STATE_POS);
                     mBrush.validCnt++;
                 }else{
-                    swrbTestStateMap |= (1<<SWRB_TEST_BRUSH_M_STATE_POS);
+                    gSwrbTestStateMap |= (1<<SWRB_TEST_BRUSH_M_STATE_POS);
                     mBrush.validCnt=0;
                 }
                 
@@ -128,11 +128,11 @@ void SweepRobot_Brush_Test_Task(void *pdata)
             }
 
             if(lBrush.validFlag && rBrush.validFlag && mBrush.validFlag){
-                swrbTestTaskCnt = 0;
-                swrbTestAcquiredData[SWRB_TEST_BRUSH_L_STATE_POS] = lBrush.current;
-                swrbTestAcquiredData[SWRB_TEST_BRUSH_R_STATE_POS] = rBrush.current;
-                swrbTestAcquiredData[SWRB_TEST_BRUSH_M_STATE_POS] = mBrush.current;
-                Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+                gSwrbTestTaskCnt = 0;
+                gSwrbTestAcquiredData[SWRB_TEST_BRUSH_L_STATE_POS] = lBrush.current;
+                gSwrbTestAcquiredData[SWRB_TEST_BRUSH_R_STATE_POS] = rBrush.current;
+                gSwrbTestAcquiredData[SWRB_TEST_BRUSH_M_STATE_POS] = mBrush.current;
+                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
                 Checkbox_Set_State(ID_CHECKBOX_BRUSH, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH OK");
@@ -151,20 +151,20 @@ void SweepRobot_Brush_Test_Task(void *pdata)
             }
         }
 
-    if(swrbTestTaskCnt > 20){
-      swrbTestTaskCnt = 0;
-      Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+    if(gSwrbTestTaskCnt > 20){
+      gSwrbTestTaskCnt = 0;
+      Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
       printf("LBRUSH->SPEED=0\r\n");
       printf("RBRUSH->SPEED=0\r\n");
       printf("MBRUSH->SPEED=0\r\n");
       MultiEdit_Set_Text_Color(GUI_RED);
-      if(swrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
+      if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
         MultiEdit_Add_Text("ERROR->LBRUSH\r\n");
       }
-      if(swrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
+      if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
         MultiEdit_Add_Text("ERROR->RBRUSH\r\n");
       }
-      if(swrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
+      if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
         MultiEdit_Add_Text("ERROR->MBRUSH\r\n");
       }
       Checkbox_Set_State(ID_CHECKBOX_BRUSH, 1);

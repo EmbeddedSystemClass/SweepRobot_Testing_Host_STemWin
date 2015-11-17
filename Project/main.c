@@ -1,26 +1,10 @@
 #include "includes.h"
 
-#include "delay.h"
-#include "usart.h"
-
-#include "ff.h"
-#include "exfuns.h"
-#include "w25qxx.h"
-#include "fattester.h"
-
-#include "sram.h"
-#include "ILI93xx.h"
-#include "touch.h"
-#include "led.h"
-#include "key.h"
-#include "sdio_sdcard.h"
-
 #include "sweeprobot_testing.h"
-
-#include "GUIDEMO.h"
 
 int main(void)
 {
+#ifdef _DEBUG_LOG
     u32 pmf;
     u8 *str1;
     s8 putsErr = 0;
@@ -30,16 +14,18 @@ int main(void)
     u8 writeErr = 0;
     u32 rtrnvalue,rtrnvalue1, totaldsk=0,freedsk=0;
     u8 filetype1;
+#endif
     
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	delay_init(168);
 	uart_init(115200);
+    My_RTC_Init();
 	TFTLCD_Init();
 	W25QXX_Init();
 	LED_Init();
 	KEY_Init();
     SD_Init();
-    rtrnvalue1 = exfuns_init();
+    exfans_init();
     TIM3_Int_Init(9999,168-1);
 	FSMC_SRAM_Init();
 

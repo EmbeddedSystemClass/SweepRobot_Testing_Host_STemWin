@@ -1,4 +1,5 @@
-#include "exfuns.h"
+#include "stm32f4xx.h"                  // Device header
+#include "exfans.h"
 #include "fattester.h"
 #include "malloc.h"
 #include "usart.h"
@@ -24,10 +25,10 @@ DIR dir; 			//目录
 
 u8 *fatbuf; 		//SD卡数据缓存区
 ///////////////////////////////////////////////////////////////////////////////////////
-//为exfuns申请内存
+//为exfans申请内存
 //返回值:0，成功
 //	     1，失败
-u8 exfuns_init(void)
+u8 exfans_init(void)
 {
 	fs[0] = (FATFS*)mymalloc(SRAMIN,sizeof(FATFS));		//为磁盘0工作区申请工作内存
 	fs[1] = (FATFS*)mymalloc(SRAMIN,sizeof(FATFS));		//为磁盘1工作区申请工作内存

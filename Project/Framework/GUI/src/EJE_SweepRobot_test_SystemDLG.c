@@ -58,7 +58,7 @@ WM_HWIN hWinEJE_SweepRobot_test_System;
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "START", ID_BUTTON_1, 675, 15, 100, 90, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "PAUSE", ID_BUTTON_2, 675, 120, 100, 90, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "SET", ID_BUTTON_2, 675, 120, 100, 90, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "STOP", ID_BUTTON_3, 675, 225, 100, 90, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "EXIT", ID_BUTTON_4, 675, 330, 100, 90, 0, 0x0, 0 },
   { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_0, 10, 425, 440, 20, 0, 0x0, 0 },
@@ -92,7 +92,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { EDIT_CreateIndirect, "EditD5", ID_EDIT_13, 230, 30, 55, 30, 0, 0x64, 0 },
   { EDIT_CreateIndirect, "EditD6", ID_EDIT_14, 285, 30, 55, 30, 0, 0x64, 0 },
   { EDIT_CreateIndirect, "EditD7", ID_EDIT_15, 340, 30, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD8", ID_EDIT_16, 395, 30, 55, 30, 0, 0x64, 0 },   
+  { EDIT_CreateIndirect, "EditD8", ID_EDIT_16, 395, 30, 55, 30, 0, 0x64, 0 },
   { EDIT_CreateIndirect, "EditHEX", ID_EDIT_17, 460, 415, 80, 30, 0, 0x64, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
@@ -115,11 +115,11 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 //static void _onValueChangedDialog(WM_HWIN hDlg, int Id)
 //{
 //	if( Id == ID_CHECKBOX_0){
-//		
+//
 //	}else if ( Id == ID_CHECKBOX_1 ){
-//		
+//
 //	}else{
-//		
+//
 //	}
 //}
 
@@ -144,7 +144,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
-    // Initialization of 'PAUSE'
+    // Initialization of 'SET'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -290,14 +290,18 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestStartProc();
+        if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+            SweepRobot_TestStartProc();
+        }else{
+            SweepRobot_TestPauseProc();
+        }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
       }
       break;
-    case ID_BUTTON_2: // Notifications sent by 'PAUSE'
+    case ID_BUTTON_2: // Notifications sent by 'SET'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
@@ -305,7 +309,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestPauseProc();
+        if(gSwrbTestMode == SWRB_TEST_MODE_IDLE)
+            SweepRobot_TestSetProc();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -320,7 +325,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestStopProc();
+        if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
+            SweepRobot_TestStopProc();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -335,7 +341,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestExitProc();
+        if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE)
+            SweepRobot_TestExitProc();
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -580,7 +587,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		case ID_PROGBAR_0:
 			switch(NCode) {
 				case WM_NOTIFICATION_VALUE_CHANGED:
-					
+
 					break;
 			}
 			break;
@@ -614,6 +621,13 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void) {
 }
 
 // USER START (Optionally insert additional public code)
+void Button_Set_Text(int buttonId, char *str)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, buttonId);
+    BUTTON_SetText(hItem, str);
+}
+
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
@@ -691,8 +705,6 @@ GRAPH_DATA_Handle Graph_Data_YT_Create(GUI_COLOR color, u32 maxNumItems, int16_t
   return hGraphData;
 }
 
-
- 
 
 // USER END
 

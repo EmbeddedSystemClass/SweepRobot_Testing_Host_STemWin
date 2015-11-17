@@ -10,112 +10,106 @@ static u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 800, 800, 250, 250,
 void SweepRobot_IFRD_Test_Task(void *pdata)
 {
     OS_CPU_SR cpu_sr;
-    static u16 swrbTestTaskCnt = 0;
-    static u16 gIFRDTxOffRxValue[SWRB_IFRD_CHAN_NUM+1] = {0};
-    static u16 gIFRDTxOnRxValue[SWRB_IFRD_CHAN_NUM+1] = {0};
+    static u16 gSwrbTestTaskCnt = 0;
+    static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
 
     int i,j;
 
     while(1){
-        swrbTestTaskCnt++;
+        gSwrbTestTaskCnt++;
 
-        if(swrbTestTaskCnt == 1){
-            swrbTestStateMap &= ~SWRB_TEST_FAULT_IFRD_MASK;
-            swrbTestRuningTaskPrio = SWRB_IFRD_TEST_TASK_PRIO;
+        if(gSwrbTestTaskCnt == 1){
+            gSwrbTestStateMap &= ~SWRB_TEST_FAULT_IFRD_MASK;
+            gSwrbTestRuningTaskPrio = SWRB_IFRD_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
             MultiEdit_Add_Text(">>>IFRD TEST<<<\r\n");
             printf("SENSOR->IFRD_LED=0\r\n");
             printf("SENSOR->B_SWITCH=0\r\n");
             OSTimeDlyHMSM(0,0,1,0);
-            for(i=0;i<SWRB_IFRD_CHAN_NUM+1;i++){
-                gIFRDTxOnRxValue[i] = 0;
-                gIFRDTxOffRxValue[i] = 0;
+            for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+                ifrd[i].offValue = 0;
+                ifrd[i].onValue = 0;
+                ifrd[i].validCnt = 0;
+                ifrd[i].validFlag = 0;
             }
         }
 
-        if(swrbTestTaskCnt%2){
-            for(i=1;i<=6;i++){
-                for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                    printf("SENSOR->READ=%d\r\n", i);
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        gIFRDTxOffRxValue[i] = usartRxNum;
-                        Edit_Set_Value(ID_EDIT_U1+i-1, usartRxNum);
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
+        if(gSwrbTestTaskCnt%2){
+            for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+                if(!ifrd[i].validFlag){
+                    if(i==6){
+                        printf("SENSOR->B_SWITCH=1\r\n");
+                        OSTimeDlyHMSM(0,0,0,1);
                     }
-                }
-            }
-            printf("SENSOR->B_SWITCH=1\r\n");
-            OSTimeDlyHMSM(0,0,0,1);
-            for(i=7;i<=8;i++){
-                for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                    printf("SENSOR->READ=%d\r\n", i-2);
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        gIFRDTxOffRxValue[i] = usartRxNum;
-                        Edit_Set_Value(ID_EDIT_U1+i-1, usartRxNum);
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
+                    for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                        if(i<6){
+                            printf("SENSOR->READ=%d\r\n", i+1);
+                        }else{
+                            printf("SENSOR->READ=%d\r\n", i-1);
+                        }
+                        OSTimeDlyHMSM(0,0,0,6);
+                        if(usartRxFlag){
+                            ifrd[i].offValue = usartRxNum;
+                            Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
+                            usartRxNum = 0;
+                            usartRxFlag = 0;
+                            break;
+                        }else{
+                            continue;
+                        }
                     }
                 }
             }
             printf("SENSOR->B_SWITCH=0\r\n");
             printf("SENSOR->IFRD_LED=1\r\n");
         }else{
-            for(i=1;i<=6;i++){
-                for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                    printf("SENSOR->READ=%d\r\n", i);
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        gIFRDTxOnRxValue[i] = usartRxNum;
-                        Edit_Set_Value(ID_EDIT_D1+i-1, usartRxNum);
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
+            for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+                if(!ifrd[i].validFlag){
+                    if(i==6){
+                        printf("SENSOR->B_SWITCH=1\r\n");
+                        OSTimeDlyHMSM(0,0,0,1);
+                    }
+                    for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                        if(i<6){
+                            printf("SENSOR->READ=%d\r\n", i+1);
+                        }else{
+                            printf("SENSOR->READ=%d\r\n", i-1);
+                        }
+                        OSTimeDlyHMSM(0,0,0,6);
+                        if(usartRxFlag){
+                            ifrd[i].onValue = usartRxNum;
+                            Edit_Set_Value(ID_EDIT_D1+i, usartRxNum);
+                            usartRxNum = 0;
+                            usartRxFlag = 0;
+                            break;
+                        }else{
+                            continue;
+                        }
+                    }
+                    
+                    if(ifrd[i].onValue){
+                        if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_VALID_THRESHOLD[i] ){
+                            gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_F_L_POS+i));
+                            ifrd[i].validCnt++;
+                        }else{
+                            gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_F_L_POS+i);
+                            ifrd[i].validCnt = 0;
+                        }
+                        
+                        if(ifrd[i].validCnt > 5){
+                            ifrd[i].validFlag = 1;
+                        }
                     }
                 }
             }
-            printf("SENSOR->B_SWITCH=1\r\n");
-            OSTimeDlyHMSM(0,0,0,1);
-            for(i=7;i<=8;i++){
-                for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                    printf("SENSOR->READ=%d\r\n", i-2);
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        gIFRDTxOnRxValue[i] = usartRxNum;
-                        Edit_Set_Value(ID_EDIT_D1+i-1, usartRxNum);
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
-                    }
-                }
-            }
-
             printf("SENSOR->B_SWITCH=0\r\n");
             printf("SENSOR->IFRD_LED=0\r\n");
 
-            for(i=1;i<=SWRB_IFRD_CHAN_NUM;i++){
-                if( (gIFRDTxOffRxValue[i] - gIFRDTxOnRxValue[i]) > SWRB_IFRD_VALID_THRESHOLD[i-1] ){
-                    swrbTestStateMap &= ~(((u32)0)<<(SWRB_TEST_IFRD_F_L_POS+i-1));
-                }else{
-                    swrbTestStateMap |= (((u32)1)<<(SWRB_TEST_IFRD_F_L_POS+i-1));
-                }
-            }
-
-            if( !(swrbTestStateMap & SWRB_TEST_FAULT_IFRD_MASK) && (lastSwrbTestStateMap == swrbTestStateMap) ){
-                swrbTestTaskCnt = 0;
-                Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+            if( ifrd[0].validFlag && ifrd[1].validFlag && ifrd[2].validFlag && ifrd[3].validFlag && \
+                ifrd[4].validFlag && ifrd[5].validFlag && ifrd[6].validFlag && ifrd[7].validFlag
+                ){
+                gSwrbTestTaskCnt = 0;
+                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
                 printf("SENSOR->IFRD_LED=0\r\n");
                 Checkbox_Set_State(ID_CHECKBOX_IFRD, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_BLUE);
@@ -135,29 +129,28 @@ void SweepRobot_IFRD_Test_Task(void *pdata)
 //                OSTaskDel(OS_PRIO_SELF);
                 OS_EXIT_CRITICAL();
             }
-            lastSwrbTestStateMap = swrbTestStateMap;
         }
 
-        if(swrbTestTaskCnt > 50){
-            swrbTestTaskCnt = 0;
-            Edit_Set_Value(ID_EDIT_HEX, swrbTestStateMap);
+        if(gSwrbTestTaskCnt > 50){
+            gSwrbTestTaskCnt = 0;
+            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
             printf("SENSOR->IFRD_LED=0\r\n");
             printf("SENSOR->B_SWITCH=0\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_L_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_L_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_F_L\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_R_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_R_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_F_R\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_L_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_L_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_S_L\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_R_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_R_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_S_R\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_B_FL\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_B_FR\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_B_SL\r\n");
-            if( swrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK)
+            if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK)
                 MultiEdit_Add_Text("ERROR->IFRD_B_SR\r\n");
             Checkbox_Set_State(ID_CHECKBOX_IFRD, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_RED);
