@@ -4,7 +4,7 @@
 #include "ff.h"
 
 u8 mf_mount(u8* path,u8 mt);
-u8 mf_open(u8*path,u8 mode);
+u8 mf_open(char*path,u8 mode);
 u8 mf_close(void);
 u8 mf_read(u16 len);
 u8 mf_write(u8*dat,u16 len);
@@ -24,7 +24,8 @@ void mf_getlabel(u8 *path);
 void mf_setlabel(u8 *path); 
 void mf_gets(u16 size);
 u8 mf_putc(u8 c);
-u8 mf_puts(u8*c);
+u8 mf_puts(char*c);
+u8 mf_puts_with_offset(char *c);
  
 
 #endif

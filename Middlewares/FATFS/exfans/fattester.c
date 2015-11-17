@@ -19,7 +19,7 @@ u8 mf_mount(u8* path,u8 mt)
 //path:路径+文件名
 //mode:打开模式
 //返回值:执行结果
-u8 mf_open(u8*path,u8 mode)
+u8 mf_open(char*path,u8 mode)
 {
 	u8 res;
 	res=f_open(file,(const TCHAR*)path,mode);//打开文件夹
@@ -314,7 +314,16 @@ u8 mf_putc(u8 c)
 //写字符串到文件
 //c:要写入的字符串
 //返回值:写入的字符串长度
-u8 mf_puts(u8*c)
+u8 mf_puts(char*c)
 {
 	return f_puts((TCHAR*)c,file);
+}
+
+u8 mf_puts_with_offset(char *c)
+{
+    u32 offset = 0;
+    
+    offset = mf_tell();
+    mf_lseek(offset);
+    return f_puts((TCHAR*)c,file);
 }

@@ -40,6 +40,7 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
 
     u8 i;
+    char *str;
     
     SweepRobot_Ash_Tray_Test_Ctrl_Init();
 
@@ -49,7 +50,11 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_ASH_TRAY_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>ASH TRAY TEST<<<\r\n");
+            str = ">>>ASH TRAY TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             printf("SENSOR->IFRD_LED=0\r\n");
             OSTimeDlyHMSM(0,0,1,0);
             SweepRobot_Ash_Tray_Test_Ins_Ctrl_On();
@@ -138,6 +143,9 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
             gSwrbTestTaskCnt = 0;
             SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_INS_VALUE_POS] = ashTrayIns.value;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS] = ashTrayLvl.onValue;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS] = ashTrayLvl.offValue;
             printf("SENSOR->IFRD_LED=0\r\n");
             Checkbox_Set_State(ID_CHECKBOX_ASH_TRAY, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_BLUE);
@@ -160,6 +168,9 @@ void SweepRobot_Ash_Tray_Test_Task(void *pdata)
             gSwrbTestTaskCnt = 0;
             SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_INS_VALUE_POS] = ashTrayIns.value;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS] = ashTrayLvl.onValue;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS] = ashTrayLvl.offValue;
             MultiEdit_Set_Text_Color(GUI_RED);
             if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK)
                 MultiEdit_Add_Text("ERROR->ASH TRAY INS\r\n");

@@ -12,6 +12,7 @@ void SweepRobot_IFRD_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
     static u16 gSwrbTestTaskCnt = 0;
     static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
+    char *str;
 
     int i,j;
 
@@ -22,7 +23,11 @@ void SweepRobot_IFRD_Test_Task(void *pdata)
             gSwrbTestStateMap &= ~SWRB_TEST_FAULT_IFRD_MASK;
             gSwrbTestRuningTaskPrio = SWRB_IFRD_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>IFRD TEST<<<\r\n");
+            str = ">>>IFRD TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts_with_offset(str);
+            mf_close();
             printf("SENSOR->IFRD_LED=0\r\n");
             printf("SENSOR->B_SWITCH=0\r\n");
             OSTimeDlyHMSM(0,0,1,0);
@@ -110,6 +115,10 @@ void SweepRobot_IFRD_Test_Task(void *pdata)
                 ){
                 gSwrbTestTaskCnt = 0;
                 Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+                for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+                    gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
+                    gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
+                }
                 printf("SENSOR->IFRD_LED=0\r\n");
                 Checkbox_Set_State(ID_CHECKBOX_IFRD, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_BLUE);
@@ -134,6 +143,10 @@ void SweepRobot_IFRD_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt > 50){
             gSwrbTestTaskCnt = 0;
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
+            }
             printf("SENSOR->IFRD_LED=0\r\n");
             printf("SENSOR->B_SWITCH=0\r\n");
             if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_L_MASK)

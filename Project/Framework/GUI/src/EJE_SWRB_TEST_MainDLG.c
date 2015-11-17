@@ -36,7 +36,7 @@
 */
 
 // USER START (Optionally insert additional defines)
-WM_HWIN hWinEJE_SweepRobot_test_System;
+WM_HWIN hWinEJE_SWRB_TEST_MAIN;
 
 #define ID_IMAGE_0_IMAGE_0 0x00
 // USER END
@@ -57,10 +57,10 @@ WM_HWIN hWinEJE_SweepRobot_test_System;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "START", ID_BUTTON_1, 675, 15, 100, 90, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "SET", ID_BUTTON_2, 675, 120, 100, 90, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_3, 675, 225, 100, 90, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "EXIT", ID_BUTTON_4, 675, 330, 100, 90, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "START", ID_BUTTON_1, 690, 0, 100, 115, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "SET", ID_BUTTON_2, 690, 115, 100, 115, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_3, 690, 230, 100, 115, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "EXIT", ID_BUTTON_4, 690, 345, 100, 115, 0, 0x0, 0 },
   { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_0, 10, 425, 440, 20, 0, 0x0, 0 },
   { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_0, 10, 60, 440, 250, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect,  "cbxWheel",       ID_CHECKBOX_0, 460, 60, 210, 20, 0, 0x0, 0 },
@@ -292,8 +292,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
         if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
             SweepRobot_TestStartProc();
-        }else{
+        }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
             SweepRobot_TestPauseProc();
+        }else{
+            
         }
         // USER END
         break;
@@ -314,6 +316,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
+      
       // USER END
       }
       break;
@@ -325,8 +328,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-        if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
+        if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
             SweepRobot_TestStopProc();
+        }
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -612,7 +616,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 *       CreateEJE_SweepRobot_test_System
 */
-WM_HWIN CreateEJE_SweepRobot_test_System(void);
 WM_HWIN CreateEJE_SweepRobot_test_System(void) {
   WM_HWIN hWin;
 
@@ -624,77 +627,77 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void) {
 void Button_Set_Text(int buttonId, char *str)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, buttonId);
+    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, buttonId);
     BUTTON_SetText(hItem, str);
 }
 
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_PROGBAR_0);
+	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_PROGBAR_0);
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
 void Edit_Set_Value(int editId, long editValue)
 {
   WM_HWIN hItem;
-  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, editId);
+  hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, editId);
   EDIT_SetValue(hItem, editValue);
 }
 
 void Checkbox_Set_Text(int checkboxId, char *string)
 {
   WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
   CHECKBOX_SetText(hItem, string);
 }
 
 void Checkbox_Set_State(int checkboxId , unsigned int checkboxState)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
   CHECKBOX_SetState(hItem, checkboxState);
 }
 
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxtextcolor)
 {
   WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
   CHECKBOX_SetTextColor(hItem, checkboxtextcolor);
 }
 
 void Checkbox_Set_TextAlign(int checkboxId, int align)
 {
   WM_HWIN hItem;
-  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+  hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
   CHECKBOX_SetTextAlign(hItem, align);
 }
 
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor)
 {
   WM_HWIN hItem;
-  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, checkboxId);
+  hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
   CHECKBOX_SetBkColor(hItem, checkboxbkcolor);
 }
 
 void MultiEdit_Set_Text(char *s)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_0);
 	MULTIEDIT_SetText(hItem, s);
 }
 
 void MultiEdit_Add_Text(char *s)
 {
   WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_0);
 	MULTIEDIT_AddText(hItem, s);
 }
 
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor)
 {
   WM_HWIN hItem;
-  hItem = WM_GetDialogItem(hWinEJE_SweepRobot_test_System, ID_MULTIEDIT_0);
+  hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_0);
   MULTIEDIT_SetTextColor(hItem, MULTIEDIT_CI_EDIT, multieditTextColor);
 }
 

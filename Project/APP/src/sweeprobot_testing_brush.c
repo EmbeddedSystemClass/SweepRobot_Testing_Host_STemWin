@@ -20,6 +20,7 @@ void SweepRobot_Brush_Test_Task(void *pdata)
     static BRUSH_TestTypeDef lBrush;
     static BRUSH_TestTypeDef rBrush;
     static BRUSH_TestTypeDef mBrush;
+    char *str;
 
     u8 i;
   
@@ -29,7 +30,12 @@ void SweepRobot_Brush_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_BRUSH_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>BRUSH TEST<<<\r\n");
+            str = ">>>BRUSH TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts_with_offset(str);
+            mf_gets(512);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             printf("LBRUSH->SPEED=30\r\n");
             printf("RBRUSH->SPEED=30\r\n");
@@ -129,9 +135,9 @@ void SweepRobot_Brush_Test_Task(void *pdata)
 
             if(lBrush.validFlag && rBrush.validFlag && mBrush.validFlag){
                 gSwrbTestTaskCnt = 0;
-                gSwrbTestAcquiredData[SWRB_TEST_BRUSH_L_STATE_POS] = lBrush.current;
-                gSwrbTestAcquiredData[SWRB_TEST_BRUSH_R_STATE_POS] = rBrush.current;
-                gSwrbTestAcquiredData[SWRB_TEST_BRUSH_M_STATE_POS] = mBrush.current;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = lBrush.current;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = rBrush.current;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = mBrush.current;
                 Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
                 Checkbox_Set_State(ID_CHECKBOX_BRUSH, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_BLUE);
@@ -154,6 +160,9 @@ void SweepRobot_Brush_Test_Task(void *pdata)
     if(gSwrbTestTaskCnt > 20){
       gSwrbTestTaskCnt = 0;
       Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+      gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = lBrush.current;
+      gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = rBrush.current;
+      gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = mBrush.current;
       printf("LBRUSH->SPEED=0\r\n");
       printf("RBRUSH->SPEED=0\r\n");
       printf("MBRUSH->SPEED=0\r\n");

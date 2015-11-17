@@ -62,6 +62,7 @@
 #define ID_PROGBAR_0		(GUI_ID_USER + 0x26)
 #define ID_MULTIEDIT_0		(GUI_ID_USER + 0x27)
 #define ID_GRAPH_0		(GUI_ID_USER + 0x28)
+#define ID_MAIN_BOUND   (GUI_ID_USER + 0x29)
 
 // USER START (Optionally insert additional defines)
 #define ID_BUTTON_START           ID_BUTTON_1
@@ -110,7 +111,7 @@ enum GUI_ID_EDIT{
 
 // USER END
 
-extern WM_HWIN hWinEJE_SweepRobot_test_System;
+extern WM_HWIN hWinEJE_SWRB_TEST_MAIN;
 
 /*********************************************************************
 *

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  200
+#define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  50
 
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
@@ -116,9 +116,9 @@ void emWin_Maintask(void *pdata)
     WM_SetCreateFlags(WM_CF_MEMDEV);
     //  MainTask();
 
-    hWinEJE_SweepRobot_test_System = CreateEJE_SweepRobot_test_System();
+    hWinEJE_SWRB_TEST_MAIN = CreateEJE_SweepRobot_test_System();
 
-    WM_EnableMemdev(hWinEJE_SweepRobot_test_System);
+    WM_EnableMemdev(hWinEJE_SWRB_TEST_MAIN);
     WM_MULTIBUF_Enable(1);
 
     MultiEdit_Set_Text("PUSH KEY0 TO START\r\n");
@@ -185,9 +185,13 @@ void Usart_Task(void *pdata)
 
 void Save_Data_Task(void *pdata)
 {
+    u8 i;
     
     while(1){
-        
+        for(i=0;i<sizeof(gSwrbTestAcquiredData);i++){
+            printf("%d\r\n",gSwrbTestAcquiredData[i]);
+        }
+        OSTaskSuspend(OS_PRIO_SELF);
         OSTimeDlyHMSM(0,0,0,50);
     }
 }
@@ -199,23 +203,27 @@ void SWRB_Test_Ctrl_Task(void *pdata)
     while(1){
     if(gkeyCodeGetFinishFlag == 1){
         switch(gkeyCode){
-            /* TEST START/RESUME PRESSED*/
+            /* TEST START/PAUSE/RESUME PRESSED*/
             case 1:
                 if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
                     SweepRobot_TestStartProc();
-                }else{
+                }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
                     SweepRobot_TestPauseProc();
+                }else{
+                    
                 }
                 break;
-            /* TEST PAUSE PRESSED */
+            /* TEST SET PRESSED */
             case 2:
                 if(gSwrbTestMode == SWRB_TEST_MODE_IDLE)
                     SweepRobot_TestSetProc();
                 break;
             /* TEST STOP PRESSED */
             case 3:
-                if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
+                if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
                     SweepRobot_TestStopProc();
+                    OSTaskResume(SAVE_DATA_TASK_PRIO);
+                }
                 break;
             /* TEST EXIT PRESSED */
             case 4:
@@ -254,7 +262,7 @@ void SweepRobot_TestPauseProc(void)
     
     gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-    Button_Set_Text(ID_BUTTON_START, "START");
+    Button_Set_Text(ID_BUTTON_START, "RESUME");
     OS_ENTER_CRITICAL();
     OSTaskSuspend(gSwrbTestRuningTaskPrio);
     OS_EXIT_CRITICAL();
@@ -265,8 +273,11 @@ void SweepRobot_TestPauseProc(void)
     printf("MBRUSH->SPEED=0\r\n");
     printf("FAN->SPEED=0\r\n");
     printf("SENSOR->IFRD_LED=0\r\n");
+    printf("SENSOR->B_SWITCH=0\r\n");
+    printf("CHARGE->OFF\r\n");
+    printf("IRDA->OFF\r\n");
     MultiEdit_Add_Text("TEST PAUSED\r\n");
-    MultiEdit_Add_Text("PRESS KEY0 TO RESUME TEST\r\n");
+    MultiEdit_Add_Text("PRESS RESUME TO RESUME TEST\r\n");
 
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;  
@@ -274,7 +285,9 @@ void SweepRobot_TestPauseProc(void)
 
 void SweepRobot_TestSetProc(void)
 {
+    gSwrbTestMode = SWRB_TEST_MODE_SET;
     
+    hWinEJE_SWRB_TEST_SETTING = CreateSettingDLG();
 }
 
 void SweepRobot_TestStopProc(void)
@@ -304,7 +317,7 @@ void SweepRobot_TestExitProc(void)
     SweepRobot_TestInitProc();
     printf("TEST->OFF\r\n");
     MultiEdit_Set_Text("ROBOT EXIT TEST MODE\r\n");
-    MultiEdit_Add_Text("PRESS KEY0 TO ENTER TEST MODE AND START TEST\r\n");
+    MultiEdit_Add_Text("PRESS START TO ENTER TEST MODE AND START TEST\r\n");
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;
 }
@@ -342,11 +355,14 @@ void SweepRobot_TestInitProc(void)
     Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED");
     Progbar_Set_Value(0);
     MultiEdit_Set_Text("TEST STOPED\r\n");
-    MultiEdit_Add_Text("PRESS KEY0 TO RESTART TEST\r\n");
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE)
+        MultiEdit_Add_Text("PRESS START TO START TEST\r\n");
+    if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
+        MultiEdit_Add_Text("PRESS RESUME TO RESUME TEST\r\n");
 
     gSwrbTestTaskCnt = 0;
     gSwrbTestStateMap = 0;
-    gSwrbTestRuningTaskPrio = SWRB_TEST_START_TASK_BOUND+4;
+    gSwrbTestRuningTaskPrio = SWRB_TEST_START_TASK_BOUND+1;
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;
 }

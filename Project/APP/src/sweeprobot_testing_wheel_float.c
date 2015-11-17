@@ -40,6 +40,7 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
     static WHEEL_FLOAT_TestTypeDef lWheelFloat;
     static WHEEL_FLOAT_TestTypeDef rWheelFloat;
     u8 i;
+    char *str;
 
     SweepRobot_Wheel_Float_Test_Init();
 
@@ -49,7 +50,11 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_WHEEL_FLOAT_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>WHEEL FLOAT TEST<<<\r\n");
+            str = ">>>WHEEL FLOAT TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             SweepRobot_Wheel_Float_Ctrl_On();
             lWheelFloat.value = 0;
@@ -117,6 +122,8 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
                 gSwrbTestTaskCnt = 0;
                 SweepRobot_Wheel_Float_Ctrl_Off();
                 Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = lWheelFloat.value;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = rWheelFloat.value;
                 Checkbox_Set_State(ID_CHECKBOX_WHEEL_FLOAT, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
@@ -139,6 +146,8 @@ void SweepRobot_Wheel_Float_Test_Task(void *pdata)
             gSwrbTestTaskCnt = 0;
             SweepRobot_Wheel_Float_Ctrl_Off();
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = lWheelFloat.value;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = rWheelFloat.value;
             MultiEdit_Set_Text_Color(GUI_RED);
             if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
                 MultiEdit_Add_Text("ERROR->WHEEL FLOAT L\r\n");

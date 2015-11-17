@@ -9,8 +9,8 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
     static WHEEL_TestTypeDef lWheel;
     static WHEEL_TestTypeDef rWheel;
-
     u8 i;
+    char *str;
 
     while(1){
         gSwrbTestTaskCnt++;
@@ -18,7 +18,12 @@ void SweepRobot_Wheel_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_WHEEL_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>WHEEL TEST<<<\r\n");
+            str = ">>>WHEEL TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts_with_offset(str);
+            mf_gets(512);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             printf("LWHEEL->SPEED=30\r\n");
             printf("RWHEEL->SPEED=30\r\n");

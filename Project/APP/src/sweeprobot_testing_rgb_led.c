@@ -7,15 +7,21 @@ void SweepRobot_RGB_LED_Test_Task(void *pdata)
 {
   static u16 gSwrbTestTaskCnt = 0;
   OS_CPU_SR cpu_sr;
-  
-  gSwrbTestRuningTaskPrio = SWRB_RGB_LED_TEST_TASK_PRIO;
-  
-  MultiEdit_Set_Text_Color(GUI_BLACK);
-  MultiEdit_Add_Text(">>>RGB LED TEST<<<\r\n");
-  OSTimeDlyHMSM(0,0,2,0);
+  char *str;
   
   while(1){
     gSwrbTestTaskCnt++;
+      
+    if(gSwrbTestTaskCnt ==1){
+        gSwrbTestRuningTaskPrio = SWRB_RGB_LED_TEST_TASK_PRIO;
+        MultiEdit_Set_Text_Color(GUI_BLACK);
+        str = ">>>RGB LED TEST<<<\r\n";
+        MultiEdit_Add_Text(str);
+        mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+        mf_puts(str);
+        mf_close();
+        OSTimeDlyHMSM(0,0,2,0);
+    }
     
     if(gSwrbTestTaskCnt == 20){
       printf("RGB_LED->ON=1\r\n");

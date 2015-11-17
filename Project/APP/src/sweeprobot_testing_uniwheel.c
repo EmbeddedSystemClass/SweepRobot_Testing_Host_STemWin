@@ -10,6 +10,7 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
     static UNIWHEEL_TestTypeDef uniwheel;
     OS_CPU_SR cpu_sr;
     u8 i=0;
+    char *str;
   
     while(1){
         gSwrbTestTaskCnt++;
@@ -17,7 +18,11 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_UNIWHEEL_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>UNIWHEEL TEST<<<\r\n");
+            str = ">>>UNIWHEEL TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             printf("SENSOR->IFRD_LED=0\r\n");
             uniwheel.onValue = 0;
@@ -75,6 +80,8 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
         if(uniwheel.validFlag){
             gSwrbTestTaskCnt = 0;
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS] = uniwheel.onValue;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
             printf("SENSOR->IFRD_LED=0\r\n");
             Checkbox_Set_State(ID_CHECKBOX_UNIWHEEL, 1);
             Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_BLUE);
@@ -95,6 +102,8 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt > 20){
             gSwrbTestTaskCnt = 0;
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS] = uniwheel.onValue;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
             MultiEdit_Set_Text_Color(GUI_RED);
             MultiEdit_Add_Text("ERROR->UNIWHEEL\r\n");
             Checkbox_Set_State(ID_CHECKBOX_UNIWHEEL, 1);

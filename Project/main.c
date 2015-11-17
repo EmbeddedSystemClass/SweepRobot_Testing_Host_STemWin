@@ -55,6 +55,7 @@ int main(void)
     rtrnvalue1 = mf_open("0:/testroot.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
     
     printf("open_err_code:%d\r\n",rtrnvalue1);
+    
     mf_read(512);
     putErr = mf_putc('5');
     printf("putErr:%d\r\n",putErr);

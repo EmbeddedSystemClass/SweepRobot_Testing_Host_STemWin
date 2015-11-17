@@ -10,6 +10,8 @@
 #define COLLISION_TEST_CTRL_S_L_PIN     GPIO_Pin_10
 #define COLLISION_TEST_CTRL_S_R_PIN     GPIO_Pin_11
 
+#define COLLISION_CHAN_NUM  4
+
 void SweepRobot_Collision_Test_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
@@ -46,11 +48,9 @@ void SweepRobot_Collision_Chan_Off(void)
 void SweepRobot_Collision_Test_Task(void *pdata)
 {
     OS_CPU_SR cpu_sr;
-    static COLLISION_TestTypeDef lCollision;
-    static COLLISION_TestTypeDef flCollision;
-    static COLLISION_TestTypeDef rCollision;
-    static COLLISION_TestTypeDef frCollision;
+    static COLLISION_TestTypeDef collision[COLLISION_CHAN_NUM];
     u8 i;
+    char *str;
 
     SweepRobot_Collision_Test_Init();
 
@@ -60,140 +60,58 @@ void SweepRobot_Collision_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>COLLISION TEST<<<\r\n");
+            str = ">>>COLLISION TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             SweepRobot_Collision_Chan_On();
-            lCollision.value = 0;
-            lCollision.validCnt = 0;
-            lCollision.validFlag = 0;
-            flCollision.value = 0;
-            flCollision.validCnt = 0;
-            flCollision.validFlag = 0;
-            rCollision.value = 0;
-            rCollision.validCnt = 0;
-            rCollision.validFlag = 0;
-            frCollision.value = 0;
-            frCollision.validCnt = 0;
-            frCollision.validFlag = 0;
+            for(i=0;i<COLLISION_CHAN_NUM;i++){
+                collision[i].value = 0;
+                collision[i].validCnt = 0;
+                collision[i].validFlag = 0;
+            }
         }
 
-        if(gSwrbTestStateMap > 1){
-            if(!lCollision.validFlag){
-                for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                    printf("COLLISION->READ=0\r\n");
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        Edit_Set_Value(ID_EDIT_U1, usartRxNum);
-                        lCollision.value = usartRxNum;
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
+        if(gSwrbTestTaskCnt > 1){
+            for(i=0;i<COLLISION_CHAN_NUM;i++){
+                if(!collision[i].validFlag){
+                    for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
+                        printf("COLLISION->READ=%d\r\n",i);
+                        OSTimeDlyHMSM(0,0,0,6);
+                        if(usartRxFlag){
+                            Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
+                            collision[i].value = usartRxNum;
+                            usartRxNum = 0;
+                            usartRxFlag = 0;
+                            break;
+                        }else{
+                            continue;
+                        }
                     }
-                }
 
-                if(!lCollision.value){
-                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_COLLISION_L_POS);
-                    lCollision.validCnt++;
-                }else{
-                    gSwrbTestStateMap |= (1<<SWRB_TEST_COLLISION_L_POS);
-                    lCollision.validCnt = 0;
-                }
-
-                if(lCollision.validCnt > 5){
-                    lCollision.validFlag = 1;
-                }
-            }
-
-            if(!flCollision.validFlag){
-                for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                    printf("COLLISION->READ=1\r\n");
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        Edit_Set_Value(ID_EDIT_U2, usartRxNum);
-                        flCollision.value = usartRxNum;
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
+                    if(!collision[i].value){
+                        gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+i));
+                        collision[i].validCnt++;
                     }else{
-                        continue;
+                        gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
+                        collision[i].validCnt = 0;
                     }
-                }
 
-                if(!flCollision.value){
-                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_COLLISION_F_L_POS);
-                    flCollision.validCnt++;
-                }else{
-                    gSwrbTestStateMap |= (1<<SWRB_TEST_COLLISION_F_L_POS);
-                    flCollision.validCnt = 0;
-                }
-
-                if(flCollision.validCnt > 5){
-                    flCollision.validFlag = 1;
-                }
-            }
-
-            if(!rCollision.validFlag){
-                for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                    printf("COLLISION->READ=2\r\n");
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        Edit_Set_Value(ID_EDIT_U1, usartRxNum);
-                        rCollision.value = usartRxNum;
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
+                    if(collision[i].validCnt > 5){
+                        collision[i].validFlag = 1;
                     }
-                }
-
-                if(!rCollision.value){
-                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_COLLISION_R_POS);
-                    rCollision.validCnt++;
-                }else{
-                    gSwrbTestStateMap |= (1<<SWRB_TEST_COLLISION_R_POS);
-                    rCollision.validCnt = 0;
-                }
-
-                if(rCollision.validCnt > 5){
-                    rCollision.validFlag = 1;
-                }
-            }
-
-            if(!frCollision.validFlag){
-                for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                    printf("COLLISION->READ=3\r\n");
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        Edit_Set_Value(ID_EDIT_U1, usartRxNum);
-                        frCollision.value = usartRxNum;
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
-                    }
-                }
-
-                if(!frCollision.value){
-                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_COLLISION_F_R_POS);
-                    frCollision.validCnt++;
-                }else{
-                    gSwrbTestStateMap |= (1<<SWRB_TEST_COLLISION_F_R_POS);
-                    frCollision.validCnt = 0;
-                }
-
-                if(frCollision.validCnt > 5){
-                    frCollision.validFlag = 1;
                 }
             }
             
-            if(lCollision.validFlag && flCollision.validFlag && rCollision.validFlag && frCollision.validFlag){
+            if(collision[0].validFlag && collision[1].validFlag && collision[2].validFlag && collision[3].validFlag){
                 gSwrbTestTaskCnt = 0;
                 SweepRobot_Collision_Chan_Off();
                 Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+                for(i=0;i<COLLISION_CHAN_NUM;i++){
+                    gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS+i] = collision[i].value;
+                }
                 Checkbox_Set_State(ID_CHECKBOX_COLLISION, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION OK");
@@ -216,6 +134,9 @@ void SweepRobot_Collision_Test_Task(void *pdata)
             gSwrbTestTaskCnt = 0;
             SweepRobot_Collision_Chan_Off();
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            for(i=0;i<COLLISION_CHAN_NUM;i++){
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS+i] = collision[i].value;
+            }
             MultiEdit_Set_Text_Color(GUI_RED);
             if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK)
                 MultiEdit_Add_Text("ERROR->COLLISION_L\r\n");

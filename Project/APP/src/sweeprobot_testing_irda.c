@@ -79,6 +79,7 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
 
     u8 i,j;
+    char *str;
 
     SweepRobot_IrDA_Test_Tx_Init();
 
@@ -88,7 +89,11 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_IRDA_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>IRDA TEST<<<\r\n");
+            str = ">>>IRDA TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
                 IrDA[j].code = 0;
@@ -120,7 +125,7 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
                             continue;
                         }
                     }
-                    
+
                     if(IrDA[j].code == 42){
                         IrDA[j].validCnt++;
                     }else{
@@ -129,7 +134,7 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
                     if(IrDA[j].validCnt){
                         IrDA[j].validFlag = 1;
                     }
-                    
+
                     if(IrDA[j].validFlag){
                         gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+j));
                     }else{
@@ -137,9 +142,12 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
                     }
                 }
             }
-            
+
             if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
                 gSwrbTestTaskCnt = 0;
+                for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+                    gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_CODE_POS+i] = IrDA[i].code;
+                }
                 Checkbox_Set_State(ID_CHECKBOX_IRDA, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA OK");
@@ -160,6 +168,9 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt > 20){
             gSwrbTestTaskCnt = 0;
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_CODE_POS+i] = IrDA[i].code;
+            }
             MultiEdit_Set_Text_Color(GUI_RED);
             if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
                 MultiEdit_Add_Text("ERROR->IRDA_B\r\n");

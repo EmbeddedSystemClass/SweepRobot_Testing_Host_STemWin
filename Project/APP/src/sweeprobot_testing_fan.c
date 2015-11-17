@@ -12,6 +12,7 @@ void SweepRobot_Fan_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
     static FAN_TestTypeDef fan;
     u8 i;
+    char *str;
 
     while(1){
         gSwrbTestTaskCnt++;
@@ -19,7 +20,11 @@ void SweepRobot_Fan_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>FAN TEST<<<\r\n");
+            str = ">>>FAN TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts_with_offset(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             printf("FAN->SPEED=30\r\n");
             fan.current = 0;
@@ -58,6 +63,7 @@ void SweepRobot_Fan_Test_Task(void *pdata)
             if(fan.validFlag){
                 gSwrbTestTaskCnt = 0;
                 Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
                 Checkbox_Set_State(ID_CHECKBOX_FAN, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
@@ -79,6 +85,7 @@ void SweepRobot_Fan_Test_Task(void *pdata)
     if(gSwrbTestTaskCnt > 20){
       gSwrbTestTaskCnt = 0;
       Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+      gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
       printf("FAN->SPEED=0\r\n");
       MultiEdit_Set_Text_Color(GUI_RED);
       MultiEdit_Add_Text("ERROR->FAN\r\n");

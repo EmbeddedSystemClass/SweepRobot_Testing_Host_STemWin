@@ -7,15 +7,21 @@ void SweepRobot_Buzzer_Test_Task(void *pdata)
 {
   static u16 gSwrbTestTaskCnt = 0;
   OS_CPU_SR cpu_sr;
-  
-  gSwrbTestRuningTaskPrio = SWRB_BUZZER_TEST_TASK_PRIO;
-  
-  MultiEdit_Set_Text_Color(GUI_BLACK);
-  MultiEdit_Add_Text(">>>BUZZER TEST<<<\r\n");
-  OSTimeDlyHMSM(0,0,2,0);
+  char *str;
   
   while(1){
     gSwrbTestTaskCnt++;
+      
+    if(gSwrbTestTaskCnt == 1){
+        gSwrbTestRuningTaskPrio = SWRB_BUZZER_TEST_TASK_PRIO;
+        MultiEdit_Set_Text_Color(GUI_BLACK);
+        str = ">>>BUZZER TEST<<<\r\n";
+        MultiEdit_Add_Text(str);
+        mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+        mf_puts(str);
+        mf_close();
+        OSTimeDlyHMSM(0,0,2,0);
+    }
     
     if(gSwrbTestTaskCnt == 20){
       printf("BUZZER->ON=1\r\n");
@@ -28,6 +34,7 @@ void SweepRobot_Buzzer_Test_Task(void *pdata)
     if(gSwrbTestTaskCnt > 140){
       gSwrbTestTaskCnt = 0;
       Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+      
       MultiEdit_Set_Text_Color(GUI_RED);
       MultiEdit_Add_Text("ERROR->BUZZER\r\n");
       Checkbox_Set_State(ID_CHECKBOX_BUZZER, 1);

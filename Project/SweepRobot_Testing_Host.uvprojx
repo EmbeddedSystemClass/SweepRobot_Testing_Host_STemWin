@@ -522,9 +522,14 @@
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
-              <FileName>EJE_SweepRobot_test_SystemDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SweepRobot_test_SystemDLG.c</FilePath>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SettingDLG.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1556,9 +1561,14 @@
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
-              <FileName>EJE_SweepRobot_test_SystemDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SweepRobot_test_SystemDLG.c</FilePath>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SettingDLG.c</FilePath>
             </File>
           </Files>
         </Group>

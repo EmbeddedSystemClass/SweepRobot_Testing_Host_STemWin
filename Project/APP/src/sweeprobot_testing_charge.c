@@ -54,6 +54,7 @@ void SweepRobot_Charge_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
     static CHARGE_TestTypeDef charge;
     u8 i;
+    char *str;
 
     SweepRobot_Charge_Test_Init();
 
@@ -63,7 +64,11 @@ void SweepRobot_Charge_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>CHARGE TEST<<<\r\n");
+            str = ">>>CHARGE TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             SweepRobot_Charge_24V_On();
             printf("CHARGE->ON\r\n");
@@ -137,6 +142,8 @@ void SweepRobot_Charge_Test_Task(void *pdata)
                 printf("CHARGE->OFF\r\n");
                 SweepRobot_Charge_24V_Off();
                 Edit_Set_Value(ID_EDIT_HEX, swrbChargeTestStateMap);
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS] = charge.current;
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
                 Checkbox_Set_State(ID_CHECKBOX_CHARGE, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE OK");
@@ -159,6 +166,8 @@ void SweepRobot_Charge_Test_Task(void *pdata)
             gSwrbTestTaskCnt = 0;
             printf("CHARGE->OFF\r\n");
             SweepRobot_Charge_24V_Off();
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS] = charge.current;
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
             if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK)
                 MultiEdit_Add_Text("ERROR->CHARGE CUR\r\n");
             if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK)

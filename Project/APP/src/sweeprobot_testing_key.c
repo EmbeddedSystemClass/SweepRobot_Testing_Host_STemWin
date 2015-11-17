@@ -37,14 +37,19 @@ void SweepRobot_Key_Test_Task(void *pdata)
     OS_CPU_SR cpu_sr;
     
     u8 i;
-  
+    char *str;
+    
     while(1){
         gSwrbTestTaskCnt++;
     
         if(gSwrbTestTaskCnt == 1){
             gSwrbTestRuningTaskPrio = SWRB_KEY_TEST_TASK_PRIO;
             MultiEdit_Set_Text_Color(GUI_BLACK);
-            MultiEdit_Add_Text(">>>KEY TEST<<<\r\n");
+            str = ">>>KEY TEST<<<\r\n";
+            MultiEdit_Add_Text(str);
+            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+            mf_puts(str);
+            mf_close();
             OSTimeDlyHMSM(0,0,1,0);
             SweepRobot_Key_Test_Ctrl_On();
         }
@@ -77,6 +82,7 @@ void SweepRobot_Key_Test_Task(void *pdata)
             if(key.validFlag){
                 gSwrbTestTaskCnt = 0;
                 Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+                gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
                 Checkbox_Set_State(ID_CHECKBOX_KEY, 1);
                 Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_BLUE);
                 Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY OK");
@@ -97,6 +103,7 @@ void SweepRobot_Key_Test_Task(void *pdata)
         if(gSwrbTestTaskCnt > 20){
             gSwrbTestTaskCnt = 0;
             Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+            gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
             MultiEdit_Set_Text_Color(GUI_RED);
             MultiEdit_Add_Text("ERROR->KEY\r\n");
             Checkbox_Set_State(ID_CHECKBOX_KEY, 1);
