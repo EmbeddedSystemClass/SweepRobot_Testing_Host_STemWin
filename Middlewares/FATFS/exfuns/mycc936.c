@@ -11,35 +11,35 @@ WCHAR ff_convert (	/* Converted code, 0 means conversion error */
 	WCHAR t[2];
 	WCHAR c;
 	u32 i, li, hi;
-	u16 n;			 
-	u32 gbk2uni_offset=0;		  
-						  
+	u16 n;
+	u32 gbk2uni_offset=0;
+
 	if (src < 0x80)c = src;//ASCII,直接不用转换.
-	else 
+	else
 	{
  		if(dir)	//GBK 2 UNICODE
 		{
-			gbk2uni_offset=ftinfo.ugbksize/2;	 
-		}else	//UNICODE 2 GBK  
-		{   
-			gbk2uni_offset=0;	
-		}    
+			gbk2uni_offset=ftinfo.ugbksize/2;
+		}else	//UNICODE 2 GBK
+		{
+			gbk2uni_offset=0;
+		}
 		/* Unicode to OEMCP */
 		hi=ftinfo.ugbksize/2;//对半开.
 		hi =hi / 4 - 1;
 		li = 0;
 		for (n = 16; n; n--)
 		{
-			i = li + (hi - li) / 2;	
-			W25QXX_Read((u8*)&t,ftinfo.ugbkaddr+i*4+gbk2uni_offset,4);//读出4个字节  
+			i = li + (hi - li) / 2;
+			W25QXX_Read((u8*)&t,ftinfo.ugbkaddr+i*4+gbk2uni_offset,4);//读出4个字节
 			if (src == t[0]) break;
-			if (src > t[0])li = i;  
-			else hi = i;    
+			if (src > t[0])li = i;
+			else hi = i;
 		}
-		c = n ? t[1] : 0;  	    
+		c = n ? t[1] : 0;
 	}
 	return c;
-}		   
+}
 
 WCHAR ff_wtoupper (	/* Upper converted character */
 	WCHAR chr		/* Input character */

@@ -11,11 +11,8 @@ int usartRxNum = 0;
 
 u32 swrbTestStateMap = 0;
 u32 lastSwrbTestStateMap = 0;
-
 u16 swrbTestTaskCnt = 0;
-
 u8 swrbTestRuningTaskPrio = 0;
-
 u16 swrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
 
 static u8 gkeyCode = 0;
@@ -27,6 +24,7 @@ static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
 static void Key_Task(void *pdata);
 static void Usart_Task(void *pdata);
+static void Save_Data_Task(void *pdata);
 static void SWRB_Test_Ctrl_Task(void *pdata);
 //static void SweepRobot_Test_Start(void *pdata);
 //static void TIM3_ISR(void);
@@ -37,6 +35,7 @@ OS_STK KEY_TASK_STK[KEY_STK_SIZE];
 OS_STK USART_TASK_STK[USART_STK_SIZE];
 OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
 OS_STK LED_TASK_STK[LED_STK_SIZE];
+OS_STK SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE];
 OS_STK SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE];
 OS_STK SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE];
 OS_STK SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE];
@@ -83,6 +82,7 @@ void Start_Task(void *pdata)
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
     OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
+    OSTaskCreate(Save_Data_Task,(void*)0,(OS_STK*)&SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE-1],SAVE_DATA_TASK_PRIO);
     OSTaskCreate(SWRB_Test_Ctrl_Task,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
     OSTaskCreate(SweepRobot_Wheel_Test_Task,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_Brush_Test_Task,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
@@ -100,6 +100,7 @@ void Start_Task(void *pdata)
     for(i=SWRB_WHEEL_TEST_TASK_PRIO;i<SWRB_TEST_TASK_PRIO_BOUND;i++){
         OSTaskSuspend(i);
     }
+    OSTaskSuspend(SAVE_DATA_TASK_PRIO);
 
     OS_EXIT_CRITICAL();
     OSTaskDel(OS_PRIO_SELF);
@@ -171,8 +172,19 @@ void Usart_Task(void *pdata)
     //      MultiEdit_Add_Text(usartRxStr);
     //      printf("%d\r\n",usartRxNum);
             USART_RX_STA = 0;
+            /* Resume usart data query task immediately */
+            OSTimeDlyResume(swrbTestRuningTaskPrio);
         }
         OSTimeDlyHMSM(0,0,0,5);
+    }
+}
+
+void Save_Data_Task(void *pdata)
+{
+    
+    while(1){
+        
+        OSTimeDlyHMSM(0,0,0,50);
     }
 }
 

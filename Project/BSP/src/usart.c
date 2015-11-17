@@ -21,9 +21,10 @@ struct __FILE
 
 FILE __stdout;       
 
-_sys_exit(int x) 
+int _sys_exit(int x) 
 { 
 	x = x;
+    return -1;
 } 
 
 int fputc(int ch, FILE *f)

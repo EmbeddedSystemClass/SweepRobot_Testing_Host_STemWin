@@ -33,7 +33,7 @@
 /   3: f_lseek() function is removed in addition to 2. */
 
 
-#define	_USE_STRFUNC	1	/* 0:Disable or 1-2:Enable */
+#define	_USE_STRFUNC	2	/* 0:Disable or 1-2:Enable */
 /* To enable string functions, set _USE_STRFUNC to 1 or 2. */
 
 
@@ -89,7 +89,7 @@
 /   1    - ASCII (Valid for only non-LFN configuration) */
 
 
-#define	_USE_LFN	3		/* 0 to 3 设置为1,支持长文件名，并采用动态内存*/
+#define	_USE_LFN	1		/* 0 to 3 设置为1,支持长文件名，并采用动态内存*/
 #define	_MAX_LFN	255		/* Maximum LFN length to handle (12 to 255) */
 /* The _USE_LFN option switches the LFN feature.
 /

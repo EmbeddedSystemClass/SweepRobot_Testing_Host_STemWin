@@ -53,7 +53,6 @@ SD_Error SD_Init(void)
 	SD_Error errorstatus=SD_OK;
 	//SDIO IO口初始化
 
-
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 
@@ -62,7 +61,6 @@ SD_Error SD_Init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SDIO, ENABLE);//SDIO时钟使能
 
 	RCC_APB2PeriphResetCmd(RCC_APB2Periph_SDIO, ENABLE);//SDIO复位
-
 
 	GPIO_InitStructure.GPIO_Pin =0X3F<<8; 	//PC8,9,10,11,12复用功能输出
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;//复用功能

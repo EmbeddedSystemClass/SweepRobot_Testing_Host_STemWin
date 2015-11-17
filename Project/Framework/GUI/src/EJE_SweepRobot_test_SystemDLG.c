@@ -257,7 +257,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     // Initialization of 'Edit'
     //
-    for(i=ID_EDIT_U1;i<ID_EDIT_BOUND-1;i++){
+    for(i=ID_EDIT_U1;i<ID_EDIT_BOUND;i++){
         hItem = WM_GetDialogItem(pMsg->hWin, i);
         EDIT_SetFont(hItem, &GUI_Font20_ASCII);
         EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_NORMAL);

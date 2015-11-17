@@ -10,6 +10,7 @@
 #include "ff.h"
 #include "exfuns.h"
 #include "w25qxx.h"
+#include "fattester.h"
 
 #include "sram.h"
 #include "ILI93xx.h"
@@ -162,6 +163,7 @@ enum SWRB_TEST_TASK_PRIO{
   EMWINDEMO_TASK_PRIO,
   LED_TASK_PRIO,
   START_TASK_PRIO,
+  SAVE_DATA_TASK_PRIO,
 };
 
 #define START_STK_SIZE                      128
@@ -170,6 +172,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define USART_STK_SIZE                      256
 #define EMWINDEMO_STK_SIZE		            2048
 #define LED_STK_SIZE				        128
+#define SAVE_DATA_STK_SIZE                  256
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
 #define SWRB_BRUSH_TEST_STK_SIZE            256
@@ -194,12 +197,9 @@ extern u8 usartRxFlag;
 extern int usartRxNum;
 
 extern u8 swrbTestRuningTaskPrio;
-
 extern u32 swrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
-
 extern u16 swrbTestAcquiredData[];
-
 extern u16 swrbTestTaskCnt;
 
 void OS_Task_Create(void);
