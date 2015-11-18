@@ -14,6 +14,7 @@ void uart_init(u32 bound);
 
 s8 USART_RxArrayToString(char *src_array, char* *dest_str);
 s8 USART_RxArrayToNumber(char *src_array, int *dest_num);
+char* USART_NumberToString(int *src_num, char *dest_str);
 #endif
 
 

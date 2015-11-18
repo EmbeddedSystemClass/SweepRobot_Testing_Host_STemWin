@@ -12,10 +12,10 @@
 
 
 //屏幕大小
-#define XSIZE_PHYS  320 //X轴
-#define YSIZE_PHYS  240 //Y轴
-#define VXSIZE_PHYS	320 
-#define VYSIZE_PHYS 240
+#define XSIZE_PHYS  800 //X轴
+#define YSIZE_PHYS  480 //Y轴
+#define VXSIZE_PHYS	800 
+#define VYSIZE_PHYS 480
 
 
 
@@ -43,7 +43,7 @@
 
 //配置程序,用于创建显示驱动器件,设置颜色转换程序和显示尺寸
 void LCD_X_Config(void) {
-	GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API, GUICC_M565, 0, 0); //创建显示驱动器件
+	GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API, GUI_COLOR_CONV_M565, 0, 0); //创建显示驱动器件
 	LCD_SetSizeEx    (0, lcddev.width, lcddev.height);
 	LCD_SetVSizeEx   (0, lcddev.width, lcddev.height);
 	if(lcddev.id == 0X5510) //0X5510为4.3寸 800x480的屏

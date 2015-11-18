@@ -2,10 +2,9 @@
 #include "sram.h"
 #include "malloc.h"
 
-
 #define USE_EXRAM  1//使用外部RAM
 //设置EMWIN内存大小
-#define GUI_NUMBYTES  (100*1024)
+#define GUI_NUMBYTES  (400*1024)
 #define GUI_BLOCKSIZE 0X80  //块大小
 
 

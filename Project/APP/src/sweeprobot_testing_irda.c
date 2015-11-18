@@ -74,7 +74,7 @@ void SweepRobot_IrDA_Test_Tx_SendCmd(u8 code)
 
 void SweepRobot_IrDA_Test_Task(void *pdata)
 {
-    static u16 gSwrbTestTaskCnt = 0;
+    static u16 gSwrbTestTaskRunCnt = 0;
     static IRDA_TestTypeDef IrDA[SWRB_TEST_IRDA_CHAN_NUM];
     OS_CPU_SR cpu_sr;
 
@@ -84,124 +84,133 @@ void SweepRobot_IrDA_Test_Task(void *pdata)
     SweepRobot_IrDA_Test_Tx_Init();
 
     while(1){
-        gSwrbTestTaskCnt++;
-
-        if(gSwrbTestTaskCnt == 1){
-            gSwrbTestRuningTaskPrio = SWRB_IRDA_TEST_TASK_PRIO;
-            MultiEdit_Set_Text_Color(GUI_BLACK);
-            str = ">>>IRDA TEST<<<\r\n";
-            MultiEdit_Add_Text(str);
-            mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
-            mf_puts(str);
-            mf_close();
-            OSTimeDlyHMSM(0,0,1,0);
-            for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
-                IrDA[j].code = 0;
-                IrDA[j].validCnt = 0;
-                IrDA[j].validFlag = 0;
-                Edit_Set_Value(ID_EDIT_U1+j, 0);
-            }
-        }
-
-        if(gSwrbTestTaskCnt > 1){
-            for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
-                if(!IrDA[j].validFlag){
-                    printf("IRDA->ON=%d\r\n",j);
-                    OSTimeDlyHMSM(0,0,0,1);
-                    for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-//                    SweepRobot_IrDA_Test_Tx_SendCmd(42);
-//                    printf("IRDA->ON=42\r\n");
-//                    OSTimeDlyHMSM(0,0,0,1);
-                        printf("IRDA->READ\r\n");
-                        OSTimeDlyHMSM(0,0,0,6);
-                        if(usartRxFlag){
-                            IrDA[j].code = usartRxNum;
-                            Edit_Set_Value(ID_EDIT_U1+j, IrDA[j].code);
-                            usartRxNum = 0;
-                            usartRxFlag = 0;
-                            break;
-                        }else{
-                            IrDA[j].code = 0;
-                            continue;
-                        }
-                    }
-
-                    if(IrDA[j].code == 42){
-                        IrDA[j].validCnt++;
-                    }else{
-                        IrDA[j].validCnt = 0;
-                    }
-                    if(IrDA[j].validCnt){
-                        IrDA[j].validFlag = 1;
-                    }
-
-                    if(IrDA[j].validFlag){
-                        gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+j));
-                    }else{
-                        gSwrbTestStateMap |= (1<<(SWRB_TEST_IRDA_B_POS+j));
-                    }
-                }
-            }
-
-            if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
-                gSwrbTestTaskCnt = 0;
-                for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
-                    gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_CODE_POS+i] = IrDA[i].code;
-                }
-                Checkbox_Set_State(ID_CHECKBOX_IRDA, 1);
-                Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_BLUE);
-                Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA OK");
-                Progbar_Set_Value( (u8)((float)( (float)SWRB_TEST_STATE_IRDA / (float)(SWRB_TEST_STATE_BOUND-1))*100) );
-
-                OS_ENTER_CRITICAL();
-
-#ifdef SWRB_TEST_TASK_RUN_OBO
-                if(SWRB_IRDA_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                    OSTaskResume(SWRB_IRDA_TEST_TASK_PRIO+1);
-#endif
-                OSTaskSuspend(OS_PRIO_SELF);
-
-                OS_EXIT_CRITICAL();
-            }
-        }
-
-        if(gSwrbTestTaskCnt > 20){
-            gSwrbTestTaskCnt = 0;
-            Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-            for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
-                gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_CODE_POS+i] = IrDA[i].code;
-            }
-            MultiEdit_Set_Text_Color(GUI_RED);
-            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
-                MultiEdit_Add_Text("ERROR->IRDA_B\r\n");
-            }
-            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
-                MultiEdit_Add_Text("ERROR->IRDA_L\r\n");
-            }
-            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
-                MultiEdit_Add_Text("ERROR->IRDA_FL\r\n");
-            }
-            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
-                MultiEdit_Add_Text("ERROR->IRDA_FR\r\n");
-            }
-            if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
-                MultiEdit_Add_Text("ERROR->IRDA_R\r\n");
-            }
-            Checkbox_Set_State(ID_CHECKBOX_IRDA, 1);
-            Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_RED);
-            Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA ERROR");
-            Progbar_Set_Value( (u8)((float)( (float)SWRB_TEST_STATE_IRDA / (float)(SWRB_TEST_STATE_BOUND-1))*100) );
-
+        
+        if(!Checkbox_Get_State(ID_CHECKBOX_IRDA)){
             OS_ENTER_CRITICAL();
-
 #ifdef SWRB_TEST_TASK_RUN_OBO
             if(SWRB_IRDA_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
                 OSTaskResume(SWRB_IRDA_TEST_TASK_PRIO+1);
 #endif
             OSTaskSuspend(OS_PRIO_SELF);
-
             OS_EXIT_CRITICAL();
+        }else{
+            gSwrbTestTaskRunCnt++;
+
+            if(gSwrbTestTaskRunCnt == 1){
+                gSwrbTestRuningTaskPrio = SWRB_IRDA_TEST_TASK_PRIO;
+                MultiEdit_Set_Text_Color(GUI_BLACK);
+                str = ">>>IRDA TEST<<<\r\n";
+                MultiEdit_Add_Text(str);
+                mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+                mf_puts(str);
+                OSTimeDlyHMSM(0,0,1,0);
+                for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
+                    IrDA[j].code = 0;
+                    IrDA[j].validCnt = 0;
+                    IrDA[j].validFlag = 0;
+                    Edit_Set_Value(ID_EDIT_U1+j, 0);
+                }
+            }
+
+            if(gSwrbTestTaskRunCnt > 1){
+                for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
+                    if(!IrDA[j].validFlag){
+                        printf("IRDA->ON=%d\r\n",j);
+                        OSTimeDlyHMSM(0,0,0,1);
+                        for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
+    //                    SweepRobot_IrDA_Test_Tx_SendCmd(42);
+    //                    printf("IRDA->ON=42\r\n");
+    //                    OSTimeDlyHMSM(0,0,0,1);
+                            printf("IRDA->READ\r\n");
+                            OSTimeDlyHMSM(0,0,0,6);
+                            if(usartRxFlag){
+                                IrDA[j].code = usartRxNum;
+                                Edit_Set_Value(ID_EDIT_U1+j, IrDA[j].code);
+                                usartRxNum = 0;
+                                usartRxFlag = 0;
+                                break;
+                            }else{
+                                IrDA[j].code = 0;
+                                continue;
+                            }
+                        }
+
+                        if(IrDA[j].code == 42){
+                            IrDA[j].validCnt++;
+                        }else{
+                            IrDA[j].validCnt = 0;
+                        }
+                        if(IrDA[j].validCnt){
+                            IrDA[j].validFlag = 1;
+                        }
+
+                        if(IrDA[j].validFlag){
+                            gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+j));
+                        }else{
+                            gSwrbTestStateMap |= (1<<(SWRB_TEST_IRDA_B_POS+j));
+                        }
+                    }
+                }
+
+                if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
+                    gSwrbTestTaskRunCnt = 0;
+                    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+                        gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_CODE_POS+i] = IrDA[i].code;
+                    }
+                    Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_BLUE);
+                    Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA OK");
+                    Progbar_Set_Value( (u8)((float)( (float)SWRB_TEST_STATE_IRDA / (float)(SWRB_TEST_STATE_BOUND-1))*100) );
+
+                    OS_ENTER_CRITICAL();
+
+    #ifdef SWRB_TEST_TASK_RUN_OBO
+                    if(SWRB_IRDA_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
+                        OSTaskResume(SWRB_IRDA_TEST_TASK_PRIO+1);
+    #endif
+                    OSTaskSuspend(OS_PRIO_SELF);
+
+                    OS_EXIT_CRITICAL();
+                }
+            }
+
+            if(gSwrbTestTaskRunCnt > 20){
+                gSwrbTestTaskRunCnt = 0;
+                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
+                for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+                    gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_CODE_POS+i] = IrDA[i].code;
+                }
+                MultiEdit_Set_Text_Color(GUI_RED);
+                if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
+                    MultiEdit_Add_Text("ERROR->IRDA_B\r\n");
+                }
+                if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
+                    MultiEdit_Add_Text("ERROR->IRDA_L\r\n");
+                }
+                if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
+                    MultiEdit_Add_Text("ERROR->IRDA_FL\r\n");
+                }
+                if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
+                    MultiEdit_Add_Text("ERROR->IRDA_FR\r\n");
+                }
+                if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
+                    MultiEdit_Add_Text("ERROR->IRDA_R\r\n");
+                }
+                Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_RED);
+                Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA ERROR");
+                Progbar_Set_Value( (u8)((float)( (float)(SWRB_IRDA_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM) / (float)(SWRB_IRDA_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM))*100) );
+
+                OS_ENTER_CRITICAL();
+
+    #ifdef SWRB_TEST_TASK_RUN_OBO
+                if(SWRB_IRDA_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
+                    OSTaskResume(SWRB_IRDA_TEST_TASK_PRIO+1);
+    #endif
+                OSTaskSuspend(OS_PRIO_SELF);
+
+                OS_EXIT_CRITICAL();
+            }
+            
+            OSTimeDlyHMSM(0,0,0,50);
         }
-        OSTimeDlyHMSM(0,0,0,50);
     }
 }

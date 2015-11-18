@@ -214,9 +214,12 @@ enum SWRB_TEST_DATA_POS{
 
 enum SWRB_TEST_TASK_PRIO{
 
-  SWRB_TEST_CTRL_TASK_PRIO=3,
+  TOUCH_TASK_PRIO=3,
+  KEY_TASK_PRIO,
+  EMWINDEMO_TASK_PRIO,
+  SWRB_TEST_CTRL_TASK_PRIO,
   SWRB_TEST_START_TASK_BOUND,
-  SWRB_WHEEL_TEST_TASK_PRIO,
+  SWRB_WHEEL_TEST_TASK_PRIO,//8
   SWRB_BRUSH_TEST_TASK_PRIO,
   SWRB_FAN_TEST_TASK_PRIO,
   SWRB_IFRD_TEST_TASK_PRIO,
@@ -229,23 +232,22 @@ enum SWRB_TEST_TASK_PRIO{
   SWRB_BUZZER_TEST_TASK_PRIO,
   SWRB_RGB_LED_TEST_TASK_PRIO,
   SWRB_CHARGE_TEST_TASK_PRIO,
-  SWRB_TEST_TASK_PRIO_BOUND,
-  TOUCH_TASK_PRIO,
-  KEY_TASK_PRIO,
+  SWRB_TEST_TASK_PRIO_BOUND,//21
   USART_TASK_PRIO,
-  EMWINDEMO_TASK_PRIO,
   LED_TASK_PRIO,
   START_TASK_PRIO,
   SAVE_DATA_TASK_PRIO,
 };
 
+#define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM 7
+
 #define START_STK_SIZE                      128
-#define TOUCH_STK_SIZE                      128
+#define TOUCH_STK_SIZE                      256
 #define KEY_STK_SIZE                        256
 #define USART_STK_SIZE                      256
 #define EMWINDEMO_STK_SIZE		            2048
 #define LED_STK_SIZE				        128
-#define SAVE_DATA_STK_SIZE                  256
+#define SAVE_DATA_STK_SIZE                  128
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
 #define SWRB_BRUSH_TEST_STK_SIZE            256
@@ -273,14 +275,14 @@ extern u8 gSwrbTestMode;
 extern u8 gSwrbTestRuningTaskPrio;
 extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
-extern u32 gSwrbTestDUTSerialNum;
+extern char *gSwrbTestDUTSerialNum;
 extern u16 gSwrbTestAcquiredData[];
+extern u16 gSwrbTestTaskRunCnt;
 extern u16 gSwrbTestTaskCnt;
 
 void OS_Task_Create(void);
 
 void SweepRobot_TestStartProc(void);
-void SweepRobot_TestPauseProc(void);
 void SweepRobot_TestSetProc(void);
 void SweepRobot_TestStopProc(void);
 void SweepRobot_TestExitProc(void);

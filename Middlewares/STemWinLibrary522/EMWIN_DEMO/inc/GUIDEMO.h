@@ -192,6 +192,10 @@ extern "C" {     /* Make sure we have C-declarations in C++ programs */
   #define SHOW_GUIDEMO_IMAGEFLOW         (1)
 #endif
 
+#ifndef   SHOW_GUIDEMO_LISTWHEEL
+  #define SHOW_GUIDEMO_LISTWHEEL         (1)
+#endif
+
 /*********************************************************************
 *
 *       Configuration macros

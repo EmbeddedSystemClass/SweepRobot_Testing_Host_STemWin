@@ -417,11 +417,6 @@
           <GroupName>Bsp</GroupName>
           <Files>
             <File>
-              <FileName>malloc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\malloc.c</FilePath>
-            </File>
-            <File>
               <FileName>24cxx.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\24cxx.c</FilePath>
@@ -430,6 +425,11 @@
               <FileName>ctiic.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\ctiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\delay.c</FilePath>
             </File>
             <File>
               <FileName>ft5206.c</FileName>
@@ -442,19 +442,24 @@
               <FilePath>.\BSP\src\gt9147.c</FilePath>
             </File>
             <File>
-              <FileName>ILI93xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ILI93xx.c</FilePath>
-            </File>
-            <File>
               <FileName>key.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\key.c</FilePath>
             </File>
             <File>
+              <FileName>ILI93xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\ILI93xx.c</FilePath>
+            </File>
+            <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\malloc.c</FilePath>
             </File>
             <File>
               <FileName>myiic.c</FileName>
@@ -465,6 +470,11 @@
               <FileName>ott2001a.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\ott2001a.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\rtc.c</FilePath>
             </File>
             <File>
               <FileName>sdio_sdcard.c</FileName>
@@ -482,6 +492,11 @@
               <FilePath>.\BSP\src\sram.c</FilePath>
             </File>
             <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\sys.c</FilePath>
+            </File>
+            <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\timer.c</FilePath>
@@ -492,29 +507,14 @@
               <FilePath>.\BSP\src\touch.c</FilePath>
             </File>
             <File>
-              <FileName>w25qxx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\w25qxx.c</FilePath>
-            </File>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sys.c</FilePath>
-            </File>
-            <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\usart.c</FilePath>
             </File>
             <File>
-              <FileName>rtc.c</FileName>
+              <FileName>w25qxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\rtc.c</FilePath>
+              <FilePath>.\BSP\src\w25qxx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1456,11 +1456,6 @@
           <GroupName>Bsp</GroupName>
           <Files>
             <File>
-              <FileName>malloc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\malloc.c</FilePath>
-            </File>
-            <File>
               <FileName>24cxx.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\24cxx.c</FilePath>
@@ -1469,6 +1464,11 @@
               <FileName>ctiic.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\ctiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\delay.c</FilePath>
             </File>
             <File>
               <FileName>ft5206.c</FileName>
@@ -1481,19 +1481,24 @@
               <FilePath>.\BSP\src\gt9147.c</FilePath>
             </File>
             <File>
-              <FileName>ILI93xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ILI93xx.c</FilePath>
-            </File>
-            <File>
               <FileName>key.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\key.c</FilePath>
             </File>
             <File>
+              <FileName>ILI93xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\ILI93xx.c</FilePath>
+            </File>
+            <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\malloc.c</FilePath>
             </File>
             <File>
               <FileName>myiic.c</FileName>
@@ -1504,6 +1509,11 @@
               <FileName>ott2001a.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\ott2001a.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\rtc.c</FilePath>
             </File>
             <File>
               <FileName>sdio_sdcard.c</FileName>
@@ -1521,6 +1531,11 @@
               <FilePath>.\BSP\src\sram.c</FilePath>
             </File>
             <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\sys.c</FilePath>
+            </File>
+            <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\timer.c</FilePath>
@@ -1531,29 +1546,14 @@
               <FilePath>.\BSP\src\touch.c</FilePath>
             </File>
             <File>
-              <FileName>w25qxx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\w25qxx.c</FilePath>
-            </File>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sys.c</FilePath>
-            </File>
-            <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\usart.c</FilePath>
             </File>
             <File>
-              <FileName>rtc.c</FileName>
+              <FileName>w25qxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\rtc.c</FilePath>
+              <FilePath>.\BSP\src\w25qxx.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -26,51 +26,75 @@ Full source code is available at: www.segger.com
 
 We appreciate your understanding and fairness.
 ----------------------------------------------------------------------
-File        : GUI_HOOK.h
-Purpose     : Hook handling routines
+File        : KNOB.h
+Purpose     : KNOB include
 --------------------END-OF-HEADER-------------------------------------
 */
 
-#ifndef GUI_HOOK_H
-#define GUI_HOOK_H
+#ifndef KNOB_PRIVATE_H
+#define KNOB_PRIVATE_H
 
-#include "WM_Intern.h"
+#include "KNOB.h"
+#include "GUI_Private.h"
 
-#if GUI_WINSUPPORT
+#if (GUI_SUPPORT_MEMDEV && GUI_WINSUPPORT)
 
-#if defined(__cplusplus)
-extern "C" {     /* Make sure we have C-declarations in C++ programs */
+/*********************************************************************
+*
+*       Object definition
+*
+**********************************************************************
+*/
+typedef struct {
+  I32 Snap;          // Position where the knob snaps
+  I32 Period;        // Time it takes to stop the knob in ms
+  GUI_COLOR BkColor; // The Bk color
+  I32 Offset;        // the offset
+  I32 MinRange;
+  I32 MaxRange;
+  I32 TickSize;      // Minimum movement range in 1/10 of degree
+  I32 KeyValue;      // Range of movement for one key push
+} KNOB_PROPS;
+
+typedef struct {
+  WIDGET Widget;
+  KNOB_PROPS Props;
+  WM_HMEM hContext;
+  I32 Angle;
+  I32 Value;
+  int xSize;
+  int ySize;
+  GUI_MEMDEV_Handle hMemSrc;
+  GUI_MEMDEV_Handle hMemDst;
+  GUI_MEMDEV_Handle hMemBk;
+} KNOB_OBJ;
+
+/*********************************************************************
+*
+*       Macros for internal use
+*
+**********************************************************************
+*/
+#if GUI_DEBUG_LEVEL >= GUI_DEBUG_LEVEL_CHECK_ALL
+  #define KNOB_INIT_ID(p) p->Widget.DebugId = KNOB_ID
+#else
+  #define KNOB_INIT_ID(p)
+#endif
+
+#if GUI_DEBUG_LEVEL >= GUI_DEBUG_LEVEL_CHECK_ALL
+  KNOB_OBJ * KNOB_LockH(KNOB_Handle h);
+  #define KNOB_LOCK_H(h)   KNOB_LockH(h)
+#else
+  #define KNOB_LOCK_H(h)   (KNOB_OBJ *)GUI_LOCK_H(h)
 #endif
 
 /*********************************************************************
 *
-*       Types
+*       Module internal data
 *
 **********************************************************************
 */
+extern KNOB_PROPS KNOB__DefaultProps;
 
-typedef int GUI_HOOK_FUNC(WM_MESSAGE* pMsg);
-
-typedef struct GUI_HOOK {
-  struct GUI_HOOK* pNext;
-  GUI_HOOK_FUNC*   pHookFunc;
-} GUI_HOOK;
-
-/*********************************************************************
-*
-*       Functions
-*
-**********************************************************************
-*/
-
-void GUI_HOOK_Add   (GUI_HOOK** ppFirstHook, GUI_HOOK* pNewHook, GUI_HOOK_FUNC* pHookFunc);
-void GUI_HOOK_Remove(GUI_HOOK** ppFirstHook, GUI_HOOK* pHook);
-
-#if defined(__cplusplus)
-  }
-#endif
-
-#endif   /* GUI_WINSUPPORT */
-#endif   /* GUI_HOOK_H */
-
-/*************************** End of file ****************************/
+#endif   // (GUI_SUPPORT_MEMDEV && GUI_WINSUPPORT)
+#endif   // KNOB_PRIVATE_H

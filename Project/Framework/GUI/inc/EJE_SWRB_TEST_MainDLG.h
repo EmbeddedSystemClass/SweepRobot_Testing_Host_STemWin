@@ -150,6 +150,7 @@ void Button_Set_Text(int buttonId, char *str);
 void Progbar_Set_Value(int progbarValue);
 void Edit_Set_Value(int editId, long editValue);
 void Checkbox_Set_Text(int checkboxId, char *string);
+int Checkbox_Get_State(int checkboxId);
 void Checkbox_Set_State(int checkboxId , unsigned int checkboxState);
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxcolor);
 void Checkbox_Set_TextAlign(int checkboxId, int align);

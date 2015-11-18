@@ -49,12 +49,22 @@ WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-    { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SET_FRAMEWIN_0, 0, 0, 320, 240, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "Listwheel", ID_SET_LISTWHEEL_0, 50, 50, 50, 68, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_0, 40, 160, 100, 40, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Button", ID_SET_BUTTON_1, 178, 161, 100, 40, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "Listwheel", ID_SET_LISTWHEEL_1, 110, 50, 50, 68, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "Listwheel", ID_SET_LISTWHEEL_2, 170, 50, 50, 68, 0, 0x0, 0 },
+    { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SET_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_0, 690, 0, 100, 115, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "cancel", ID_SET_BUTTON_1, 690, 345, 100, 115, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwYear", ID_SET_LISTWHEEL_0, 20, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwMonth", ID_SET_LISTWHEEL_1, 130, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwDay", ID_SET_LISTWHEEL_2, 240, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN1", ID_SET_LISTWHEEL_3, 350, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN2", ID_SET_LISTWHEEL_4, 460, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN3", ID_SET_LISTWHEEL_5, 570, 70, 110, 230, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "editComb", ID_SET_EDIT_0, 20, 360, 660, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editYear", ID_SET_EDIT_1, 20, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editMonth", ID_SET_EDIT_2, 130, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editDay", ID_SET_EDIT_3, 240, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN1", ID_SET_EDIT_4, 350, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN2", ID_SET_EDIT_5, 460, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN3", ID_SET_EDIT_6, 570, 320, 110, 40, 0 ,0x0, 0 },
     // USER START (Optionally insert additional widgets)
     // USER END
 };
@@ -67,6 +77,46 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
+static void SerialNum_Comb(WM_HWIN *hWin, int id, char *dest_SNumStr)
+{
+    WM_HWIN hItem;
+    int     lwItemIndex;
+    char    *lwBuf;
+    
+    hItem = WM_GetDialogItem(*hWin, id);
+    lwItemIndex = LISTWHEEL_GetPos(hItem);
+    lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+    LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+    dest_SNumStr = strcat(dest_SNumStr, lwBuf);
+    myfree(SRAMIN, lwBuf);
+}
+
+static void ListWheel_SerialNumComb(WM_HWIN *hWin)
+{
+    WM_HWIN hItem;
+    int     lwItemIndex;
+    char    *lwBuf;
+    
+    *gSwrbTestDUTSerialNum = 0;
+    
+    lwBuf = "0:/";
+    gSwrbTestDUTSerialNum = strcat(gSwrbTestDUTSerialNum, lwBuf);
+    
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDUTSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDUTSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDUTSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestDUTSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestDUTSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestDUTSerialNum);
+    
+    lwBuf = ".txt";
+    gSwrbTestDUTSerialNum = strcat(gSwrbTestDUTSerialNum, lwBuf);
+    
+    hItem = WM_GetDialogItem(*hWin, ID_SET_EDIT_COMB);
+    EDIT_SetText(hItem, gSwrbTestDUTSerialNum);
+    
+    f_open(file, gSwrbTestDUTSerialNum, FA_WRITE|FA_OPEN_ALWAYS);
+}
 // USER END
 
 /*********************************************************************
@@ -78,6 +128,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     int     NCode;
     int     Id;
     // USER START (Optionally insert additional variables)
+    int     lwItemIndex;
+    char   *lwBuf;
+    int     i;
     // USER END
 
     switch (pMsg->MsgId) {
@@ -88,55 +141,74 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             hItem = pMsg->hWin;
             FRAMEWIN_SetTextColor(hItem, 0x00000000);
             //
-            // Initialization of 'Listwheel'
+            // Initialization of 'confirm'
             //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_0);
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CONFIRM);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "Confirm");
+            //
+            // Initialization of 'cancel'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CANCEL);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "Cancel");
+            //
+            // Initialization of 'lwYear'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_YEAR);
+            LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
+            LISTWHEEL_SetDeceleration(hItem, 10);
+            LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            LISTWHEEL_SetSnapPosition(hItem, 115);
             LISTWHEEL_AddString(hItem, "2014");
             LISTWHEEL_AddString(hItem, "2015");
             LISTWHEEL_AddString(hItem, "2016");
             LISTWHEEL_AddString(hItem, "2017");
             LISTWHEEL_AddString(hItem, "2018");
+            LISTWHEEL_AddString(hItem, "2019");
+            LISTWHEEL_AddString(hItem, "2020");
+            LISTWHEEL_AddString(hItem, "2021");
+            LISTWHEEL_AddString(hItem, "2022");
+            LISTWHEEL_AddString(hItem, "2023");
+            LISTWHEEL_AddString(hItem, "2024");
+            LISTWHEEL_AddString(hItem, "2025");
             //
-            // Initialization of 'confirm'
+            // Initialization of 'lwMonth'
             //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_0);
-            BUTTON_SetFont(hItem, GUI_FONT_16B_ASCII);
-            BUTTON_SetText(hItem, "Confirm");
-            //
-            // Initialization of 'Button'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_1);
-            BUTTON_SetFont(hItem, GUI_FONT_16B_ASCII);
-            BUTTON_SetText(hItem, "Cancel");
-            //
-            // Initialization of 'Listwheel'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_1);
-            LISTWHEEL_AddString(hItem, "1");
-            LISTWHEEL_AddString(hItem, "2");
-            LISTWHEEL_AddString(hItem, "3");
-            LISTWHEEL_AddString(hItem, "4");
-            LISTWHEEL_AddString(hItem, "5");
-            LISTWHEEL_AddString(hItem, "6");
-            LISTWHEEL_AddString(hItem, "7");
-            LISTWHEEL_AddString(hItem, "8");
-            LISTWHEEL_AddString(hItem, "9");
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_MONTH);
+            LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
+            LISTWHEEL_SetDeceleration(hItem, 5);
+            LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            LISTWHEEL_SetSnapPosition(hItem, 115);
+            LISTWHEEL_AddString(hItem, "01");
+            LISTWHEEL_AddString(hItem, "02");
+            LISTWHEEL_AddString(hItem, "03");
+            LISTWHEEL_AddString(hItem, "04");
+            LISTWHEEL_AddString(hItem, "05");
+            LISTWHEEL_AddString(hItem, "06");
+            LISTWHEEL_AddString(hItem, "07");
+            LISTWHEEL_AddString(hItem, "08");
+            LISTWHEEL_AddString(hItem, "09");
             LISTWHEEL_AddString(hItem, "10");
             LISTWHEEL_AddString(hItem, "11");
             LISTWHEEL_AddString(hItem, "12");
             //
-            // Initialization of 'Listwheel'
+            // Initialization of 'lwDay'
             //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_2);
-            LISTWHEEL_AddString(hItem, "1");
-            LISTWHEEL_AddString(hItem, "2");
-            LISTWHEEL_AddString(hItem, "3");
-            LISTWHEEL_AddString(hItem, "4");
-            LISTWHEEL_AddString(hItem, "5");
-            LISTWHEEL_AddString(hItem, "6");
-            LISTWHEEL_AddString(hItem, "7");
-            LISTWHEEL_AddString(hItem, "8");
-            LISTWHEEL_AddString(hItem, "9");
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_DAY);
+            LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
+            LISTWHEEL_SetDeceleration(hItem, 5);
+            LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            LISTWHEEL_SetSnapPosition(hItem, 115);
+            LISTWHEEL_AddString(hItem, "01");
+            LISTWHEEL_AddString(hItem, "02");
+            LISTWHEEL_AddString(hItem, "03");
+            LISTWHEEL_AddString(hItem, "04");
+            LISTWHEEL_AddString(hItem, "05");
+            LISTWHEEL_AddString(hItem, "06");
+            LISTWHEEL_AddString(hItem, "07");
+            LISTWHEEL_AddString(hItem, "08");
+            LISTWHEEL_AddString(hItem, "09");
             LISTWHEEL_AddString(hItem, "10");
             LISTWHEEL_AddString(hItem, "11");
             LISTWHEEL_AddString(hItem, "12");
@@ -159,117 +231,240 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             LISTWHEEL_AddString(hItem, "29");
             LISTWHEEL_AddString(hItem, "30");
             LISTWHEEL_AddString(hItem, "31");
+            //
+            // Initialization of 'lwSN1,2,3'
+            //
+            for(i=ID_SET_LISTWHEEL_SN1;i<=ID_SET_LISTWHEEL_SN3;i++){
+                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
+                LISTWHEEL_SetDeceleration(hItem, 10);
+                LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+                LISTWHEEL_SetSnapPosition(hItem, 115);
+                LISTWHEEL_AddString(hItem, "0");
+                LISTWHEEL_AddString(hItem, "1");
+                LISTWHEEL_AddString(hItem, "2");
+                LISTWHEEL_AddString(hItem, "3");
+                LISTWHEEL_AddString(hItem, "4");
+                LISTWHEEL_AddString(hItem, "5");
+                LISTWHEEL_AddString(hItem, "6");
+                LISTWHEEL_AddString(hItem, "7");
+                LISTWHEEL_AddString(hItem, "8");
+                LISTWHEEL_AddString(hItem, "9");
+            }
+            //
+            // Initialization of 'editYear'
+            //
+            
+            for(i=ID_SET_EDIT_COMB;i<=ID_SET_EDIT_SN3;i++){
+                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+                EDIT_SetTextMode(hItem);
+                EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            }
             // USER START (Optionally insert additional code for further widget initialization)
+            GUI_SetColor(GUI_RED);
+            GUI_DrawHLine(40, 0, 99);
+            GUI_DrawHLine(59, 0, 99);
+            GUI_SetColor(GUI_DEFAULT_COLOR);
             // USER END
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
             NCode = pMsg->Data.v;
             switch(Id) {
-            case ID_SET_FRAMEWIN_0:
-                switch(NCode){
-                    case WM_NOTIFICATION_LOST_FOCUS:
-                        hItem = pMsg->hWin;
-                        WM_DeleteWindow(hItem);
-                        GUI_Clear();
-                        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-                        break;
+                case ID_SET_BUTTON_0: // Notifications sent by 'Confirm'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            ListWheel_SerialNumComb(&pMsg->hWin);
+                            WM_DeleteWindow(pMsg->hWin);
+                            GUI_Clear();
+                            gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_BUTTON_1: // Notifications sent by 'Cancel'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            WM_DeleteWindow(pMsg->hWin);
+                            GUI_Clear();
+                            gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_LISTWHEEL_0: // Notifications sent by 'lwYear'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_SEL_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_YEAR);
+                            lwItemIndex = LISTWHEEL_GetPos(hItem);
+                            LISTWHEEL_SetSel(hItem, lwItemIndex);
+                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_YEAR);
+                            EDIT_SetText(hItem, lwBuf);
+                            myfree(SRAMIN, lwBuf);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_LISTWHEEL_1: // Notifications sent by 'lwMonth'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_SEL_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_MONTH);
+                            lwItemIndex = LISTWHEEL_GetPos(hItem);
+                            LISTWHEEL_SetSel(hItem, lwItemIndex);
+                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_MONTH);
+                            EDIT_SetText(hItem, lwBuf);
+                            myfree(SRAMIN, lwBuf);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_LISTWHEEL_2: // Notifications sent by 'lwDay'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_SEL_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_DAY);
+                            lwItemIndex = LISTWHEEL_GetPos(hItem);
+                            LISTWHEEL_SetSel(hItem, lwItemIndex);
+                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_DAY);
+                            EDIT_SetText(hItem, lwBuf);
+                            myfree(SRAMIN, lwBuf);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_LISTWHEEL_3: // Notifications sent by 'lwSN1'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_SEL_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_SN1);
+                            lwItemIndex = LISTWHEEL_GetPos(hItem);
+                            LISTWHEEL_SetSel(hItem, lwItemIndex);
+                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_SN1);
+                            EDIT_SetText(hItem, lwBuf);
+                            myfree(SRAMIN, lwBuf);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further Ids)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_LISTWHEEL_4: // Notifications sent by 'lwSN2'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_SEL_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_SN2);
+                            lwItemIndex = LISTWHEEL_GetPos(hItem);
+                            LISTWHEEL_SetSel(hItem, lwItemIndex);
+                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_SN2);
+                            EDIT_SetText(hItem, lwBuf);
+                            myfree(SRAMIN, lwBuf);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further Ids)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_LISTWHEEL_5: // Notifications sent by 'lwSN3'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_SEL_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_SN3);
+                            lwItemIndex = LISTWHEEL_GetPos(hItem);
+                            LISTWHEEL_SetSel(hItem, lwItemIndex);
+                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_SN3);
+                            EDIT_SetText(hItem, lwBuf);
+                            myfree(SRAMIN, lwBuf);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further Ids)
+                        // USER END
+                    }
+                    break;
                 }
-                break;
-            case ID_SET_LISTWHEEL_0: // Notifications sent by 'Listwheel'
-                switch(NCode) {
-                    case WM_NOTIFICATION_CLICKED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_RELEASED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_SEL_CHANGED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    // USER START (Optionally insert additional code for further notification handling)
-                    // USER END
-                }
-                break;
-            case ID_SET_BUTTON_0: // Notifications sent by 'Confirm'
-                switch(NCode) {
-                    case WM_NOTIFICATION_CLICKED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_RELEASED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        hItem = pMsg->hWin;
-                        WM_DeleteWindow(hItem);
-                        GUI_Clear();
-                        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-                        // USER END
-                        break;
-                    // USER START (Optionally insert additional code for further notification handling)
-                    // USER END
-                }
-                break;
-            case ID_SET_BUTTON_1: // Notifications sent by 'Cancel'
-                switch(NCode) {
-                    case WM_NOTIFICATION_CLICKED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_RELEASED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        hItem = pMsg->hWin;
-                        WM_DeleteWindow(hItem);
-                        GUI_Clear();
-                        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-                        // USER END
-                        break;
-                    // USER START (Optionally insert additional code for further notification handling)
-                    // USER END
-                }
-                break;
-            case ID_SET_LISTWHEEL_1: // Notifications sent by 'Listwheel'
-                switch(NCode) {
-                    case WM_NOTIFICATION_CLICKED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_RELEASED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_SEL_CHANGED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    // USER START (Optionally insert additional code for further notification handling)
-                    // USER END
-                }
-                break;
-            case ID_SET_LISTWHEEL_2: // Notifications sent by 'Listwheel'
-                switch(NCode) {
-                    case WM_NOTIFICATION_CLICKED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_RELEASED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    case WM_NOTIFICATION_SEL_CHANGED:
-                        // USER START (Optionally insert code for reacting on notification message)
-                        // USER END
-                        break;
-                    // USER START (Optionally insert additional code for further notification handling)
-                    // USER END
-                }
-                break;
-            // USER START (Optionally insert additional code for further Ids)
-            // USER END
-            }
-            break;
         // USER START (Optionally insert additional message handling)
         // USER END
         default:
@@ -291,7 +486,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 WM_HWIN CreateSettingDLG(void) {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 100, 50);
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
     return hWin;
 }
 
