@@ -8,10 +8,10 @@
 //文件类型列表
 const u8 *FILE_TYPE_TBL[6][13]=
 {
-	{"BIN"},   			//BIN文件
-	{"LRC"},			//LRC文件
-	{"NES"},			//NES文件
-	{"TXT","C","H"},	//文本文件
+	{"BIN"},   			        //BIN文件
+	{"LRC"},			        //LRC文件
+	{"NES"},			        //NES文件
+	{"TXT","CSV","C","H"},	    //文本文件
 	{"MP1","MP2","MP3","MP4","M4A","3GP","3G2","OGG","ACC","WMA","WAV","MID","FLAC"},//音乐文件
 	{"BMP","JPG","JPEG","GIF"},//图片文件
 };

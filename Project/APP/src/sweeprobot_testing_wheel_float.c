@@ -8,7 +8,11 @@
 #define WHEEL_FLOAT_TEST_CTRL_L_PIN     GPIO_Pin_6
 #define WHEEL_FLOAT_TEST_CTRL_R_PIN     GPIO_Pin_7
 
-void SweepRobot_Wheel_Float_Test_Init(void)
+#define WHEEL_FLOAT_CHAN_NUM    2
+
+static WHEEL_FLOAT_TestTypeDef wheelFloat[WHEEL_FLOAT_CHAN_NUM];
+
+void SweepRobot_WheelFloatTestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -22,165 +26,145 @@ void SweepRobot_Wheel_Float_Test_Init(void)
     GPIO_Init(WHEEL_FLOAT_TEST_CTRL_GPIO, &GPIO_InitStructure);
 }
 
-void SweepRobot_Wheel_Float_Ctrl_On(void)
+void SweepRobot_WheelFloatCtrlOn(void)
 {
     GPIO_SetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_L_PIN);
     GPIO_SetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_R_PIN);
 }
 
-void SweepRobot_Wheel_Float_Ctrl_Off(void)
+void SweepRobot_WheelFloatCtrlOff(void)
 {
     GPIO_ResetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_L_PIN);
     GPIO_ResetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_R_PIN);
 }
 
-void SweepRobot_Wheel_Float_Test_Task(void *pdata)
+void SweepRobot_WheelFloatTestInit(void)
 {
-    OS_CPU_SR cpu_sr;
-    static WHEEL_FLOAT_TestTypeDef lWheelFloat;
-    static WHEEL_FLOAT_TestTypeDef rWheelFloat;
     u8 i;
     char *str;
+    
+    gSwrbTestRuningTaskPrio = SWRB_WHEEL_FLOAT_TEST_TASK_PRIO;
+    
+    str = "\r\n>>>WHEEL FLOAT TEST<<<\r\n";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Set_Text_Color(GUI_BLACK);
+    MultiEdit_Add_Text(str);
+    
+    OSTimeDlyHMSM(0,0,1,0);
+    
+    SweepRobot_WheelFloatCtrlOn();
+    
+    for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
+        wheelFloat[i].value = 0;
+        wheelFloat[i].validCnt = 0;
+        wheelFloat[i].validFlag = 0;
+    }
+}
 
-    SweepRobot_Wheel_Float_Test_Init();
+static void SweepRobot_WheelFloatTestProc(void)
+{
+    u8 i,j;
+    
+    for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
+        
+        if(!wheelFloat[i].validFlag){
+            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                printf("WHEEL_FLOAT->READ=%d\r\n",i);
+                OSTimeDlyHMSM(0,0,0,6);
+                if(usartRxFlag){
+                    wheelFloat[i].value = usartRxNum;
+                    Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
+                    usartRxNum = 0;
+                    usartRxFlag = 0;
+                    break;
+                }else{
+                    continue;
+                }
+            }
+            if(wheelFloat[i].value){
+                gSwrbTestStateMap &= ~(1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
+                wheelFloat[i].validCnt++;
+            }else{
+                gSwrbTestStateMap |= (1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
+                wheelFloat[i].validCnt = 0;
+            }
+            if(wheelFloat[i].validCnt > 5){
+                wheelFloat[i].validFlag = 1;
+            }
+        }
+    }
+    
+    if(wheelFloat[0].validFlag && wheelFloat[1].validFlag){
+        gSwrbTestTaskRunCnt = 0;
+        SweepRobot_WheelFloatCtrlOff();
+
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[0].value;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[1].value;
+        SWRB_TestDataSaveToFile(WHEEL_FLOAT_TestDataSave);
+        
+        MultiEdit_Add_Text("WHEEL FLOAT OK\r\n");
+        Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
+        Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
+        Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL_FLOAT);
+
+        SWRB_NextTestTaskResume(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
+    }
+}
+
+static void SweepRobot_WheelFloatTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    SweepRobot_WheelFloatCtrlOff();
+    
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[0].value;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[1].value;
+    SWRB_TestDataSaveToFile(WHEEL_FLOAT_TestDataSave);
+
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
+        MultiEdit_Add_Text("ERROR->WHEEL FLOAT L\r\n");
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
+        MultiEdit_Add_Text("ERROR->WHEEL FLOAT R\r\n");
+    }
+    Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_RED);
+    Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
+    Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL_FLOAT);
+
+    SWRB_NextTestTaskResume(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
+}
+
+void SweepRobot_WheelFloatTestTask(void *pdata)
+{
+    
+    SweepRobot_WheelFloatTestGPIOInit();
 
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_WHEEL_FLOAT)){
-            OS_ENTER_CRITICAL();
-#ifdef  SWRB_TEST_TASK_RUN_OBO
-            if(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                OSTaskResume(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO+1);
-#endif
-            OSTaskSuspend(OS_PRIO_SELF);
-            OS_EXIT_CRITICAL();
+            SWRB_NextTestTaskResume(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
         }else{
         
             gSwrbTestTaskRunCnt++;
             
             if(gSwrbTestTaskRunCnt == 1){
-                gSwrbTestRuningTaskPrio = SWRB_WHEEL_FLOAT_TEST_TASK_PRIO;
-                MultiEdit_Set_Text_Color(GUI_BLACK);
-                str = ">>>WHEEL FLOAT TEST<<<\r\n";
-                MultiEdit_Add_Text(str);
-                mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
-                mf_puts(str);
-                OSTimeDlyHMSM(0,0,1,0);
-                SweepRobot_Wheel_Float_Ctrl_On();
-                lWheelFloat.value = 0;
-                lWheelFloat.validCnt = 0;
-                lWheelFloat.validFlag = 0;
-                rWheelFloat.value = 0;
-                rWheelFloat.validCnt = 0;
-                rWheelFloat.validFlag = 0;
+                SweepRobot_WheelFloatTestInit();
             }
             
             if(gSwrbTestTaskRunCnt > 1){
-                if(!lWheelFloat.validFlag){
-                    for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                        printf("WHEEL_FLOAT->READ=0\r\n");
-                        OSTimeDlyHMSM(0,0,0,6);
-                        if(usartRxFlag){
-                            lWheelFloat.value = usartRxNum;
-                            Edit_Set_Value(ID_EDIT_U1, usartRxNum);
-                            usartRxNum = 0;
-                            usartRxFlag = 0;
-                            break;
-                        }else{
-                            continue;
-                        }
-                    }
-                    if(lWheelFloat.value){
-                        gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_FLOAT_L_POS);
-                        lWheelFloat.validCnt++;
-                    }else{
-                        gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_FLOAT_L_POS);
-                        lWheelFloat.validCnt = 0;
-                    }
-                    if(lWheelFloat.validCnt > 5){
-                        lWheelFloat.validFlag = 1;
-                    }
-                }
-                
-                if(!rWheelFloat.validFlag){
-                    for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                        printf("WHEEL_FLOAT->READ=1\r\n");
-                        OSTimeDlyHMSM(0,0,0,6);
-                        if(usartRxFlag){
-                            rWheelFloat.value = usartRxNum;
-                            Edit_Set_Value(ID_EDIT_U2, usartRxNum);
-                            usartRxNum = 0;
-                            usartRxFlag = 0;
-                            break;
-                        }else{
-                            continue;
-                        }
-                    }
-                    if(rWheelFloat.value){
-                        gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_FLOAT_R_POS);
-                        rWheelFloat.validCnt++;
-                    }else{
-                        gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_FLOAT_R_POS);
-                        rWheelFloat.validCnt = 0;
-                    }
-                    if(rWheelFloat.validCnt > 5){
-                        rWheelFloat.validFlag = 1;
-                    }
-                }
-                
-                if(lWheelFloat.validFlag && rWheelFloat.validFlag){
-                    gSwrbTestTaskRunCnt = 0;
-                    SweepRobot_Wheel_Float_Ctrl_Off();
-                    Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-                    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = lWheelFloat.value;
-                    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = rWheelFloat.value;
-                    Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
-                    Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
-                    Progbar_Set_Value( (u8)( ( (float)(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM) / (float)(SWRB_TEST_TASK_PRIO_BOUND-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM))*100) );
-
-                    OS_ENTER_CRITICAL();
-
-    #ifdef  SWRB_TEST_TASK_RUN_OBO
-                    if(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                        OSTaskResume(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO+1);
-    #endif
-                    OSTaskSuspend(OS_PRIO_SELF);
-    //                OSTaskDel(OS_PRIO_SELF);
-
-                    OS_EXIT_CRITICAL();
-                }
+                SweepRobot_WheelFloatTestProc();
             }
         
             if(gSwrbTestTaskRunCnt > 20){
-                gSwrbTestTaskRunCnt = 0;
-                SweepRobot_Wheel_Float_Ctrl_Off();
-                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-                gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = lWheelFloat.value;
-                gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = rWheelFloat.value;
-                MultiEdit_Set_Text_Color(GUI_RED);
-                if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
-                    MultiEdit_Add_Text("ERROR->WHEEL FLOAT L\r\n");
-                }
-                if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
-                    MultiEdit_Add_Text("ERROR->WHEEL FLOAT R\r\n");
-                }
-                Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_RED);
-                Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
-                Progbar_Set_Value( (u8)( ( (float)(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM) / (float)(SWRB_TEST_TASK_PRIO_BOUND-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM))*100) );
-
-                OS_ENTER_CRITICAL();
-
-    #ifdef  SWRB_TEST_TASK_RUN_OBO
-                if(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                    OSTaskResume(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO+1);
-    #endif
-                OSTaskSuspend(OS_PRIO_SELF);
-    //            OSTaskDel(OS_PRIO_SELF);
-
-                OS_EXIT_CRITICAL();
+                SweepRobot_WheelFloatTestOverTimeProc();
             }
-            
             OSTimeDlyHMSM(0,0,0,50);
         }
     }
+}
+
+void WHEEL_FLOAT_TestDataSave(void)
+{
+    SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=", wheelFloat[0].value);
+    SWRB_TestDataFileWriteData("WHEEL_FLOAT->R_Value=", wheelFloat[1].value);
 }

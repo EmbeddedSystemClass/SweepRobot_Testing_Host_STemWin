@@ -148,6 +148,7 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void);
 // USER START (Optionally insert additional public code)
 void Button_Set_Text(int buttonId, char *str);
 void Progbar_Set_Value(int progbarValue);
+void Progbar_Set_Percent(u8 teststate);
 void Edit_Set_Value(int editId, long editValue);
 void Checkbox_Set_Text(int checkboxId, char *string);
 int Checkbox_Get_State(int checkboxId);

@@ -9,7 +9,7 @@ typedef struct{
     int validFlag;
 }WHEEL_TestTypeDef;
 
-void SweepRobot_Wheel_Test_Task(void *pdata);
+void SweepRobot_WheelTestTask(void *pdata);
 void Wheel_TestDataSave(void);
 
 #endif

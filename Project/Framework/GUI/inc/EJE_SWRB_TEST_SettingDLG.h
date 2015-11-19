@@ -100,6 +100,8 @@ extern WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 WM_HWIN CreateSettingDLG(void);
 
 // USER START (Optionally insert additional public code)
+void SWRB_TestDataFileOpen(void);
+void SWRB_TestDataSaveToFile(void dataSaveProc(void));
 // USER END
 
 /*************************** End of file ****************************/

@@ -32,7 +32,7 @@ int main(void)
 	OS_Task_Create();
 	OSStart();
 
-  /* XXX: should never get here */
+ 
 NO_SD_FAULT:
     FSMC_SRAM_Init();
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
@@ -46,9 +46,11 @@ NO_SD_FAULT:
     GUI_SetFont(GUI_DEFAULT_FONT);
     GUI_SetColor(GUI_DEFAULT_COLOR);
     GUI_SetBkColor(GUI_DEFAULT_BKCOLOR);
+    
 	while(1){
         
 	}
-
+    
+    /* XXX: should never get here */
 	return -1;
 }

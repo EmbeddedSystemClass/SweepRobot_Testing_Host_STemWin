@@ -4,11 +4,12 @@
 #include "sweeprobot_testing.h"
 
 typedef struct{
-    u16 current;
+    int current;
     u8 validCnt;
     u8 validFlag;
 }FAN_TestTypeDef;
 
-void SweepRobot_Fan_Test_Task(void *pdata);
+void SweepRobot_FanTestTask(void *pdata);
+void Fan_TestDataSave(void);
 
 #endif

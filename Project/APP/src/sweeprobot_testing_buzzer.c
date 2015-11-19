@@ -3,33 +3,56 @@
 #include "usart.h"
 #include "includes.h"
 
+static BUZZER_TestTypeDef buzzer;
+
+static void SweepRobot_BuzzerTestInit(void)
+{
+    char *str;
+    
+    gSwrbTestRuningTaskPrio = SWRB_BUZZER_TEST_TASK_PRIO;
+    
+    str = "\r\n>>>BUZZER TEST<<<\r\n";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Set_Text_Color(GUI_BLACK);
+    MultiEdit_Add_Text(str);
+
+    OSTimeDlyHMSM(0,0,2,0);
+    
+    buzzer.state = 0;
+    buzzer.validCnt = 0;
+    buzzer.validFlag = 0;
+}
+
+static void SweepRobot_BuzzerTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    
+    SWRB_TestDataSaveToFile(BUZZER_TestDataSave);
+
+    MultiEdit_Set_Text_Color(GUI_RED);
+    MultiEdit_Add_Text("ERROR->BUZZER\r\n");
+    Checkbox_Set_Text_Color(ID_CHECKBOX_BUZZER, GUI_RED);
+    Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER ERROR");
+    Progbar_Set_Percent(SWRB_TEST_STATE_BUZZER);
+
+    SWRB_NextTestTaskResume(SWRB_BUZZER_TEST_TASK_PRIO);
+}
+
 void SweepRobot_Buzzer_Test_Task(void *pdata)
 {
     static u16 gSwrbTestTaskRunCnt = 0;
-    OS_CPU_SR cpu_sr;
     char *str;
   
     while(1){
       
         if(!Checkbox_Get_State(ID_CHECKBOX_BUZZER)){
-            OS_ENTER_CRITICAL();
-#ifdef SWRB_TEST_TASK_RUN_OBO
-            if(SWRB_BUZZER_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                OSTaskResume(SWRB_BUZZER_TEST_TASK_PRIO+1);
-#endif
-            OSTaskSuspend(OS_PRIO_SELF);
-            OS_EXIT_CRITICAL();
+            SWRB_NextTestTaskResume(SWRB_BUZZER_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
-                gSwrbTestRuningTaskPrio = SWRB_BUZZER_TEST_TASK_PRIO;
-                MultiEdit_Set_Text_Color(GUI_BLACK);
-                str = ">>>BUZZER TEST<<<\r\n";
-                MultiEdit_Add_Text(str);
-                mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
-                mf_puts(str);
-                OSTimeDlyHMSM(0,0,2,0);
+                SweepRobot_BuzzerTestInit();
             }
 
             if(gSwrbTestTaskRunCnt == 20){
@@ -41,27 +64,14 @@ void SweepRobot_Buzzer_Test_Task(void *pdata)
             }
 
             if(gSwrbTestTaskRunCnt > 140){
-                gSwrbTestTaskRunCnt = 0;
-                Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-
-                MultiEdit_Set_Text_Color(GUI_RED);
-                MultiEdit_Add_Text("ERROR->BUZZER\r\n");
-                Checkbox_Set_Text_Color(ID_CHECKBOX_BUZZER, GUI_RED);
-                Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER ERROR");
-                Progbar_Set_Value( (u8)((float)( (float)(SWRB_BUZZER_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM) / (float)(SWRB_BUZZER_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM))*100) );
-
-                OS_ENTER_CRITICAL();
-
-    #ifdef SWRB_TEST_TASK_RUN_OBO
-                if(SWRB_BUZZER_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                    OSTaskResume(SWRB_BUZZER_TEST_TASK_PRIO+1);
-    #endif
-                OSTaskSuspend(OS_PRIO_SELF);
-
-                OS_EXIT_CRITICAL();
+                SweepRobot_BuzzerTestOverTimeProc();
             }
-
             OSTimeDlyHMSM(0,0,0,50);
         }
     }
+}
+
+void BUZZER_TestDataSave(void)
+{
+    SWRB_TestDataFileWriteData("BUZZER->Value=", buzzer.state);
 }

@@ -17,8 +17,8 @@ u32 lastSwrbTestStateMap = 0;
 u16 gSwrbTestTaskRunCnt = 0;
 u16 gSwrbTestTaskCnt = 0;
 u8 gSwrbTestRuningTaskPrio = 0;
-char *gSwrbTestDUTSerialNum;
-u16 gSwrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
+char *gSwrbTestDataFilePath;
+int gSwrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
 
 static u8 gkeyCode = 0;
 static u8 gkeyCodeGetFinishFlag = 0;
@@ -29,7 +29,7 @@ static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
 static void Key_Task(void *pdata);
 static void Usart_Task(void *pdata);
-static void Save_Data_Task(void *pdata);
+static void SweepRobot_TestSaveDataTask(void *pdata);
 static void SWRB_Test_Ctrl_Task(void *pdata);
 //static void SweepRobot_Test_Start(void *pdata);
 //static void TIM3_ISR(void);
@@ -86,21 +86,21 @@ void Start_Task(void *pdata)
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
     OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
-    OSTaskCreate(Save_Data_Task,(void*)0,(OS_STK*)&SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE-1],SAVE_DATA_TASK_PRIO);
+    OSTaskCreate(SweepRobot_TestSaveDataTask,(void*)0,(OS_STK*)&SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE-1],SAVE_DATA_TASK_PRIO);
     OSTaskCreate(SWRB_Test_Ctrl_Task,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Wheel_Test_Task,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Brush_Test_Task,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Fan_Test_Task,(void*)0,(OS_STK*)&SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE-1],SWRB_FAN_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_IFRD_Test_Task,(void*)0,(OS_STK*)&SWRB_IFRD_TEST_TASK_STK[SWRB_IFRD_TEST_STK_SIZE-1],SWRB_IFRD_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Collision_Test_Task,(void*)0,(OS_STK*)&SWRB_COLLISION_TEST_TASK_STK[SWRB_COLLISION_TEST_STK_SIZE-1],SWRB_COLLISION_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Wheel_Float_Test_Task,(void*)0,(OS_STK*)&SWRB_WHEEL_FLOAT_TEST_TASK_STK[SWRB_WHEEL_FLOAT_TEST_STK_SIZE-1],SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Ash_Tray_Test_Task,(void*)0,(OS_STK*)&SWRB_ASH_TRAY_TEST_TASK_STK[SWRB_ASH_TRAY_TEST_STK_SIZE-1],SWRB_ASH_TRAY_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_WheelTestTask,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_BrushTestTask,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_FanTestTask,(void*)0,(OS_STK*)&SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE-1],SWRB_FAN_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_IFRDTestTask,(void*)0,(OS_STK*)&SWRB_IFRD_TEST_TASK_STK[SWRB_IFRD_TEST_STK_SIZE-1],SWRB_IFRD_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_CollisionTestTask,(void*)0,(OS_STK*)&SWRB_COLLISION_TEST_TASK_STK[SWRB_COLLISION_TEST_STK_SIZE-1],SWRB_COLLISION_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_WheelFloatTestTask,(void*)0,(OS_STK*)&SWRB_WHEEL_FLOAT_TEST_TASK_STK[SWRB_WHEEL_FLOAT_TEST_STK_SIZE-1],SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_AshTrayTestTask,(void*)0,(OS_STK*)&SWRB_ASH_TRAY_TEST_TASK_STK[SWRB_ASH_TRAY_TEST_STK_SIZE-1],SWRB_ASH_TRAY_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_UniWheel_Test_Task,(void*)0,(OS_STK*)&SWRB_UNIWHEEL_TEST_TASK_STK[SWRB_UNIWHEEL_TEST_STK_SIZE-1],SWRB_UNIWHEEL_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Key_Test_Task,(void*)0,(OS_STK*)&SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE-1],SWRB_KEY_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_IrDA_Test_Task,(void*)0,(OS_STK*)&SWRB_IRDA_TEST_TASK_STK[SWRB_IRDA_TEST_STK_SIZE-1],SWRB_IRDA_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_KeyTestTask,(void*)0,(OS_STK*)&SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE-1],SWRB_KEY_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_IrDATestTask,(void*)0,(OS_STK*)&SWRB_IRDA_TEST_TASK_STK[SWRB_IRDA_TEST_STK_SIZE-1],SWRB_IRDA_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_Buzzer_Test_Task,(void*)0,(OS_STK*)&SWRB_BUZZER_TEST_TASK_STK[SWRB_BUZZER_TEST_STK_SIZE-1],SWRB_BUZZER_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_RGB_LED_Test_Task,(void*)0,(OS_STK*)&SWRB_RGB_LED_TEST_TASK_STK[SWRB_RGB_LED_TEST_STK_SIZE-1],SWRB_RGB_LED_TEST_TASK_PRIO);
-//    OSTaskCreate(SweepRobot_Charge_Test_Task,(void*)0,(OS_STK*)&SWRB_CHARGE_TEST_TASK_STK[SWRB_CHARGE_TEST_STK_SIZE-1],SWRB_CHARGE_TEST_TASK_PRIO);
+//    OSTaskCreate(SweepRobot_ChargeTestTask,(void*)0,(OS_STK*)&SWRB_CHARGE_TEST_TASK_STK[SWRB_CHARGE_TEST_STK_SIZE-1],SWRB_CHARGE_TEST_TASK_PRIO);
 
     for(i=SWRB_WHEEL_TEST_TASK_PRIO;i<SWRB_TEST_TASK_PRIO_BOUND;i++){
         OSTaskSuspend(i);
@@ -127,6 +127,7 @@ void emWin_Maintask(void *pdata)
     GUI_Init();
 
     hWinEJE_SWRB_TEST_MAIN = CreateEJE_SweepRobot_test_System();
+    hWinEJE_SWRB_TEST_SETTING = CreateSettingDLG();
 
     WM_EnableMemdev(hWinEJE_SWRB_TEST_MAIN);
     WM_MULTIBUF_Enable(1);
@@ -195,17 +196,77 @@ void Usart_Task(void *pdata)
     }
 }
 
-void Save_Data_Task(void *pdata)
+void SWRB_TestDataFileWriteString(char *str)
 {
-    u8 i;
+    SWRB_TestDataFileOpen();
+    f_puts(str,file);
+    f_close(file);
+}
 
+void SWRB_TestDataFileWriteData(char *headstr, int data)
+{
+    char *datastr;
+    
+    f_puts(headstr, file);
+    datastr = mymalloc(SRAMIN, sizeof(char)*10);
+    sprintf(datastr, "%d\r\n", data);
+    f_puts(datastr,file);
+    myfree(SRAMIN, datastr);
+}
+
+void SweepRobot_TestSaveDataTask(void *pdata)
+{
+    
     while(1){
-        for(i=0;i<sizeof(gSwrbTestAcquiredData);i++){
-            printf("%d\r\n",gSwrbTestAcquiredData[i]);
-            
-        }
+        SWRB_TestDataFileOpen();
+        
+        SWRB_TestDataFileWriteData("WHEEL->LSPEED=", gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS]);
+        SWRB_TestDataFileWriteData("WHEEL->RSPEED=", gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS]);
+        SWRB_TestDataFileWriteData("BRUSH->LCUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS]);
+        SWRB_TestDataFileWriteData("BRUSH->RCUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS]);
+        SWRB_TestDataFileWriteData("BRUSH->MCUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS]);
+        SWRB_TestDataFileWriteData("FAN->CUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS]);
+        SWRB_TestDataFileWriteData("IFRD->FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FR_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->L_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_L_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->R_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_R_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SL_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SR_TxOn_POS]);
+        SWRB_TestDataFileWriteData("IFRD->FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FR_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->L_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_L_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->R_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_R_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SL_TxOff_POS]);
+        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SR_TxOff_POS]);
+        SWRB_TestDataFileWriteData("COLLISION->L_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS]);
+        SWRB_TestDataFileWriteData("COLLISION->FL_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_FL_VALUE_POS]);
+        SWRB_TestDataFileWriteData("COLLISION->R_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_R_VALUE_POS]);
+        SWRB_TestDataFileWriteData("COLLISION->FR_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_FR_VALUE_POS]);
+        SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS]);
+        SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS]);
+        SWRB_TestDataFileWriteData("ASH_TRAY->INS_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_INS_VALUE_POS]);
+        SWRB_TestDataFileWriteData("ASH_TRAY->LVL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS]);
+        SWRB_TestDataFileWriteData("ASH_TRAY->LVL_TxOffValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS]);
+        SWRB_TestDataFileWriteData("UNIWHEEL->TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS]);
+        SWRB_TestDataFileWriteData("UNIWHEEL->TxOffValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS]);
+        SWRB_TestDataFileWriteData("KEY->Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS]);
+        SWRB_TestDataFileWriteData("IRDA->B_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS]);
+        SWRB_TestDataFileWriteData("IRDA->L_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_L_RxCODE_POS]);
+        SWRB_TestDataFileWriteData("IRDA->FL_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_FL_RxCODE_POS]);
+        SWRB_TestDataFileWriteData("IRDA->FR_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_FR_RxCODE_POS]);
+        SWRB_TestDataFileWriteData("IRDA->R_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_R_RxCODE_POS]);
+        SWRB_TestDataFileWriteData("BUZZER->OK=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BUZZER_OK_POS]);
+        SWRB_TestDataFileWriteData("RGB_LED->OK=",gSwrbTestAcquiredData[SWRB_TEST_DATA_RGB_LED_OK_POS]);
+        SWRB_TestDataFileWriteData("CHARGE->CUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS]);
+        SWRB_TestDataFileWriteData("CHARGE->VOL=",gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS]);
+        
+        f_close(file);
+        
         OSTaskSuspend(OS_PRIO_SELF);
-        OSTimeDlyHMSM(0,0,0,50);
     }
 }
 
@@ -213,8 +274,8 @@ void SWRB_Test_Ctrl_Task(void *pdata)
 {
     SweepRobot_TestInitProc();
     
-    gSwrbTestDUTSerialNum = mymalloc(SRAMIN, sizeof(char)*40);
-    mymemset(gSwrbTestDUTSerialNum, 0, sizeof(char)*40);
+    gSwrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+    mymemset(gSwrbTestDataFilePath, 0, sizeof(char)*40);
 
     while(1){
         if(gkeyCodeGetFinishFlag == 1){
@@ -297,8 +358,10 @@ void SweepRobot_TestSetProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
         gSwrbTestMode = SWRB_TEST_MODE_SET;
-
-        hWinEJE_SWRB_TEST_SETTING = CreateSettingDLG();
+        
+        WM_HideWin(hWinEJE_SWRB_TEST_MAIN);
+        WM_ShowWin(hWinEJE_SWRB_TEST_SETTING);
+        
     }
 }
 
@@ -381,6 +444,19 @@ void SweepRobot_TestInitProc(void)
     gSwrbTestRuningTaskPrio = SWRB_TEST_START_TASK_BOUND+1;
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;
+}
+
+void SWRB_NextTestTaskResume(u8 taskPrio)
+{
+    OS_CPU_SR cpu_sr;
+    
+    OS_ENTER_CRITICAL();
+#ifdef  SWRB_TEST_TASK_RUN_OBO
+    if(taskPrio+1 < SWRB_TEST_TASK_PRIO_BOUND)
+        OSTaskResume(taskPrio+1);
+#endif
+    OSTaskSuspend(OS_PRIO_SELF);
+    OS_EXIT_CRITICAL();
 }
 
 /*

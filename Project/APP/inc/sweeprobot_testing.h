@@ -79,8 +79,6 @@ enum SWRB_TEST_STATE{
 
   SWRB_TEST_STATE_WHEEL = 1,
   SWRB_TEST_STATE_BRUSH,
-//  SWRB_TEST_STATE_SBRUSH,
-//  SWRB_TEST_STATE_MBRUSH,
   SWRB_TEST_STATE_FAN,
   SWRB_TEST_STATE_IFRD,
   SWRB_TEST_STATE_COLLISION,
@@ -91,6 +89,7 @@ enum SWRB_TEST_STATE{
   SWRB_TEST_STATE_IRDA,
   SWRB_TEST_STATE_BUZZER,
   SWRB_TEST_STATE_RGB_LED,
+  SWRB_TEST_STATE_CHARGE,
 
   SWRB_TEST_STATE_BOUND,
 };
@@ -197,11 +196,11 @@ enum SWRB_TEST_DATA_POS{
     
     SWRB_TEST_DATA_KEY_VALUE_POS,
     
-    SWRB_TEST_DATA_IRDA_B_CODE_POS,
-    SWRB_TEST_DATA_IRDA_L_CODE_POS,
-    SWRB_TEST_DATA_IRDA_FL_CODE_POS,
-    SWRB_TEST_DATA_IRDA_FR_CODE_POS,
-    SWRB_TEST_DATA_IRDA_R_CODE_POS,
+    SWRB_TEST_DATA_IRDA_B_RxCODE_POS,
+    SWRB_TEST_DATA_IRDA_L_RxCODE_POS,
+    SWRB_TEST_DATA_IRDA_FL_RxCODE_POS,
+    SWRB_TEST_DATA_IRDA_FR_RxCODE_POS,
+    SWRB_TEST_DATA_IRDA_R_RxCODE_POS,
     
     SWRB_TEST_DATA_BUZZER_OK_POS,
     
@@ -239,7 +238,7 @@ enum SWRB_TEST_TASK_PRIO{
   SAVE_DATA_TASK_PRIO,
 };
 
-#define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM 7
+#define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM     7
 
 #define START_STK_SIZE                      128
 #define TOUCH_STK_SIZE                      256
@@ -275,12 +274,16 @@ extern u8 gSwrbTestMode;
 extern u8 gSwrbTestRuningTaskPrio;
 extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
-extern char *gSwrbTestDUTSerialNum;
-extern u16 gSwrbTestAcquiredData[];
+extern char *gSwrbTestDataFilePath;
+extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
 extern u16 gSwrbTestTaskCnt;
 
 void OS_Task_Create(void);
+void SWRB_NextTestTaskResume(u8 taskPrio);
+
+void SWRB_TestDataFileWriteData(char *headstr, int data);
+void SWRB_TestDataFileWriteString(char *str);
 
 void SweepRobot_TestStartProc(void);
 void SweepRobot_TestSetProc(void);

@@ -42,6 +42,7 @@ WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 */
 
 // USER START (Optionally insert additional static data)
+static char *gSwrbTestSerialNum;
 // USER END
 
 /*********************************************************************
@@ -91,31 +92,58 @@ static void SerialNum_Comb(WM_HWIN *hWin, int id, char *dest_SNumStr)
     myfree(SRAMIN, lwBuf);
 }
 
-static void ListWheel_SerialNumComb(WM_HWIN *hWin)
+static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
 {
     WM_HWIN hItem;
-    int     lwItemIndex;
     char    *lwBuf;
     
-    *gSwrbTestDUTSerialNum = 0;
+    *gSwrbTestDataFilePath = 0;
     
     lwBuf = "0:/";
-    gSwrbTestDUTSerialNum = strcat(gSwrbTestDUTSerialNum, lwBuf);
+    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
     
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDUTSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDUTSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDUTSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestDUTSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestDUTSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestDUTSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestDataFilePath);
     
     lwBuf = ".txt";
-    gSwrbTestDUTSerialNum = strcat(gSwrbTestDUTSerialNum, lwBuf);
+    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
     
     hItem = WM_GetDialogItem(*hWin, ID_SET_EDIT_COMB);
-    EDIT_SetText(hItem, gSwrbTestDUTSerialNum);
+    EDIT_SetText(hItem, gSwrbTestDataFilePath);
+}
+
+static void ListWheel_TestDataFileWriteSN(WM_HWIN *hWin)
+{
+    char *cBuf;
     
-    f_open(file, gSwrbTestDUTSerialNum, FA_WRITE|FA_OPEN_ALWAYS);
+    SWRB_TestDataFileOpen();
+    
+    gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);
+    
+    *gSwrbTestSerialNum = 0;
+    
+    cBuf = "SerialNumber:";
+    
+    gSwrbTestSerialNum = strcat(gSwrbTestSerialNum, cBuf);
+
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestSerialNum);
+
+    f_puts(gSwrbTestSerialNum, file);
+    f_puts("\r\n", file);
+    
+    f_close(file);
+    
+    myfree(SRAMIN, gSwrbTestSerialNum);
 }
 // USER END
 
@@ -266,6 +294,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             GUI_DrawHLine(40, 0, 99);
             GUI_DrawHLine(59, 0, 99);
             GUI_SetColor(GUI_DEFAULT_COLOR);
+            
+            WM_HideWin(pMsg->hWin);
             // USER END
             break;
         case WM_NOTIFY_PARENT:
@@ -280,10 +310,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            ListWheel_SerialNumComb(&pMsg->hWin);
-                            WM_DeleteWindow(pMsg->hWin);
-                            GUI_Clear();
+                            ListWheel_TestDataFileWriteSN(&pMsg->hWin);
                             gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+                            WM_HideWin(pMsg->hWin);
+                            WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
@@ -298,8 +328,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            WM_DeleteWindow(pMsg->hWin);
-                            GUI_Clear();
+                            WM_HideWin(pMsg->hWin);
+                            WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
                             gSwrbTestMode = SWRB_TEST_MODE_IDLE;
                             // USER END
                             break;
@@ -491,6 +521,21 @@ WM_HWIN CreateSettingDLG(void) {
 }
 
 // USER START (Optionally insert additional public code)
+void SWRB_TestDataFileOpen(void)
+{
+    ListWheel_TestDataFilePathGen(&hWinEJE_SWRB_TEST_SETTING);
+    f_open(file, gSwrbTestDataFilePath, FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+    f_lseek(file, file->fsize);
+}
+
+void SWRB_TestDataSaveToFile(void dataSaveProc(void))
+{
+    SWRB_TestDataFileOpen();
+    dataSaveProc();
+    f_close(file);
+}
+
+
 // USER END
 
 /*************************** End of file ****************************/

@@ -7,117 +7,116 @@
 #define SWRB_TEST_FAN_CUR_LOW_BOUND     20
 #define SWRB_TEST_FAN_CUR_HIGH_BOUND    500
 
-void SweepRobot_Fan_Test_Task(void *pdata)
-{
-    OS_CPU_SR cpu_sr;
-    static FAN_TestTypeDef fan;
-    u8 i;
-    char *str;
+static FAN_TestTypeDef fan;
 
+static void SweepRobot_FanTestInit(void)
+{
+    char *str;
+    
+    gSwrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
+    
+    str = "\r\n>>>FAN TEST<<<";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Set_Text_Color(GUI_BLACK);
+    MultiEdit_Add_Text(str);
+    
+    OSTimeDlyHMSM(0,0,1,0);
+    
+    printf("FAN->SPEED=30\r\n");
+    fan.current = 0;
+    fan.validCnt = 0;
+    fan.validFlag = 0;
+}
+
+static void SweepRobot_FanTestProc(void)
+{
+    u8 i;
+    
+    for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
+        printf("FAN->READ\r\n");
+        OSTimeDlyHMSM(0,0,0,6);
+        if(usartRxFlag){
+            fan.current = usartRxNum;
+            Edit_Set_Value(ID_EDIT_U1, usartRxNum);
+            /* TODO: add fan over current protection here */
+            usartRxNum = 0;
+            usartRxFlag = 0;
+            break;
+        }else{
+            continue;
+        }
+    }
+    if(SWRB_TEST_FAN_CUR_LOW_BOUND < fan.current &&  SWRB_TEST_FAN_CUR_HIGH_BOUND > fan.current){
+        gSwrbTestStateMap &= ~(1<<SWRB_TEST_FAN_POS);
+        fan.validCnt++;
+    }else{
+        gSwrbTestStateMap |= (1<<SWRB_TEST_FAN_POS);
+        fan.validCnt = 0;
+    }
+
+    if(fan.validCnt > 5){
+        fan.validFlag = 1;
+        printf("FAN->SPEED=0\r\n");
+    }
+
+    if(fan.validFlag){
+        gSwrbTestTaskRunCnt = 0;
+        
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
+        SWRB_TestDataSaveToFile(Fan_TestDataSave);
+        
+        MultiEdit_Add_Text("FAN OK\r\n");
+        Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
+        Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
+        Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
+
+        SWRB_NextTestTaskResume(SWRB_FAN_TEST_TASK_PRIO);
+    }
+}
+
+static void SweepRobot_FanTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    printf("FAN->SPEED=0\r\n");
+    
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
+    SWRB_TestDataSaveToFile(Fan_TestDataSave);
+
+    MultiEdit_Add_Text("ERROR->FAN\r\n");
+    Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
+    Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
+    Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
+
+    SWRB_NextTestTaskResume(SWRB_FAN_TEST_TASK_PRIO);
+}
+
+void SweepRobot_FanTestTask(void *pdata)
+{
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_FAN)){
-            
-            OS_ENTER_CRITICAL();
-            
-#ifdef  SWRB_TEST_TASK_RUN_OBO
-            if(SWRB_FAN_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                OSTaskResume(SWRB_FAN_TEST_TASK_PRIO+1);
-#endif
-            OSTaskSuspend(OS_PRIO_SELF);
-            
-            OS_EXIT_CRITICAL();
-            
+            SWRB_NextTestTaskResume(SWRB_FAN_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
-                gSwrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
-                MultiEdit_Set_Text_Color(GUI_BLACK);
-                str = ">>>FAN TEST<<<\r\n";
-                MultiEdit_Add_Text(str);
-                mf_open("0:/test/sn20151117.txt",FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
-                mf_puts_with_offset(str);
-                OSTimeDlyHMSM(0,0,1,0);
-                printf("FAN->SPEED=30\r\n");
-                fan.current = 0;
-                fan.validCnt = 0;
-                fan.validFlag = 0;
+                SweepRobot_FanTestInit();
             }
 
             if(gSwrbTestTaskRunCnt > 5){
-                for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                    printf("FAN->READ\r\n");
-                    OSTimeDlyHMSM(0,0,0,6);
-                    if(usartRxFlag){
-                        fan.current = usartRxNum;
-                        Edit_Set_Value(ID_EDIT_U1, usartRxNum);
-                        /* TODO: add fan over current protection here */
-                        usartRxNum = 0;
-                        usartRxFlag = 0;
-                        break;
-                    }else{
-                        continue;
-                    }
-                }
-                if(SWRB_TEST_FAN_CUR_LOW_BOUND < fan.current &&  SWRB_TEST_FAN_CUR_HIGH_BOUND > fan.current){
-                    gSwrbTestStateMap &= ~(1<<SWRB_TEST_FAN_POS);
-                    fan.validCnt++;
-                }else{
-                    gSwrbTestStateMap |= (1<<SWRB_TEST_FAN_POS);
-                    fan.validCnt = 0;
-                }
-                
-                if(fan.validCnt > 5){
-                    fan.validFlag = 1;
-                    printf("FAN->SPEED=0\r\n");
-                }
-
-                if(fan.validFlag){
-                    gSwrbTestTaskRunCnt = 0;
-                    Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-                    gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
-                    Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
-                    Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
-                    Progbar_Set_Value( (u8)(( (float)(SWRB_FAN_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM) / (float)(SWRB_TEST_TASK_PRIO_BOUND-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM))*100) );
-
-                    OS_ENTER_CRITICAL();
-
-    #ifdef  SWRB_TEST_TASK_RUN_OBO
-                    if(SWRB_FAN_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-                        OSTaskResume(SWRB_FAN_TEST_TASK_PRIO+1);
-    #endif
-                    OSTaskSuspend(OS_PRIO_SELF);
-                    //        OSTaskDel(OS_PRIO_SELF);
-
-                    OS_EXIT_CRITICAL();
-                }
+                SweepRobot_FanTestProc();
             }
 
-        if(gSwrbTestTaskRunCnt > 20){
-          gSwrbTestTaskRunCnt = 0;
-          Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-          gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
-          printf("FAN->SPEED=0\r\n");
-          MultiEdit_Set_Text_Color(GUI_RED);
-          MultiEdit_Add_Text("ERROR->FAN\r\n");
-          Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
-          Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
-          Progbar_Set_Value( (u8)(( (float)(SWRB_FAN_TEST_TASK_PRIO-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM) / (float)(SWRB_TEST_TASK_PRIO_BOUND-SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM))*100) );
-
-          OS_ENTER_CRITICAL();
-
-    #ifdef  SWRB_TEST_TASK_RUN_OBO
-          if(SWRB_FAN_TEST_TASK_PRIO+1 < SWRB_TEST_TASK_PRIO_BOUND)
-            OSTaskResume(SWRB_FAN_TEST_TASK_PRIO+1);
-    #endif
-          OSTaskSuspend(OS_PRIO_SELF);
-    //      OSTaskDel(OS_PRIO_SELF);
-
-          OS_EXIT_CRITICAL();
+            if(gSwrbTestTaskRunCnt > 20){
+                SweepRobot_FanTestOverTimeProc();
+            }
+            OSTimeDlyHMSM(0,0,0,50);
         }
-
-        OSTimeDlyHMSM(0,0,0,50);
     }
-  }
+}
+
+void Fan_TestDataSave(void)
+{
+    SWRB_TestDataFileWriteData("\r\nFAN->CUR=", fan.current);
 }

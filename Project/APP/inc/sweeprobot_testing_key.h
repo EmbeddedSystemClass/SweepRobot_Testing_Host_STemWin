@@ -4,11 +4,12 @@
 #include "sweeprobot_testing.h"
 
 typedef struct{
-    u8 value;
+    int value;
     u8 validCnt;
     u8 validFlag;
 }KEY_TestTypeDef;
 
-void SweepRobot_Key_Test_Task(void *pdata);
+void SweepRobot_KeyTestTask(void *pdata);
+void KEY_TestDataSave(void);
 
 #endif

@@ -9,6 +9,7 @@ typedef struct{
     u8 validFlag;
 }WHEEL_FLOAT_TestTypeDef;
 
-void SweepRobot_Wheel_Float_Test_Task(void *pdata);
+void SweepRobot_WheelFloatTestTask(void *pdata);
+void WHEEL_FLOAT_TestDataSave(void);
 
 #endif
