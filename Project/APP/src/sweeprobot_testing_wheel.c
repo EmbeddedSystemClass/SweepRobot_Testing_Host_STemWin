@@ -4,6 +4,11 @@
 #include "includes.h"
 #include "timer.h"
 
+#define SWRB_TEST_LWHEEL_SPEED_LOW_BOUND        0
+#define SWRB_TEST_LWHEEL_SPEED_HIGH_BOUND       50
+#define SWRB_TEST_RWHEEL_SPEED_LOW_BOUND        5
+#define SWRB_TEST_RWHEEL_SPEED_HIGH_BOUND       50
+
 static WHEEL_TestTypeDef lWheel;
 static WHEEL_TestTypeDef rWheel;
 
@@ -13,7 +18,7 @@ static void SWRB_WheelTestInit(void)
     
     gSwrbTestRuningTaskPrio = SWRB_WHEEL_TEST_TASK_PRIO;
     
-    str = "\r\n>>>WHEEL TEST<<<";
+    str = "\r\n>>>WHEEL TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
@@ -35,6 +40,7 @@ static void SWRB_WheelTestInit(void)
 static void SWRB_WheelTestProc(void)
 {
     u8 i;
+    char *str;
     
     if(!lWheel.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
@@ -50,7 +56,7 @@ static void SWRB_WheelTestProc(void)
                 continue;
             }
         }
-        if(0<lWheel.speed && 50>lWheel.speed){
+        if(SWRB_TEST_LWHEEL_SPEED_LOW_BOUND<lWheel.speed && SWRB_TEST_LWHEEL_SPEED_HIGH_BOUND>lWheel.speed){
             gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_L_STATE_POS);
             lWheel.validCnt++;
         }else{
@@ -58,7 +64,7 @@ static void SWRB_WheelTestProc(void)
             lWheel.validCnt = 0;
         }
         
-        if(lWheel.validCnt > 5){
+        if(lWheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             lWheel.validFlag = 1;
             printf("LWHEEL->SPEED=0\r\n");
         }
@@ -78,7 +84,7 @@ static void SWRB_WheelTestProc(void)
                 continue;
             }
         }
-        if(0<rWheel.speed && 50>rWheel.speed){
+        if(SWRB_TEST_RWHEEL_SPEED_LOW_BOUND<rWheel.speed && SWRB_TEST_RWHEEL_SPEED_HIGH_BOUND>rWheel.speed){
             gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_R_STATE_POS);
             rWheel.validCnt++;
         }else{
@@ -86,7 +92,7 @@ static void SWRB_WheelTestProc(void)
             rWheel.validCnt = 0;
         }
         
-        if(rWheel.validCnt > 5){
+        if(rWheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             rWheel.validFlag = 1;
             printf("RWHEEL->SPEED=0\r\n");
         }
@@ -99,7 +105,10 @@ static void SWRB_WheelTestProc(void)
         gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = rWheel.speed;
         SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
-        MultiEdit_Add_Text("WHEEL OK\r\n");
+        str = "WHEEL OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        
+        MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
@@ -110,6 +119,8 @@ static void SWRB_WheelTestProc(void)
 
 static void SWRB_WheelTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
 
     printf("LWHEEL->SPEED=0\r\n");
@@ -120,12 +131,14 @@ static void SWRB_WheelTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(Wheel_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
-        MultiEdit_Add_Text("ERROR->LEFT WHEEL\r\n");
-        
+        str = "ERROR->LEFT WHEEL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
-        MultiEdit_Add_Text("ERROR->RIGHT WHEEL\r\n");
-        
+        str = "ERROR->RIGHT WHEEL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL ERROR");

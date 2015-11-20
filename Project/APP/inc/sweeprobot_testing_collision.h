@@ -11,5 +11,7 @@ typedef struct{
 
 void SweepRobot_CollisionTestTask(void *pdata);
 void Collision_TestDataSave(void);
+void SweepRobot_CollisionCtrlOn(void);
+void SweepRobot_CollisionCtrlOff(void);
 
 #endif

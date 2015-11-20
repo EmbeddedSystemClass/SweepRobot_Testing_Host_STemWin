@@ -26,12 +26,16 @@ static void SweepRobot_BuzzerTestInit(void)
 
 static void SweepRobot_BuzzerTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     
     SWRB_TestDataSaveToFile(BUZZER_TestDataSave);
 
-    MultiEdit_Set_Text_Color(GUI_RED);
-    MultiEdit_Add_Text("ERROR->BUZZER\r\n");
+    str = "ERROR->BUZZER\r\n";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_BUZZER, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_BUZZER);
@@ -41,9 +45,6 @@ static void SweepRobot_BuzzerTestOverTimeProc(void)
 
 void SweepRobot_Buzzer_Test_Task(void *pdata)
 {
-    static u16 gSwrbTestTaskRunCnt = 0;
-    char *str;
-  
     while(1){
       
         if(!Checkbox_Get_State(ID_CHECKBOX_BUZZER)){

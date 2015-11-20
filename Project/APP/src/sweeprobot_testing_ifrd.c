@@ -16,7 +16,7 @@ static void SweepRobot_IFRDTestInit(void)
 
     gSwrbTestRuningTaskPrio = SWRB_IFRD_TEST_TASK_PRIO;
     
-    str = "\r\n>>>IFRD TEST<<<";
+    str = "\r\n>>>IFRD TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
@@ -71,6 +71,7 @@ static void SweepRobot_IFRDTestTxOffProc(void)
 static void SweepRobot_IFRDTestTxOnProc(void)
 {
     int i,j;
+    char *str;
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!ifrd[i].validFlag){
@@ -105,7 +106,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                     ifrd[i].validCnt = 0;
                 }
                 
-                if(ifrd[i].validCnt > 5){
+                if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                     ifrd[i].validFlag = 1;
                 }
             }
@@ -128,8 +129,10 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
         }
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
-
-        MultiEdit_Add_Text("IFRD OK\r\n");
+        
+        str = "IFRD OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
@@ -144,6 +147,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
 static void SweepRobot_IFRDTestOverTimeProc(void)
 {
     int i;
+    char *str;
     
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
@@ -155,22 +159,46 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     }
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_L_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_F_L\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_R_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_F_R\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_L_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_S_L\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_R_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_S_R\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_B_FL\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_B_FR\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_B_SL\r\n");
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK)
-        MultiEdit_Add_Text("ERROR->IFRD_B_SR\r\n");
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_L_MASK){
+        str = "ERROR->IFRD_F_L\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_R_MASK){
+        str = "ERROR->IFRD_F_R\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_L_MASK){
+        str = "ERROR->IFRD_S_L\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_R_MASK){
+        str = "ERROR->IFRD_S_R\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK){
+        str = "ERROR->IFRD_B_FL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK){
+        str = "ERROR->IFRD_B_FR\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK){
+        str = "ERROR->IFRD_B_SL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK){
+        str = "ERROR->IFRD_B_SR\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
     Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
@@ -202,7 +230,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 50){
                 SweepRobot_IFRDTestOverTimeProc();
             }
-            OSTimeDlyHMSM(0,0,0,20);
+            OSTimeDlyHMSM(0,0,0,10);
         }
     }
 }

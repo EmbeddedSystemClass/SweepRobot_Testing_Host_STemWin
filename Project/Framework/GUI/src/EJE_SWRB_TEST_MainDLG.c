@@ -22,7 +22,6 @@
 // USER END
 
 #include "sweeprobot_testing.h"
-#include "eje_logo.h"
 
 #include "usart.h"
 #include "led.h"
@@ -615,7 +614,7 @@ void Progbar_Set_Value(int progbarValue)
 
 void Progbar_Set_Percent(u8 teststate)
 {
-    Progbar_Set_Value( (u8)( (float)(teststate) / (float)(SWRB_TEST_STATE_BOUND)*100) );
+    Progbar_Set_Value( (u8)( (float)(teststate) / (float)(SWRB_TEST_STATE_BOUND-2)*100) );
 }
 
 void Edit_Set_Value(int editId, long editValue)

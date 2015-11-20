@@ -53,6 +53,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
 static void SweepRobot_UniWheelTestTxOnProc(void)
 {
     u8 i;
+    char *str;
     
     if(!uniwheel.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
@@ -78,7 +79,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             uniwheel.validCnt = 0;
         }
         
-        if(uniwheel.validCnt > 5){
+        if(uniwheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             uniwheel.validFlag = 1;
         }
         
@@ -90,7 +91,10 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
             SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
             
-            MultiEdit_Add_Text("UNIWHEEL OK\r\n");
+            str = "UNIWHEEL OK\r\n";
+            SWRB_TestDataFileWriteString(str);
+            
+            MultiEdit_Add_Text(str);
             Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_BLUE);
             Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL OK");
             Progbar_Set_Percent(SWRB_TEST_STATE_UNIWHEEL);
@@ -102,6 +106,8 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
 
 static void SweepRobot_UniwheelTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
     
@@ -109,7 +115,10 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
     SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
     
-    MultiEdit_Add_Text("ERROR->UNIWHEEL\r\n");
+    str = "ERROR->UNIWHEEL\r\n";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_UNIWHEEL);

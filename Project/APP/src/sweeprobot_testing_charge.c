@@ -27,7 +27,7 @@ static u8 swrbChargeTestStateMap = 0;
 
 static CHARGE_TestTypeDef charge;
 
-void SweepRobot_ChargeTestGPIOInit(void)
+static void SweepRobot_ChargeTestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -78,6 +78,7 @@ static void SweepRobot_ChargeTestInit(void)
 static void SweepRobot_ChargeTestProc(void)
 {
     u8 i;
+    char *str;
     
     if(!charge.curValidFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
@@ -102,7 +103,7 @@ static void SweepRobot_ChargeTestProc(void)
             charge.curValidCnt = 0;
         }
 
-        if(charge.curValidCnt > 5){
+        if(charge.curValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.curValidFlag = 1;
         }
     }
@@ -130,7 +131,7 @@ static void SweepRobot_ChargeTestProc(void)
             charge.volValidCnt = 0;
         }
 
-        if(charge.volValidCnt > 5){
+        if(charge.volValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.volValidFlag = 1;
         }
     }
@@ -144,7 +145,10 @@ static void SweepRobot_ChargeTestProc(void)
         gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
         SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
         
-        MultiEdit_Add_Text("CHARGE OK\r\n");
+        str = "CHARGE OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        
+        MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_CHARGE);
@@ -155,6 +159,8 @@ static void SweepRobot_ChargeTestProc(void)
 
 static void SweepRobot_ChargeTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     printf("CHARGE->OFF\r\n");
     SweepRobot_Charge24VOff();
@@ -163,12 +169,18 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
     gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
     SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
     
-    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK)
-        MultiEdit_Add_Text("ERROR->CHARGE CUR\r\n");
-    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK)
-        MultiEdit_Add_Text("ERROR->CHARGE VOL\r\n");
+    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
+        str = "ERROR->CHARGE CUR\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK){
+        str = "ERROR->CHARGE VOL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
     Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_BLUE);
-    Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE OK");
+    Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_CHARGE);
 
     SWRB_NextTestTaskResume(SWRB_CHARGE_TEST_TASK_PRIO);

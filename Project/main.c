@@ -26,8 +26,6 @@ int main(void)
 	f_mount(fs[0],"0:",1);
 	f_mount(fs[1],"1:",1);
     
-//    MainTask();
-    
 	OSInit();
 	OS_Task_Create();
 	OSStart();

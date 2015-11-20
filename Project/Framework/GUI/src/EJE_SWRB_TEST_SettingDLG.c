@@ -51,21 +51,23 @@ static char *gSwrbTestSerialNum;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SET_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_0, 690, 0, 100, 115, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "cancel", ID_SET_BUTTON_1, 690, 345, 100, 115, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwYear", ID_SET_LISTWHEEL_0, 20, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwMonth", ID_SET_LISTWHEEL_1, 130, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwDay", ID_SET_LISTWHEEL_2, 240, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwSN1", ID_SET_LISTWHEEL_3, 350, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwSN2", ID_SET_LISTWHEEL_4, 460, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwSN3", ID_SET_LISTWHEEL_5, 570, 70, 110, 230, 0, 0x0, 0 },
-    { EDIT_CreateIndirect, "editComb", ID_SET_EDIT_0, 20, 360, 660, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editYear", ID_SET_EDIT_1, 20, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editMonth", ID_SET_EDIT_2, 130, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editDay", ID_SET_EDIT_3, 240, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editSN1", ID_SET_EDIT_4, 350, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editSN2", ID_SET_EDIT_5, 460, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editSN3", ID_SET_EDIT_6, 570, 320, 110, 40, 0 ,0x0, 0 },
+    { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_CONFIRM, 690, 0, 100, 115, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "check", ID_SET_BUTTON_CHECK, 690, 115, 100, 115, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "reset", ID_SET_BUTTON_RESET, 690, 230, 100, 115, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "cancel", ID_SET_BUTTON_CANCEL, 690, 345, 100, 115, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwYear", ID_SET_LISTWHEEL_YEAR, 20, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwMonth", ID_SET_LISTWHEEL_MONTH, 130, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwDay", ID_SET_LISTWHEEL_DAY, 240, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN1", ID_SET_LISTWHEEL_SN1, 350, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN2", ID_SET_LISTWHEEL_SN2, 460, 70, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN3", ID_SET_LISTWHEEL_SN3, 570, 70, 110, 230, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "editComb", ID_SET_EDIT_COMB, 20, 360, 660, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editYear", ID_SET_EDIT_YEAR, 20, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editMonth", ID_SET_EDIT_MONTH, 130, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editDay", ID_SET_EDIT_DAY, 240, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN1", ID_SET_EDIT_SN1, 350, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN2", ID_SET_EDIT_SN2, 460, 320, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN3", ID_SET_EDIT_SN3, 570, 320, 110, 40, 0 ,0x0, 0 },
     // USER START (Optionally insert additional widgets)
     // USER END
 };
@@ -175,6 +177,18 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "Confirm");
             //
+            // Initialization of 'check'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CHECK);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "Check");
+            //
+            // Initialization of 'reset'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_RESET);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "Reset");
+            //
             // Initialization of 'cancel'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CANCEL);
@@ -280,7 +294,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 LISTWHEEL_AddString(hItem, "9");
             }
             //
-            // Initialization of 'editYear'
+            // Initialization of 'edit'
             //
             
             for(i=ID_SET_EDIT_COMB;i<=ID_SET_EDIT_SN3;i++){
@@ -289,6 +303,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 EDIT_SetTextMode(hItem);
                 EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             }
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_COMB);
+            EDIT_SetMaxLen(hItem, 50);
             // USER START (Optionally insert additional code for further widget initialization)
             GUI_SetColor(GUI_RED);
             GUI_DrawHLine(40, 0, 99);
@@ -302,7 +318,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             Id    = WM_GetId(pMsg->hWinSrc);
             NCode = pMsg->Data.v;
             switch(Id) {
-                case ID_SET_BUTTON_0: // Notifications sent by 'Confirm'
+                case ID_SET_BUTTON_CONFIRM: // Notifications sent by 'Confirm'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -320,7 +336,40 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         // USER END
                     }
                     break;
-                case ID_SET_BUTTON_1: // Notifications sent by 'Cancel'
+                case ID_SET_BUTTON_CHECK: // Notifications sent by 'Check'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            ListWheel_TestDataFilePathGen(&pMsg->hWin);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_BUTTON_RESET: // Notifications sent by 'Reset'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            for(i=ID_SET_LISTWHEEL_0;i<=ID_SET_LISTWHEEL_5;i++){
+                                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                                LISTWHEEL_MoveToPos(hItem, 0);
+                            }
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_BUTTON_CANCEL: // Notifications sent by 'Cancel'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
