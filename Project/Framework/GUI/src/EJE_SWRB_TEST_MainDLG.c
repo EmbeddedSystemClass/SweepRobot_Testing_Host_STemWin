@@ -126,25 +126,22 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
+//    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
     // Initialization of 'SET'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
     // Initialization of 'STOP'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
     // Initialization of 'EXIT'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
     // Initialization of 'Msg Multiedit'
     //

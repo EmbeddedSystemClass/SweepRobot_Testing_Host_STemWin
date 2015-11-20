@@ -130,6 +130,9 @@ void emWin_Maintask(void *pdata)
     hWinEJE_SWRB_TEST_MAIN = CreateEJE_SweepRobot_test_System();
     hWinEJE_SWRB_TEST_SETTING = CreateSettingDLG();
     
+    WIDGET_SetEffect(hWinEJE_SWRB_TEST_MAIN, &WIDGET_Effect_None);
+    WIDGET_SetEffect(hWinEJE_SWRB_TEST_SETTING, &WIDGET_Effect_None);
+    
     OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);

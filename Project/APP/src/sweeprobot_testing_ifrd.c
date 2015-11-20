@@ -5,7 +5,7 @@
 
 #define SWRB_IFRD_CHAN_NUM   8
 
-static u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 800, 800, 250, 250, 150, 150, 150, 150 };
+const static u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 800, 800, 250, 250, 150, 150, 150, 150 };
 
 static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
 
@@ -103,7 +103,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                     ifrd[i].validCnt++;
                 }else{
                     gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_F_L_POS+i);
-                    ifrd[i].validCnt = 0;
+//                    ifrd[i].validCnt = 0;
                 }
                 
                 if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){

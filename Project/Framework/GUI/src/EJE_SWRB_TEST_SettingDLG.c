@@ -52,6 +52,7 @@ static char *gSwrbTestSerialNum;
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SET_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_CONFIRM, 690, 0, 100, 115, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "check", ID_SET_BUTTON_CHECK, 690, 115, 100, 115, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "reset", ID_SET_BUTTON_RESET, 690, 230, 100, 115, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "cancel", ID_SET_BUTTON_CANCEL, 690, 345, 100, 115, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwYear", ID_SET_LISTWHEEL_YEAR, 20, 70, 110, 230, 0, 0x0, 0 },
@@ -176,6 +177,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "Confirm");
             //
+            // Initialization of 'check'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CHECK);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "Check");
+            //
             // Initialization of 'reset'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_RESET);
@@ -287,7 +294,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 LISTWHEEL_AddString(hItem, "9");
             }
             //
-            // Initialization of 'editYear'
+            // Initialization of 'edit'
             //
             
             for(i=ID_SET_EDIT_COMB;i<=ID_SET_EDIT_SN3;i++){
@@ -296,6 +303,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 EDIT_SetTextMode(hItem);
                 EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             }
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_COMB);
+            EDIT_SetMaxLen(hItem, 50);
             // USER START (Optionally insert additional code for further widget initialization)
             GUI_SetColor(GUI_RED);
             GUI_DrawHLine(40, 0, 99);
@@ -321,6 +330,21 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             gSwrbTestMode = SWRB_TEST_MODE_IDLE;
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
+                            // USER END
+                            break;
+                        // USER START (Optionally insert additional code for further notification handling)
+                        // USER END
+                    }
+                    break;
+                case ID_SET_BUTTON_CHECK: // Notifications sent by 'Check'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            ListWheel_TestDataFilePathGen(&pMsg->hWin);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
@@ -353,6 +377,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
+                            for(i=ID_SET_LISTWHEEL_0;i<=ID_SET_LISTWHEEL_5;i++){
+                                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                                LISTWHEEL_MoveToPos(hItem, 0);
+                            }
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
                             gSwrbTestMode = SWRB_TEST_MODE_IDLE;

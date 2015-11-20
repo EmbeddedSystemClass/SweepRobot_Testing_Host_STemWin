@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "includes.h"
 
-#define SWRB_UNIWHEEL_VALID_THRESHOLD     120
+const static int SWRB_UNIWHEEL_VALID_THRESHOLD = 120;
 
 static UNIWHEEL_TestTypeDef uniwheel;
 

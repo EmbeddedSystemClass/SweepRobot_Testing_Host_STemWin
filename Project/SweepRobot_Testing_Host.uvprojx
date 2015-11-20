@@ -373,7 +373,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>SWRB_TEST_TASK_RUN_OBO,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>.\BSP\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Lib\ARM;..\Middlewares\STemWinLibrary522\inc;..\Middlewares\STemWinLibrary522\Config;..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc;..\Middlewares\FATFS\exfans;..\Middlewares\FATFS\src;..\Middlewares\FONTS\inc;..\Middlewares\UCOSII\CONFIG;..\Middlewares\UCOSII\CORE;..\Middlewares\UCOSII\PORT;..\Libraries\CMSIS\Devices\ST;..\Libraries\STM32F4xx_Ext\inc;..\Project;.\Framework\GUI\inc;.\APP\inc;.\Framework\GUI\res\inc</IncludePath>
+              <IncludePath>.\BSP\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Lib\ARM;..\Middlewares\STemWinLibrary528\inc;..\Middlewares\STemWinLibrary528\Config;..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\Middlewares\FATFS\exfans;..\Middlewares\FATFS\src;..\Middlewares\FONTS\inc;..\Middlewares\UCOSII\CONFIG;..\Middlewares\UCOSII\CORE;..\Middlewares\UCOSII\PORT;..\Libraries\CMSIS\Devices\ST;..\Libraries\STM32F4xx_Ext\inc;..\Project;.\Framework\GUI\inc;.\APP\inc;.\Framework\GUI\res\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -515,6 +515,11 @@
               <FileName>w25qxx.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\src\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>crypto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\crypto.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -809,52 +814,42 @@
             <File>
               <FileName>GUI_X_Touch_Analog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUI_X_Touch_Analog.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
               <FileName>GUIConf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUIConf.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.c</FilePath>
             </File>
             <File>
               <FileName>GUIDRV_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUIDRV_Template.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIDRV_Template.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf_FlexColor_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\LCDConf_FlexColor_Template.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf_FlexColor_Template.c</FilePath>
             </File>
             <File>
               <FileName>GUI_X_UCOSII.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\OS\GUI_X_UCOSII.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIConf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUIConf.h</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\OS\GUI_X_UCOSII.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\LCDConf.h</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf.h</FilePath>
+            </File>
+            <File>
+              <FileName>GUIConf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.h</FilePath>
             </File>
             <File>
               <FileName>STemWin528_CM4_OS_Keil.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares\stemwin_demo</GroupName>
-          <Files>
-            <File>
-              <FileName>GUIDEMO.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc\GUIDEMO.h</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -1555,6 +1550,11 @@
               <FileType>1</FileType>
               <FilePath>.\BSP\src\w25qxx.c</FilePath>
             </File>
+            <File>
+              <FileName>crypto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\src\crypto.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1848,52 +1848,42 @@
             <File>
               <FileName>GUI_X_Touch_Analog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUI_X_Touch_Analog.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
               <FileName>GUIConf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUIConf.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.c</FilePath>
             </File>
             <File>
               <FileName>GUIDRV_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUIDRV_Template.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIDRV_Template.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf_FlexColor_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\LCDConf_FlexColor_Template.c</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf_FlexColor_Template.c</FilePath>
             </File>
             <File>
               <FileName>GUI_X_UCOSII.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\OS\GUI_X_UCOSII.c</FilePath>
-            </File>
-            <File>
-              <FileName>GUIConf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\GUIConf.h</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\OS\GUI_X_UCOSII.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Config\LCDConf.h</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf.h</FilePath>
+            </File>
+            <File>
+              <FileName>GUIConf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.h</FilePath>
             </File>
             <File>
               <FileName>STemWin528_CM4_OS_Keil.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares\stemwin_demo</GroupName>
-          <Files>
-            <File>
-              <FileName>GUIDEMO.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary522\EMWIN_DEMO\inc\GUIDEMO.h</FilePath>
+              <FilePath>..\Middlewares\STemWinLibrary528\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
             </File>
           </Files>
         </Group>

@@ -5,9 +5,15 @@
 
 #define SWRB_BRUSH_CHAN_NUM     3
 
-u16 swrbTestBrushOCThreshold[SWRB_BRUSH_CHAN_NUM] = { 300, 300, 1000 };
-u16 swrbTestBrushCurLowBound[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
-u16 swrbTestBrushCurHighBound[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
+enum BrushChan{
+    BRUSH_CHAN_L,
+    BRUSH_CHAN_R,
+    BRUSH_CHAN_M,
+};
+
+const static u16 swrbTestBrushOCThreshold[SWRB_BRUSH_CHAN_NUM] = { 300, 300, 1000 };
+const static u16 swrbTestBrushCurLowBound[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
+const static u16 swrbTestBrushCurHighBound[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
 
 static BRUSH_TestTypeDef brush[SWRB_BRUSH_CHAN_NUM];
 
@@ -42,14 +48,14 @@ static void SWRB_BrushTestProc(void)
     u8 i,j;
     char *str;
     
-    for(j=0;j<SWRB_BRUSH_CHAN_NUM;j++){
-        if(!brush[j].validFlag){
-            for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-                printf("LBRUSH->READ\r\n");
+    for(i=0;i<SWRB_BRUSH_CHAN_NUM;i++){
+        if(!brush[i].validFlag){
+            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                printf("BRUSH->READ=%d\r\n",i);
                 OSTimeDlyHMSM(0,0,0,6);
                 if(usartRxFlag){
                     brush[i].current = usartRxNum;
-                    Edit_Set_Value(ID_EDIT_U1+j, usartRxNum);
+                    Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     break;
@@ -57,27 +63,27 @@ static void SWRB_BrushTestProc(void)
                     continue;
                 }
             }
-            if(swrbTestBrushCurLowBound[j]<brush[j].current && swrbTestBrushCurHighBound[j]>brush[j].current){
-                gSwrbTestStateMap &= ~(1<<(SWRB_TEST_BRUSH_L_STATE_POS+j));
-                brush[j].validCnt++;
+            if(swrbTestBrushCurLowBound[i]<brush[i].current && swrbTestBrushCurHighBound[i]>brush[i].current){
+                gSwrbTestStateMap &= ~(1<<(SWRB_TEST_BRUSH_L_STATE_POS+i));
+                brush[i].validCnt++;
             }else{
-                gSwrbTestStateMap |= (1<<(SWRB_TEST_BRUSH_L_STATE_POS+j));
-                brush[j].validCnt=0;
+                gSwrbTestStateMap |= (1<<(SWRB_TEST_BRUSH_L_STATE_POS+i));
+//                brush[i].validCnt=0;
             }
             
-            if( brush[j].validCnt > SWRB_TEST_VALID_COMP_TIMES){
-                brush[j].validFlag = 1;
-                printf("LBRUSH->SPEED=0\r\n");
+            if( brush[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
+                brush[i].validFlag = 1;
+                printf("BRUSH->OFF=%d\r\n",i);
             }
         }
     }
 
-    if(brush[0].validFlag && brush[1].validFlag && brush[2].validFlag){
+    if(brush[BRUSH_CHAN_L].validFlag && brush[BRUSH_CHAN_R].validFlag && brush[BRUSH_CHAN_M].validFlag){
         gSwrbTestTaskRunCnt = 0;
         
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[0].current;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[1].current;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[2].current;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[BRUSH_CHAN_L].current;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[BRUSH_CHAN_R].current;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[BRUSH_CHAN_M].current;
         SWRB_TestDataSaveToFile(Brush_TestDataSave);
         
         str = "BRUSH OK\r\n";
@@ -101,9 +107,9 @@ void SWRB_BrushTestOverTimeProc(void)
     printf("RBRUSH->SPEED=0\r\n");
     printf("MBRUSH->SPEED=0\r\n");
     
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[0].current;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[1].current;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[2].current;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[BRUSH_CHAN_L].current;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[BRUSH_CHAN_R].current;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[BRUSH_CHAN_M].current;
     SWRB_TestDataSaveToFile(Brush_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
@@ -152,7 +158,7 @@ void SweepRobot_BrushTestTask(void *pdata)
 
 void Brush_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("LBRUSH->CURRENT=", brush[0].current);
-    SWRB_TestDataFileWriteData("RBRUSH->CURRENT=", brush[1].current);
-    SWRB_TestDataFileWriteData("MBRUSH->CURRENT=", brush[2].current);
+    SWRB_TestDataFileWriteData("LBRUSH->CURRENT=", brush[BRUSH_CHAN_L].current);
+    SWRB_TestDataFileWriteData("RBRUSH->CURRENT=", brush[BRUSH_CHAN_R].current);
+    SWRB_TestDataFileWriteData("MBRUSH->CURRENT=", brush[BRUSH_CHAN_M].current);
 }

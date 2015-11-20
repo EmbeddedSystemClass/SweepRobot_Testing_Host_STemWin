@@ -7,7 +7,7 @@
 #define ASH_TRAY_TEST_CTRL_GPIO         GPIOE
 #define ASH_TRAY_TEST_CTRL_PIN          GPIO_Pin_5
 
-#define SWRB_ASH_TRAY_LVL_VALID_THRESHOLD   120
+const static int SWRB_ASH_TRAY_LVL_VALID_THRESHOLD = 120;
 
 static ASH_TRAY_TestTypeDef ashTrayIns;
 static ASH_TRAY_TestTypeDef ashTrayLvl;

@@ -3,9 +3,9 @@
 #include "usart.h"
 #include "includes.h"
 
-#define SWRB_TEST_FAN_OC_THRESHOLD      1000
-#define SWRB_TEST_FAN_CUR_LOW_BOUND     20
-#define SWRB_TEST_FAN_CUR_HIGH_BOUND    500
+const static int SWRB_TEST_FAN_OC_THRESHOLD = 1000;
+const static int SWRB_TEST_FAN_CUR_LOW_BOUND = 20;
+const static int SWRB_TEST_FAN_CUR_HIGH_BOUND = 500;
 
 static FAN_TestTypeDef fan;
 
@@ -53,7 +53,7 @@ static void SweepRobot_FanTestProc(void)
         fan.validCnt++;
     }else{
         gSwrbTestStateMap |= (1<<SWRB_TEST_FAN_POS);
-        fan.validCnt = 0;
+//        fan.validCnt = 0;
     }
 
     if(fan.validCnt > SWRB_TEST_VALID_COMP_TIMES){

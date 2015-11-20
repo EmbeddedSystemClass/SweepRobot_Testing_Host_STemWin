@@ -4,16 +4,21 @@
 #include "includes.h"
 #include "timer.h"
 
-#define SWRB_TEST_LWHEEL_SPEED_LOW_BOUND        0
-#define SWRB_TEST_LWHEEL_SPEED_HIGH_BOUND       50
-#define SWRB_TEST_RWHEEL_SPEED_LOW_BOUND        5
-#define SWRB_TEST_RWHEEL_SPEED_HIGH_BOUND       50
+#define SWRB_WHEEL_CHAN_NUM     2
 
-static WHEEL_TestTypeDef lWheel;
-static WHEEL_TestTypeDef rWheel;
+enum WheelChan{
+    WHEEL_CHAN_L,
+    WHEEL_CHAN_R,
+};
+
+const static int SWRB_TEST_WHEEL_SPEED_LOW_BOUND[SWRB_WHEEL_CHAN_NUM] = { 0, 0 };
+const static int SWRB_TEST_WHEEL_SPEED_HIGH_BOUND[SWRB_WHEEL_CHAN_NUM] = { 50, 50 };
+
+static WHEEL_TestTypeDef wheel[SWRB_WHEEL_CHAN_NUM];
 
 static void SWRB_WheelTestInit(void)
 {
+    u8 i;
     char *str;
     
     gSwrbTestRuningTaskPrio = SWRB_WHEEL_TEST_TASK_PRIO;
@@ -26,83 +31,59 @@ static void SWRB_WheelTestInit(void)
     
     OSTimeDlyHMSM(0,0,1,0);
     
-    lWheel.speed = 0;
-    lWheel.validCnt = 0;
-    lWheel.validFlag = 0;
-    rWheel.speed = 0;
-    rWheel.validCnt = 0;
-    rWheel.validFlag = 0;
+    for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){
+        wheel[i].speed = 0;
+        wheel[i].validCnt = 0;
+        wheel[i].validFlag = 0;
+    }
     
-    printf("LWHEEL->SPEED=30\r\n");
-    printf("RWHEEL->SPEED=30\r\n");
+    printf("WHEEL->DIR=1\r\n");
+    printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_L);
+    printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_R);
 }
 
 static void SWRB_WheelTestProc(void)
 {
-    u8 i;
+    u8 i,j;
     char *str;
     
-    if(!lWheel.validFlag){
-        for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("LWHEEL->READ\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
-            if(usartRxFlag){
-                lWheel.speed = (u8)usartRxNum;
-                usartRxNum = 0;
-                usartRxFlag = 0;
-                Edit_Set_Value(ID_EDIT_U1, lWheel.speed);
-                break;
-            }else{
-                continue;
+    for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){
+        if(!wheel[i].validFlag){
+            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                printf("WHEEL->READ=%d\r\n",i);
+                OSTimeDlyHMSM(0,0,0,6);
+                if(usartRxFlag){
+                    wheel[i].speed = (u8)usartRxNum;
+                    usartRxNum = 0;
+                    usartRxFlag = 0;
+                    Edit_Set_Value(ID_EDIT_U1, wheel[i].speed);
+                    break;
+                }else{
+                    continue;
+                }
             }
-        }
-        if(SWRB_TEST_LWHEEL_SPEED_LOW_BOUND<lWheel.speed && SWRB_TEST_LWHEEL_SPEED_HIGH_BOUND>lWheel.speed){
-            gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_L_STATE_POS);
-            lWheel.validCnt++;
-        }else{
-            gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_L_STATE_POS);
-            lWheel.validCnt = 0;
-        }
+            
+            if(SWRB_TEST_WHEEL_SPEED_LOW_BOUND[i]<wheel[i].speed && SWRB_TEST_WHEEL_SPEED_HIGH_BOUND[i]>wheel[i].speed){
+                gSwrbTestStateMap &= ~(1<<(SWRB_TEST_WHEEL_L_STATE_POS+i));
+                wheel[i].validCnt++;
+            }else{
+                gSwrbTestStateMap |= (1<<(SWRB_TEST_WHEEL_L_STATE_POS+i));
+                /* FIXME: to avoid error judgement,comment this */
+//                wheel[i].validCnt = 0;
+            }
         
-        if(lWheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
-            lWheel.validFlag = 1;
-            printf("LWHEEL->SPEED=0\r\n");
+            if(wheel[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
+                wheel[i].validFlag = 1;
+                printf("WHEEL->OFF=%d\r\n",i);
+            }
         }
     }
 
-    if(!rWheel.validFlag){
-        for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("RWHEEL->READ\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
-            if(usartRxFlag){
-                rWheel.speed = (u8)usartRxNum;
-                usartRxNum = 0;
-                usartRxFlag = 0;
-                Edit_Set_Value(ID_EDIT_D1, rWheel.speed);
-                break;
-            }else{
-                continue;
-            }
-        }
-        if(SWRB_TEST_RWHEEL_SPEED_LOW_BOUND<rWheel.speed && SWRB_TEST_RWHEEL_SPEED_HIGH_BOUND>rWheel.speed){
-            gSwrbTestStateMap &= ~(1<<SWRB_TEST_WHEEL_R_STATE_POS);
-            rWheel.validCnt++;
-        }else{
-            gSwrbTestStateMap |= (1<<SWRB_TEST_WHEEL_R_STATE_POS);
-            rWheel.validCnt = 0;
-        }
-        
-        if(rWheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
-            rWheel.validFlag = 1;
-            printf("RWHEEL->SPEED=0\r\n");
-        }
-    }
-
-    if(lWheel.validFlag && rWheel.validFlag ){
+    if(wheel[WHEEL_CHAN_L].validFlag && wheel[WHEEL_CHAN_R].validFlag ){
         gSwrbTestTaskRunCnt = 0;
 
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = lWheel.speed;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = rWheel.speed;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = wheel[WHEEL_CHAN_L].speed;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = wheel[WHEEL_CHAN_R].speed;
         SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
         str = "WHEEL OK\r\n";
@@ -123,11 +104,11 @@ static void SWRB_WheelTestOverTimeProc(void)
     
     gSwrbTestTaskRunCnt = 0;
 
-    printf("LWHEEL->SPEED=0\r\n");
-    printf("RWHEEL->SPEED=0\r\n");
+    printf("WHEEL->OFF=0\r\n");
+    printf("WHEEL->OFF=1\r\n");
     
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = lWheel.speed;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = rWheel.speed;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = wheel[WHEEL_CHAN_L].speed;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = wheel[WHEEL_CHAN_R].speed;
     SWRB_TestDataSaveToFile(Wheel_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
@@ -174,6 +155,6 @@ void SweepRobot_WheelTestTask(void *pdata)
 
 void Wheel_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("LWHEEL->SPEED=", lWheel.speed);
-    SWRB_TestDataFileWriteData("RWHEEL->SPEED=", rWheel.speed);
+    SWRB_TestDataFileWriteData("LWHEEL->SPEED=", wheel[WHEEL_CHAN_L].speed);
+    SWRB_TestDataFileWriteData("RWHEEL->SPEED=", wheel[WHEEL_CHAN_R].speed);
 }
