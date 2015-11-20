@@ -28,6 +28,8 @@ static void SweepRobot_RGBLEDTestInit(void)
 
 static void SweepRobot_RGBLEDTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     if(gSwrbTestStateMap){
         printf("RGB_LED->ON=1\r\n");
@@ -36,10 +38,11 @@ static void SweepRobot_RGBLEDTestOverTimeProc(void)
     }
     
     SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
+
+    str = "ERROR->RGB LED\r\n";
+    SWRB_TestDataFileWriteString(str);
     
-    MultiEdit_Set_Text_Color(GUI_RED);
-    if( !(gSwrbTestStateMap & SWRB_TEST_FAULT_RGB_LED_MASK) )
-        MultiEdit_Add_Text("ERROR->RGB LED\r\n");
+    MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_RGB_LED, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_RGB_LED);

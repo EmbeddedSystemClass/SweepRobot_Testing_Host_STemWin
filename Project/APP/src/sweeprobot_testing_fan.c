@@ -15,7 +15,7 @@ static void SweepRobot_FanTestInit(void)
     
     gSwrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
     
-    str = "\r\n>>>FAN TEST<<<";
+    str = "\r\n>>>FAN TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
@@ -32,6 +32,7 @@ static void SweepRobot_FanTestInit(void)
 static void SweepRobot_FanTestProc(void)
 {
     u8 i;
+    char *str;
     
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
         printf("FAN->READ\r\n");
@@ -55,7 +56,7 @@ static void SweepRobot_FanTestProc(void)
         fan.validCnt = 0;
     }
 
-    if(fan.validCnt > 5){
+    if(fan.validCnt > SWRB_TEST_VALID_COMP_TIMES){
         fan.validFlag = 1;
         printf("FAN->SPEED=0\r\n");
     }
@@ -66,7 +67,10 @@ static void SweepRobot_FanTestProc(void)
         gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
         SWRB_TestDataSaveToFile(Fan_TestDataSave);
         
-        MultiEdit_Add_Text("FAN OK\r\n");
+        str = "FAN OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        
+        MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
@@ -77,13 +81,18 @@ static void SweepRobot_FanTestProc(void)
 
 static void SweepRobot_FanTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     printf("FAN->SPEED=0\r\n");
     
     gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
     SWRB_TestDataSaveToFile(Fan_TestDataSave);
-
-    MultiEdit_Add_Text("ERROR->FAN\r\n");
+    
+    str = "ERROR->FAN\r\n";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
@@ -118,5 +127,5 @@ void SweepRobot_FanTestTask(void *pdata)
 
 void Fan_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("\r\nFAN->CUR=", fan.current);
+    SWRB_TestDataFileWriteData("FAN->CUR=", fan.current);
 }

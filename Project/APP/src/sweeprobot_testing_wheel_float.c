@@ -12,7 +12,7 @@
 
 static WHEEL_FLOAT_TestTypeDef wheelFloat[WHEEL_FLOAT_CHAN_NUM];
 
-void SweepRobot_WheelFloatTestGPIOInit(void)
+static void SweepRobot_WheelFloatTestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -65,6 +65,7 @@ void SweepRobot_WheelFloatTestInit(void)
 static void SweepRobot_WheelFloatTestProc(void)
 {
     u8 i,j;
+    char *str;
     
     for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
         
@@ -89,7 +90,7 @@ static void SweepRobot_WheelFloatTestProc(void)
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
                 wheelFloat[i].validCnt = 0;
             }
-            if(wheelFloat[i].validCnt > 5){
+            if(wheelFloat[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 wheelFloat[i].validFlag = 1;
             }
         }
@@ -103,7 +104,10 @@ static void SweepRobot_WheelFloatTestProc(void)
         gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[1].value;
         SWRB_TestDataSaveToFile(WHEEL_FLOAT_TestDataSave);
         
-        MultiEdit_Add_Text("WHEEL FLOAT OK\r\n");
+        str = "WHEEL FLOAT OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+
         Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL_FLOAT);
@@ -114,6 +118,8 @@ static void SweepRobot_WheelFloatTestProc(void)
 
 static void SweepRobot_WheelFloatTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     SweepRobot_WheelFloatCtrlOff();
     
@@ -122,10 +128,14 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(WHEEL_FLOAT_TestDataSave);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
-        MultiEdit_Add_Text("ERROR->WHEEL FLOAT L\r\n");
+        str = "ERROR->WHEEL FLOAT L\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
-        MultiEdit_Add_Text("ERROR->WHEEL FLOAT R\r\n");
+        str = "ERROR->WHEEL FLOAT R\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");

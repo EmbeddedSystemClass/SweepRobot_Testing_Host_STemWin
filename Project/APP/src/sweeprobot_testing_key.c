@@ -47,11 +47,16 @@ static void SweepRobot_KeyTestInit(void)
     
     OSTimeDlyHMSM(0,0,1,0);
     SweepRobot_KeyTestCtrlOn();
+    
+    key.value = 0;
+    key.validCnt = 0;
+    key.validFlag = 0;
 }
 
 static void SweepRobot_KeyTestProc(void)
 {
     u8 i;
+    char *str;
     
     if(!key.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
@@ -84,6 +89,9 @@ static void SweepRobot_KeyTestProc(void)
         gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
         SWRB_TestDataSaveToFile(KEY_TestDataSave);
         
+        str = "ERROR->KEY\r\n";
+        SWRB_TestDataFileWriteString(str);
+        
         MultiEdit_Add_Text("KEY OK\r\n");
         Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY OK");
@@ -95,13 +103,18 @@ static void SweepRobot_KeyTestProc(void)
 
 static void SweepRobot_KeyTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     SweepRobot_KeyTestCtrlOff();
 
     gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
     SWRB_TestDataSaveToFile(KEY_TestDataSave);
 
-    MultiEdit_Add_Text("ERROR->KEY\r\n");
+    str = "ERROR->KEY\r\n";
+    SWRB_TestDataFileWriteString(str);
+    
+    MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_KEY);

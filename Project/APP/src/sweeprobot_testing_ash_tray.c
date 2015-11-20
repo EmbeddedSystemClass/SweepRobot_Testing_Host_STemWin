@@ -12,7 +12,7 @@
 static ASH_TRAY_TestTypeDef ashTrayIns;
 static ASH_TRAY_TestTypeDef ashTrayLvl;
 
-void SweepRobot_AshTrayTestGPIOInit(void)
+static void SweepRobot_AshTrayTestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -26,12 +26,12 @@ void SweepRobot_AshTrayTestGPIOInit(void)
     GPIO_Init(ASH_TRAY_TEST_CTRL_GPIO, &GPIO_InitStructure);
 }
 
-void SweepRobot_Ash_Tray_Test_Ins_Ctrl_On(void)
+void SweepRobot_AshTrayTestInsCtrlOn(void)
 {
     GPIO_SetBits(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN);
 }
 
-void SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off(void)
+void SweepRobot_AshTrayTestInsCtrlOff(void)
 {
     GPIO_ResetBits(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN);
 }
@@ -49,7 +49,7 @@ static void SweepRobot_AshTrayTestInit(void)
     MultiEdit_Add_Text(str);
 
     printf("SENSOR->IFRD_LED=0\r\n");
-    SweepRobot_Ash_Tray_Test_Ins_Ctrl_On();
+    SweepRobot_AshTrayTestInsCtrlOn();
     
     OSTimeDlyHMSM(0,0,1,0);
 }
@@ -60,7 +60,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
     
     if(!ashTrayIns.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("WHEEL_FLOAT->READ=0\r\n");
+            printf("ASH_TRAY->READ=0\r\n");
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 ashTrayIns.value = usartRxNum;
@@ -79,12 +79,12 @@ static void SweepRobot_AshTrayInsTestProc(void)
             gSwrbTestStateMap |= (1<<SWRB_TEST_ASH_TRAY_INS_POS);
             ashTrayIns.validCnt = 0;
         }
-        if(ashTrayIns.validCnt > 5){
+        if(ashTrayIns.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayIns.validFlag = 1;
         }
         
         if(ashTrayIns.validFlag){
-            SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
+            SweepRobot_AshTrayTestInsCtrlOff();
         }
     }
 }
@@ -139,7 +139,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             ashTrayLvl.validCnt = 0;
         }
         
-        if(ashTrayLvl.validCnt > 5){
+        if(ashTrayLvl.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayLvl.validFlag = 1;
         }
     }
@@ -147,6 +147,8 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
 
 static void SweepRobot_AshTrayTestProc(void)
 {
+    char *str;
+    
     if(gSwrbTestTaskRunCnt > 1){
         SweepRobot_AshTrayInsTestProc();
     }
@@ -160,14 +162,17 @@ static void SweepRobot_AshTrayTestProc(void)
     if(ashTrayIns.validFlag && ashTrayLvl.validFlag){
         gSwrbTestTaskRunCnt = 0;
         printf("SENSOR->IFRD_LED=0\r\n");
-        SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
+        SweepRobot_AshTrayTestInsCtrlOff();
         
         gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_INS_VALUE_POS] = ashTrayIns.value;
         gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS] = ashTrayLvl.onValue;
         gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS] = ashTrayLvl.offValue;
         SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
         
-        MultiEdit_Add_Text("ASH TRAY OK\r\n");
+        str = "ASH TRAY OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        
+        MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_ASH_TRAY, "ASH TRAY OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_ASH_TRAY);
@@ -178,19 +183,27 @@ static void SweepRobot_AshTrayTestProc(void)
 
 static void SweepRobot_AshTrayTestOverTimeProc(void)
 {
+    char *str;
+    
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
-    SweepRobot_Ash_Tray_Test_Ins_Ctrl_Off();
+    SweepRobot_AshTrayTestInsCtrlOff();
 
     gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_INS_VALUE_POS] = ashTrayIns.value;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS] = ashTrayLvl.onValue;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS] = ashTrayLvl.offValue;
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
 
-    if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK)
-        MultiEdit_Add_Text("ERROR->ASH TRAY INS\r\n");
-    if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK)
-        MultiEdit_Add_Text("ERROR->ASH TRAY LVL\r\n");
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK){
+        str = "ERROR->ASH TRAY INS\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK){
+        str = "ERROR->ASH TRAY LVL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
     Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_ASH_TRAY, "ASH TRAY ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_ASH_TRAY);

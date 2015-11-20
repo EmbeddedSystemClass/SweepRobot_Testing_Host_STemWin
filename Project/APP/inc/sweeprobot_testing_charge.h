@@ -14,5 +14,7 @@ typedef struct{
 
 void SweepRobot_ChargeTestTask(void *pdata);
 void CHARGE_TestDataSave(void);
+void SweepRobot_Charge24VOn(void);
+void SweepRobot_Charge24VOff(void);
 
 #endif

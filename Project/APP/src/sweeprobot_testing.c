@@ -82,12 +82,7 @@ void Start_Task(void *pdata)
     OS_ENTER_CRITICAL();
 
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWINDEMO_TASK_PRIO);
-    OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
-    OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
-    OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
-    OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
     OSTaskCreate(SweepRobot_TestSaveDataTask,(void*)0,(OS_STK*)&SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE-1],SAVE_DATA_TASK_PRIO);
-    OSTaskCreate(SWRB_Test_Ctrl_Task,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
     OSTaskCreate(SweepRobot_WheelTestTask,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_BrushTestTask,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_FanTestTask,(void*)0,(OS_STK*)&SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE-1],SWRB_FAN_TEST_TASK_PRIO);
@@ -124,13 +119,22 @@ void emWin_Maintask(void *pdata)
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
     
     WM_SetCreateFlags(WM_CF_MEMDEV);
+    WM_MULTIBUF_Enable(1);
     GUI_Init();
+    
+    GUI_SetBkColor(GUI_WHITE);
+    GUI_Clear();
+    GUI_DrawBitmap( &bmeje_logo, 320, 214);
+    OSTimeDlyHMSM(0,0,1,500);
 
     hWinEJE_SWRB_TEST_MAIN = CreateEJE_SweepRobot_test_System();
     hWinEJE_SWRB_TEST_SETTING = CreateSettingDLG();
-
-    WM_EnableMemdev(hWinEJE_SWRB_TEST_MAIN);
-    WM_MULTIBUF_Enable(1);
+    
+    OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
+    OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
+    OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
+    OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
+    OSTaskCreate(SWRB_Test_Ctrl_Task,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
 
     MultiEdit_Set_Text("PRESS KEY0 TO START\r\n");
     MultiEdit_Add_Text("READY FOR TESTING\r\n");
@@ -291,7 +295,6 @@ void SWRB_Test_Ctrl_Task(void *pdata)
                 /* TEST STOP PRESSED */
                 case 3:
                     SweepRobot_TestStopProc();
-    //                OSTaskResume(SAVE_DATA_TASK_PRIO);
                     break;
                 /* TEST EXIT PRESSED */
                 case 4:
@@ -323,9 +326,11 @@ void SweepRobot_TestStartProc(void)
 
         Button_Set_Text(ID_BUTTON_START, "PAUSE");
         printf("TEST->ON\r\n");
+        
         OS_ENTER_CRITICAL();
         OSTaskResume(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
+        
         gkeyCode = 0;
         gkeyCodeGetFinishFlag = 0;
     }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
@@ -361,7 +366,6 @@ void SweepRobot_TestSetProc(void)
         
         WM_HideWin(hWinEJE_SWRB_TEST_MAIN);
         WM_ShowWin(hWinEJE_SWRB_TEST_SETTING);
-        
     }
 }
 
@@ -375,11 +379,15 @@ void SweepRobot_TestStopProc(void)
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
         Button_Set_Text(ID_BUTTON_START, "START");
+        
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
-        for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++)
+        
+        for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
+        }
+        
         SweepRobot_TestInitProc();
         gkeyCode = 0;
         gkeyCodeGetFinishFlag = 0;
@@ -400,8 +408,10 @@ void SweepRobot_TestExitProc(void)
         OS_EXIT_CRITICAL();
         SweepRobot_TestInitProc();
         printf("TEST->OFF\r\n");
+        
         MultiEdit_Set_Text("ROBOT EXIT TEST MODE\r\n");
         MultiEdit_Add_Text("PRESS START TO ENTER TEST MODE AND START TEST\r\n");
+        
         gkeyCode = 0;
         gkeyCodeGetFinishFlag = 0;
     }
@@ -409,7 +419,17 @@ void SweepRobot_TestExitProc(void)
 
 void SweepRobot_TestInitProc(void)
 {
+    int i;
+    
+    SweepRobot_Charge24VOff();
+    SweepRobot_KeyTestCtrlOff();
+    SweepRobot_CollisionCtrlOff();
+    SweepRobot_WheelFloatCtrlOff();
+    SweepRobot_AshTrayTestInsCtrlOff();
+
     printf("TEST->ON\r\n");
+    printf("CHARGE->OFF\r\n");
+    printf("IRDA->OFF\r\n");
     printf("LWHEEL->SPEED=0\r\n");
     printf("RWHEEL->SPEED=0\r\n");
     printf("LBRUSH->SPEED=0\r\n");
@@ -418,8 +438,11 @@ void SweepRobot_TestInitProc(void)
     printf("FAN->SPEED=0\r\n");
     printf("SENSOR->IFRD_LED=0\r\n");
     printf("SENSOR->B_SWITCH=0\r\n");
-    printf("CHARGE->OFF\r\n");
-    printf("IRDA->OFF\r\n");
+    
+    for(i=ID_EDIT_1;i<=ID_EDIT_17;i++){
+        Edit_Set_Value(i, 0);
+    }
+    
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL");
     Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH");
     Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN");
@@ -432,8 +455,12 @@ void SweepRobot_TestInitProc(void)
     Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA");
     Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER");
     Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED");
+    Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE");
+    
     Progbar_Set_Value(0);
+    
     MultiEdit_Set_Text("TEST STOPED\r\n");
+    
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE)
         MultiEdit_Add_Text("PRESS START TO START TEST\r\n");
     if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
@@ -442,6 +469,7 @@ void SweepRobot_TestInitProc(void)
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
     gSwrbTestRuningTaskPrio = SWRB_TEST_START_TASK_BOUND+1;
+    
     gkeyCode = 0;
     gkeyCodeGetFinishFlag = 0;
 }
@@ -452,15 +480,18 @@ void SWRB_NextTestTaskResume(u8 taskPrio)
     
     OS_ENTER_CRITICAL();
 #ifdef  SWRB_TEST_TASK_RUN_OBO
-    if(taskPrio+1 < SWRB_TEST_TASK_PRIO_BOUND)
+    if(taskPrio+1 < SWRB_TEST_TASK_PRIO_BOUND){
         OSTaskResume(taskPrio+1);
+    }else{
+        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    }
 #endif
     OSTaskSuspend(OS_PRIO_SELF);
     OS_EXIT_CRITICAL();
 }
 
 /*
-void SweepRobot_Test_Test_Task(void *pdata)
+void SweepRobot_TestTestTask(void *pdata)
 {
   OS_CPU_SR cpu_sr;
 

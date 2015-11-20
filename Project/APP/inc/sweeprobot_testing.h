@@ -30,6 +30,7 @@
 
 #include "EJE_SWRB_TEST_MainDLG.h"
 #include "EJE_SWRB_TEST_SettingDLG.h"
+#include "eje_logo.h"
 
 enum SWRB_Test_State_Pos{
 
@@ -266,6 +267,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define DATAMSG_Q_NUM	                    4
 
 #define SWRB_TEST_USART_READ_TIMES          5
+#define SWRB_TEST_VALID_COMP_TIMES          5
 
 extern u8 usartRxFlag;
 extern int usartRxNum;

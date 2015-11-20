@@ -16,7 +16,7 @@
 
 static IRDA_TestTypeDef IrDA[SWRB_TEST_IRDA_CHAN_NUM];
 
-void SweepRobot_IrDATestGPIOInit(void)
+static void SweepRobot_IrDATestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -99,6 +99,7 @@ static void SweepRobot_IrDATestInit(void)
 static void SweepRobot_IrDATestProc(void)
 {
     u8 i,j;
+    char *str;
     
     for(j=0;j<SWRB_TEST_IRDA_CHAN_NUM;j++){
         if(!IrDA[j].validFlag){
@@ -147,7 +148,10 @@ static void SweepRobot_IrDATestProc(void)
         }
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
-        MultiEdit_Add_Text("IRDA OK\r\n");
+        str = "IRDA OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+        
+        MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_IRDA);
@@ -159,6 +163,7 @@ static void SweepRobot_IrDATestProc(void)
 static void SweepRobot_IrDATestOverTimeProc(void)
 {
     u8 i;
+    char *str;
     
     gSwrbTestTaskRunCnt = 0;
 
@@ -168,19 +173,29 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
-        MultiEdit_Add_Text("ERROR->IRDA_B\r\n");
+        str = "ERROR->IRDA_B\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
-        MultiEdit_Add_Text("ERROR->IRDA_L\r\n");
+        str = "ERROR->IRDA_L\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
-        MultiEdit_Add_Text("ERROR->IRDA_FL\r\n");
+        str = "ERROR->IRDA_FL\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
-        MultiEdit_Add_Text("ERROR->IRDA_FR\r\n");
+        str = "ERROR->IRDA_FR\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
-        MultiEdit_Add_Text("ERROR->IRDA_R\r\n");
+        str = "ERROR->IRDA_R\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA ERROR");
@@ -191,9 +206,7 @@ static void SweepRobot_IrDATestOverTimeProc(void)
 
 void SweepRobot_IrDATestTask(void *pdata)
 {
-    u8 i,j;
-    char *str;
-
+    
     SweepRobot_IrDATestGPIOInit();
 
     while(1){
