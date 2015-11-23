@@ -98,8 +98,9 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_BLUE);
             Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL OK");
             Progbar_Set_Percent(SWRB_TEST_STATE_UNIWHEEL);
+            Edit_Clear();
 
-            SWRB_NextTestTaskResume(SWRB_UNIWHEEL_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
         }
     }
 }
@@ -122,8 +123,9 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_UNIWHEEL);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_UNIWHEEL_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
 }
 
 void SweepRobot_UniWheel_Test_Task(void *pdata)
@@ -132,7 +134,7 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_UNIWHEEL)){
-            SWRB_NextTestTaskResume(SWRB_UNIWHEEL_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

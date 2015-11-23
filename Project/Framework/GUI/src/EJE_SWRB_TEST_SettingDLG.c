@@ -80,6 +80,28 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
+static void Button_Init(WM_HWIN hItem)
+{
+    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+    BUTTON_SetSkinClassic(hItem);
+    BUTTON_SetFocussable(hItem, DISABLE);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+}
+
+static void ListWheel_GetText(WM_HWIN *hWin,int id, char *str)
+{
+    WM_HWIN hItem;
+    int     lwItemIndex;
+    char    *lwBuf;
+   
+    hItem = WM_GetDialogItem(*hWin, id);
+    lwItemIndex = LISTWHEEL_GetPos(hItem);
+    lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+    LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+    mymemcpy(str,lwBuf,1);
+    myfree(SRAMIN, lwBuf);
+}
+
 static void SerialNum_Comb(WM_HWIN *hWin, int id, char *dest_SNumStr)
 {
     WM_HWIN hItem;
@@ -117,36 +139,6 @@ static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
     hItem = WM_GetDialogItem(*hWin, ID_SET_EDIT_COMB);
     EDIT_SetText(hItem, gSwrbTestDataFilePath);
 }
-
-static void ListWheel_TestDataFileWriteSN(WM_HWIN *hWin)
-{
-    char *cBuf;
-    
-    SWRB_TestDataFileOpen();
-    
-    gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
-    mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);
-    
-    *gSwrbTestSerialNum = 0;
-    
-    cBuf = "SerialNumber:";
-    
-    gSwrbTestSerialNum = strcat(gSwrbTestSerialNum, cBuf);
-
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestSerialNum);
-
-    f_puts(gSwrbTestSerialNum, file);
-    f_puts("\r\n", file);
-    
-    f_close(file);
-    
-    myfree(SRAMIN, gSwrbTestSerialNum);
-}
 // USER END
 
 /*********************************************************************
@@ -174,26 +166,28 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             // Initialization of 'confirm'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CONFIRM);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "Confirm");
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_DARKGRAY);
             //
             // Initialization of 'check'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CHECK);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "Check");
+            Button_Init(hItem);
             //
             // Initialization of 'reset'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_RESET);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "Reset");
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_DARKGRAY);
             //
             // Initialization of 'cancel'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_BUTTON_CANCEL);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "Cancel");
+            Button_Init(hItem);
             //
             // Initialization of 'lwYear'
             //
@@ -326,7 +320,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            ListWheel_TestDataFileWriteSN(&pMsg->hWin);
                             gSwrbTestMode = SWRB_TEST_MODE_IDLE;
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
@@ -574,6 +567,61 @@ WM_HWIN CreateSettingDLG(void) {
 }
 
 // USER START (Optionally insert additional public code)
+void SWRB_ListWheelSNInc(WM_HWIN *hWin)
+{
+    WM_HWIN hItem;
+    int     lwItemIndex;
+    char    *strSN1,*strSN2,*strSN3;
+    char *str;
+    
+    strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
+    strSN2 = mymalloc(SRAMIN, sizeof(char)*3);
+    strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
+    
+    ListWheel_GetText(hWin, ID_SET_LISTWHEEL_SN3, strSN3);
+    if(*strSN3 != '9'){
+        hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN3);
+        lwItemIndex = LISTWHEEL_GetPos(hItem);
+        LISTWHEEL_SetPos(hItem, lwItemIndex+1);
+        LISTWHEEL_SetSel(hItem, lwItemIndex+1);
+    }else{
+        hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN3);
+        LISTWHEEL_SetPos(hItem, 0);
+        LISTWHEEL_SetSel(hItem, 0);
+        
+        ListWheel_GetText(hWin, ID_SET_LISTWHEEL_SN2, strSN2);
+        if(*strSN2 != '9'){
+            hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN2);
+            lwItemIndex = LISTWHEEL_GetPos(hItem);
+            LISTWHEEL_SetPos(hItem, lwItemIndex+1);
+            LISTWHEEL_SetSel(hItem, lwItemIndex+1);
+        }else{
+            hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN2);
+            LISTWHEEL_SetPos(hItem, 0);
+            LISTWHEEL_SetSel(hItem, 0);
+            
+            ListWheel_GetText(hWin, ID_SET_LISTWHEEL_SN1, strSN1);
+            if(*strSN1 != '9'){
+                hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN1);
+                lwItemIndex = LISTWHEEL_GetPos(hItem);
+                LISTWHEEL_SetPos(hItem, lwItemIndex+1);
+                LISTWHEEL_SetSel(hItem, lwItemIndex+1);
+            }else{
+                str = "SerialNumber is larger than 999, return to 0\r\n";
+                SWRB_TestDataFileWriteString(str);
+                MultiEdit_Add_Text(str);
+                hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN1);
+                LISTWHEEL_SetPos(hItem, 0);
+                LISTWHEEL_SetSel(hItem, 0);
+            }
+        }
+    }
+    
+    myfree(SRAMIN, strSN1);
+    myfree(SRAMIN, strSN2);
+    myfree(SRAMIN, strSN3);
+}
+
 void SWRB_TestDataFileOpen(void)
 {
     ListWheel_TestDataFilePathGen(&hWinEJE_SWRB_TEST_SETTING);
@@ -588,6 +636,35 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
     f_close(file);
 }
 
+void SWRB_TestDataFileWriteSN(WM_HWIN *hWin)
+{
+    char *cBuf;
+    
+    SWRB_TestDataFileOpen();
+    
+    gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);
+    
+    *gSwrbTestSerialNum = 0;
+    
+    cBuf = "\nSerialNumber:";
+    
+    gSwrbTestSerialNum = strcat(gSwrbTestSerialNum, cBuf);
+
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestSerialNum);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestSerialNum);
+
+    f_puts(gSwrbTestSerialNum, file);
+    f_puts("\r\n", file);
+    
+    f_close(file);
+    
+    myfree(SRAMIN, gSwrbTestSerialNum);
+}
 
 // USER END
 

@@ -46,8 +46,9 @@ static void SweepRobot_RGBLEDTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_RGB_LED, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_RGB_LED);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_RGB_LED_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
 }
 
 void SweepRobot_RGB_LED_Test_Task(void *pdata)
@@ -55,7 +56,7 @@ void SweepRobot_RGB_LED_Test_Task(void *pdata)
     while(1){
       
         if(!Checkbox_Get_State(ID_CHECKBOX_RGB_LED)){
-            SWRB_NextTestTaskResume(SWRB_RGB_LED_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_RGB_LED_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

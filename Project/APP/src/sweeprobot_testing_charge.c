@@ -152,8 +152,9 @@ static void SweepRobot_ChargeTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_CHARGE);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_CHARGE_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
     }
 }
 
@@ -179,11 +180,12 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
-    Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_BLUE);
+    Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_CHARGE);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_CHARGE_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
 }
 
 void SweepRobot_ChargeTestTask(void *pdata)
@@ -193,7 +195,7 @@ void SweepRobot_ChargeTestTask(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_CHARGE)){
-            SWRB_NextTestTaskResume(SWRB_CHARGE_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_CHARGE_TEST_TASK_PRIO);
         }else{
         
             gSwrbTestTaskRunCnt++;

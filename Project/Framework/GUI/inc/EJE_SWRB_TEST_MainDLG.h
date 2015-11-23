@@ -37,32 +37,40 @@
 #define ID_CHECKBOX_10		(GUI_ID_USER + 0x0B)
 #define ID_CHECKBOX_11		(GUI_ID_USER + 0x0C)
 #define ID_CHECKBOX_12		(GUI_ID_USER + 0x0D)
-#define ID_EDIT_1		(GUI_ID_USER + 0x0F)
-#define ID_EDIT_2		(GUI_ID_USER + 0x10)
-#define ID_EDIT_3		(GUI_ID_USER + 0x11)
-#define ID_EDIT_4		(GUI_ID_USER + 0x12)
-#define ID_EDIT_5		(GUI_ID_USER + 0x13)
-#define ID_EDIT_6		(GUI_ID_USER + 0x14)
-#define ID_EDIT_7		(GUI_ID_USER + 0x15)
-#define ID_EDIT_8		(GUI_ID_USER + 0x16)
-#define ID_EDIT_9		(GUI_ID_USER + 0x17)
-#define ID_EDIT_10		(GUI_ID_USER + 0x18)
-#define ID_EDIT_11		(GUI_ID_USER + 0x19)
-#define ID_EDIT_12		(GUI_ID_USER + 0x1A)
-#define ID_EDIT_13		(GUI_ID_USER + 0x1B)
-#define ID_EDIT_14		(GUI_ID_USER + 0x1C)
-#define ID_EDIT_15		(GUI_ID_USER + 0x1D)
-#define ID_EDIT_16		(GUI_ID_USER + 0x1E)
-#define ID_EDIT_17		(GUI_ID_USER + 0x1F)
-#define ID_BUTTON_1		(GUI_ID_USER + 0x21)
-#define ID_BUTTON_2		(GUI_ID_USER + 0x22)
-#define ID_BUTTON_3		(GUI_ID_USER + 0x23)
-#define ID_BUTTON_4		(GUI_ID_USER + 0x24)
-#define ID_FRAMEWIN_0		(GUI_ID_USER + 0x25)
-#define ID_PROGBAR_0		(GUI_ID_USER + 0x26)
-#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x27)
-#define ID_GRAPH_0		(GUI_ID_USER + 0x28)
-#define ID_MAIN_BOUND   (GUI_ID_USER + 0x29)
+#define ID_EDIT_0		(GUI_ID_USER + 0x0F)
+#define ID_EDIT_1		(GUI_ID_USER + 0x10)
+#define ID_EDIT_2		(GUI_ID_USER + 0x11)
+#define ID_EDIT_3		(GUI_ID_USER + 0x12)
+#define ID_EDIT_4		(GUI_ID_USER + 0x13)
+#define ID_EDIT_5		(GUI_ID_USER + 0x14)
+#define ID_EDIT_6		(GUI_ID_USER + 0x15)
+#define ID_EDIT_7		(GUI_ID_USER + 0x16)
+#define ID_EDIT_8		(GUI_ID_USER + 0x17)
+#define ID_EDIT_9		(GUI_ID_USER + 0x18)
+#define ID_EDIT_10		(GUI_ID_USER + 0x19)
+#define ID_EDIT_11		(GUI_ID_USER + 0x1A)
+#define ID_EDIT_12		(GUI_ID_USER + 0x1B)
+#define ID_EDIT_13		(GUI_ID_USER + 0x1C)
+#define ID_EDIT_14		(GUI_ID_USER + 0x1D)
+#define ID_EDIT_15		(GUI_ID_USER + 0x1E)
+#define ID_EDIT_16		(GUI_ID_USER + 0x1F)
+#define ID_EDIT_17      (GUI_ID_USER + 0x20)
+#define ID_EDIT_18      (GUI_ID_USER + 0x21)
+#define ID_EDIT_19      (GUI_ID_USER + 0x22)
+#define ID_EDIT_20      (GUI_ID_USER + 0x23)
+#define ID_EDIT_21      (GUI_ID_USER + 0x24)
+#define ID_EDIT_22      (GUI_ID_USER + 0x25)
+#define ID_BUTTON_1		(GUI_ID_USER + 0x31)
+#define ID_BUTTON_2		(GUI_ID_USER + 0x32)
+#define ID_BUTTON_3		(GUI_ID_USER + 0x33)
+#define ID_BUTTON_4		(GUI_ID_USER + 0x34)
+#define ID_FRAMEWIN_0		(GUI_ID_USER + 0x35)
+#define ID_PROGBAR_0		(GUI_ID_USER + 0x36)
+#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x37)
+#define ID_GRAPH_0		(GUI_ID_USER + 0x38)
+#define ID_WINDOW_0     (GUI_ID_USER + 0x39)
+#define ID_MAIN_BOUND   (GUI_ID_USER + 0x3A)
+
 
 // USER START (Optionally insert additional defines)
 #define ID_BUTTON_START           ID_BUTTON_1
@@ -70,6 +78,10 @@
 #define ID_BUTTON_STOP            ID_BUTTON_3
 #define ID_BUTTON_EXIT            ID_BUTTON_4
 #define ID_GRAPH_CURVE            ID_GRAPH_0
+#define ID_MULTIEDIT_MAIN         ID_MULTIEDIT_0
+#define ID_PROGBAR_MAIN           ID_PROGBAR_0
+#define ID_FRAMEWIN_MAIN          ID_FRAMEWIN_0
+#define ID_WINDOW_MAIN            ID_WINDOW_0
 
 enum GUI_ID_CHECKBOX{
   ID_CHECKBOX_WHEEL = ID_CHECKBOX_0,
@@ -89,24 +101,30 @@ enum GUI_ID_CHECKBOX{
 };
 
 enum GUI_ID_EDIT{
-  ID_EDIT_U1 = ID_EDIT_1,
-  ID_EDIT_U2,
-  ID_EDIT_U3,
-  ID_EDIT_U4,
-  ID_EDIT_U5,
-  ID_EDIT_U6,
-  ID_EDIT_U7,
-  ID_EDIT_U8,
-  ID_EDIT_D1,
-  ID_EDIT_D2,
-  ID_EDIT_D3,
-  ID_EDIT_D4,
-  ID_EDIT_D5,
-  ID_EDIT_D6,
-  ID_EDIT_D7,
-  ID_EDIT_D8,
-  ID_EDIT_HEX,
-  ID_EDIT_BOUND,
+    ID_EDIT_U1 = ID_EDIT_0,
+    ID_EDIT_U2,
+    ID_EDIT_U3,
+    ID_EDIT_U4,
+    ID_EDIT_U5,
+    ID_EDIT_U6,
+    ID_EDIT_U7,
+    ID_EDIT_U8,
+    ID_EDIT_D1,
+    ID_EDIT_D2,
+    ID_EDIT_D3,
+    ID_EDIT_D4,
+    ID_EDIT_D5,
+    ID_EDIT_D6,
+    ID_EDIT_D7,
+    ID_EDIT_D8,
+    ID_EDIT_SN,
+    ID_EDIT_YEAR,
+    ID_EDIT_MONTH,
+    ID_EDIT_DAY,
+    ID_EDIT_HOUR,
+    ID_EDIT_MIN,
+    ID_EDIT_SEC,
+    ID_EDIT_BOUND,
 };
 
 // USER END
@@ -147,11 +165,14 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void);
 
 // USER START (Optionally insert additional public code)
 void Button_Set_Text(int buttonId, char *str);
+void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(u8 teststate);
 void Edit_Set_Value(int editId, long editValue);
+void Edit_Clear(void);
 void Checkbox_Set_Text(int checkboxId, char *string);
 int Checkbox_Get_State(int checkboxId);
+void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio);
 void Checkbox_Set_State(int checkboxId , unsigned int checkboxState);
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxcolor);
 void Checkbox_Set_TextAlign(int checkboxId, int align);

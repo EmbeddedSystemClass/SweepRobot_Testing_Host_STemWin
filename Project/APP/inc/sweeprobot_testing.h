@@ -41,21 +41,21 @@ enum SWRB_Test_State_Pos{
 
   SWRB_TEST_BRUSH_M_STATE_POS,
   SWRB_TEST_FAN_POS,
-  SWRB_TEST_IFRD_F_L_POS,
-  SWRB_TEST_IFRD_F_R_POS,
+  SWRB_TEST_IFRD_FL_POS,
+  SWRB_TEST_IFRD_FR_POS,
 
-  SWRB_TEST_IFRD_S_L_POS,
-  SWRB_TEST_IFRD_S_R_POS,
-  SWRB_TEST_IFRD_B_F_L_POS,
-  SWRB_TEST_IFRD_B_F_R_POS,
+  SWRB_TEST_IFRD_L_POS,
+  SWRB_TEST_IFRD_R_POS,
+  SWRB_TEST_IFRD_B_FL_POS,
+  SWRB_TEST_IFRD_B_FR_POS,
 
-  SWRB_TEST_IFRD_B_S_L_POS,
-  SWRB_TEST_IFRD_B_S_R_POS,
+  SWRB_TEST_IFRD_B_SL_POS,
+  SWRB_TEST_IFRD_B_SR_POS,
   SWRB_TEST_COLLISION_L_POS,
-  SWRB_TEST_COLLISION_F_L_POS,
+  SWRB_TEST_COLLISION_FL_POS,
 
   SWRB_TEST_COLLISION_R_POS,
-  SWRB_TEST_COLLISION_F_R_POS,
+  SWRB_TEST_COLLISION_FR_POS,
   SWRB_TEST_WHEEL_FLOAT_L_POS,
   SWRB_TEST_WHEEL_FLOAT_R_POS,
 
@@ -114,10 +114,10 @@ enum SWRB_TEST_MODE{
 #define SWRB_TEST_FAULT_FAN_MASK              0x00000020
 
 #define SWRB_TEST_FAULT_IFRD_MASK             0x00003FC0
-#define SWRB_TEST_FAULT_IFRD_F_L_MASK         0x00000040
-#define SWRB_TEST_FAULT_IFRD_F_R_MASK         0x00000080
-#define SWRB_TEST_FAULT_IFRD_S_L_MASK         0x00000100
-#define SWRB_TEST_FAULT_IFRD_S_R_MASK         0x00000200
+#define SWRB_TEST_FAULT_IFRD_FL_MASK          0x00000040
+#define SWRB_TEST_FAULT_IFRD_FR_MASK          0x00000080
+#define SWRB_TEST_FAULT_IFRD_L_MASK           0x00000100
+#define SWRB_TEST_FAULT_IFRD_R_MASK           0x00000200
 #define SWRB_TEST_FAULT_IFRD_B_FL_MASK        0x00000400
 #define SWRB_TEST_FAULT_IFRD_B_FR_MASK        0x00000800
 #define SWRB_TEST_FAULT_IFRD_B_SL_MASK        0x00001000
@@ -125,9 +125,9 @@ enum SWRB_TEST_MODE{
 
 #define SWRB_TEST_FAULT_COLLISION_MASK        0x0003C000
 #define SWRB_TEST_FAULT_COLLISION_L_MASK      0x00004000
-#define SWRB_TEST_FAULT_COLLISION_F_L_MASK    0x00008000
-#define SWRB_TEST_FAULT_COLLISION_F_R_MASK    0x00010000
-#define SWRB_TEST_FAULT_COLLISION_R_MASK      0x00020000
+#define SWRB_TEST_FAULT_COLLISION_FL_MASK     0x00008000
+#define SWRB_TEST_FAULT_COLLISION_R_MASK      0x00010000
+#define SWRB_TEST_FAULT_COLLISION_FR_MASK     0x00020000
 
 #define SWRB_TEST_FAULT_WHEEL_FLOAT_MASK      0x000C0000
 #define SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK    0x00040000
@@ -234,6 +234,7 @@ enum SWRB_TEST_TASK_PRIO{
   SWRB_CHARGE_TEST_TASK_PRIO,
   SWRB_TEST_TASK_PRIO_BOUND,//21
   USART_TASK_PRIO,
+  RTC_TASK_PRIO,
   LED_TASK_PRIO,
   START_TASK_PRIO,
   SAVE_DATA_TASK_PRIO,
@@ -242,9 +243,10 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM     7
 
 #define START_STK_SIZE                      128
-#define TOUCH_STK_SIZE                      256
-#define KEY_STK_SIZE                        256
+#define TOUCH_STK_SIZE                      128
+#define KEY_STK_SIZE                        128
 #define USART_STK_SIZE                      256
+#define RTC_STK_SIZE                        256
 #define EMWINDEMO_STK_SIZE		            2048
 #define LED_STK_SIZE				        128
 #define SAVE_DATA_STK_SIZE                  128
@@ -279,10 +281,11 @@ extern u32 lastSwrbTestStateMap;
 extern char *gSwrbTestDataFilePath;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
-extern u16 gSwrbTestTaskCnt;
+extern volatile int gSwrbTestTaskCnt;
 
 void OS_Task_Create(void);
-void SWRB_NextTestTaskResume(u8 taskPrio);
+void SWRB_NextTestTaskResumePreAct(u8 taskPrio);
+void SWRB_NextTestTaskResumePostAct(u8 taskPrio);
 
 void SWRB_TestDataFileWriteData(char *headstr, int data);
 void SWRB_TestDataFileWriteString(char *str);

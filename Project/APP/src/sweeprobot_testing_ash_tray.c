@@ -176,8 +176,9 @@ static void SweepRobot_AshTrayTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_ASH_TRAY, "ASH TRAY OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_ASH_TRAY);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_ASH_TRAY_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
     }
 }
 
@@ -207,8 +208,9 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_ASH_TRAY, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_ASH_TRAY, "ASH TRAY ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_ASH_TRAY);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_ASH_TRAY_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
 }
 
 void SweepRobot_AshTrayTestTask(void *pdata)
@@ -219,7 +221,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_ASH_TRAY)){
-            SWRB_NextTestTaskResume(SWRB_ASH_TRAY_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

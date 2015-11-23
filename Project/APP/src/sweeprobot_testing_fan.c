@@ -74,8 +74,9 @@ static void SweepRobot_FanTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_FAN_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
     }
 }
 
@@ -96,8 +97,9 @@ static void SweepRobot_FanTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_FAN_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
 }
 
 void SweepRobot_FanTestTask(void *pdata)
@@ -105,7 +107,7 @@ void SweepRobot_FanTestTask(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_FAN)){
-            SWRB_NextTestTaskResume(SWRB_FAN_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_FAN_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

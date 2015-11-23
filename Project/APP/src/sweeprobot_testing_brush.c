@@ -11,7 +11,7 @@ enum BrushChan{
     BRUSH_CHAN_M,
 };
 
-const static u16 swrbTestBrushOCThreshold[SWRB_BRUSH_CHAN_NUM] = { 300, 300, 1000 };
+//const static u16 swrbTestBrushOCThreshold[SWRB_BRUSH_CHAN_NUM] = { 300, 300, 1000 };
 const static u16 swrbTestBrushCurLowBound[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
 const static u16 swrbTestBrushCurHighBound[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
 
@@ -32,15 +32,21 @@ static void SWRB_BrushTestTaskInit(void)
     
     OSTimeDlyHMSM(0,0,1,0);
     
-    printf("LBRUSH->SPEED=30\r\n");
-    printf("RBRUSH->SPEED=30\r\n");
-    printf("MBRUSH->SPEED=30\r\n");
-    
     for(i=0;i<SWRB_BRUSH_CHAN_NUM;i++){
         brush[i].current = 0;
         brush[i].validCnt = 0;
         brush[i].validFlag = 0;
     }
+    
+    printf("LBRUSH->SPEED=30\r\n");
+    printf("RBRUSH->SPEED=30\r\n");
+    printf("MBRUSH->SPEED=30\r\n");
+    /* TODO: if using default brush startup speed,uncomment this */
+    /*
+    printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_L);
+    printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_R);
+    printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_M);
+    */
 }
 
 static void SWRB_BrushTestProc(void)
@@ -93,8 +99,9 @@ static void SWRB_BrushTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_BRUSH);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_BRUSH_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
     }
 }
 
@@ -103,9 +110,9 @@ void SWRB_BrushTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    printf("LBRUSH->SPEED=0\r\n");
-    printf("RBRUSH->SPEED=0\r\n");
-    printf("MBRUSH->SPEED=0\r\n");
+    printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_L);
+    printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_R);
+    printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_M);
     
     gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[BRUSH_CHAN_L].current;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[BRUSH_CHAN_R].current;
@@ -130,15 +137,16 @@ void SWRB_BrushTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_BRUSH);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_BRUSH_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
 }
 
 void SweepRobot_BrushTestTask(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(ID_CHECKBOX_BRUSH)){
-            SWRB_NextTestTaskResume(SWRB_BRUSH_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_BRUSH_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

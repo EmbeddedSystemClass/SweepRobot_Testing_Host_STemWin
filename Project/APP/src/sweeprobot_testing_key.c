@@ -96,8 +96,9 @@ static void SweepRobot_KeyTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_KEY);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_KEY_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
     }
 }
 
@@ -118,8 +119,9 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_KEY);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_KEY_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
 }
 
 void SweepRobot_KeyTestTask(void *pdata)
@@ -130,7 +132,7 @@ void SweepRobot_KeyTestTask(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_KEY)){
-            SWRB_NextTestTaskResume(SWRB_KEY_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_KEY_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
         

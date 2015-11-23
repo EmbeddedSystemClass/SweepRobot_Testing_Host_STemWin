@@ -70,7 +70,7 @@ static void SweepRobot_IFRDTestTxOffProc(void)
 
 static void SweepRobot_IFRDTestTxOnProc(void)
 {
-    int i,j;
+    u8 i,j;
     char *str;
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
@@ -99,16 +99,18 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             
             if(ifrd[i].onValue){
                 if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_VALID_THRESHOLD[i] ){
-                    gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_F_L_POS+i));
+                    gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_FL_POS+i));
                     ifrd[i].validCnt++;
                 }else{
-                    gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_F_L_POS+i);
+                    gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
 //                    ifrd[i].validCnt = 0;
                 }
                 
                 if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                     ifrd[i].validFlag = 1;
                 }
+            }else{
+                gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
             }
         }
     }
@@ -122,8 +124,6 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         printf("SENSOR->IFRD_LED=0\r\n");
         printf("SENSOR->B_SWITCH=0\r\n");
             
-        Edit_Set_Value(ID_EDIT_HEX, gSwrbTestStateMap);
-            
         for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
             gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
             gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
@@ -136,17 +136,15 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
-        for(i=ID_EDIT_1;i<ID_EDIT_BOUND;i++){
-            Edit_Set_Value(i, 0);
-        }
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_IFRD_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
     }
 }
 
 static void SweepRobot_IFRDTestOverTimeProc(void)
 {
-    int i;
+    u8 i;
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
@@ -159,22 +157,22 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     }
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_L_MASK){
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FL_MASK){
         str = "ERROR->IFRD_F_L\r\n";
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_F_R_MASK){
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FR_MASK){
         str = "ERROR->IFRD_F_R\r\n";
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_L_MASK){
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_L_MASK){
         str = "ERROR->IFRD_S_L\r\n";
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
-    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_S_R_MASK){
+    if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_R_MASK){
         str = "ERROR->IFRD_S_R\r\n";
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
@@ -202,18 +200,16 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
-    for(i=ID_EDIT_1;i<ID_EDIT_BOUND;i++){
-        Edit_Set_Value(i, 0);
-    }
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_IFRD_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
 }
 
 void SweepRobot_IFRDTestTask(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(ID_CHECKBOX_IFRD)){
-            SWRB_NextTestTaskResume(SWRB_IFRD_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

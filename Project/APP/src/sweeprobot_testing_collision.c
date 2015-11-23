@@ -5,12 +5,19 @@
 
 #define COLLISION_TEST_CTRL_RCC         RCC_AHB1Periph_GPIOB
 #define COLLISION_TEST_CTRL_GPIO        GPIOB
-#define COLLISION_TEST_CTRL_F_L_PIN     GPIO_Pin_6
-#define COLLISION_TEST_CTRL_F_R_PIN     GPIO_Pin_7
-#define COLLISION_TEST_CTRL_S_L_PIN     GPIO_Pin_10
-#define COLLISION_TEST_CTRL_S_R_PIN     GPIO_Pin_11
+#define COLLISION_TEST_CTRL_L_PIN       GPIO_Pin_10
+#define COLLISION_TEST_CTRL_FL_PIN      GPIO_Pin_6
+#define COLLISION_TEST_CTRL_R_PIN       GPIO_Pin_11
+#define COLLISION_TEST_CTRL_FR_PIN      GPIO_Pin_7
 
 #define COLLISION_CHAN_NUM  4
+
+enum CollisionChan{
+    COLLISION_CHAN_L,
+    COLLISION_CHAN_FL,
+    COLLISION_CHAN_R,
+    COLLISION_CHAN_FR,
+};
 
 static COLLISION_TestTypeDef collision[COLLISION_CHAN_NUM];
 
@@ -20,10 +27,10 @@ static void SweepRobot_CollisionTestGPIOInit(void)
 
     RCC_AHB1PeriphClockCmd(COLLISION_TEST_CTRL_RCC, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = COLLISION_TEST_CTRL_F_L_PIN |\
-                                  COLLISION_TEST_CTRL_F_R_PIN |\
-                                  COLLISION_TEST_CTRL_S_L_PIN |\
-                                  COLLISION_TEST_CTRL_S_R_PIN;
+    GPIO_InitStructure.GPIO_Pin = COLLISION_TEST_CTRL_L_PIN |\
+                                  COLLISION_TEST_CTRL_FL_PIN |\
+                                  COLLISION_TEST_CTRL_R_PIN |\
+                                  COLLISION_TEST_CTRL_FR_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -33,18 +40,18 @@ static void SweepRobot_CollisionTestGPIOInit(void)
 
 void SweepRobot_CollisionCtrlOn(void)
 {
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_F_L_PIN);
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_F_R_PIN);
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_S_L_PIN);
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_S_R_PIN);
+    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_L_PIN);
+    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FL_PIN);
+    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_R_PIN);
+    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FR_PIN);
 }
 
 void SweepRobot_CollisionCtrlOff(void)
 {
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_F_L_PIN);
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_F_R_PIN);
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_S_L_PIN);
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_S_R_PIN);
+    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_L_PIN);
+    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FL_PIN);
+    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_R_PIN);
+    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FR_PIN);
 }
 
 static void SweepRobot_CollisionTestInit(void)
@@ -106,7 +113,7 @@ static void SweepRobot_CollisionTestProc(void)
         }
     }
     
-    if(collision[0].validFlag && collision[1].validFlag && collision[2].validFlag && collision[3].validFlag){
+    if(collision[COLLISION_CHAN_L].validFlag && collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_R].validFlag && collision[COLLISION_CHAN_FR].validFlag){
         gSwrbTestTaskRunCnt = 0;
         SweepRobot_CollisionCtrlOff();
 
@@ -122,8 +129,9 @@ static void SweepRobot_CollisionTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_COLLISION);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_COLLISION_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
     }
 }
 
@@ -145,13 +153,8 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
-    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_F_L_MASK){
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FL_MASK){
         str = "ERROR->COLLISION_FL\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
-    }
-    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_F_R_MASK){
-        str = "ERROR->COLLISION_FR\r\n";
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
@@ -160,11 +163,18 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FR_MASK){
+        str = "ERROR->COLLISION_FR\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
+    
     Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_COLLISION);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_COLLISION_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
 }
 
 void SweepRobot_CollisionTestTask(void *pdata)
@@ -175,7 +185,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_COLLISION)){
-            SWRB_NextTestTaskResume(SWRB_COLLISION_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_COLLISION_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 
@@ -197,8 +207,8 @@ void SweepRobot_CollisionTestTask(void *pdata)
 
 void Collision_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("COLLISION->L_Value=", collision[0].value);
-    SWRB_TestDataFileWriteData("COLLISION->FL_Value=", collision[1].value);
-    SWRB_TestDataFileWriteData("COLLISION->FR_Value=", collision[2].value);
-    SWRB_TestDataFileWriteData("COLLISION->R_Value=", collision[3].value);
+    SWRB_TestDataFileWriteData("COLLISION->L_Value=", collision[COLLISION_CHAN_L].value);
+    SWRB_TestDataFileWriteData("COLLISION->FL_Value=", collision[COLLISION_CHAN_FL].value);
+    SWRB_TestDataFileWriteData("COLLISION->R_Value=", collision[COLLISION_CHAN_R].value);
+    SWRB_TestDataFileWriteData("COLLISION->FR_Value=", collision[COLLISION_CHAN_FR].value);
 }

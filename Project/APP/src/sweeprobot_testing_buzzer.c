@@ -39,8 +39,9 @@ static void SweepRobot_BuzzerTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_BUZZER, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_BUZZER);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_BUZZER_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
 }
 
 void SweepRobot_Buzzer_Test_Task(void *pdata)
@@ -48,7 +49,7 @@ void SweepRobot_Buzzer_Test_Task(void *pdata)
     while(1){
       
         if(!Checkbox_Get_State(ID_CHECKBOX_BUZZER)){
-            SWRB_NextTestTaskResume(SWRB_BUZZER_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_BUZZER_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 

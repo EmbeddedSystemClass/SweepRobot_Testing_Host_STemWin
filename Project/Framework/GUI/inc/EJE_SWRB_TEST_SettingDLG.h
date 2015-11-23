@@ -106,6 +106,8 @@ WM_HWIN CreateSettingDLG(void);
 // USER START (Optionally insert additional public code)
 void SWRB_TestDataFileOpen(void);
 void SWRB_TestDataSaveToFile(void dataSaveProc(void));
+void SWRB_TestDataFileWriteSN(WM_HWIN *hWin);
+void SWRB_ListWheelSNInc(WM_HWIN *hWin);
 // USER END
 
 /*************************** End of file ****************************/

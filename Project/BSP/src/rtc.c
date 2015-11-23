@@ -31,29 +31,29 @@ u8 My_RTC_Init(void)
 {
     RTC_InitTypeDef RTC_InitStructure;
     u16 retry=0X1FFF;
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);//使能PWR时钟
-    PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+    PWR_BackupAccessCmd(ENABLE);
 
-    if(RTC_ReadBackupRegister(RTC_BKP_DR0)!=0x5050){		//是否第一次配置?
-        RCC_LSEConfig(RCC_LSE_ON);//LSE 开启
-        while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET){	//检查指定的RCC标志位设置与否,等待低速晶振就绪
+    if(RTC_ReadBackupRegister(RTC_BKP_DR0)!=0x5050){
+        RCC_LSEConfig(RCC_LSE_ON);
+        while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET){
             retry++;
             delay_ms(10);
         }
-        if(retry==0)return 1;		//LSE 开启失败.
+        if(retry==0)return 1;
 
-        RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);		//设置RTC时钟(RTCCLK),选择LSE作为RTC时钟
-        RCC_RTCCLKCmd(ENABLE);	//使能RTC时钟
+        RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+        RCC_RTCCLKCmd(ENABLE);
 
-        RTC_InitStructure.RTC_AsynchPrediv = 0x7F;//RTC异步分频系数(1~0X7F)
-        RTC_InitStructure.RTC_SynchPrediv  = 0xFF;//RTC同步分频系数(0~7FFF)
-        RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;//RTC设置为,24小时格式
+        RTC_InitStructure.RTC_AsynchPrediv = 0x7F;
+        RTC_InitStructure.RTC_SynchPrediv  = 0xFF;
+        RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;
         RTC_Init(&RTC_InitStructure);
 
-        RTC_Set_Time(23,59,56,RTC_H12_AM);	//设置时间
-        RTC_Set_Date(14,5,5,1);		//设置日期
+        RTC_Set_Time(4,0,1,RTC_H12_AM);
+        RTC_Set_Date(15,11,23,48);
 
-        RTC_WriteBackupRegister(RTC_BKP_DR0,0x5050);	//标记已经初始化过了
+        RTC_WriteBackupRegister(RTC_BKP_DR0,0x5050);
     }
 
     return 0;

@@ -38,8 +38,13 @@ static void SWRB_WheelTestInit(void)
     }
     
     printf("WHEEL->DIR=1\r\n");
+    
+    printf("LWHEEL->SPEED=30\r\n");
+    printf("RWHEEL->SPEED=30\r\n");
+    /*
     printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_L);
     printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_R);
+    */
 }
 
 static void SWRB_WheelTestProc(void)
@@ -93,8 +98,9 @@ static void SWRB_WheelTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL OK");
         Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
+        Edit_Clear();
 
-        SWRB_NextTestTaskResume(SWRB_WHEEL_TEST_TASK_PRIO);
+        SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
     }      
 }
 
@@ -124,8 +130,9 @@ static void SWRB_WheelTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL ERROR");
     Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
+    Edit_Clear();
 
-    SWRB_NextTestTaskResume(SWRB_WHEEL_TEST_TASK_PRIO);
+    SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
 }
 
 void SweepRobot_WheelTestTask(void *pdata)
@@ -133,7 +140,7 @@ void SweepRobot_WheelTestTask(void *pdata)
     while(1){
         
         if(!Checkbox_Get_State(ID_CHECKBOX_WHEEL)){
-            SWRB_NextTestTaskResume(SWRB_WHEEL_TEST_TASK_PRIO);
+            SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
 
