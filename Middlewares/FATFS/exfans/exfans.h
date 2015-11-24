@@ -3,7 +3,7 @@
 #include "sys.h"
 #include "ff.h"
 
-extern FATFS *fs[2];  
+extern FATFS *fs[1];  
 extern FIL *file;	 
 extern FIL *ftemp;	 
 extern UINT br,bw;

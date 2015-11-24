@@ -119,7 +119,12 @@ u8 mf_readdir(void)
 	res=f_readdir(&dir,&fileinfo);//读取一个文件的信息
 	if(res!=FR_OK||fileinfo.fname[0]==0)
 	{
+#if _USE_LFN
 		myfree(SRAMIN,fileinfo.lfname);
+#else
+        myfree(SRAMIN,fileinfo.fname);
+#endif
+
 		return res;//读完了.
 	}
 #if _USE_LFN
@@ -142,7 +147,11 @@ u8 mf_readdir(void)
 	printf("File time is:%d\r\n",fileinfo.ftime);
 	printf("File Attr is:%d\r\n",fileinfo.fattrib);
 	printf("\r\n");
+#if _USE_LFN
 	myfree(SRAMIN,fileinfo.lfname);
+#else
+    myfree(SRAMIN,fileinfo.fname);
+#endif
 	return 0;
 }
 
@@ -176,7 +185,11 @@ u8 mf_scan_files(u8 * path)
 			printf("%s\r\n",  fn);//打印文件名
 		}
     }
+#if _USE_LFN
 	myfree(SRAMIN,fileinfo.lfname);
+#else
+    myfree(SRAMIN,fileinfo.fname);
+#endif
     return res;
 }
 

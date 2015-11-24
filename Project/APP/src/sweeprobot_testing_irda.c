@@ -236,9 +236,9 @@ void SweepRobot_IrDATestTask(void *pdata)
 
 void IRDA_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("IRDA->B_Code=", IrDA[0].code);
-    SWRB_TestDataFileWriteData("IRDA->L_Code=", IrDA[1].code);
-    SWRB_TestDataFileWriteData("IRDA->FL_Code=", IrDA[2].code);
-    SWRB_TestDataFileWriteData("IRDA->FR_Code=", IrDA[3].code);
-    SWRB_TestDataFileWriteData("IRDA->R_Code=", IrDA[4].code);
+    SWRB_TestDataFileWriteData("IRDA->B_Code=", IrDA[0].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->L_Code=", IrDA[1].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->FL_Code=", IrDA[2].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->FR_Code=", IrDA[3].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->R_Code=", IrDA[4].code, 1);
 }

@@ -154,5 +154,5 @@ void SweepRobot_KeyTestTask(void *pdata)
 
 void KEY_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("KEY->Value=", key.value);
+    SWRB_TestDataFileWriteData("KEY->Value=", key.value, 1);
 }

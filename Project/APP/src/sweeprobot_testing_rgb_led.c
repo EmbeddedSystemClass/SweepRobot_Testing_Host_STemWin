@@ -82,7 +82,7 @@ void SweepRobot_RGB_LED_Test_Task(void *pdata)
 
 void RGB_LED_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("RGB_LED->R_State=", rgb_led.r_state);
-    SWRB_TestDataFileWriteData("RGB_LED->G_State=", rgb_led.g_state);
-    SWRB_TestDataFileWriteData("RGB_LED->B_State=", rgb_led.b_state);
+    SWRB_TestDataFileWriteData("RGB_LED->R_State=", rgb_led.r_state, 1);
+    SWRB_TestDataFileWriteData("RGB_LED->G_State=", rgb_led.g_state, 1);
+    SWRB_TestDataFileWriteData("RGB_LED->B_State=", rgb_led.b_state, 1);
 }

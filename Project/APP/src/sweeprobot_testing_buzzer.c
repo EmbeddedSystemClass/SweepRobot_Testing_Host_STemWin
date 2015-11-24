@@ -75,5 +75,5 @@ void SweepRobot_Buzzer_Test_Task(void *pdata)
 
 void BUZZER_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("BUZZER->Value=", buzzer.state);
+    SWRB_TestDataFileWriteData("BUZZER->Value=", buzzer.state, 1);
 }

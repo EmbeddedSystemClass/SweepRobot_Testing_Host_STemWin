@@ -159,6 +159,6 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
 
 void UNIWHEEL_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("UNIWHEEL->onValue=", uniwheel.onValue);
-    SWRB_TestDataFileWriteData("UNIWHEEL->offValue=", uniwheel.offValue);
+    SWRB_TestDataFileWriteData("UNIWHEEL->onValue=", uniwheel.onValue, 1);
+    SWRB_TestDataFileWriteData("UNIWHEEL->offValue=", uniwheel.offValue, 1);
 }

@@ -207,8 +207,8 @@ void SweepRobot_CollisionTestTask(void *pdata)
 
 void Collision_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("COLLISION->L_Value=", collision[COLLISION_CHAN_L].value);
-    SWRB_TestDataFileWriteData("COLLISION->FL_Value=", collision[COLLISION_CHAN_FL].value);
-    SWRB_TestDataFileWriteData("COLLISION->R_Value=", collision[COLLISION_CHAN_R].value);
-    SWRB_TestDataFileWriteData("COLLISION->FR_Value=", collision[COLLISION_CHAN_FR].value);
+    SWRB_TestDataFileWriteData("COLLISION->L_Value=", collision[COLLISION_CHAN_L].value, 1);
+    SWRB_TestDataFileWriteData("COLLISION->FL_Value=", collision[COLLISION_CHAN_FL].value, 1);
+    SWRB_TestDataFileWriteData("COLLISION->R_Value=", collision[COLLISION_CHAN_R].value, 1);
+    SWRB_TestDataFileWriteData("COLLISION->FR_Value=", collision[COLLISION_CHAN_FR].value, 1);
 }

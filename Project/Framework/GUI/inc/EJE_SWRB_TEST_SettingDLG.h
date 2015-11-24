@@ -44,6 +44,7 @@
 #define ID_SET_EDIT_5 (ID_MAIN_BOUND + 0x15)
 #define ID_SET_EDIT_6 (ID_MAIN_BOUND + 0x16)
 #define ID_SET_FRAMEWIN_0 (ID_MAIN_BOUND + 0x20)
+#define ID_SET_WINDOW_0 (ID_MAIN_BOUND + 0x21)
 #define ID_SET_BUTTON_0 (ID_MAIN_BOUND + 0x30)
 #define ID_SET_BUTTON_1 (ID_MAIN_BOUND + 0x31)
 #define ID_SET_BUTTON_2 (ID_MAIN_BOUND + 0x32)
@@ -68,6 +69,8 @@
 #define ID_SET_BUTTON_CHECK     ID_SET_BUTTON_1
 #define ID_SET_BUTTON_RESET     ID_SET_BUTTON_2
 #define ID_SET_BUTTON_CANCEL    ID_SET_BUTTON_3
+#define ID_SET_FRAMEWIN         ID_SET_FRAMEWIN_0
+#define ID_SET_WINDOW           ID_SET_WINDOW_0
 
 // USER START (Optionally insert additional defines)
 // USER END
@@ -104,10 +107,12 @@ extern WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 WM_HWIN CreateSettingDLG(void);
 
 // USER START (Optionally insert additional public code)
-void SWRB_TestDataFileOpen(void);
+FRESULT SWRB_TestDataFileOpen(void);
 void SWRB_TestDataSaveToFile(void dataSaveProc(void));
 void SWRB_TestDataFileWriteSN(WM_HWIN *hWin);
 void SWRB_ListWheelSNInc(WM_HWIN *hWin);
+void SWRB_SET_ListwheelSnapPosUpdate(void);
+void SWRB_SET_EditTextUpdate(void);
 // USER END
 
 /*************************** End of file ****************************/

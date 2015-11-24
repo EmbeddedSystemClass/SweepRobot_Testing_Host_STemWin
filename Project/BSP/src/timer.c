@@ -81,8 +81,8 @@ void TIM4_Int_Init(u16 arr,u16 psc)
 void TIM4_ISR(void)
 {
 		GUI_TOUCH_Exec();
-//    tp_dev.scan(0);
-//    GUI_TOUCH_StoreUnstable(tp_dev.x[0],tp_dev.y[0]); 
+//    tpDev.scan(0);
+//    GUI_TOUCH_StoreUnstable(tpDev.x[0],tpDev.y[0]); 
 }
 
 ////定时器4中断服务函数
@@ -92,7 +92,7 @@ void TIM4_ISR(void)
 //	{
 //		TIM_ClearITPendingBit(TIM4,TIM_IT_Update);  //清除中断标志位
 //		GUI_TOUCH_Exec();
-//		//tp_dev.scan(0);
-//		//GUI_TOUCH_StoreUnstable(tp_dev.x[0],tp_dev.y[0]);
+//		//tpDev.scan(0);
+//		//GUI_TOUCH_StoreUnstable(tpDev.x[0],tpDev.y[0]);
 //	}
 //}

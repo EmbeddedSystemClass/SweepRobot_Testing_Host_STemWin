@@ -243,12 +243,12 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM     7
 
 #define START_STK_SIZE                      128
-#define TOUCH_STK_SIZE                      128
-#define KEY_STK_SIZE                        128
-#define USART_STK_SIZE                      256
-#define RTC_STK_SIZE                        256
-#define EMWINDEMO_STK_SIZE		            2048
-#define LED_STK_SIZE				        128
+#define TOUCH_STK_SIZE                      256
+#define KEY_STK_SIZE                        256
+#define USART_STK_SIZE                      512
+#define RTC_STK_SIZE                        128
+#define EMWINDEMO_STK_SIZE		            1024+512
+#define LED_STK_SIZE				        64
 #define SAVE_DATA_STK_SIZE                  128
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
@@ -274,21 +274,22 @@ enum SWRB_TEST_TASK_PRIO{
 extern u8 usartRxFlag;
 extern int usartRxNum;
 
-extern u8 gSwrbTestMode;
-extern u8 gSwrbTestRuningTaskPrio;
+extern enum SWRB_TEST_MODE gSwrbTestMode;
+extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
 extern char *gSwrbTestDataFilePath;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
-extern volatile int gSwrbTestTaskCnt;
+extern int gSwrbTestTaskCnt;
 
 void OS_Task_Create(void);
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio);
 void SWRB_NextTestTaskResumePostAct(u8 taskPrio);
 
-void SWRB_TestDataFileWriteData(char *headstr, int data);
+void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);
+void SWRB_TestDataFileWriteDate(RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 
 void SweepRobot_TestStartProc(void);
 void SweepRobot_TestSetProc(void);

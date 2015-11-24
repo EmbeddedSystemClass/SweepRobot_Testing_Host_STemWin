@@ -55,21 +55,17 @@
 #define ID_EDIT_15		(GUI_ID_USER + 0x1E)
 #define ID_EDIT_16		(GUI_ID_USER + 0x1F)
 #define ID_EDIT_17      (GUI_ID_USER + 0x20)
-#define ID_EDIT_18      (GUI_ID_USER + 0x21)
-#define ID_EDIT_19      (GUI_ID_USER + 0x22)
-#define ID_EDIT_20      (GUI_ID_USER + 0x23)
-#define ID_EDIT_21      (GUI_ID_USER + 0x24)
-#define ID_EDIT_22      (GUI_ID_USER + 0x25)
 #define ID_BUTTON_1		(GUI_ID_USER + 0x31)
 #define ID_BUTTON_2		(GUI_ID_USER + 0x32)
 #define ID_BUTTON_3		(GUI_ID_USER + 0x33)
 #define ID_BUTTON_4		(GUI_ID_USER + 0x34)
 #define ID_FRAMEWIN_0		(GUI_ID_USER + 0x35)
-#define ID_PROGBAR_0		(GUI_ID_USER + 0x36)
-#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x37)
-#define ID_GRAPH_0		(GUI_ID_USER + 0x38)
-#define ID_WINDOW_0     (GUI_ID_USER + 0x39)
-#define ID_MAIN_BOUND   (GUI_ID_USER + 0x3A)
+#define ID_MULTIPAGE_0      (GUI_ID_USER + 0x36)
+#define ID_PROGBAR_0		(GUI_ID_USER + 0x37)
+#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x38)
+#define ID_GRAPH_0		(GUI_ID_USER + 0x39)
+#define ID_WINDOW_0     (GUI_ID_USER + 0x3A)
+#define ID_MAIN_BOUND   (GUI_ID_USER + 0x3B)
 
 
 // USER START (Optionally insert additional defines)
@@ -82,6 +78,7 @@
 #define ID_PROGBAR_MAIN           ID_PROGBAR_0
 #define ID_FRAMEWIN_MAIN          ID_FRAMEWIN_0
 #define ID_WINDOW_MAIN            ID_WINDOW_0
+#define ID_MULTIPAGE_MAIN         ID_MULTIPAGE_0
 
 enum GUI_ID_CHECKBOX{
   ID_CHECKBOX_WHEEL = ID_CHECKBOX_0,
@@ -118,12 +115,7 @@ enum GUI_ID_EDIT{
     ID_EDIT_D7,
     ID_EDIT_D8,
     ID_EDIT_SN,
-    ID_EDIT_YEAR,
-    ID_EDIT_MONTH,
-    ID_EDIT_DAY,
-    ID_EDIT_HOUR,
-    ID_EDIT_MIN,
-    ID_EDIT_SEC,
+    ID_EDIT_DATE,
     ID_EDIT_BOUND,
 };
 
@@ -168,6 +160,7 @@ void Button_Set_Text(int buttonId, char *str);
 void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(u8 teststate);
+void Edit_Set_Text(int editId, char *str);
 void Edit_Set_Value(int editId, long editValue);
 void Edit_Clear(void);
 void Checkbox_Set_Text(int checkboxId, char *string);
@@ -177,6 +170,8 @@ void Checkbox_Set_State(int checkboxId , unsigned int checkboxState);
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxcolor);
 void Checkbox_Set_TextAlign(int checkboxId, int align);
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor);
+void Checkbox_Set_Box_Back_Color(int checkboxId, GUI_COLOR boxBkColor, int Index);
+void MULTIEDIT_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(char *s);
 void MultiEdit_Add_Text(char *s);
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor);

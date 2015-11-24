@@ -42,7 +42,6 @@ WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 */
 
 // USER START (Optionally insert additional static data)
-static char *gSwrbTestSerialNum;
 // USER END
 
 /*********************************************************************
@@ -50,24 +49,26 @@ static char *gSwrbTestSerialNum;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-    { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SET_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_CONFIRM, 690, 0, 100, 115, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "check", ID_SET_BUTTON_CHECK, 690, 115, 100, 115, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "reset", ID_SET_BUTTON_RESET, 690, 230, 100, 115, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "cancel", ID_SET_BUTTON_CANCEL, 690, 345, 100, 115, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwYear", ID_SET_LISTWHEEL_YEAR, 20, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwMonth", ID_SET_LISTWHEEL_MONTH, 130, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwDay", ID_SET_LISTWHEEL_DAY, 240, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwSN1", ID_SET_LISTWHEEL_SN1, 350, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwSN2", ID_SET_LISTWHEEL_SN2, 460, 70, 110, 230, 0, 0x0, 0 },
-    { LISTWHEEL_CreateIndirect, "lwSN3", ID_SET_LISTWHEEL_SN3, 570, 70, 110, 230, 0, 0x0, 0 },
-    { EDIT_CreateIndirect, "editComb", ID_SET_EDIT_COMB, 20, 360, 660, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editYear", ID_SET_EDIT_YEAR, 20, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editMonth", ID_SET_EDIT_MONTH, 130, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editDay", ID_SET_EDIT_DAY, 240, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editSN1", ID_SET_EDIT_SN1, 350, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editSN2", ID_SET_EDIT_SN2, 460, 320, 110, 40, 0 ,0x0, 0 },
-    { EDIT_CreateIndirect, "editSN3", ID_SET_EDIT_SN3, 570, 320, 110, 40, 0 ,0x0, 0 },
+//    { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SET_FRAMEWIN, 0, 0, 800, 480, 0, 0x0, 0 },
+    { WINDOW_CreateIndirect, "TEST SETTING", ID_SET_WINDOW, 0, 0, 800, 480, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "Set Serial Number", ID_SET_TEXT_0, 20, 50, 680, 50, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "confirm", ID_SET_BUTTON_CONFIRM, 700, 0, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "check", ID_SET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "reset", ID_SET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "cancel", ID_SET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwYear", ID_SET_LISTWHEEL_YEAR, 20, 100, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwMonth", ID_SET_LISTWHEEL_MONTH, 130, 100, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwDay", ID_SET_LISTWHEEL_DAY, 240, 100, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN1", ID_SET_LISTWHEEL_SN1, 350, 100, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN2", ID_SET_LISTWHEEL_SN2, 460, 100, 110, 230, 0, 0x0, 0 },
+    { LISTWHEEL_CreateIndirect, "lwSN3", ID_SET_LISTWHEEL_SN3, 570, 100, 110, 230, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "editComb", ID_SET_EDIT_COMB, 20, 390, 660, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editYear", ID_SET_EDIT_YEAR, 20, 350, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editMonth", ID_SET_EDIT_MONTH, 130, 350, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editDay", ID_SET_EDIT_DAY, 240, 350, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN1", ID_SET_EDIT_SN1, 350, 350, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN2", ID_SET_EDIT_SN2, 460, 350, 110, 40, 0 ,0x0, 0 },
+    { EDIT_CreateIndirect, "editSN3", ID_SET_EDIT_SN3, 570, 350, 110, 40, 0 ,0x0, 0 },
     // USER START (Optionally insert additional widgets)
     // USER END
 };
@@ -86,6 +87,18 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetSkinClassic(hItem);
     BUTTON_SetFocussable(hItem, DISABLE);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+}
+
+static void ListWheel_Init(WM_HWIN hItem)
+{
+    LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
+    LISTWHEEL_SetDeceleration(hItem, 10);
+    LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTWHEEL_SetSnapPosition(hItem, 115);
+    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_SEL, GUI_LIGHTRED);
+    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_UNSEL, GUI_BLACK);
+    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_SEL, GUI_WHITE);
+    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_UNSEL, GUI_GRAY);
 }
 
 static void ListWheel_GetText(WM_HWIN *hWin,int id, char *str)
@@ -120,6 +133,20 @@ static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
 {
     WM_HWIN hItem;
     char    *lwBuf;
+    FRESULT flErr;
+
+    flErr = flErr;
+    
+    *gSwrbTestDataFilePath = 0;
+
+    lwBuf = "0:/";
+    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
+
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
+    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    
+    flErr = f_mkdir(gSwrbTestDataFilePath);
     
     *gSwrbTestDataFilePath = 0;
     
@@ -129,13 +156,17 @@ static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    
+    lwBuf = "/";
+    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
+    
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestDataFilePath);
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestDataFilePath);
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestDataFilePath);
-    
+
     lwBuf = ".txt";
     gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
-    
+
     hItem = WM_GetDialogItem(*hWin, ID_SET_EDIT_COMB);
     EDIT_SetText(hItem, gSwrbTestDataFilePath);
 }
@@ -162,6 +193,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             //
             hItem = pMsg->hWin;
             FRAMEWIN_SetTextColor(hItem, 0x00000000);
+            //
+            // Initialization of 'TEXT'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_TEXT_0);
+            TEXT_SetFont(hItem, &GUI_Font32_ASCII);
+            TEXT_SetTextColor(hItem, GUI_WHITE);
             //
             // Initialization of 'confirm'
             //
@@ -192,10 +229,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             // Initialization of 'lwYear'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_YEAR);
-            LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
-            LISTWHEEL_SetDeceleration(hItem, 10);
-            LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            LISTWHEEL_SetSnapPosition(hItem, 115);
+            ListWheel_Init(hItem);
             LISTWHEEL_AddString(hItem, "2014");
             LISTWHEEL_AddString(hItem, "2015");
             LISTWHEEL_AddString(hItem, "2016");
@@ -212,10 +246,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             // Initialization of 'lwMonth'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_MONTH);
-            LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
-            LISTWHEEL_SetDeceleration(hItem, 5);
-            LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            LISTWHEEL_SetSnapPosition(hItem, 115);
+            ListWheel_Init(hItem);
             LISTWHEEL_AddString(hItem, "01");
             LISTWHEEL_AddString(hItem, "02");
             LISTWHEEL_AddString(hItem, "03");
@@ -232,10 +263,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             // Initialization of 'lwDay'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_DAY);
-            LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
-            LISTWHEEL_SetDeceleration(hItem, 5);
-            LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            LISTWHEEL_SetSnapPosition(hItem, 115);
+            ListWheel_Init(hItem);
             LISTWHEEL_AddString(hItem, "01");
             LISTWHEEL_AddString(hItem, "02");
             LISTWHEEL_AddString(hItem, "03");
@@ -272,10 +300,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             //
             for(i=ID_SET_LISTWHEEL_SN1;i<=ID_SET_LISTWHEEL_SN3;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
-                LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
-                LISTWHEEL_SetDeceleration(hItem, 10);
-                LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-                LISTWHEEL_SetSnapPosition(hItem, 115);
+                ListWheel_Init(hItem);
                 LISTWHEEL_AddString(hItem, "0");
                 LISTWHEEL_AddString(hItem, "1");
                 LISTWHEEL_AddString(hItem, "2");
@@ -300,11 +325,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_COMB);
             EDIT_SetMaxLen(hItem, 50);
             // USER START (Optionally insert additional code for further widget initialization)
-            GUI_SetColor(GUI_RED);
-            GUI_DrawHLine(40, 0, 99);
-            GUI_DrawHLine(59, 0, 99);
-            GUI_SetColor(GUI_DEFAULT_COLOR);
-            
             WM_HideWin(pMsg->hWin);
             // USER END
             break;
@@ -622,11 +642,15 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
     myfree(SRAMIN, strSN3);
 }
 
-void SWRB_TestDataFileOpen(void)
+FRESULT SWRB_TestDataFileOpen(void)
 {
+    FRESULT flErr;
+    
     ListWheel_TestDataFilePathGen(&hWinEJE_SWRB_TEST_SETTING);
-    f_open(file, gSwrbTestDataFilePath, FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+    flErr = f_open(file, gSwrbTestDataFilePath, FA_WRITE|FA_OPEN_ALWAYS);
     f_lseek(file, file->fsize);
+    
+    return flErr;
 }
 
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
@@ -638,10 +662,11 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 
 void SWRB_TestDataFileWriteSN(WM_HWIN *hWin)
 {
+    char *gSwrbTestSerialNum;
     char *cBuf;
     
     SWRB_TestDataFileOpen();
-    
+
     gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
     mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);
     
@@ -658,12 +683,47 @@ void SWRB_TestDataFileWriteSN(WM_HWIN *hWin)
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestSerialNum);
     SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestSerialNum);
 
-    f_puts(gSwrbTestSerialNum, file);
-    f_puts("\r\n", file);
+    f_printf(file, "%s\r\n", gSwrbTestSerialNum);
+//    f_puts(gSwrbTestSerialNum, file);
+//    f_puts("\r\n", file);
     
     f_close(file);
     
     myfree(SRAMIN, gSwrbTestSerialNum);
+}
+
+void SWRB_SET_ListwheelSnapPosUpdate(void)
+{
+    int i,j;
+    WM_HWIN hItem;
+    
+    for(i=ID_SET_LISTWHEEL_YEAR;i<=ID_SET_LISTWHEEL_SN3;i++){
+        hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_SETTING, i);
+        j = LISTWHEEL_GetPos(hItem);
+        LISTWHEEL_SetSel(hItem, j);
+    }
+}
+
+void SWRB_SET_EditTextUpdate(void)
+{
+    int i,j;
+    char *str;
+    int lwItemIndex;
+    LISTWHEEL_Handle hListWheel;
+    WM_HWIN hItem;
+    
+    for(i=ID_SET_EDIT_YEAR,j=ID_SET_LISTWHEEL_YEAR;i<=ID_SET_EDIT_SN3;i++,j++){
+        hListWheel = WM_GetDialogItem(hWinEJE_SWRB_TEST_SETTING, j);
+        lwItemIndex = LISTWHEEL_GetPos(hListWheel);
+        str = mymalloc(SRAMIN, sizeof(char)*10);
+        if(str != NULL){
+            *str = 0;
+            LISTWHEEL_GetItemText(hListWheel, lwItemIndex, str, 10);
+            hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_SETTING, i);
+            EDIT_SetText(hItem, str);
+            myfree(SRAMIN, str);
+        }
+    }
 }
 
 // USER END

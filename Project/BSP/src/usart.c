@@ -170,7 +170,7 @@ void USART3_ISR(void)
 
 s8 USART_RxArrayToString(char *src_array, char* *dest_str)
 {
-  *dest_str = (char *)mymalloc(SRAMEX ,(sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
+  *dest_str = (char *)mymalloc(SRAMIN ,(sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
   if(NULL==(*dest_str) )
     return -1;
     

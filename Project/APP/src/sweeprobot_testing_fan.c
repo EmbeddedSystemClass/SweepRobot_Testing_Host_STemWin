@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "includes.h"
 
-const static int SWRB_TEST_FAN_OC_THRESHOLD = 1000;
+//const static int SWRB_TEST_FAN_OC_THRESHOLD = 1000;
 const static int SWRB_TEST_FAN_CUR_LOW_BOUND = 20;
 const static int SWRB_TEST_FAN_CUR_HIGH_BOUND = 500;
 
@@ -23,7 +23,7 @@ static void SweepRobot_FanTestInit(void)
     
     OSTimeDlyHMSM(0,0,1,0);
     
-    printf("FAN->SPEED=30\r\n");
+    printf("FAN->SPEED=50\r\n");
     fan.current = 0;
     fan.validCnt = 0;
     fan.validFlag = 0;
@@ -73,6 +73,7 @@ static void SweepRobot_FanTestProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
+        Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
         Edit_Clear();
 
@@ -96,6 +97,7 @@ static void SweepRobot_FanTestOverTimeProc(void)
     MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
+    Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
     Edit_Clear();
 
@@ -110,6 +112,8 @@ void SweepRobot_FanTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_FAN_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
+            
+            Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_FanTestInit();
@@ -129,5 +133,5 @@ void SweepRobot_FanTestTask(void *pdata)
 
 void Fan_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("FAN->CUR=", fan.current);
+    SWRB_TestDataFileWriteData("FAN->CUR=", fan.current, 1);
 }

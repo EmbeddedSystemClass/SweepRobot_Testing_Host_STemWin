@@ -219,6 +219,6 @@ void SweepRobot_ChargeTestTask(void *pdata)
 
 void CHARGE_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("CHARGE->Vol=", charge.voltage);
-    SWRB_TestDataFileWriteData("CHARGE->Cur=", charge.current);
+    SWRB_TestDataFileWriteData("CHARGE->Vol=", charge.voltage, 1);
+    SWRB_TestDataFileWriteData("CHARGE->Cur=", charge.current, 1);
 }

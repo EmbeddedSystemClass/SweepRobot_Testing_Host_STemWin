@@ -108,40 +108,40 @@ u8 FT5206_Scan(u8 mode)
 		if((mode&0XF)&&((mode&0XF)<6))
 		{
 			temp=0XFF<<(mode&0XF);//将点的个数转换为1的位数,匹配tp_dev.sta定义 
-			tp_dev.sta=(~temp)|TP_PRES_DOWN|TP_CATH_PRES; 
+			tpDev.sta=(~temp)|TP_PRES_DOWN|TP_CATH_PRES; 
 			for(i=0;i<5;i++)
 			{
-				if(tp_dev.sta&(1<<i))	//触摸有效?
+				if(tpDev.sta&(1<<i))	//触摸有效?
 				{
 					FT5206_RD_Reg(FT5206_TPX_TBL[i],buf,4);	//读取XY坐标值 
-					if(tp_dev.touchtype&0X01)//横屏
+					if(tpDev.touchtype&0X01)//横屏
 					{
-						tp_dev.y[i]=((u16)(buf[0]&0X0F)<<8)+buf[1];
-						tp_dev.x[i]=((u16)(buf[2]&0X0F)<<8)+buf[3];
+						tpDev.y[i]=((u16)(buf[0]&0X0F)<<8)+buf[1];
+						tpDev.x[i]=((u16)(buf[2]&0X0F)<<8)+buf[3];
 					}else
 					{
-						tp_dev.x[i]=480-(((u16)(buf[0]&0X0F)<<8)+buf[1]);
-						tp_dev.y[i]=((u16)(buf[2]&0X0F)<<8)+buf[3];
+						tpDev.x[i]=480-(((u16)(buf[0]&0X0F)<<8)+buf[1]);
+						tpDev.y[i]=((u16)(buf[2]&0X0F)<<8)+buf[3];
 					}  
-					if((buf[0]&0XF0)!=0X80)tp_dev.x[i]=tp_dev.y[i]=0;//必须是contact事件，才认为有效
-					//printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
+					if((buf[0]&0XF0)!=0X80)tpDev.x[i]=tpDev.y[i]=0;//必须是contact事件，才认为有效
+					//printf("x[%d]:%d,y[%d]:%d\r\n",i,tpDev.x[i],i,tpDev.y[i]);
 				}			
 			} 
 			res=1;
-			if(tp_dev.x[0]==0 && tp_dev.y[0]==0)mode=0;	//读到的数据都是0,则忽略此次数据
+			if(tpDev.x[0]==0 && tpDev.y[0]==0)mode=0;	//读到的数据都是0,则忽略此次数据
 			t=0;		//触发一次,则会最少连续监测10次,从而提高命中率
 		}
 	}
 	if((mode&0X1F)==0)//无触摸点按下
 	{ 
-		if(tp_dev.sta&TP_PRES_DOWN)	//之前是被按下的
+		if(tpDev.sta&TP_PRES_DOWN)	//之前是被按下的
 		{
-			tp_dev.sta&=~(1<<7);	//标记按键松开
+			tpDev.sta&=~(1<<7);	//标记按键松开
 		}else						//之前就没有被按下
 		{ 
-			tp_dev.x[0]=0xffff;
-			tp_dev.y[0]=0xffff;
-			tp_dev.sta&=0XE0;	//清除点有效标记	
+			tpDev.x[0]=0xffff;
+			tpDev.y[0]=0xffff;
+			tpDev.sta&=0XE0;	//清除点有效标记	
 		}	 
 	} 	
 	if(t>240)t=10;//重新从10开始计数

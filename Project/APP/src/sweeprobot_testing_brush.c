@@ -38,9 +38,9 @@ static void SWRB_BrushTestTaskInit(void)
         brush[i].validFlag = 0;
     }
     
-    printf("LBRUSH->SPEED=30\r\n");
-    printf("RBRUSH->SPEED=30\r\n");
-    printf("MBRUSH->SPEED=30\r\n");
+    printf("LBRUSH->SPEED=50\r\n");
+    printf("RBRUSH->SPEED=50\r\n");
+    printf("MBRUSH->SPEED=40\r\n");
     /* TODO: if using default brush startup speed,uncomment this */
     /*
     printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_L);
@@ -98,6 +98,7 @@ static void SWRB_BrushTestProc(void)
         
         Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH OK");
+        Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Progbar_Set_Percent(SWRB_TEST_STATE_BRUSH);
         Edit_Clear();
 
@@ -136,9 +137,10 @@ void SWRB_BrushTestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH ERROR");
+    Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Progbar_Set_Percent(SWRB_TEST_STATE_BRUSH);
     Edit_Clear();
-
+    
     SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
 }
 
@@ -149,6 +151,8 @@ void SweepRobot_BrushTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_BRUSH_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
+            
+            Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SWRB_BrushTestTaskInit();
@@ -166,7 +170,7 @@ void SweepRobot_BrushTestTask(void *pdata)
 
 void Brush_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("LBRUSH->CURRENT=", brush[BRUSH_CHAN_L].current);
-    SWRB_TestDataFileWriteData("RBRUSH->CURRENT=", brush[BRUSH_CHAN_R].current);
-    SWRB_TestDataFileWriteData("MBRUSH->CURRENT=", brush[BRUSH_CHAN_M].current);
+    SWRB_TestDataFileWriteData("LBRUSH->CURRENT=", brush[BRUSH_CHAN_L].current, 1);
+    SWRB_TestDataFileWriteData("RBRUSH->CURRENT=", brush[BRUSH_CHAN_R].current, 1);
+    SWRB_TestDataFileWriteData("MBRUSH->CURRENT=", brush[BRUSH_CHAN_M].current, 1);
 }

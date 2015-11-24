@@ -135,6 +135,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD OK");
+        Checkbox_Set_Box_Back_Color(ID_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
         Edit_Clear();
 
@@ -199,6 +200,7 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD ERROR");
+    Checkbox_Set_Box_Back_Color(ID_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
     Edit_Clear();
 
@@ -212,6 +214,8 @@ void SweepRobot_IFRDTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
+            
+            Checkbox_Set_Box_Back_Color(ID_CHECKBOX_IFRD, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_IFRDTestInit();
@@ -233,20 +237,20 @@ void SweepRobot_IFRDTestTask(void *pdata)
 
 void IFRD_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("IFRD->FL_onValue=", ifrd[0].onValue);
-    SWRB_TestDataFileWriteData("IFRD->FL_offValue=", ifrd[0].offValue);
-    SWRB_TestDataFileWriteData("IFRD->FR_onValue=", ifrd[1].onValue);
-    SWRB_TestDataFileWriteData("IFRD->FR_offValue=", ifrd[1].offValue);
-    SWRB_TestDataFileWriteData("IFRD->SL_onValue=", ifrd[2].onValue);
-    SWRB_TestDataFileWriteData("IFRD->SL_offValue=", ifrd[2].offValue);
-    SWRB_TestDataFileWriteData("IFRD->SR_onValue=", ifrd[3].onValue);
-    SWRB_TestDataFileWriteData("IFRD->SR_offValue=", ifrd[3].offValue);
-    SWRB_TestDataFileWriteData("IFRD->B_FL_onValue=", ifrd[4].onValue);
-    SWRB_TestDataFileWriteData("IFRD->B_FL_offValue=", ifrd[4].offValue);
-    SWRB_TestDataFileWriteData("IFRD->B_FR_onValue=", ifrd[5].onValue);
-    SWRB_TestDataFileWriteData("IFRD->B_FR_offValue=", ifrd[5].offValue);
-    SWRB_TestDataFileWriteData("IFRD->B_SL_onValue=", ifrd[6].onValue);
-    SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", ifrd[6].offValue);
-    SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[7].onValue);
-    SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[7].offValue);
+    SWRB_TestDataFileWriteData("IFRD->FL_onValue=", ifrd[0].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FL_offValue=", ifrd[0].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FR_onValue=", ifrd[1].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FR_offValue=", ifrd[1].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SL_onValue=", ifrd[2].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SL_offValue=", ifrd[2].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SR_onValue=", ifrd[3].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SR_offValue=", ifrd[3].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FL_onValue=", ifrd[4].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FL_offValue=", ifrd[4].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FR_onValue=", ifrd[5].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FR_offValue=", ifrd[5].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SL_onValue=", ifrd[6].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", ifrd[6].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[7].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[7].offValue, 1);
 }

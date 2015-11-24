@@ -241,7 +241,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
 
 void ASH_TRAY_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("ASH_TRAY->INS_Value=", ashTrayIns.value);
-    SWRB_TestDataFileWriteData("ASH_TRAY->LVL_onValue=", ashTrayLvl.onValue);
-    SWRB_TestDataFileWriteData("ASH_TRAY->LVL_offValue=", ashTrayLvl.offValue);
+    SWRB_TestDataFileWriteData("ASH_TRAY->INS_Value=", ashTrayIns.value, 1);
+    SWRB_TestDataFileWriteData("ASH_TRAY->LVL_onValue=", ashTrayLvl.onValue, 1);
+    SWRB_TestDataFileWriteData("ASH_TRAY->LVL_offValue=", ashTrayLvl.offValue, 1);
 }

@@ -39,8 +39,8 @@ static void SWRB_WheelTestInit(void)
     
     printf("WHEEL->DIR=1\r\n");
     
-    printf("LWHEEL->SPEED=30\r\n");
-    printf("RWHEEL->SPEED=30\r\n");
+    printf("LWHEEL->SPEED=40\r\n");
+    printf("RWHEEL->SPEED=40\r\n");
     /*
     printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_L);
     printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_R);
@@ -97,6 +97,7 @@ static void SWRB_WheelTestProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL OK");
+        Checkbox_Set_Box_Back_Color(ID_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
         Edit_Clear();
 
@@ -129,6 +130,7 @@ static void SWRB_WheelTestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL ERROR");
+    Checkbox_Set_Box_Back_Color(ID_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
     Edit_Clear();
 
@@ -143,6 +145,8 @@ void SweepRobot_WheelTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
+            
+            Checkbox_Set_Box_Back_Color(ID_CHECKBOX_WHEEL, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SWRB_WheelTestInit();
@@ -162,6 +166,6 @@ void SweepRobot_WheelTestTask(void *pdata)
 
 void Wheel_TestDataSave(void)
 {
-    SWRB_TestDataFileWriteData("LWHEEL->SPEED=", wheel[WHEEL_CHAN_L].speed);
-    SWRB_TestDataFileWriteData("RWHEEL->SPEED=", wheel[WHEEL_CHAN_R].speed);
+    SWRB_TestDataFileWriteData("LWHEEL->SPEED=", wheel[WHEEL_CHAN_L].speed, 1);
+    SWRB_TestDataFileWriteData("RWHEEL->SPEED=", wheel[WHEEL_CHAN_R].speed, 1);
 }

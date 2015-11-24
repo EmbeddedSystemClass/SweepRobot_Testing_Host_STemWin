@@ -1,7 +1,6 @@
 #include "rtc.h"
-#include "led.h"
-#include "delay.h"
-#include "usart.h"
+
+#include "sweeprobot_testing.h"
 
 NVIC_InitTypeDef   NVIC_InitStructure;
 
@@ -25,6 +24,16 @@ ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)
     RTC_DateTypeInitStructure.RTC_WeekDay=week;
     RTC_DateTypeInitStructure.RTC_Year=year;
     return RTC_SetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
+}
+
+void RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
+{
+    char *str;
+    
+    str = mymalloc(SRAMIN, sizeof(char)*30);
+    sprintf(str,"%d/%d/%d %d:%d:%d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
+    Edit_Set_Text(ID_EDIT_DATE, str);
+    myfree(SRAMIN, str);
 }
 
 u8 My_RTC_Init(void)

@@ -35,7 +35,7 @@ typedef struct
 	u8 touchtype;
 }_m_tp_dev;
 
-extern _m_tp_dev tp_dev;	 	//触屏控制器在touch.c里面定义
+extern _m_tp_dev tpDev;	 	//触屏控制器在touch.c里面定义
 
 //电阻屏芯片连接引脚	   
 #define PEN  		PBin(1)  	//T_PEN

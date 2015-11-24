@@ -16,7 +16,7 @@ const u8 *FILE_TYPE_TBL[6][13]=
 	{"BMP","JPG","JPEG","GIF"},//图片文件
 };
 
-FATFS *fs[2];		//逻辑磁盘工作区
+FATFS *fs[1];		//逻辑磁盘工作区
 FIL *file; 			//文件1
 FIL *ftemp;			//文件2
 UINT br,bw;			//读写变量
@@ -30,13 +30,17 @@ u8 *fatbuf; 		//SD卡数据缓存区
 //	     1，失败
 u8 exfans_init(void)
 {
-	fs[0] = (FATFS*)mymalloc(SRAMIN,sizeof(FATFS));		//为磁盘0工作区申请工作内存
-	fs[1] = (FATFS*)mymalloc(SRAMIN,sizeof(FATFS));		//为磁盘1工作区申请工作内存
-	file = (FIL*)mymalloc(SRAMIN,sizeof(FIL));			//为file申请内存空间
-	ftemp = (FIL*)mymalloc(SRAMIN,sizeof(FIL));			//为ftemp申请内存空间
-	fatbuf = (u8*)mymalloc(SRAMIN,512);					//为fatbuf申请内存空间
-	if(fs[0]&&fs[1]&&file&&ftemp&&fatbuf)return 0;  //申请有一个失败,即失败.
-	else return 1;
+	fs[0] = (FATFS*)mymalloc(SRAMIN,sizeof(FATFS));
+    mymemset(fs[0], 0 ,sizeof(FATFS));
+//	fs[1] = (FATFS*)mymalloc(SRAMIN,sizeof(FATFS));
+	file = (FIL*)mymalloc(SRAMIN,sizeof(FIL));
+	ftemp = (FIL*)mymalloc(SRAMIN,sizeof(FIL));
+	fatbuf = (u8*)mymalloc(SRAMIN,2048);
+//	if(fs[0]&&fs[1]&&file&&ftemp&&fatbuf)return 0;
+    if(fs[0]&&file&&ftemp&&fatbuf)
+        return 0;
+	else 
+        return 1;
 }
 
 //将小写字母转为大写字母,如果是数字,则保持不变

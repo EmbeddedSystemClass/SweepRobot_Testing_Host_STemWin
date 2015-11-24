@@ -5,7 +5,7 @@
 #include "math.h"
 #include "24cxx.h" 
 
-_m_tp_dev tp_dev=
+_m_tp_dev tpDev=
 {
 	TP_Init,
 	TP_Scan,
@@ -174,32 +174,32 @@ u8 TP_Scan(u8 tp)
 {			   
 	if(PEN==0)//有按键按下
 	{
-		if(tp)TP_Read_XY2(&tp_dev.x[0],&tp_dev.y[0]);//读取物理坐标
-		else if(TP_Read_XY2(&tp_dev.x[0],&tp_dev.y[0]))//读取屏幕坐标
+		if(tp)TP_Read_XY2(&tpDev.x[0],&tpDev.y[0]);//读取物理坐标
+		else if(TP_Read_XY2(&tpDev.x[0],&tpDev.y[0]))//读取屏幕坐标
 		{
-	 		tp_dev.x[0]=tp_dev.xfac*tp_dev.x[0]+tp_dev.xoff;//将结果转换为屏幕坐标
-			tp_dev.y[0]=tp_dev.yfac*tp_dev.y[0]+tp_dev.yoff;  
+	 		tpDev.x[0]=tpDev.xfac*tpDev.x[0]+tpDev.xoff;//将结果转换为屏幕坐标
+			tpDev.y[0]=tpDev.yfac*tpDev.y[0]+tpDev.yoff;  
 	 	} 
-		if((tp_dev.sta&TP_PRES_DOWN)==0)//之前没有被按下
+		if((tpDev.sta&TP_PRES_DOWN)==0)//之前没有被按下
 		{		 
-			tp_dev.sta=TP_PRES_DOWN|TP_CATH_PRES;//按键按下  
-			tp_dev.x[4]=tp_dev.x[0];//记录第一次按下时的坐标
-			tp_dev.y[4]=tp_dev.y[0];  	   			 
+			tpDev.sta=TP_PRES_DOWN|TP_CATH_PRES;//按键按下  
+			tpDev.x[4]=tpDev.x[0];//记录第一次按下时的坐标
+			tpDev.y[4]=tpDev.y[0];  	   			 
 		}			   
 	}else
 	{
-		if(tp_dev.sta&TP_PRES_DOWN)//之前是被按下的
+		if(tpDev.sta&TP_PRES_DOWN)//之前是被按下的
 		{
-			tp_dev.sta&=~(1<<7);//标记按键松开	
+			tpDev.sta&=~(1<<7);//标记按键松开	
 		}else//之前就没有被按下
 		{
-			tp_dev.x[4]=0;
-			tp_dev.y[4]=0;
-			tp_dev.x[0]=0xffff;
-			tp_dev.y[0]=0xffff;
+			tpDev.x[4]=0;
+			tpDev.y[4]=0;
+			tpDev.x[0]=0xffff;
+			tpDev.y[0]=0xffff;
 		}	    
 	}
-	return tp_dev.sta&TP_PRES_DOWN;//返回当前的触屏状态
+	return tpDev.sta&TP_PRES_DOWN;//返回当前的触屏状态
 }	  
 //////////////////////////////////////////////////////////////////////////	 
 //保存在EEPROM里面的地址区间基址,占用13个字节(RANGE:SAVE_ADDR_BASE~SAVE_ADDR_BASE+12)
@@ -209,16 +209,16 @@ void TP_Save_Adjdata(void)
 {
 	s32 temp;			 
 	//保存校正结果!		   							  
-	temp=tp_dev.xfac*100000000;//保存x校正因素      
+	temp=tpDev.xfac*100000000;//保存x校正因素      
     AT24CXX_WriteLenByte(SAVE_ADDR_BASE,temp,4);   
-	temp=tp_dev.yfac*100000000;//保存y校正因素    
+	temp=tpDev.yfac*100000000;//保存y校正因素    
     AT24CXX_WriteLenByte(SAVE_ADDR_BASE+4,temp,4);
 	//保存x偏移量
-    AT24CXX_WriteLenByte(SAVE_ADDR_BASE+8,tp_dev.xoff,2);		    
+    AT24CXX_WriteLenByte(SAVE_ADDR_BASE+8,tpDev.xoff,2);		    
 	//保存y偏移量
-	AT24CXX_WriteLenByte(SAVE_ADDR_BASE+10,tp_dev.yoff,2);	
+	AT24CXX_WriteLenByte(SAVE_ADDR_BASE+10,tpDev.yoff,2);	
 	//保存触屏类型
-	AT24CXX_WriteOneByte(SAVE_ADDR_BASE+12,tp_dev.touchtype);	
+	AT24CXX_WriteOneByte(SAVE_ADDR_BASE+12,tpDev.touchtype);	
 	temp=0X0A;//标记校准过了
 	AT24CXX_WriteOneByte(SAVE_ADDR_BASE+13,temp); 
 }
@@ -232,15 +232,15 @@ u8 TP_Get_Adjdata(void)
 	if(tempfac==0X0A)//触摸屏已经校准过了			   
 	{    												 
 		tempfac=AT24CXX_ReadLenByte(SAVE_ADDR_BASE,4);		   
-		tp_dev.xfac=(float)tempfac/100000000;//得到x校准参数
+		tpDev.xfac=(float)tempfac/100000000;//得到x校准参数
 		tempfac=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+4,4);			          
-		tp_dev.yfac=(float)tempfac/100000000;//得到y校准参数
+		tpDev.yfac=(float)tempfac/100000000;//得到y校准参数
 	    //得到x偏移量
-		tp_dev.xoff=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+8,2);			   	  
+		tpDev.xoff=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+8,2);			   	  
  	    //得到y偏移量
-		tp_dev.yoff=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+10,2);				 	  
- 		tp_dev.touchtype=AT24CXX_ReadOneByte(SAVE_ADDR_BASE+12);//读取触屏类型标记
-		if(tp_dev.touchtype)//X,Y方向与屏幕相反
+		tpDev.yoff=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+10,2);				 	  
+ 		tpDev.touchtype=AT24CXX_ReadOneByte(SAVE_ADDR_BASE+12);//读取触屏类型标记
+		if(tpDev.touchtype)//X,Y方向与屏幕相反
 		{
 			CMD_RDX=0X90;
 			CMD_RDY=0XD0;	 
@@ -300,18 +300,18 @@ void TP_Adjust(void)
 	POINT_COLOR=BLACK;
 	LCD_ShowString(40,40,160,100,16,(u8*)TP_REMIND_MSG_TBL);//显示提示信息
 	TP_Drow_Touch_Point(20,20,RED);//画点1 
-	tp_dev.sta=0;//消除触发信号 
-	tp_dev.xfac=0;//xfac用来标记是否校准过,所以校准之前必须清掉!以免错误	 
+	tpDev.sta=0;//消除触发信号 
+	tpDev.xfac=0;//xfac用来标记是否校准过,所以校准之前必须清掉!以免错误	 
 	while(1)//如果连续10秒钟没有按下,则自动退出
 	{
-		tp_dev.scan(1);//扫描物理坐标
-		if((tp_dev.sta&0xc0)==TP_CATH_PRES)//按键按下了一次(此时按键松开了.)
+		tpDev.scan(1);//扫描物理坐标
+		if((tpDev.sta&0xc0)==TP_CATH_PRES)//按键按下了一次(此时按键松开了.)
 		{	
 			outtime=0;		
-			tp_dev.sta&=~(1<<6);//标记按键已经被处理过了.
+			tpDev.sta&=~(1<<6);//标记按键已经被处理过了.
 						   			   
-			pos_temp[cnt][0]=tp_dev.x[0];
-			pos_temp[cnt][1]=tp_dev.y[0];
+			pos_temp[cnt][0]=tpDev.x[0];
+			pos_temp[cnt][1]=tpDev.y[0];
 			cnt++;	  
 			switch(cnt)
 			{			   
@@ -392,19 +392,19 @@ void TP_Adjust(void)
 						continue;
 					}//正确了
 					//计算结果
-					tp_dev.xfac=(float)(lcddev.width-40)/(pos_temp[1][0]-pos_temp[0][0]);//得到xfac		 
-					tp_dev.xoff=(lcddev.width-tp_dev.xfac*(pos_temp[1][0]+pos_temp[0][0]))/2;//得到xoff
+					tpDev.xfac=(float)(lcddev.width-40)/(pos_temp[1][0]-pos_temp[0][0]);//得到xfac		 
+					tpDev.xoff=(lcddev.width-tpDev.xfac*(pos_temp[1][0]+pos_temp[0][0]))/2;//得到xoff
 						  
-					tp_dev.yfac=(float)(lcddev.height-40)/(pos_temp[2][1]-pos_temp[0][1]);//得到yfac
-					tp_dev.yoff=(lcddev.height-tp_dev.yfac*(pos_temp[2][1]+pos_temp[0][1]))/2;//得到yoff  
-					if(abs(tp_dev.xfac)>2||abs(tp_dev.yfac)>2)//触屏和预设的相反了.
+					tpDev.yfac=(float)(lcddev.height-40)/(pos_temp[2][1]-pos_temp[0][1]);//得到yfac
+					tpDev.yoff=(lcddev.height-tpDev.yfac*(pos_temp[2][1]+pos_temp[0][1]))/2;//得到yoff  
+					if(abs(tpDev.xfac)>2||abs(tpDev.yfac)>2)//触屏和预设的相反了.
 					{
 						cnt=0;
  				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//清除点4
    	 					TP_Drow_Touch_Point(20,20,RED);								//画点1
 						LCD_ShowString(40,26,lcddev.width,lcddev.height,16,"TP Need readjust!");
-						tp_dev.touchtype=!tp_dev.touchtype;//修改触屏类型.
-						if(tp_dev.touchtype)//X,Y方向与屏幕相反
+						tpDev.touchtype=!tpDev.touchtype;//修改触屏类型.
+						if(tpDev.touchtype)//X,Y方向与屏幕相反
 						{
 							CMD_RDX=0X90;
 							CMD_RDY=0XD0;	 
@@ -444,14 +444,14 @@ u8 TP_Init(void)
 	{
 		if(GT9147_Init()==0)	//是GT9147
 		{ 
-			tp_dev.scan=GT9147_Scan;	//扫描函数指向GT9147触摸屏扫描
+			tpDev.scan=GT9147_Scan;	//扫描函数指向GT9147触摸屏扫描
 		}else
 		{
 			OTT2001A_Init();
-			tp_dev.scan=OTT2001A_Scan;	//扫描函数指向OTT2001A触摸屏扫描
+			tpDev.scan=OTT2001A_Scan;	//扫描函数指向OTT2001A触摸屏扫描
 		}
-		tp_dev.touchtype|=0X80;	//电容屏 
-		tp_dev.touchtype|=lcddev.dir&0X01;//横屏还是竖屏 
+		tpDev.touchtype|=0X80;	//电容屏 
+		tpDev.touchtype|=lcddev.dir&0X01;//横屏还是竖屏 
 		return 0;
 	}else
 	{
@@ -480,7 +480,7 @@ u8 TP_Init(void)
 	  GPIO_Init(GPIOF, &GPIO_InitStructure);//初始化			
 		
    
-		TP_Read_XY(&tp_dev.x[0],&tp_dev.y[0]);//第一次读取初始化	 
+		TP_Read_XY(&tpDev.x[0],&tpDev.y[0]);//第一次读取初始化	 
 		AT24CXX_Init();		//初始化24CXX
 		if(TP_Get_Adjdata())return 0;//已经校准
 		else			   //未校准?
