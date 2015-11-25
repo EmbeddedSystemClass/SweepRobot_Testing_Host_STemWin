@@ -42,6 +42,7 @@ WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 */
 
 // USER START (Optionally insert additional static data)
+static int  lastLwIndex[6];
 // USER END
 
 /*********************************************************************
@@ -80,6 +81,10 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 **********************************************************************
 */
 
+static void ListWheel_ResetToLastPos(WM_HWIN hWin);
+static void ListWheel_ResetToZero(WM_HWIN hWin);
+static void ListWheel_TestDataFilePathGen(WM_HWIN hWin);
+
 // USER START (Optionally insert additional static code)
 static void Button_Init(WM_HWIN hItem)
 {
@@ -87,6 +92,32 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetSkinClassic(hItem);
     BUTTON_SetFocussable(hItem, DISABLE);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+}
+
+static void Button_ConfirmProc(WM_HWIN hWin)
+{
+    ListWheel_TestDataFilePathGen(hWin);
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    WM_HideWin(hWin);
+    WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
+}
+
+static void Button_CheckProc(WM_HWIN hWin)
+{
+    ListWheel_TestDataFilePathGen(hWin);
+}
+
+static void Button_ResetProc(WM_HWIN hWin)
+{
+    ListWheel_ResetToZero(hWin);
+}
+
+static void Button_CancelProc(WM_HWIN hWin)
+{
+    ListWheel_ResetToLastPos(hWin);
+    WM_HideWin(hWin);
+    WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
 
 static void ListWheel_Init(WM_HWIN hItem)
@@ -99,6 +130,22 @@ static void ListWheel_Init(WM_HWIN hItem)
     LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_UNSEL, GUI_BLACK);
     LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_SEL, GUI_WHITE);
     LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_UNSEL, GUI_GRAY);
+}
+
+static void ListWheel_SelChangeProc(WM_HWIN hWin, int lwId, int editId)
+{
+    int  lwItemIndex;
+    char *lwBuf;
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin, lwId);
+    lwItemIndex = LISTWHEEL_GetPos(hItem);
+    LISTWHEEL_SetSel(hItem, lwItemIndex);
+    lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
+    LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
+    hItem = WM_GetDialogItem(hWin, editId);
+    EDIT_SetText(hItem, lwBuf);
+    myfree(SRAMIN, lwBuf);
 }
 
 static void ListWheel_GetText(WM_HWIN *hWin,int id, char *str)
@@ -115,13 +162,36 @@ static void ListWheel_GetText(WM_HWIN *hWin,int id, char *str)
     myfree(SRAMIN, lwBuf);
 }
 
-static void SerialNum_Comb(WM_HWIN *hWin, int id, char *dest_SNumStr)
+static void ListWheel_ResetToLastPos(WM_HWIN hWin)
+{
+    WM_HWIN hItem;
+    int i;
+    u8 j;
+    
+    for(i=ID_SET_LISTWHEEL_YEAR,j=0;i<=ID_SET_LISTWHEEL_SN3;i++,j++){
+        hItem = WM_GetDialogItem(hWin, i);
+        LISTWHEEL_SetPos(hItem, lastLwIndex[j]);
+    }
+}
+
+static void ListWheel_ResetToZero(WM_HWIN hWin)
+{
+    WM_HWIN hItem;
+    int i;
+    
+    for(i=ID_SET_LISTWHEEL_0;i<=ID_SET_LISTWHEEL_5;i++){
+        hItem = WM_GetDialogItem(hWin, i);
+        LISTWHEEL_MoveToPos(hItem, 0);
+    }
+}
+
+static void SerialNum_Comb(WM_HWIN hWin, int id, char *dest_SNumStr)
 {
     WM_HWIN hItem;
     int     lwItemIndex;
     char    *lwBuf;
     
-    hItem = WM_GetDialogItem(*hWin, id);
+    hItem = WM_GetDialogItem(hWin, id);
     lwItemIndex = LISTWHEEL_GetPos(hItem);
     lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
     LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
@@ -129,7 +199,7 @@ static void SerialNum_Comb(WM_HWIN *hWin, int id, char *dest_SNumStr)
     myfree(SRAMIN, lwBuf);
 }
 
-static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
+static void ListWheel_TestDataFilePathGen(WM_HWIN hWin)
 {
     WM_HWIN hItem;
     char    *lwBuf;
@@ -142,9 +212,9 @@ static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
     lwBuf = "0:/";
     gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
 
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
     
     flErr = f_mkdir(gSwrbTestDataFilePath);
     
@@ -153,21 +223,24 @@ static void ListWheel_TestDataFilePathGen(WM_HWIN *hWin)
     lwBuf = "0:/";
     gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
     
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
     
     lwBuf = "/";
     gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
     
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestDataFilePath);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestDataFilePath);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN1, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN2, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN3, gSwrbTestDataFilePath);
 
     lwBuf = ".txt";
     gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
 
-    hItem = WM_GetDialogItem(*hWin, ID_SET_EDIT_COMB);
+    hItem = WM_GetDialogItem(hWin, ID_SET_EDIT_COMB);
+    EDIT_SetText(hItem, gSwrbTestDataFilePath);
+    
+    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_EDIT_SN);
     EDIT_SetText(hItem, gSwrbTestDataFilePath);
 }
 // USER END
@@ -181,8 +254,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     int     NCode;
     int     Id;
     // USER START (Optionally insert additional variables)
-    int     lwItemIndex;
-    char   *lwBuf;
     int     i;
     // USER END
 
@@ -340,9 +411,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-                            WM_HideWin(pMsg->hWin);
-                            WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
+                            Button_ConfirmProc(pMsg->hWin);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
@@ -357,7 +426,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            ListWheel_TestDataFilePathGen(&pMsg->hWin);
+                            Button_CheckProc(pMsg->hWin);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
@@ -372,10 +441,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            for(i=ID_SET_LISTWHEEL_0;i<=ID_SET_LISTWHEEL_5;i++){
-                                hItem = WM_GetDialogItem(pMsg->hWin, i);
-                                LISTWHEEL_MoveToPos(hItem, 0);
-                            }
+                            Button_ResetProc(pMsg->hWin);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
@@ -390,20 +456,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            for(i=ID_SET_LISTWHEEL_0;i<=ID_SET_LISTWHEEL_5;i++){
-                                hItem = WM_GetDialogItem(pMsg->hWin, i);
-                                LISTWHEEL_MoveToPos(hItem, 0);
-                            }
-                            WM_HideWin(pMsg->hWin);
-                            WM_ShowWin(hWinEJE_SWRB_TEST_MAIN);
-                            gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+                            Button_CancelProc(pMsg->hWin);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
                         // USER END
                     }
                     break;
-                case ID_SET_LISTWHEEL_0: // Notifications sent by 'lwYear'
+                case ID_SET_LISTWHEEL_YEAR: // Notifications sent by 'lwYear'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -416,21 +476,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_YEAR);
-                            lwItemIndex = LISTWHEEL_GetPos(hItem);
-                            LISTWHEEL_SetSel(hItem, lwItemIndex);
-                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_YEAR);
-                            EDIT_SetText(hItem, lwBuf);
-                            myfree(SRAMIN, lwBuf);
+                            ListWheel_SelChangeProc(pMsg->hWin, ID_SET_LISTWHEEL_YEAR, ID_SET_EDIT_YEAR);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
                         // USER END
                     }
                     break;
-                case ID_SET_LISTWHEEL_1: // Notifications sent by 'lwMonth'
+                case ID_SET_LISTWHEEL_MONTH: // Notifications sent by 'lwMonth'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -442,21 +495,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_MONTH);
-                            lwItemIndex = LISTWHEEL_GetPos(hItem);
-                            LISTWHEEL_SetSel(hItem, lwItemIndex);
-                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_MONTH);
-                            EDIT_SetText(hItem, lwBuf);
-                            myfree(SRAMIN, lwBuf);
+                            ListWheel_SelChangeProc(pMsg->hWin, ID_SET_LISTWHEEL_MONTH, ID_SET_EDIT_MONTH);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
                         // USER END
                     }
                     break;
-                case ID_SET_LISTWHEEL_2: // Notifications sent by 'lwDay'
+                case ID_SET_LISTWHEEL_DAY: // Notifications sent by 'lwDay'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -468,21 +514,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_DAY);
-                            lwItemIndex = LISTWHEEL_GetPos(hItem);
-                            LISTWHEEL_SetSel(hItem, lwItemIndex);
-                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_DAY);
-                            EDIT_SetText(hItem, lwBuf);
-                            myfree(SRAMIN, lwBuf);
+                            ListWheel_SelChangeProc(pMsg->hWin, ID_SET_LISTWHEEL_DAY, ID_SET_EDIT_DAY);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further notification handling)
                         // USER END
                     }
                     break;
-                case ID_SET_LISTWHEEL_3: // Notifications sent by 'lwSN1'
+                case ID_SET_LISTWHEEL_SN1: // Notifications sent by 'lwSN1'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -494,21 +533,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_SN1);
-                            lwItemIndex = LISTWHEEL_GetPos(hItem);
-                            LISTWHEEL_SetSel(hItem, lwItemIndex);
-                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_SN1);
-                            EDIT_SetText(hItem, lwBuf);
-                            myfree(SRAMIN, lwBuf);
+                            ListWheel_SelChangeProc(pMsg->hWin, ID_SET_LISTWHEEL_SN1, ID_SET_EDIT_SN1);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further Ids)
                         // USER END
                     }
                     break;
-                case ID_SET_LISTWHEEL_4: // Notifications sent by 'lwSN2'
+                case ID_SET_LISTWHEEL_SN2: // Notifications sent by 'lwSN2'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -520,21 +552,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_SN2);
-                            lwItemIndex = LISTWHEEL_GetPos(hItem);
-                            LISTWHEEL_SetSel(hItem, lwItemIndex);
-                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_SN2);
-                            EDIT_SetText(hItem, lwBuf);
-                            myfree(SRAMIN, lwBuf);
+                            ListWheel_SelChangeProc(pMsg->hWin, ID_SET_LISTWHEEL_SN2, ID_SET_EDIT_SN2);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further Ids)
                         // USER END
                     }
                     break;
-                case ID_SET_LISTWHEEL_5: // Notifications sent by 'lwSN3'
+                case ID_SET_LISTWHEEL_SN3: // Notifications sent by 'lwSN3'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             // USER START (Optionally insert code for reacting on notification message)
@@ -546,14 +571,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_SN3);
-                            lwItemIndex = LISTWHEEL_GetPos(hItem);
-                            LISTWHEEL_SetSel(hItem, lwItemIndex);
-                            lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-                            LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-                            hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_EDIT_SN3);
-                            EDIT_SetText(hItem, lwBuf);
-                            myfree(SRAMIN, lwBuf);
+                            ListWheel_SelChangeProc(pMsg->hWin, ID_SET_LISTWHEEL_SN3, ID_SET_EDIT_SN3);
                             // USER END
                             break;
                         // USER START (Optionally insert additional code for further Ids)
@@ -587,6 +605,18 @@ WM_HWIN CreateSettingDLG(void) {
 }
 
 // USER START (Optionally insert additional public code)
+void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin)
+{
+    WM_HWIN hItem;
+    int i;
+    u8 j;
+    
+    for(i=ID_SET_LISTWHEEL_YEAR,j=0;i<=ID_SET_LISTWHEEL_SN3;i++,j++){
+        hItem = WM_GetDialogItem(hWin, i);
+        lastLwIndex[j] = LISTWHEEL_GetPos(hItem);
+    }
+}
+
 void SWRB_ListWheelSNInc(WM_HWIN *hWin)
 {
     WM_HWIN hItem;
@@ -646,7 +676,7 @@ FRESULT SWRB_TestDataFileOpen(void)
 {
     FRESULT flErr;
     
-    ListWheel_TestDataFilePathGen(&hWinEJE_SWRB_TEST_SETTING);
+    ListWheel_TestDataFilePathGen(hWinEJE_SWRB_TEST_SETTING);
     flErr = f_open(file, gSwrbTestDataFilePath, FA_WRITE|FA_OPEN_ALWAYS);
     f_lseek(file, file->fsize);
     
@@ -660,7 +690,7 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
     f_close(file);
 }
 
-void SWRB_TestDataFileWriteSN(WM_HWIN *hWin)
+void SWRB_TestDataFileWriteSN(WM_HWIN hWin)
 {
     char *gSwrbTestSerialNum;
     char *cBuf;
@@ -676,12 +706,12 @@ void SWRB_TestDataFileWriteSN(WM_HWIN *hWin)
     
     gSwrbTestSerialNum = strcat(gSwrbTestSerialNum, cBuf);
 
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_MONTH, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_DAY, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN1, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN2, gSwrbTestSerialNum);
-    SerialNum_Comb(&(*hWin), ID_SET_LISTWHEEL_SN3, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN1, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN2, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN3, gSwrbTestSerialNum);
 
     f_printf(file, "%s\r\n", gSwrbTestSerialNum);
 //    f_puts(gSwrbTestSerialNum, file);

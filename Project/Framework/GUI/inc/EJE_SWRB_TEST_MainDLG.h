@@ -10,6 +10,9 @@
 **********************************************************************
 */
 
+#ifndef __EJE_SWRB_TEST_MAINDLG_H
+#define __EJE_SWRB_TEST_MAINDLG_H
+
 // USER START (Optionally insert additional includes)
 // USER END
 
@@ -125,26 +128,6 @@ extern WM_HWIN hWinEJE_SWRB_TEST_MAIN;
 
 /*********************************************************************
 *
-*       Static data
-*
-**********************************************************************
-*/
-
-// USER START (Optionally insert additional static data)
-// USER END
-
-/*********************************************************************
-*
-*       Static code
-*
-**********************************************************************
-*/
-
-// USER START (Optionally insert additional static code)
-// USER END
-
-/*********************************************************************
-*
 *       Public code
 *
 **********************************************************************
@@ -178,4 +161,6 @@ void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor);
 //void MultiEdit_Set_CursorCharPos(int x, int y);
 // USER END
 
+
+#endif
 /*************************** End of file ****************************/

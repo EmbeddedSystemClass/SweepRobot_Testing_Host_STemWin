@@ -58,12 +58,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 //  { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
   { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
 //  { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
+  { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_MAIN, 10, 77, 440, 330, 0, 0x0, 0 },
+  { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_MAIN, 10, 442, 440, 20, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "START", ID_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "SET", ID_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "EXIT", ID_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-  { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_MAIN, 10, 435, 440, 20, 0, 0x0, 0 },
-  { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_MAIN, 10, 70, 440, 330, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "SET",   ID_BUTTON_SET,  700, 120, 100, 120, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "STOP",  ID_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "EXIT",  ID_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect,  "cbxWheel",       ID_CHECKBOX_WHEEL, 460, 17, 210, 25, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect,  "cbxBrush",       ID_CHECKBOX_BRUSH, 460, 52, 210, 25, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect,  "cbxFan",         ID_CHECKBOX_FAN, 460, 87, 210, 25, 0, 0x0, 0 },
@@ -78,24 +78,24 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { CHECKBOX_CreateIndirect,  "cbxRgbLed",      ID_CHECKBOX_RGB_LED, 460, 402, 210, 25, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect,  "cbxCharge",      ID_CHECKBOX_CHARGE, 460, 437, 210, 25, 0, 0x0, 0 },
 //  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 10, 310, 440, 100, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "EditU1", ID_EDIT_U1, 10, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU2", ID_EDIT_U2, 65, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU3", ID_EDIT_U3, 120, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU4", ID_EDIT_U4, 175, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU5", ID_EDIT_U5, 230, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU6", ID_EDIT_U6, 285, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU7", ID_EDIT_U7, 340, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU8", ID_EDIT_U8, 395, 10, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD1", ID_EDIT_D1, 10, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD2", ID_EDIT_D2, 65, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD3", ID_EDIT_D3, 120, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD4", ID_EDIT_D4, 175, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD5", ID_EDIT_D5, 230, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD6", ID_EDIT_D6, 285, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD7", ID_EDIT_D7, 340, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD8", ID_EDIT_D8, 395, 40, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditSN", ID_EDIT_SN, 190, 400, 260, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditDate", ID_EDIT_DATE, 10, 400, 180, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU1", ID_EDIT_U1, 10, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU2", ID_EDIT_U2, 65, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU3", ID_EDIT_U3, 120, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU4", ID_EDIT_U4, 175, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU5", ID_EDIT_U5, 230, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU6", ID_EDIT_U6, 285, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU7", ID_EDIT_U7, 340, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditU8", ID_EDIT_U8, 395, 17, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD1", ID_EDIT_D1, 10, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD2", ID_EDIT_D2, 65, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD3", ID_EDIT_D3, 120, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD4", ID_EDIT_D4, 175, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD5", ID_EDIT_D5, 230, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD6", ID_EDIT_D6, 285, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD7", ID_EDIT_D7, 340, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditD8", ID_EDIT_D8, 395, 47, 55, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditSN", ID_EDIT_SN, 190, 407, 260, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "EditDate", ID_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -267,6 +267,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_NORMAL);
         EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     }
+    //
+    // Initialization of 'EditDate'
+    //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_DATE);
     EDIT_SetFont(hItem, &GUI_Font20_ASCII);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
@@ -617,7 +620,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_EDIT_SN:
-        
+        switch(NCode){
+            case WM_NOTIFICATION_CLICKED:
+                break;
+            case WM_NOTIFICATION_RELEASED:
+                break;
+            case WM_NOTIFICATION_VALUE_CHANGED:
+                break;
+        }
         break;
     case ID_PROGBAR_MAIN:
         switch(NCode) {

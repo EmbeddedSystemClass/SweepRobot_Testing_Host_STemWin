@@ -29,7 +29,7 @@
 #include "DIALOG.h"
 
 #include "EJE_SWRB_TEST_MainDLG.h"
-#include "EJE_SWRB_TEST_SettingDLG.h"
+#include "EJE_SWRB_TEST_SNSettingDLG.h"
 #include "eje_logo.h"
 
 enum SWRB_Test_State_Pos{

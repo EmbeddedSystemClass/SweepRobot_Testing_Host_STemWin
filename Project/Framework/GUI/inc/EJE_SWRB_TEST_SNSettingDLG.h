@@ -17,6 +17,8 @@
 *                                                                    *
 **********************************************************************
 */
+#ifndef __EJE_SWRB_TEST_SNSETTINGDLG_H
+#define __EJE_SWRB_TEST_SNSETTINGDLG_H
 
 // USER START (Optionally insert additional includes)
 // USER END
@@ -77,16 +79,6 @@
 
 /*********************************************************************
 *
-*       Static data
-*
-**********************************************************************
-*/
-
-// USER START (Optionally insert additional static data)
-// USER END
-
-/*********************************************************************
-*
 *       Public data
 *
 **********************************************************************
@@ -109,10 +101,13 @@ WM_HWIN CreateSettingDLG(void);
 // USER START (Optionally insert additional public code)
 FRESULT SWRB_TestDataFileOpen(void);
 void SWRB_TestDataSaveToFile(void dataSaveProc(void));
-void SWRB_TestDataFileWriteSN(WM_HWIN *hWin);
+void SWRB_TestDataFileWriteSN(WM_HWIN hWin);
+void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin);
 void SWRB_ListWheelSNInc(WM_HWIN *hWin);
 void SWRB_SET_ListwheelSnapPosUpdate(void);
 void SWRB_SET_EditTextUpdate(void);
 // USER END
 
+
+#endif
 /*************************** End of file ****************************/

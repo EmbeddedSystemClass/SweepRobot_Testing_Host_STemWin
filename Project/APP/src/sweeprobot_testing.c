@@ -431,7 +431,7 @@ void SweepRobot_TestStartProc(void)
     OS_CPU_SR cpu_sr;
     
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-        SWRB_TestDataFileWriteSN(&hWinEJE_SWRB_TEST_SETTING);
+        SWRB_TestDataFileWriteSN(hWinEJE_SWRB_TEST_SETTING);
         SWRB_TestDataFileWriteDate(&rtcDate, &rtcTime);
     }
 
@@ -487,6 +487,7 @@ void SweepRobot_TestSetProc(void)
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
         gSwrbTestMode = SWRB_TEST_MODE_SET;
 
+        SWRB_ListWheelLastItemPosGet(hWinEJE_SWRB_TEST_SETTING);
         WM_HideWin(hWinEJE_SWRB_TEST_MAIN);
         WM_ShowWin(hWinEJE_SWRB_TEST_SETTING);
     }
@@ -522,9 +523,7 @@ void SweepRobot_TestExitProc(void)
 {
     OS_CPU_SR cpu_sr;
 
-    if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-
-        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
         mf_close();
         OS_ENTER_CRITICAL();
@@ -532,6 +531,9 @@ void SweepRobot_TestExitProc(void)
         OS_EXIT_CRITICAL();
         SweepRobot_TestInitProc();
         printf("TEST->OFF\r\n");
+        
+        Button_Set_unPressedBkColor(hWinEJE_SWRB_TEST_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
+        Button_Set_Text(ID_BUTTON_START, "START");
 
         MultiEdit_Set_Text("ROBOT EXIT TEST MODE\r\n");
         MultiEdit_Add_Text("PRESS START TO ENTER TEST MODE AND START TEST\r\n");
