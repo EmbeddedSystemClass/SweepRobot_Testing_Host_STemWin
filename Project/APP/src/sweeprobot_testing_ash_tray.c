@@ -3,9 +3,10 @@
 #include "usart.h"
 #include "includes.h"
 
-#define ASH_TRAY_TEST_CTRL_RCC          RCC_AHB1Periph_GPIOE
-#define ASH_TRAY_TEST_CTRL_GPIO         GPIOE
-#define ASH_TRAY_TEST_CTRL_PIN          GPIO_Pin_5
+#define ASH_TRAY_TEST_CTRL_RCC          RCC_AHB1Periph_GPIOB
+#define ASH_TRAY_TEST_CTRL_GPIO         GPIOB
+#define ASH_TRAY_TEST_CTRL_PIN          GPIO_Pin_6
+#define ASH_TRAY_TEST_CTRL_TIM          TIM4
 
 const static int SWRB_ASH_TRAY_LVL_VALID_THRESHOLD = 120;
 
@@ -14,6 +15,8 @@ static ASH_TRAY_TestTypeDef ashTrayLvl;
 
 static void SweepRobot_AshTrayTestGPIOInit(void)
 {
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
+    TIM_OCInitTypeDef TIM_OCInitStructure;
     GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_AHB1PeriphClockCmd(ASH_TRAY_TEST_CTRL_RCC, ENABLE);
@@ -21,19 +24,47 @@ static void SweepRobot_AshTrayTestGPIOInit(void)
     GPIO_InitStructure.GPIO_Pin = ASH_TRAY_TEST_CTRL_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(ASH_TRAY_TEST_CTRL_GPIO, &GPIO_InitStructure);
+    
+    TIM_DeInit(ASH_TRAY_TEST_CTRL_TIM);
+    
+    TIM_TimeBaseInitStructure.TIM_Period = 2500-1;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(ASH_TRAY_TEST_CTRL_TIM, &TIM_TimeBaseInitStructure);
+    
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OC1Init(ASH_TRAY_TEST_CTRL_TIM, &TIM_OCInitStructure);
+    
+    TIM_OC1PreloadConfig(ASH_TRAY_TEST_CTRL_TIM, TIM_OCPreload_Enable);
+    
+    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, DISABLE);
+    
+    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 2000);
 }
 
 void SweepRobot_AshTrayTestInsCtrlOn(void)
 {
-    GPIO_SetBits(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN);
+    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 2400);
+    
+    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
+    
+//    GPIO_SetBits(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN);
 }
 
 void SweepRobot_AshTrayTestInsCtrlOff(void)
 {
-    GPIO_ResetBits(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN);
+    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 2000);
+    
+    OSTimeDlyHMSM(0,0,1,0);
+    
+    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, DISABLE);
+    
+//    GPIO_ResetBits(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN);
 }
 
 static void SweepRobot_AshTrayTestInit(void)

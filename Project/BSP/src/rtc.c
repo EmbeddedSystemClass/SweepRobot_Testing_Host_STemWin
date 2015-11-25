@@ -32,7 +32,11 @@ void RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
     
     str = mymalloc(SRAMIN, sizeof(char)*30);
     sprintf(str,"%d/%d/%d %d:%d:%d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
-    Edit_Set_Text(ID_EDIT_DATE, str);
+    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
+        Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
+    }else{
+        Edit_Set_Text(hWin_SWRB_MAIN, ID_EDIT_DATE, str);
+    }
     myfree(SRAMIN, str);
 }
 

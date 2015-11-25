@@ -18,6 +18,7 @@ int main(void)
     }
 //    W25QXX_Init();
     FSMC_SRAM_Init();
+    SWRB_CRYPInit();
     
     if(exfans_init()){
         goto MEM_INIT_FAULT;

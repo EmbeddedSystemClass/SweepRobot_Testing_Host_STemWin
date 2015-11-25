@@ -124,7 +124,7 @@ enum GUI_ID_EDIT{
 
 // USER END
 
-extern WM_HWIN hWinEJE_SWRB_TEST_MAIN;
+extern WM_HWIN hWin_SWRB_MAIN;
 
 /*********************************************************************
 *
@@ -143,7 +143,7 @@ void Button_Set_Text(int buttonId, char *str);
 void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(u8 teststate);
-void Edit_Set_Text(int editId, char *str);
+void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(int editId, long editValue);
 void Edit_Clear(void);
 void Checkbox_Set_Text(int checkboxId, char *string);

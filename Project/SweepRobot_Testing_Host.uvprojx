@@ -532,9 +532,14 @@
               <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_SettingDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SettingDLG.c</FilePath>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1566,9 +1571,14 @@
               <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_SettingDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SettingDLG.c</FilePath>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
             </File>
           </Files>
         </Group>

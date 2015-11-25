@@ -107,7 +107,6 @@ static void SweepRobot_IrDATestProc(void)
             OSTimeDlyHMSM(0,0,0,1);
             for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
 //                    SweepRobot_IrDATestTxSendCmd(42);
-//                    printf("IRDA->ON=42\r\n");
 //                    OSTimeDlyHMSM(0,0,0,1);
                 printf("IRDA->READ\r\n");
                 OSTimeDlyHMSM(0,0,0,6);
@@ -143,6 +142,8 @@ static void SweepRobot_IrDATestProc(void)
     if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
         gSwrbTestTaskRunCnt = 0;
         
+        printf("IRDA->OFF\r\n");
+        
         for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
             gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
         }
@@ -167,6 +168,8 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
+    
+    printf("IRDA->OFF\r\n");
 
     for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;

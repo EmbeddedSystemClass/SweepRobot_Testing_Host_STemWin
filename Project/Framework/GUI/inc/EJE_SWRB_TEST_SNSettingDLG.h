@@ -31,7 +31,6 @@
 *
 **********************************************************************
 */
-//#define ID_SET_WINDOW_0 (ID_MAIN_BOUND + 0x00)
 #define ID_SET_LISTWHEEL_0 (ID_MAIN_BOUND + 0x00)
 #define ID_SET_LISTWHEEL_1 (ID_MAIN_BOUND + 0x01)
 #define ID_SET_LISTWHEEL_2 (ID_MAIN_BOUND + 0x02)
@@ -51,6 +50,11 @@
 #define ID_SET_BUTTON_1 (ID_MAIN_BOUND + 0x31)
 #define ID_SET_BUTTON_2 (ID_MAIN_BOUND + 0x32)
 #define ID_SET_BUTTON_3 (ID_MAIN_BOUND + 0x33)
+#define ID_SET_BUTTON_4 (ID_MAIN_BOUND + 0x34)
+#define ID_SET_BUTTON_5 (ID_MAIN_BOUND + 0x35)
+#define ID_SET_BUTTON_6 (ID_MAIN_BOUND + 0x36)
+#define ID_SET_BUTTON_7 (ID_MAIN_BOUND + 0x37)
+#define ID_SET_BUTTON_8 (ID_MAIN_BOUND + 0x38)
 #define ID_SET_TEXT_0 (ID_MAIN_BOUND + 0x40)
 #define ID_SET_BOUND (ID_MAIN_BOUND + 0x50)
 
@@ -71,6 +75,11 @@
 #define ID_SET_BUTTON_CHECK     ID_SET_BUTTON_1
 #define ID_SET_BUTTON_RESET     ID_SET_BUTTON_2
 #define ID_SET_BUTTON_CANCEL    ID_SET_BUTTON_3
+#define ID_SET_BUTTON_SNSET     ID_SET_BUTTON_4
+#define ID_SET_BUTTON_TIMESET   ID_SET_BUTTON_5
+#define ID_SET_BUTTON_RESERVE1  ID_SET_BUTTON_6
+#define ID_SET_BUTTON_RESERVE2  ID_SET_BUTTON_7
+#define ID_SET_BUTTON_RESERVE3  ID_SET_BUTTON_8
 #define ID_SET_FRAMEWIN         ID_SET_FRAMEWIN_0
 #define ID_SET_WINDOW           ID_SET_WINDOW_0
 
@@ -84,7 +93,7 @@
 **********************************************************************
 */
 
-extern WM_HWIN hWinEJE_SWRB_TEST_SETTING;
+extern WM_HWIN hWin_SWRB_SNSETTING;
 
 /*********************************************************************
 *
@@ -96,7 +105,7 @@ extern WM_HWIN hWinEJE_SWRB_TEST_SETTING;
 *
 *       CreateSettingDLG
 */
-WM_HWIN CreateSettingDLG(void);
+WM_HWIN CreateSNSettingDLG(void);
 
 // USER START (Optionally insert additional public code)
 FRESULT SWRB_TestDataFileOpen(void);

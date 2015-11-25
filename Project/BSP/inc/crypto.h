@@ -4,7 +4,7 @@
 #include "stm32f4xx_conf.h"
 
 
-
+void SWRB_CRYPInit(void);
 
 
 

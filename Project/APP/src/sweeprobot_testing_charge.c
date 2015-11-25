@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "includes.h"
 
-#define CHARGE_TEST_CTRL_RCC        RCC_AHB1Periph_GPIOB
+#define CHARGE_TEST_CTRL_RCC        RCC_AHB1Periph_GPIOC
 #define CHARGE_TEST_CTRL_GPIO       GPIOC
 #define CHARGE_TEST_CTRL_PIN        GPIO_Pin_7
 

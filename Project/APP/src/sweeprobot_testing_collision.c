@@ -3,13 +3,16 @@
 #include "usart.h"
 #include "includes.h"
 
-#define COLLISION_TEST_CTRL_RCC         RCC_AHB1Periph_GPIOB
-#define COLLISION_TEST_CTRL_GPIO        GPIOB
-#define COLLISION_TEST_CTRL_L_PIN       GPIO_Pin_10
-#define COLLISION_TEST_CTRL_FL_PIN      GPIO_Pin_6
-#define COLLISION_TEST_CTRL_R_PIN       GPIO_Pin_11
-#define COLLISION_TEST_CTRL_FR_PIN      GPIO_Pin_7
+#define COLLISION_SIDE_TEST_CTRL_RCC         RCC_AHB1Periph_GPIOD
+#define COLLISION_SIDE_TEST_CTRL_GPIO        GPIOD
+#define COLLISION_SIDE_TEST_CTRL_L_PIN       GPIO_Pin_6
+#define COLLISION_SIDE_TEST_CTRL_R_PIN       GPIO_Pin_7
 
+#define COLLISION_FRONT_TEST_CTRL_RCC         RCC_AHB1Periph_GPIOE
+#define COLLISION_FRONT_TEST_CTRL_GPIO        GPIOE
+#define COLLISION_FRONT_TEST_CTRL_L_PIN       GPIO_Pin_5
+#define COLLISION_FRONT_TEST_CTRL_R_PIN       GPIO_Pin_6
+    
 #define COLLISION_CHAN_NUM  4
 
 enum CollisionChan{
@@ -25,33 +28,40 @@ static void SweepRobot_CollisionTestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_AHB1PeriphClockCmd(COLLISION_TEST_CTRL_RCC, ENABLE);
+    RCC_AHB1PeriphClockCmd(COLLISION_FRONT_TEST_CTRL_RCC, ENABLE);
+    RCC_AHB1PeriphClockCmd(COLLISION_SIDE_TEST_CTRL_RCC, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = COLLISION_TEST_CTRL_L_PIN |\
-                                  COLLISION_TEST_CTRL_FL_PIN |\
-                                  COLLISION_TEST_CTRL_R_PIN |\
-                                  COLLISION_TEST_CTRL_FR_PIN;
+    GPIO_InitStructure.GPIO_Pin = COLLISION_SIDE_TEST_CTRL_L_PIN |\
+                                  COLLISION_SIDE_TEST_CTRL_R_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_Init(COLLISION_TEST_CTRL_GPIO, &GPIO_InitStructure);
+    GPIO_Init(COLLISION_SIDE_TEST_CTRL_GPIO, &GPIO_InitStructure);
+    
+    GPIO_InitStructure.GPIO_Pin = COLLISION_FRONT_TEST_CTRL_L_PIN |\
+                                  COLLISION_FRONT_TEST_CTRL_R_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(COLLISION_FRONT_TEST_CTRL_GPIO, &GPIO_InitStructure);
 }
 
 void SweepRobot_CollisionCtrlOn(void)
 {
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_L_PIN);
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FL_PIN);
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_R_PIN);
-    GPIO_SetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FR_PIN);
+    GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+    GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
+    GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
+    GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
 }
 
 void SweepRobot_CollisionCtrlOff(void)
 {
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_L_PIN);
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FL_PIN);
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_R_PIN);
-    GPIO_ResetBits(COLLISION_TEST_CTRL_GPIO, COLLISION_TEST_CTRL_FR_PIN);
+    GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+    GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
+    GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
+    GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
 }
 
 static void SweepRobot_CollisionTestInit(void)
@@ -66,11 +76,11 @@ static void SweepRobot_CollisionTestInit(void)
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(str);
-
-    OSTimeDlyHMSM(0,0,1,0);
     
     SweepRobot_CollisionCtrlOn();
-    
+
+    OSTimeDlyHMSM(0,0,1,0);
+
     for(i=0;i<COLLISION_CHAN_NUM;i++){
         collision[i].value = 0;
         collision[i].validCnt = 0;

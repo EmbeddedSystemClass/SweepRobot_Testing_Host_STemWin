@@ -12,6 +12,7 @@ u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+enum SWRB_TEST_SET_STATE gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 u32 gSwrbTestStateMap = 0;
 u32 lastSwrbTestStateMap = 0;
@@ -37,8 +38,7 @@ static void Rtc_Task(void *pdata);
 static void Usart_Task(void *pdata);
 static void SweepRobot_TestSaveDataTask(void *pdata);
 static void SWRB_TestCtrlTask(void *pdata);
-//static void SweepRobot_Test_Start(void *pdata);
-//static void TIM3_ISR(void);
+static void SWRB_ExceptionCheckTask(void *pdata);
 
 OS_STK START_TASK_STK[START_STK_SIZE];
 OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
@@ -49,6 +49,7 @@ OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
 OS_STK LED_TASK_STK[LED_STK_SIZE];
 OS_STK SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE];
 OS_STK SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE];
+OS_STK SWRB_TEST_EXCEPTION_CHECK_TASK_STK[SWRB_TEST_EXCEPTION_CHECK_STK_SIZE];
 OS_STK SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE];
 OS_STK SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE];
 OS_STK SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE];
@@ -83,7 +84,7 @@ void Start_Task(void *pdata)
 
     OS_ENTER_CRITICAL();
 
-    OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWINDEMO_TASK_PRIO);
+    OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWIN_TASK_PRIO);
     OSTaskCreate(SweepRobot_WheelTestTask,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_BrushTestTask,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_FanTestTask,(void*)0,(OS_STK*)&SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE-1],SWRB_FAN_TEST_TASK_PRIO);
@@ -118,9 +119,10 @@ static void SweepRobot_TestCkbStateSet(void)
 static void SweepRobot_TestCkbStateDisable(void)
 {
     u16 i;
-    
-    for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++)
+
+    for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
         Checkbox_Set_State(i, 2);
+    }
 }
 
 void emWin_Maintask(void *pdata)
@@ -136,8 +138,9 @@ void emWin_Maintask(void *pdata)
     GUI_DrawBitmap( &bmeje_logo, 320, 214);
     OSTimeDlyHMSM(0,0,1,500);
 
-    hWinEJE_SWRB_TEST_MAIN = CreateEJE_SweepRobot_test_System();
-    hWinEJE_SWRB_TEST_SETTING = CreateSettingDLG();
+    hWin_SWRB_MAIN = CreateEJE_SweepRobot_test_System();
+    hWin_SWRB_SNSETTING = CreateSNSettingDLG();
+    hWin_SWRB_TIMESETTING = CreateTimeSettingDLG();
 
     WIDGET_SetDefaultEffect(&WIDGET_Effect_None);
 
@@ -147,6 +150,7 @@ void emWin_Maintask(void *pdata)
     OSTaskCreate(Rtc_Task,(void*)0,(OS_STK*)&RTC_TASK_STK[RTC_STK_SIZE-1],RTC_TASK_PRIO);
     OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
     OSTaskCreate(SWRB_TestCtrlTask,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
+    OSTaskCreate(SWRB_ExceptionCheckTask, (void*)0,(OS_STK*)&SWRB_TEST_EXCEPTION_CHECK_TASK_STK[SWRB_TEST_EXCEPTION_CHECK_STK_SIZE-1],SWRB_TEST_EXCEPTION_CHECK_TASK_PRIO);
 
     MultiEdit_Set_Text("PRESS KEY0 TO START\r\n");
     MultiEdit_Add_Text("READY FOR TESTING\r\n");
@@ -160,7 +164,7 @@ void emWin_Maintask(void *pdata)
             SWRB_SET_ListwheelSnapPosUpdate();
             SWRB_SET_EditTextUpdate();
         }
-        
+
         GUI_Exec();
         OSTimeDlyHMSM(0,0,0,20);
     }
@@ -200,24 +204,24 @@ void Key_Task(void *pdata)
 }
 
 void Rtc_Task(void *pdata)
-{   
+{
 //    RTC_TimeTypeDef rtcTmpTime;
 //    RTC_DateTypeDef rtcTmpDate;
-//    
+//
 //    rtcTmpTime.RTC_Hours = 9;
 //    rtcTmpTime.RTC_Minutes = 28;
 //    rtcTmpTime.RTC_Seconds = 40;
-//    
+//
 //    rtcTmpDate.RTC_Year = 15;
 //    rtcTmpDate.RTC_Month = 11;
 //    rtcTmpDate.RTC_Date = 25;
-//    
+//
 //    RTC_SetTime(RTC_Format_BIN, &rtcTmpTime);
 //    RTC_SetDate(RTC_Format_BIN, &rtcTmpDate);
-    
+
     while(1){
-        
-        RTC_GetDate(RTC_Format_BIN, &rtcDate);        
+
+        RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
 
         RTC_TIME_Disp(&rtcDate, &rtcTime);
@@ -256,7 +260,7 @@ void SWRB_TestDataFileWriteString(char *str)
 void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 {
     char *datastr;
-    
+
     SWRB_TestDataFileOpen();
 
     f_puts(headstr, file);
@@ -269,7 +273,7 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
     }
     f_puts(datastr,file);
     myfree(SRAMIN, datastr);
-    
+
     f_close(file);
 }
 
@@ -278,7 +282,7 @@ void SWRB_TestDataFileWriteDate(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
     SWRB_TestDataFileWriteData("Test Time:20",date->RTC_Year, 0);
     SWRB_TestDataFileWriteData("/",date->RTC_Month, 0);
     SWRB_TestDataFileWriteData("/",date->RTC_Date, 0);
-    
+
     SWRB_TestDataFileWriteData(" ",time->RTC_Hours, 0);
     SWRB_TestDataFileWriteData(":",time->RTC_Minutes, 0);
     SWRB_TestDataFileWriteData(":",time->RTC_Seconds, 1);
@@ -288,9 +292,9 @@ void SweepRobot_TestSaveDataTask(void *pdata)
 {
 
     while(1){
-        
+
         SWRB_TestDataFileWriteDate(&rtcDate, &rtcTime);
-        
+
         if(Checkbox_Get_State(ID_CHECKBOX_WHEEL)){
             Wheel_TestDataSave();
         }
@@ -331,52 +335,6 @@ void SweepRobot_TestSaveDataTask(void *pdata)
             CHARGE_TestDataSave();
         }
 
-        /*
-        SWRB_TestDataFileWriteData("WHEEL->LSPEED=", gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS], 1);
-        SWRB_TestDataFileWriteData("WHEEL->RSPEED=", gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS], 1);
-        SWRB_TestDataFileWriteData("BRUSH->LCUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS], 1);
-        SWRB_TestDataFileWriteData("BRUSH->RCUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS], 1);
-        SWRB_TestDataFileWriteData("BRUSH->MCUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS], 1);
-        SWRB_TestDataFileWriteData("FAN->CUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FR_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->L_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_L_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->R_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_R_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SL_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SR_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FR_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->L_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_L_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->R_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_R_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_FL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_FR_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FL_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SL_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("IFRD->B_SL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SR_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("COLLISION->L_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("COLLISION->FL_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_FL_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("COLLISION->R_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_R_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("COLLISION->FR_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_FR_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("ASH_TRAY->INS_Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_INS_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("ASH_TRAY->LVL_TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("ASH_TRAY->LVL_TxOffValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("UNIWHEEL->TxOnValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS], 1);
-        SWRB_TestDataFileWriteData("UNIWHEEL->TxOffValue=",gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS], 1);
-        SWRB_TestDataFileWriteData("KEY->Value=",gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS], 1);
-        SWRB_TestDataFileWriteData("IRDA->B_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS], 1);
-        SWRB_TestDataFileWriteData("IRDA->L_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_L_RxCODE_POS], 1);
-        SWRB_TestDataFileWriteData("IRDA->FL_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_FL_RxCODE_POS], 1);
-        SWRB_TestDataFileWriteData("IRDA->FR_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_FR_RxCODE_POS], 1);
-        SWRB_TestDataFileWriteData("IRDA->R_RxCODE=",gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_R_RxCODE_POS], 1);
-        SWRB_TestDataFileWriteData("BUZZER->OK=",gSwrbTestAcquiredData[SWRB_TEST_DATA_BUZZER_OK_POS], 1);
-        SWRB_TestDataFileWriteData("RGB_LED->OK=",gSwrbTestAcquiredData[SWRB_TEST_DATA_RGB_LED_OK_POS], 1);
-        SWRB_TestDataFileWriteData("CHARGE->CUR=",gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS], 1);
-        SWRB_TestDataFileWriteData("CHARGE->VOL=",gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS], 1);
-        */
-
         OSTaskSuspend(OS_PRIO_SELF);
     }
 }
@@ -384,17 +342,18 @@ void SweepRobot_TestSaveDataTask(void *pdata)
 void SWRB_TestCtrlTask(void *pdata)
 {
     OS_CPU_SR cpu_sr;
-    
+
     OS_ENTER_CRITICAL();
     OSTaskCreate(SweepRobot_TestSaveDataTask,(void*)0,(OS_STK*)&SAVE_DATA_TASK_STK[SAVE_DATA_STK_SIZE-1],SAVE_DATA_TASK_PRIO);
     OSTaskSuspend(SAVE_DATA_TASK_PRIO);
     OS_EXIT_CRITICAL();
 
     SweepRobot_TestInitProc();
+    MultiEdit_Add_Text("PRESS START TO START TEST\r\n");
 
     gSwrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
     mymemset(gSwrbTestDataFilePath, 0, sizeof(char)*40);
-    
+
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     while(1){
@@ -426,12 +385,17 @@ void SWRB_TestCtrlTask(void *pdata)
     }
 }
 
+void SWRB_ExceptionCheckTask(void *pdata)
+{
+    
+}
+
 void SweepRobot_TestStartProc(void)
 {
     OS_CPU_SR cpu_sr;
-    
+
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-        SWRB_TestDataFileWriteSN(hWinEJE_SWRB_TEST_SETTING);
+        SWRB_TestDataFileWriteSN(hWin_SWRB_SNSETTING);
         SWRB_TestDataFileWriteDate(&rtcDate, &rtcTime);
     }
 
@@ -445,7 +409,7 @@ void SweepRobot_TestStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
-        Button_Set_unPressedBkColor(hWinEJE_SWRB_TEST_MAIN, ID_BUTTON_START, GUI_LIGHTRED);
+        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTRED);
         Button_Set_Text(ID_BUTTON_START, "PAUSE");
         printf("TEST->ON\r\n");
 
@@ -459,8 +423,10 @@ void SweepRobot_TestStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-        Button_Set_unPressedBkColor(hWinEJE_SWRB_TEST_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
+        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
         Button_Set_Text(ID_BUTTON_START, "RESUME");
+        MultiEdit_Add_Text("PRESS RESUME TO RESUME TEST\r\n");
+        
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
@@ -484,12 +450,21 @@ void SweepRobot_TestStartProc(void)
 
 void SweepRobot_TestSetProc(void)
 {
+    WM_HWIN hItem;
+
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
         gSwrbTestMode = SWRB_TEST_MODE_SET;
+        gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 
-        SWRB_ListWheelLastItemPosGet(hWinEJE_SWRB_TEST_SETTING);
-        WM_HideWin(hWinEJE_SWRB_TEST_MAIN);
-        WM_ShowWin(hWinEJE_SWRB_TEST_SETTING);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SET_BUTTON_SNSET);
+        BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+        BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+        BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+
+        SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+
+        WM_HideWin(hWin_SWRB_MAIN);
+        WM_ShowWin(hWin_SWRB_SNSETTING);
     }
 }
 
@@ -502,8 +477,10 @@ void SweepRobot_TestStopProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-        Button_Set_unPressedBkColor(hWinEJE_SWRB_TEST_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
+        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
         Button_Set_Text(ID_BUTTON_START, "START");
+
+        MultiEdit_Add_Text("PRESS START TO START TEST\r\n");
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
@@ -531,8 +508,8 @@ void SweepRobot_TestExitProc(void)
         OS_EXIT_CRITICAL();
         SweepRobot_TestInitProc();
         printf("TEST->OFF\r\n");
-        
-        Button_Set_unPressedBkColor(hWinEJE_SWRB_TEST_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
+
+        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
         Button_Set_Text(ID_BUTTON_START, "START");
 
         MultiEdit_Set_Text("ROBOT EXIT TEST MODE\r\n");
@@ -585,15 +562,6 @@ void SweepRobot_TestInitProc(void)
 
     Progbar_Set_Value(0);
 
-    if(gSwrbTestTaskCnt){        
-        MultiEdit_Set_Text("TEST STOPED\r\n");
-
-        if(gSwrbTestMode == SWRB_TEST_MODE_IDLE)
-            MultiEdit_Add_Text("PRESS START TO START TEST\r\n");
-        if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE)
-            MultiEdit_Add_Text("PRESS RESUME TO RESUME TEST\r\n");
-    }
-
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_START_TASK_BOUND+1);
@@ -614,6 +582,18 @@ void SWRB_NextTestTaskResumePreAct(u8 taskPrio)
     OS_EXIT_CRITICAL();
 }
 
+static void SWRB_ValidTestTaskCntGet(void)
+{
+    int i;
+    WM_HWIN hItem;
+
+    for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
+        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        if(CHECKBOX_GetState(hItem))
+            gSwrbTestTaskCnt++;
+    }
+}
+
 void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
 {
     int i;
@@ -628,33 +608,24 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     if(gSwrbTestTaskCnt){
         OSTaskResume(taskPrio+1);
     }else{
-        
+        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+
+        SWRB_ValidTestTaskCntGet();
         SweepRobot_TestInitProc();
 
-        for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
-            hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, i);
-            if(CHECKBOX_GetState(hItem))
-                gSwrbTestTaskCnt++;
-        }
-        
         str = "\r\nTEST FINISHED\r\n";
         SWRB_TestDataFileWriteString(str);
-        
-        MultiEdit_Add_Text("\r\nTEST FINISHED\r\n");
-        Button_Set_unPressedBkColor(hWinEJE_SWRB_TEST_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
+
+        MultiEdit_Add_Text(str);
+        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
         Button_Set_Text(ID_BUTTON_START, "START");
         for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
         }
-        
-        f_sync(file);
-        
-        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-        SWRB_ListWheelSNInc(&hWinEJE_SWRB_TEST_SETTING);
-        
-//        OSTaskResume(SAVE_DATA_TASK_PRIO);
+
+        SWRB_ListWheelSNInc(&hWin_SWRB_SNSETTING);
     }
-    
+
     OSTaskSuspend(OS_PRIO_SELF);
 
     OS_EXIT_CRITICAL();

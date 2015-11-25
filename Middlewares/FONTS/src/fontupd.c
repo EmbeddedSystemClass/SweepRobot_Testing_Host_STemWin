@@ -5,7 +5,7 @@
 #include "malloc.h"
 
 //字库存放起始地址 
-#define FONTINFOADDR 	1024*1024*10 					//Explorer STM32F4是从10M地址以后开始存放字库
+#define FONTINFOADDR 	1024*1024*10
 
 //用于保存字库基本信息,地址,大小等
 _font_info ftinfo;

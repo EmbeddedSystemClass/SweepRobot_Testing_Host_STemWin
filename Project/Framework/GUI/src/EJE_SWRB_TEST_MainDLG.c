@@ -35,7 +35,7 @@
 */
 
 // USER START (Optionally insert additional defines)
-WM_HWIN hWinEJE_SWRB_TEST_MAIN;
+WM_HWIN hWin_SWRB_MAIN;
 
 #define ID_IMAGE_0_IMAGE_0 0x00
 // USER END
@@ -56,6 +56,7 @@ WM_HWIN hWinEJE_SWRB_TEST_MAIN;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 //  { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
+
   { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
 //  { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
   { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_MAIN, 10, 77, 440, 330, 0, 0x0, 0 },
@@ -170,7 +171,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MULTIEDIT_MAIN);
     MULTIEDIT_SetText(hItem, "Waiting for Start");
-    MULTIEDIT_SetFont(hItem, GUI_FONT_16B_ASCII);
+    MULTIEDIT_SetFont(hItem, GUI_FONT_16_ASCII);
     MULTIEDIT_SetAutoScrollV(hItem,1);
     MULTIEDIT_SetWrapWord(hItem);
     MULTIEDIT_SetBufferSize(hItem, 1024);
@@ -669,7 +670,7 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void) {
 void Button_Set_Text(int buttonId, char *str)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, buttonId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, buttonId);
     BUTTON_SetText(hItem, str);
 }
 
@@ -683,7 +684,7 @@ void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_PROGBAR_0);
+	hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_PROGBAR_0);
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
@@ -695,14 +696,14 @@ void Progbar_Set_Percent(u8 teststate)
 void Edit_Set_Value(int editId, long editValue)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, editId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, editId);
     EDIT_SetValue(hItem, editValue);
 }
 
-void Edit_Set_Text(int editId, char *str)
+void Edit_Set_Text(WM_HWIN hWin, int editId, char *str)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, editId);
+    hItem = WM_GetDialogItem(hWin, editId);
     EDIT_SetText(hItem, str);
 }
 
@@ -718,14 +719,14 @@ void Edit_Clear(void)
 void Checkbox_Set_Text(int checkboxId, char *string)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     CHECKBOX_SetText(hItem, string);
 }
 
 int Checkbox_Get_State(int checkboxId)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     return(CHECKBOX_GetState(hItem));
 }
 
@@ -743,35 +744,35 @@ void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
 void Checkbox_Set_State(int checkboxId, unsigned int checkboxState)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     CHECKBOX_SetState(hItem, checkboxState);
 }
 
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxtextcolor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     CHECKBOX_SetTextColor(hItem, checkboxtextcolor);
 }
 
 void Checkbox_Set_TextAlign(int checkboxId, int align)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     CHECKBOX_SetTextAlign(hItem, align);
 }
 
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     CHECKBOX_SetBkColor(hItem, checkboxbkcolor);
 }
 
 void Checkbox_Set_Box_Back_Color(int checkboxId, GUI_COLOR boxBkColor, int Index)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
     CHECKBOX_SetBoxBkColor(hItem, boxBkColor, Index);
 }
 
@@ -779,28 +780,28 @@ void MULTIEDIT_Set_Buffer_Size(int size)
 {
     WM_HWIN hItem;
     
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_MAIN);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MULTIEDIT_MAIN);
     MULTIEDIT_SetBufferSize(hItem, size);
 }
 
 void MultiEdit_Set_Text(char *s)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_0);
+	hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MULTIEDIT_0);
 	MULTIEDIT_SetText(hItem, s);
 }
 
 void MultiEdit_Add_Text(char *s)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_0);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MULTIEDIT_0);
     MULTIEDIT_AddText(hItem, s);
 }
 
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWinEJE_SWRB_TEST_MAIN, ID_MULTIEDIT_0);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MULTIEDIT_0);
     MULTIEDIT_SetTextColor(hItem, MULTIEDIT_CI_EDIT, multieditTextColor);
 }
 

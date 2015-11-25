@@ -4,7 +4,7 @@
 
 #define USE_EXRAM  1//使用外部RAM
 //设置EMWIN内存大小
-#define GUI_NUMBYTES  (800*1024)
+#define GUI_NUMBYTES  (1024*1024)
 #define GUI_BLOCKSIZE 0X80  //块大小
 
 

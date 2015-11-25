@@ -77,7 +77,7 @@
 #endif /* STM32F427_437xx */
 
 #if defined (STM32F40_41xxx)
-#include "stm32f4xx_cryp.h"
+//#include "stm32f4xx_cryp.h"
 #include "stm32f4xx_hash.h"
 #include "stm32f4xx_rng.h"
 #include "stm32f4xx_can.h"
