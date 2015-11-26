@@ -88,7 +88,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 static void ListWheel_ResetToLastPos(WM_HWIN hWin);
 static void ListWheel_ResetToZero(WM_HWIN hWin);
-static void ListWheel_TestDataFilePathGen(WM_HWIN hWin);
+static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str);
 
 // USER START (Optionally insert additional static code)
 static void Button_Init(WM_HWIN hItem)
@@ -101,7 +101,9 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
-    ListWheel_TestDataFilePathGen(hWin);
+    char *str;
+    
+    ListWheel_TestDataFilePathGet(hWin,str);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_MAIN);
@@ -109,7 +111,9 @@ static void Button_ConfirmProc(WM_HWIN hWin)
 
 static void Button_CheckProc(WM_HWIN hWin)
 {
-    ListWheel_TestDataFilePathGen(hWin);
+    char *str;
+    
+    ListWheel_TestDataFilePathGet(hWin, str);
 }
 
 static void Button_ResetProc(WM_HWIN hWin)
@@ -226,49 +230,55 @@ static void SerialNum_Comb(WM_HWIN hWin, int id, char *dest_SNumStr)
     myfree(SRAMIN, lwBuf);
 }
 
-static void ListWheel_TestDataFilePathGen(WM_HWIN hWin)
+static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
 {
     WM_HWIN hItem;
-    char    *lwBuf;
     FRESULT flErr;
+    char    *lwBuf;
+    char *swrbTestDataFilePath;
 
     flErr = flErr;
     
-    *gSwrbTestDataFilePath = 0;
+    swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+    *swrbTestDataFilePath = 0;
 
     lwBuf = "0:/";
-    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
+    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
 
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, swrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, swrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, swrbTestDataFilePath);
     
-    flErr = f_mkdir(gSwrbTestDataFilePath);
+    flErr = f_mkdir(swrbTestDataFilePath);
     
-    *gSwrbTestDataFilePath = 0;
+    *swrbTestDataFilePath = 0;
     
     lwBuf = "0:/";
-    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
+    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
     
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, gSwrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, gSwrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_YEAR, swrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_MONTH, swrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_DAY, swrbTestDataFilePath);
     
     lwBuf = "/";
-    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
+    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
     
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN1, gSwrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN2, gSwrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN3, gSwrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN1, swrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN2, swrbTestDataFilePath);
+    SerialNum_Comb(hWin, ID_SET_LISTWHEEL_SN3, swrbTestDataFilePath);
 
     lwBuf = ".txt";
-    gSwrbTestDataFilePath = strcat(gSwrbTestDataFilePath, lwBuf);
+    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
 
     hItem = WM_GetDialogItem(hWin, ID_SET_EDIT_COMB);
-    EDIT_SetText(hItem, gSwrbTestDataFilePath);
+    EDIT_SetText(hItem, swrbTestDataFilePath);
     
     hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_EDIT_SN);
-    EDIT_SetText(hItem, gSwrbTestDataFilePath);
+    EDIT_SetText(hItem, swrbTestDataFilePath);
+    
+    sprintf(dest_str, "%s", swrbTestDataFilePath);
+    
+    myfree(SRAMIN, swrbTestDataFilePath);
 }
 // USER END
 
@@ -723,12 +733,17 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
     myfree(SRAMIN, strSN3);
 }
 
-FRESULT SWRB_TestDataFileOpen(void)
+FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 {
     FRESULT flErr;
+    char *pathStr;
     
-    ListWheel_TestDataFilePathGen(hWin_SWRB_SNSETTING);
-    flErr = f_open(file, gSwrbTestDataFilePath, FA_WRITE|FA_OPEN_ALWAYS);
+    pathStr = mymalloc(SRAMIN, sizeof(char)*40);
+    *pathStr = 0;
+    
+    ListWheel_TestDataFilePathGet(hWin_SWRB_SNSETTING, pathStr);
+    flErr = f_open(file, pathStr, fileOpenMode);
+    myfree(SRAMIN, pathStr);
     f_lseek(file, file->fsize);
     
     return flErr;
@@ -736,7 +751,7 @@ FRESULT SWRB_TestDataFileOpen(void)
 
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 {
-    SWRB_TestDataFileOpen();
+    SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
     dataSaveProc();
     f_close(file);
 }
@@ -746,7 +761,7 @@ void SWRB_TestDataFileWriteSN(WM_HWIN hWin)
     char *gSwrbTestSerialNum;
     char *cBuf;
     
-    SWRB_TestDataFileOpen();
+    SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
 
     gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
     mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);

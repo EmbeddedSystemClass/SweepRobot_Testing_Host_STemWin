@@ -105,8 +105,11 @@ static void Button_ConfirmProc(WM_HWIN hWin)
     ErrorStatus err;
     
     TimeStr_Comb(hWin, ID_TIMESET_EDIT_SETVALUE);
+    PWR_BackupAccessCmd(ENABLE);
     while(!(RTC_SetDate(RTC_Format_BIN, &rtcDate)));
     while(!(RTC_SetTime(RTC_Format_BIN, &rtcTime)));
+    while(!RTC_WaitForSynchro());
+    PWR_BackupAccessCmd(DISABLE);
     
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);

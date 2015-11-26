@@ -517,9 +517,9 @@
               <FilePath>.\BSP\src\w25qxx.c</FilePath>
             </File>
             <File>
-              <FileName>crypto.c</FileName>
+              <FileName>crypto_tea.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\crypto.c</FilePath>
+              <FilePath>.\BSP\src\crypto_tea.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1556,9 +1556,9 @@
               <FilePath>.\BSP\src\w25qxx.c</FilePath>
             </File>
             <File>
-              <FileName>crypto.c</FileName>
+              <FileName>crypto_tea.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\crypto.c</FilePath>
+              <FilePath>.\BSP\src\crypto_tea.c</FilePath>
             </File>
           </Files>
         </Group>

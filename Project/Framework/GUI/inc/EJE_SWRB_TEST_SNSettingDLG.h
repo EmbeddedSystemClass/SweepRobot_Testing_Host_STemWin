@@ -24,6 +24,8 @@
 // USER END
 
 #include "DIALOG.h"
+#include "ff.h"
+#include "stm32f4xx.h"
 
 /*********************************************************************
 *
@@ -108,7 +110,7 @@ extern WM_HWIN hWin_SWRB_SNSETTING;
 WM_HWIN CreateSNSettingDLG(void);
 
 // USER START (Optionally insert additional public code)
-FRESULT SWRB_TestDataFileOpen(void);
+FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode);
 void SWRB_TestDataSaveToFile(void dataSaveProc(void));
 void SWRB_TestDataFileWriteSN(WM_HWIN hWin);
 void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin);

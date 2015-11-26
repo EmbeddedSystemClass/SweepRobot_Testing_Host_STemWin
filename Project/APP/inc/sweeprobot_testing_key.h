@@ -11,7 +11,7 @@ typedef struct{
 
 void SweepRobot_KeyTestTask(void *pdata);
 void KEY_TestDataSave(void);
-void SweepRobot_KeyTestCtrlOn(void);
-void SweepRobot_KeyTestCtrlOff(void);
+void SweepRobot_KeyTestCtrlTestPos(void);
+void SweepRobot_KeyTestCtrlIdlePos(void);
 
 #endif

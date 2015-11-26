@@ -13,7 +13,8 @@ typedef struct{
 
 void SweepRobot_AshTrayTestTask(void *pdata);
 void ASH_TRAY_TestDataSave(void);
-void SweepRobot_AshTrayTestInsCtrlOn(void);
+void SweepRobot_AshTrayTestInsCtrlTestPos(void);
+void SweepRobot_AshTrayTestInsCtrlIdlePos(void);
 void SweepRobot_AshTrayTestInsCtrlOff(void);
 
 #endif

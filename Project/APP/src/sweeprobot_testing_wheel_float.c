@@ -3,11 +3,15 @@
 #include "usart.h"
 #include "includes.h"
 
-#define WHEEL_FLOAT_TEST_CTRL_RCC       RCC_AHB1Periph_GPIOB
-#define WHEEL_FLOAT_TEST_CTRL_GPIO      GPIOB
-#define WHEEL_FLOAT_TEST_CTRL_L_PIN     GPIO_Pin_10
-#define WHEEL_FLOAT_TEST_CTRL_R_PIN     GPIO_Pin_11
-#define WHEEL_FLOAT_TEST_CTRL_TIM       TIM2
+#define WHEEL_FLOAT_TEST_CTRL_GPIO_RCC      RCC_AHB1Periph_GPIOB
+#define WHEEL_FLOAT_TEST_CTRL_GPIO          GPIOB
+#define WHEEL_FLOAT_TEST_CTRL_L_PIN         GPIO_Pin_10
+#define WHEEL_FLOAT_TEST_CTRL_R_PIN         GPIO_Pin_11
+#define WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE  GPIO_PinSource10
+#define WHEEL_FLOAT_TSET_CTRL_R_PIN_SOURCE  GPIO_PinSource11
+#define WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP   GPIO_AF_TIM2
+#define WHEEL_FLOAT_TEST_CTRL_TIM_RCC       RCC_APB1Periph_TIM2
+#define WHEEL_FLOAT_TEST_CTRL_TIM           TIM2
 
 #define WHEEL_FLOAT_CHAN_NUM    2
 
@@ -24,18 +28,22 @@ static void SweepRobot_WheelFloatTestGPIOInit(void)
     TIM_OCInitTypeDef TIM_OCInitStructure;
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_AHB1PeriphClockCmd(WHEEL_FLOAT_TEST_CTRL_RCC, ENABLE);
+    RCC_APB1PeriphClockCmd(WHEEL_FLOAT_TEST_CTRL_TIM_RCC, ENABLE);
+    RCC_AHB1PeriphClockCmd(WHEEL_FLOAT_TEST_CTRL_GPIO_RCC, ENABLE);
+    
+    GPIO_PinAFConfig(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE, WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP);
+    GPIO_PinAFConfig(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE, WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP);
 
     GPIO_InitStructure.GPIO_Pin = WHEEL_FLOAT_TEST_CTRL_L_PIN | WHEEL_FLOAT_TEST_CTRL_R_PIN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(WHEEL_FLOAT_TEST_CTRL_GPIO, &GPIO_InitStructure);
     
     TIM_DeInit(WHEEL_FLOAT_TEST_CTRL_TIM);
     
-    TIM_TimeBaseInitStructure.TIM_Period = 2500-1;
+    TIM_TimeBaseInitStructure.TIM_Period = 20000-1;
     TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
     TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -43,40 +51,45 @@ static void SweepRobot_WheelFloatTestGPIOInit(void)
     
     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
     TIM_OC3Init(WHEEL_FLOAT_TEST_CTRL_TIM, &TIM_OCInitStructure);
     TIM_OC4Init(WHEEL_FLOAT_TEST_CTRL_TIM, &TIM_OCInitStructure);
     
     TIM_OC3PreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, TIM_OCPreload_Enable);
     TIM_OC4PreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, TIM_OCPreload_Enable);
     
-    TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, DISABLE);
+    TIM_ARRPreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
     
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 2000);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 2000);
-}
-
-void SweepRobot_WheelFloatCtrlOn(void)
-{
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 2400);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 2400);
+    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 300);
+    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 300);
     
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
+}
+
+void SweepRobot_WheelFloatCtrlTestPos(void)
+{
+    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 1000);
+    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 1000);
     
-//    GPIO_SetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_L_PIN);
-//    GPIO_SetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_R_PIN);
+    TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
+}
+
+void SweepRobot_WheelFloatCtrlIdlePos(void)
+{
+    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 300);
+    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 300);
+    
+    TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
 
 void SweepRobot_WheelFloatCtrlOff(void)
 {
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 2000);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 2000);
+    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, 300);
+    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, 300);
     
     OSTimeDlyHMSM(0,0,1,0);
     
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, DISABLE);
-    
-//    GPIO_ResetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_L_PIN);
-//    GPIO_ResetBits(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TEST_CTRL_R_PIN);
 }
 
 void SweepRobot_WheelFloatTestInit(void)
@@ -92,10 +105,10 @@ void SweepRobot_WheelFloatTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(str);
     
+    SweepRobot_WheelFloatCtrlTestPos();
+    
     OSTimeDlyHMSM(0,0,1,0);
-    
-    SweepRobot_WheelFloatCtrlOn();
-    
+
     for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
         wheelFloat[i].value = 0;
         wheelFloat[i].validCnt = 0;
@@ -139,7 +152,7 @@ static void SweepRobot_WheelFloatTestProc(void)
     
     if(wheelFloat[WHEEL_FLOAT_CHAN_L].validFlag && wheelFloat[WHEEL_FLOAT_CHAN_R].validFlag){
         gSwrbTestTaskRunCnt = 0;
-        SweepRobot_WheelFloatCtrlOff();
+        SweepRobot_WheelFloatCtrlIdlePos();
 
         gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_L].value;
         gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_R].value;
@@ -163,7 +176,7 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    SweepRobot_WheelFloatCtrlOff();
+    SweepRobot_WheelFloatCtrlIdlePos();
     
     gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_L].value;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_R].value;

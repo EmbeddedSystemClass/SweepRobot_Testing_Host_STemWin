@@ -23,7 +23,7 @@
 #include "led.h"
 #include "key.h"
 #include "sdio_SDcard.h"
-#include "crypto.h"
+#include "crypto_tea.h"
 
 #include "GUI.h"
 #include "WM.h"
@@ -246,7 +246,7 @@ enum SWRB_TEST_TASK_PRIO{
     RTC_TASK_PRIO,
     LED_TASK_PRIO,
     START_TASK_PRIO,
-    SAVE_DATA_TASK_PRIO,
+    TASK_PRIO_BOUND,
 };
 
 #define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM     7
@@ -258,7 +258,6 @@ enum SWRB_TEST_TASK_PRIO{
 #define RTC_STK_SIZE                        128
 #define EMWINDEMO_STK_SIZE		            1024+512
 #define LED_STK_SIZE				        64
-#define SAVE_DATA_STK_SIZE                  128
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
@@ -289,7 +288,6 @@ extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
-extern char *gSwrbTestDataFilePath;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
 extern int gSwrbTestTaskCnt;

@@ -3,10 +3,13 @@
 #include "usart.h"
 #include "includes.h"
 
-#define KEY_TEST_CTRL_RCC       RCC_AHB1Periph_GPIOB
-#define KEY_TEST_CTRL_GPIO      GPIOB
-#define KEY_TEST_CTRL_PIN       GPIO_Pin_7
-#define KEY_TEST_CTRL_TIM       TIM4
+#define KEY_TEST_CTRL_RCC           RCC_AHB1Periph_GPIOB
+#define KEY_TEST_CTRL_GPIO          GPIOB
+#define KEY_TEST_CTRL_PIN           GPIO_Pin_7
+#define KEY_TEST_CTRL_PIN_SOURCE    GPIO_PinSource7
+#define KEY_TEST_CTRL_GPIO_AF_PPP   GPIO_AF_TIM4
+#define KEY_TEST_CTRL_TIM_RCC       RCC_APB1Periph_TIM4
+#define KEY_TEST_CTRL_TIM           TIM4
 
 static KEY_TestTypeDef key;
 
@@ -16,18 +19,21 @@ static void SweepRobot_KeyTestGPIOInit(void)
     TIM_OCInitTypeDef TIM_OCInitStructure;
     GPIO_InitTypeDef GPIO_InitStructure;
 
+    RCC_APB1PeriphClockCmd(KEY_TEST_CTRL_TIM_RCC, ENABLE);
     RCC_AHB1PeriphClockCmd(KEY_TEST_CTRL_RCC, ENABLE);
+    
+    GPIO_PinAFConfig(KEY_TEST_CTRL_GPIO, KEY_TEST_CTRL_PIN_SOURCE, KEY_TEST_CTRL_GPIO_AF_PPP);
 
     GPIO_InitStructure.GPIO_Pin = KEY_TEST_CTRL_PIN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(KEY_TEST_CTRL_GPIO, &GPIO_InitStructure);
     
     TIM_DeInit(KEY_TEST_CTRL_TIM);
     
-    TIM_TimeBaseInitStructure.TIM_Period = 2500-1;
+    TIM_TimeBaseInitStructure.TIM_Period = 20000-1;
     TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
     TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -35,31 +41,34 @@ static void SweepRobot_KeyTestGPIOInit(void)
     
     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
     TIM_OC2Init(KEY_TEST_CTRL_TIM, &TIM_OCInitStructure);
     
     TIM_OC2PreloadConfig(KEY_TEST_CTRL_TIM, TIM_OCPreload_Enable);
     
-    TIM_Cmd(KEY_TEST_CTRL_TIM, DISABLE);
+    TIM_ARRPreloadConfig(KEY_TEST_CTRL_TIM, ENABLE);
     
-    TIM_SetCompare1(KEY_TEST_CTRL_TIM, 2000);
+    TIM_SetCompare2(KEY_TEST_CTRL_TIM, 300);
+    
+    TIM_Cmd(KEY_TEST_CTRL_TIM, ENABLE);
 }
 
-void SweepRobot_KeyTestCtrlOn(void)
+void SweepRobot_KeyTestCtrlTestPos(void)
 {
-    TIM_SetCompare1(KEY_TEST_CTRL_TIM, 2400);
+    TIM_SetCompare1(KEY_TEST_CTRL_TIM, 1000);
     
     TIM_Cmd(KEY_TEST_CTRL_TIM, ENABLE);
     
 //    GPIO_SetBits(KEY_TEST_CTRL_GPIO, KEY_TEST_CTRL_PIN);
 }
 
-void SweepRobot_KeyTestCtrlOff(void)
+void SweepRobot_KeyTestCtrlIdlePos(void)
 {
-    TIM_SetCompare1(KEY_TEST_CTRL_TIM, 2000);
+    TIM_SetCompare1(KEY_TEST_CTRL_TIM, 300);
     
-    OSTimeDlyHMSM(0,0,1,0);
+//    OSTimeDlyHMSM(0,0,1,0);
     
-    TIM_Cmd(KEY_TEST_CTRL_TIM, DISABLE);
+    TIM_Cmd(KEY_TEST_CTRL_TIM, ENABLE);
     
 //    GPIO_ResetBits(KEY_TEST_CTRL_GPIO, KEY_TEST_CTRL_PIN);
 }
@@ -76,9 +85,10 @@ static void SweepRobot_KeyTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(str);
     
-    OSTimeDlyHMSM(0,0,1,0);
-    SweepRobot_KeyTestCtrlOn();
+    SweepRobot_KeyTestCtrlTestPos();
     
+    OSTimeDlyHMSM(0,0,1,0);
+
     key.value = 0;
     key.validCnt = 0;
     key.validFlag = 0;
@@ -109,13 +119,13 @@ static void SweepRobot_KeyTestProc(void)
         }
         
         if(key.validFlag){
-            SweepRobot_KeyTestCtrlOff();
+            SweepRobot_KeyTestCtrlIdlePos();
         }
     }
     
     if(key.validFlag){
         gSwrbTestTaskRunCnt = 0;
-        SweepRobot_KeyTestCtrlOff();
+        SweepRobot_KeyTestCtrlIdlePos();
 
         gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
         SWRB_TestDataSaveToFile(KEY_TestDataSave);
@@ -138,7 +148,7 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    SweepRobot_KeyTestCtrlOff();
+    SweepRobot_KeyTestCtrlIdlePos();
 
     gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
     SWRB_TestDataSaveToFile(KEY_TestDataSave);

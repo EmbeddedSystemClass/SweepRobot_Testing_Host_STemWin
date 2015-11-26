@@ -733,11 +733,12 @@ int Checkbox_Get_State(int checkboxId)
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, id);
-    if(CHECKBOX_GetState(hItem)){
-        gSwrbTestTaskCnt++;
-    }else{
-        gSwrbTestTaskCnt--;
-        OSTaskSuspend(taskPrio);
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+        if(CHECKBOX_GetState(hItem)){
+            gSwrbTestTaskCnt++;
+        }else{
+            gSwrbTestTaskCnt--;
+        }
     }
 }
 
