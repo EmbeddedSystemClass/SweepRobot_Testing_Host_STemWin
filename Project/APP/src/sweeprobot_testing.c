@@ -117,6 +117,8 @@ void emWin_Maintask(void *pdata)
     GUI_DrawBitmap( &bmeje_logo, 320, 214);
     OSTimeDlyHMSM(0,0,1,500);
 
+    hWin_SWRB_RGB_LED = CreateRGB_LED_TestDLG();
+    hWin_SWRB_BUZZER = CreateBUZZER_TestDLG();
     hWin_SWRB_MAIN = CreateEJE_SweepRobot_test_System();
     hWin_SWRB_SNSETTING = CreateSNSettingDLG();
     hWin_SWRB_TIMESETTING = CreateTimeSettingDLG();

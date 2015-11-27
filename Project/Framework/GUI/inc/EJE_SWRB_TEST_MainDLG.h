@@ -62,26 +62,45 @@
 #define ID_BUTTON_2		(GUI_ID_USER + 0x32)
 #define ID_BUTTON_3		(GUI_ID_USER + 0x33)
 #define ID_BUTTON_4		(GUI_ID_USER + 0x34)
-#define ID_FRAMEWIN_0		(GUI_ID_USER + 0x35)
-#define ID_MULTIPAGE_0      (GUI_ID_USER + 0x36)
-#define ID_PROGBAR_0		(GUI_ID_USER + 0x37)
-#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x38)
-#define ID_GRAPH_0		(GUI_ID_USER + 0x39)
-#define ID_WINDOW_0     (GUI_ID_USER + 0x3A)
-#define ID_MAIN_BOUND   (GUI_ID_USER + 0x3B)
+#define ID_BUTTON_5     (GUI_ID_USER + 0x35)
+#define ID_BUTTON_6     (GUI_ID_USER + 0x36)
+#define ID_BUTTON_7     (GUI_ID_USER + 0x37)
+#define ID_BUTTON_8     (GUI_ID_USER + 0x38)
+#define ID_FRAMEWIN_0		(GUI_ID_USER + 0x3A)
+#define ID_FRAMEWIN_1       (GUI_ID_USER + 0x3B)
+#define ID_FRAMEWIN_2       (GUI_ID_USER + 0x3C)
+#define ID_MULTIPAGE_0      (GUI_ID_USER + 0x40)
+#define ID_PROGBAR_0		(GUI_ID_USER + 0x41)
+#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x42)
+#define ID_GRAPH_0		(GUI_ID_USER + 0x43)
+#define ID_WINDOW_0     (GUI_ID_USER + 0x44)
+#define ID_TEXT_0       (GUI_ID_USER + 0x45)
+#define ID_TEXT_1       (GUI_ID_USER + 0x46)
+#define ID_MAIN_BOUND   (GUI_ID_USER + 0x50)
 
 
 // USER START (Optionally insert additional defines)
-#define ID_BUTTON_START           ID_BUTTON_1
-#define ID_BUTTON_SET             ID_BUTTON_2
-#define ID_BUTTON_STOP            ID_BUTTON_3
-#define ID_BUTTON_EXIT            ID_BUTTON_4
-#define ID_GRAPH_CURVE            ID_GRAPH_0
-#define ID_MULTIEDIT_MAIN         ID_MULTIEDIT_0
-#define ID_PROGBAR_MAIN           ID_PROGBAR_0
-#define ID_FRAMEWIN_MAIN          ID_FRAMEWIN_0
-#define ID_WINDOW_MAIN            ID_WINDOW_0
-#define ID_MULTIPAGE_MAIN         ID_MULTIPAGE_0
+enum MainDLG_BUTTON{
+    ID_BUTTON_START = ID_BUTTON_1,
+    ID_BUTTON_SET,
+    ID_BUTTON_STOP,
+    ID_BUTTON_EXIT,
+    ID_BUTTON_RGB_LED_OK,
+    ID_BUTTON_RGB_LED_ERR,
+    ID_BUTTON_BUZZER_OK,
+    ID_BUTTON_BUZZER_ERR,
+};
+
+#define ID_GRAPH_CURVE              ID_GRAPH_0
+#define ID_MULTIEDIT_MAIN           ID_MULTIEDIT_0
+#define ID_PROGBAR_MAIN             ID_PROGBAR_0
+#define ID_FRAMEWIN_MAIN            ID_FRAMEWIN_0
+#define ID_FRAMEWIN_RGB_LED         ID_FRAMEWIN_1
+#define ID_FRAMEWIN_BUZZER          ID_FRAMEWIN_2
+#define ID_WINDOW_MAIN              ID_WINDOW_0
+#define ID_MULTIPAGE_MAIN           ID_MULTIPAGE_0
+#define ID_TEXT_RGB_LED             ID_TEXT_0
+#define ID_TEXT_BUZZER              ID_TEXT_1
 
 enum GUI_ID_CHECKBOX{
   ID_CHECKBOX_WHEEL = ID_CHECKBOX_0,
@@ -125,6 +144,8 @@ enum GUI_ID_EDIT{
 // USER END
 
 extern WM_HWIN hWin_SWRB_MAIN;
+extern WM_HWIN hWin_SWRB_RGB_LED;
+extern WM_HWIN hWin_SWRB_BUZZER;
 
 /*********************************************************************
 *
@@ -137,6 +158,8 @@ extern WM_HWIN hWin_SWRB_MAIN;
 *       CreateEJE_SweepRobot_test_System
 */
 WM_HWIN CreateEJE_SweepRobot_test_System(void);
+WM_HWIN CreateRGB_LED_TestDLG(void);
+WM_HWIN CreateBUZZER_TestDLG(void);
 
 // USER START (Optionally insert additional public code)
 void Button_Set_Text(int buttonId, char *str);

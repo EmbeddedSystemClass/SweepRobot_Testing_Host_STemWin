@@ -36,6 +36,8 @@
 
 // USER START (Optionally insert additional defines)
 WM_HWIN hWin_SWRB_MAIN;
+WM_HWIN hWin_SWRB_RGB_LED;
+WM_HWIN hWin_SWRB_BUZZER;
 
 #define ID_IMAGE_0_IMAGE_0 0x00
 // USER END
@@ -55,50 +57,65 @@ WM_HWIN hWin_SWRB_MAIN;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-//  { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
+//    { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
 
-  { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-//  { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
-  { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_MAIN, 10, 77, 440, 330, 0, 0x0, 0 },
-  { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_MAIN, 10, 442, 440, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "START", ID_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "SET",   ID_BUTTON_SET,  700, 120, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP",  ID_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "EXIT",  ID_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxWheel",       ID_CHECKBOX_WHEEL, 460, 17, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxBrush",       ID_CHECKBOX_BRUSH, 460, 52, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxFan",         ID_CHECKBOX_FAN, 460, 87, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxIFRD",        ID_CHECKBOX_IFRD, 460, 122, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxCollision",   ID_CHECKBOX_COLLISION, 460, 157, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxWheelFloat",  ID_CHECKBOX_WHEEL_FLOAT, 460, 192, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxAshTray",     ID_CHECKBOX_ASH_TRAY, 460, 227, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxUniWheel",    ID_CHECKBOX_UNIWHEEL, 460, 262, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxKey",         ID_CHECKBOX_KEY, 460, 297, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxIRDA",        ID_CHECKBOX_IRDA, 460, 332, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxBuzzer",      ID_CHECKBOX_BUZZER, 460, 367, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxRgbLed",      ID_CHECKBOX_RGB_LED, 460, 402, 210, 25, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect,  "cbxCharge",      ID_CHECKBOX_CHARGE, 460, 437, 210, 25, 0, 0x0, 0 },
-//  { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 10, 310, 440, 100, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "EditU1", ID_EDIT_U1, 10, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU2", ID_EDIT_U2, 65, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU3", ID_EDIT_U3, 120, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU4", ID_EDIT_U4, 175, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU5", ID_EDIT_U5, 230, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU6", ID_EDIT_U6, 285, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU7", ID_EDIT_U7, 340, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditU8", ID_EDIT_U8, 395, 17, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD1", ID_EDIT_D1, 10, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD2", ID_EDIT_D2, 65, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD3", ID_EDIT_D3, 120, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD4", ID_EDIT_D4, 175, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD5", ID_EDIT_D5, 230, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD6", ID_EDIT_D6, 285, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD7", ID_EDIT_D7, 340, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditD8", ID_EDIT_D8, 395, 47, 55, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditSN", ID_EDIT_SN, 190, 407, 260, 30, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "EditDate", ID_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
-  // USER START (Optionally insert additional widgets)
-  // USER END
+    { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
+
+//    { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
+    { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_MAIN, 10, 77, 440, 330, 0, 0x0, 0 },
+    { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_MAIN, 10, 442, 440, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "START", ID_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SET",   ID_BUTTON_SET,  700, 120, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "STOP",  ID_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "EXIT",  ID_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxWheel",       ID_CHECKBOX_WHEEL, 460, 17, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxBrush",       ID_CHECKBOX_BRUSH, 460, 52, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxFan",         ID_CHECKBOX_FAN, 460, 87, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxIFRD",        ID_CHECKBOX_IFRD, 460, 122, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxCollision",   ID_CHECKBOX_COLLISION, 460, 157, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxWheelFloat",  ID_CHECKBOX_WHEEL_FLOAT, 460, 192, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxAshTray",     ID_CHECKBOX_ASH_TRAY, 460, 227, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxUniWheel",    ID_CHECKBOX_UNIWHEEL, 460, 262, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxKey",         ID_CHECKBOX_KEY, 460, 297, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxIRDA",        ID_CHECKBOX_IRDA, 460, 332, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxBuzzer",      ID_CHECKBOX_BUZZER, 460, 367, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxRgbLed",      ID_CHECKBOX_RGB_LED, 460, 402, 210, 25, 0, 0x0, 0 },
+    { CHECKBOX_CreateIndirect,  "cbxCharge",      ID_CHECKBOX_CHARGE, 460, 437, 210, 25, 0, 0x0, 0 },
+//    { GRAPH_CreateIndirect, "Graph", ID_GRAPH_0, 10, 310, 440, 100, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "EditU1", ID_EDIT_U1, 10, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU2", ID_EDIT_U2, 65, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU3", ID_EDIT_U3, 120, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU4", ID_EDIT_U4, 175, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU5", ID_EDIT_U5, 230, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU6", ID_EDIT_U6, 285, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU7", ID_EDIT_U7, 340, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditU8", ID_EDIT_U8, 395, 17, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD1", ID_EDIT_D1, 10, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD2", ID_EDIT_D2, 65, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD3", ID_EDIT_D3, 120, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD4", ID_EDIT_D4, 175, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD5", ID_EDIT_D5, 230, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD6", ID_EDIT_D6, 285, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD7", ID_EDIT_D7, 340, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditD8", ID_EDIT_D8, 395, 47, 55, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditSN", ID_EDIT_SN, 190, 407, 260, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditDate", ID_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
+    // USER START (Optionally insert additional widgets)
+    // USER END
+};
+
+static const GUI_WIDGET_CREATE_INFO _RgbLEDTestDialogCreate[] = {
+    { FRAMEWIN_CreateIndirect, "RGB LED TEST", ID_FRAMEWIN_RGB_LED, 0, 0, 440, 210, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "OK", ID_BUTTON_RGB_LED_OK, 60, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "ERROR",   ID_BUTTON_RGB_LED_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "IS RED LED OK?", ID_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
+};
+
+static const GUI_WIDGET_CREATE_INFO _BuzzerTestDialogCreate[] = {
+    { FRAMEWIN_CreateIndirect, "BUZZER TEST", ID_FRAMEWIN_BUZZER, 0, 0, 440, 210, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "OK", ID_BUTTON_BUZZER_OK, 60, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "ERROR",   ID_BUTTON_BUZZER_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "IS BUZZER OK?", ID_TEXT_BUZZER, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -243,7 +260,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     CHECKBOX_SetText(hItem, "BUZZER");
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     //
-    // Initialization of 'cbxRgbLed Test'
+    // Initialization of 'cbxRgbLED Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_RGB_LED);
     CHECKBOX_SetText(hItem, "RGB LED");
@@ -287,6 +304,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     PROGBAR_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 //    PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX);
+
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -649,6 +667,81 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   }
 }
 
+static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
+    WM_HWIN hItem;
+    int     NCode;
+    int     Id;
+    
+    switch(pMsg->MsgId){
+        case WM_INIT_DIALOG:
+
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_RGB_LED);
+            CHECKBOX_SetText(hItem, "RGB LED");
+            CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+
+            hItem = WM_GetDialogItem(pMsg->hWin,ID_FRAMEWIN_RGB_LED);
+            WM_AttachWindowAt(hItem, hWin_SWRB_MAIN, 10, 77);
+
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id) {
+                case ID_BUTTON_RGB_LED_OK: // Notifications sent by 'RGB LED OK'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+
+                            break;
+                    }
+                    break;
+            }
+        default:
+            WM_DefaultProc(pMsg);
+            break;
+    }
+}
+
+static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
+    WM_HWIN hItem;
+    int     NCode;
+    int     Id;
+    
+    switch(pMsg->MsgId){
+        case WM_INIT_DIALOG:
+
+            //
+            // Initialization of 'BUZZER FRAMEWIN'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin,ID_FRAMEWIN_BUZZER);
+            WM_AttachWindowAt(hItem, hWin_SWRB_MAIN, 10, 77);
+        
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id) {
+                case ID_BUTTON_RGB_LED_OK: // Notifications sent by 'RGB LED OK'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+
+                            break;
+                    }
+                    break;
+            }
+        default:
+            WM_DefaultProc(pMsg);
+            break;
+    }
+}
+
+    
+
 /*********************************************************************
 *
 *       Public code
@@ -659,10 +752,28 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 *       CreateEJE_SweepRobot_test_System
 */
-WM_HWIN CreateEJE_SweepRobot_test_System(void) {
+WM_HWIN CreateEJE_SweepRobot_test_System(void)
+{
     WM_HWIN hWin;
 
     hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+    WM_AttachWindowAt(hWin_SWRB_RGB_LED, hWin_SWRB_MAIN, 10,77);
+    return hWin;
+}
+
+WM_HWIN CreateRGB_LED_TestDLG(void)
+{
+    WM_HWIN hWin;
+
+    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, WM_HBKWIN, 0, 0);
+    return hWin;
+}
+
+WM_HWIN CreateBUZZER_TestDLG(void)
+{
+    WM_HWIN hWin;
+
+    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, WM_UNATTACHED, 0, 0);
     return hWin;
 }
 
