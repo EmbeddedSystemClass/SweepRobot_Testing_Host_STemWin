@@ -169,6 +169,8 @@ void Progbar_Set_Percent(u8 teststate);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(int editId, long editValue);
 void Edit_Clear(void);
+void Text_Set_Text(WM_HWIN hWin, int textId, char *str);
+void Text_Set_Color(WM_HWIN hWin, int textId, GUI_COLOR color);
 void Checkbox_Set_Text(int checkboxId, char *string);
 int Checkbox_Get_State(int checkboxId);
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio);

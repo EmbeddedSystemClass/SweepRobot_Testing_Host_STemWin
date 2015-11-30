@@ -290,7 +290,7 @@ extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
-extern int gSwrbTestTaskCnt;
+extern int gSwrbTestValidTaskCnt;
 
 void OS_Task_Create(void);
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio);

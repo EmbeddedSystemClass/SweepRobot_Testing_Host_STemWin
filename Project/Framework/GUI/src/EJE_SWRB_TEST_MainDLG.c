@@ -23,6 +23,8 @@
 
 #include "sweeprobot_testing.h"
 
+#include "sweeprobot_testing_rgb_led.h"
+
 #include "usart.h"
 #include "led.h"
 
@@ -108,14 +110,14 @@ static const GUI_WIDGET_CREATE_INFO _RgbLEDTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "RGB LED TEST", ID_FRAMEWIN_RGB_LED, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "OK", ID_BUTTON_RGB_LED_OK, 60, 100, 120, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "ERROR",   ID_BUTTON_RGB_LED_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "IS RED LED OK?", ID_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
+    { TEXT_CreateIndirect, "RGB LED TEST", ID_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _BuzzerTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "BUZZER TEST", ID_FRAMEWIN_BUZZER, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "OK", ID_BUTTON_BUZZER_OK, 60, 100, 120, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "ERROR",   ID_BUTTON_BUZZER_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "IS BUZZER OK?", ID_TEXT_BUZZER, 68, 17, 308, 65, 0, 0x64, 0 },
+    { TEXT_CreateIndirect, "BUZZER TEST", ID_TEXT_BUZZER, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -671,17 +673,23 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
     WM_HWIN hItem;
     int     NCode;
     int     Id;
+    u8      state;
     
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_RGB_LED_OK);
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
 
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_CHECKBOX_RGB_LED);
-            CHECKBOX_SetText(hItem, "RGB LED");
-            CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
-
-            hItem = WM_GetDialogItem(pMsg->hWin,ID_FRAMEWIN_RGB_LED);
-            WM_AttachWindowAt(hItem, hWin_SWRB_MAIN, 10, 77);
-
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_RGB_LED_ERR);
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_RGB_LED);
+            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+            TEXT_SetText(hItem, "RGB LED TEST");
+            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            TEXT_SetTextColor(hItem, 0x000000FF);
+            
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -690,10 +698,28 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
                 case ID_BUTTON_RGB_LED_OK: // Notifications sent by 'RGB LED OK'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
+                            state = RGB_LED_TestValidCntGet();
+                            RGB_LED_TestRgbStateSet(state, 1);
+                            if(state == 3)
+                                WM_HideWin(pMsg->hWin);
+                            OSTaskResume(gSwrbTestRuningTaskPrio);
+                            break;
+                    }
+                    break;
+                case ID_BUTTON_RGB_LED_ERR: // Notifications sent by 'RGB LED ERR'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            state = RGB_LED_TestValidCntGet();
+                            RGB_LED_TestRgbStateSet(state, 0);
+                            if(state == 3)
+                                WM_HideWin(pMsg->hWin);
+                            OSTaskResume(gSwrbTestRuningTaskPrio);
                             break;
                     }
                     break;
@@ -757,7 +783,6 @@ WM_HWIN CreateEJE_SweepRobot_test_System(void)
     WM_HWIN hWin;
 
     hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-    WM_AttachWindowAt(hWin_SWRB_RGB_LED, hWin_SWRB_MAIN, 10,77);
     return hWin;
 }
 
@@ -765,7 +790,7 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, WM_HBKWIN, 0, 0);
+    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, WM_HBKWIN, 180, 135);
     return hWin;
 }
 
@@ -773,7 +798,7 @@ WM_HWIN CreateBUZZER_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, WM_UNATTACHED, 0, 0);
+    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, WM_HBKWIN, 180, 135);
     return hWin;
 }
 
@@ -827,6 +852,19 @@ void Edit_Clear(void)
     }
 }
 
+void Text_Set_Text(WM_HWIN hWin, int textId, char *str)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, textId);
+    TEXT_SetText(hItem, str);
+}
+void Text_Set_Color(WM_HWIN hWin, int textId, GUI_COLOR color)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, textId);
+    TEXT_SetTextColor(hItem, color);
+}
+
 void Checkbox_Set_Text(int checkboxId, char *string)
 {
     WM_HWIN hItem;
@@ -846,9 +884,9 @@ void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
     hItem = WM_GetDialogItem(hWin, id);
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
         if(CHECKBOX_GetState(hItem)){
-            gSwrbTestTaskCnt++;
+            gSwrbTestValidTaskCnt++;
         }else{
-            gSwrbTestTaskCnt--;
+            gSwrbTestValidTaskCnt--;
         }
     }
 }

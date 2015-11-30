@@ -4,7 +4,7 @@
 /*------------------------------------------------------------------------*/
 
 
-#include "../ff.h"
+#include "ff.h"
 
 
 #if _FS_REENTRANT
@@ -13,7 +13,6 @@
 /*------------------------------------------------------------------------*/
 /* This function is called in f_mount() function to create a new
 /  synchronization object, such as semaphore and mutex. When a 0 is returned,
-/  the f_mount() function fails with FR_INT_ERR.
 */
 
 int ff_cre_syncobj (	/* !=0:Function succeeded, ==0:Could not create due to any error */

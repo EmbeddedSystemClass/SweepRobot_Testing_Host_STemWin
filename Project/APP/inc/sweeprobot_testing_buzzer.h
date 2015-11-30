@@ -1,7 +1,7 @@
 #ifndef __SWEEPROBOT_TESTING_BUZZER_H
 #define __SWEEPROBOT_TESTING_BUZZER_H
 
-#include "sweeprobot_testing.h"
+#include "stm32f4xx.h"
 
 typedef struct{
     int state;

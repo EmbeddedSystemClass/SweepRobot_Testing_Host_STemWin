@@ -1,4 +1,6 @@
-#include "sweepRobot_testing_buzzer.h"
+#include "sweeprobot_testing_buzzer.h"
+
+#include "sweeprobot_testing.h"
 
 #include "usart.h"
 #include "includes.h"
@@ -17,7 +19,9 @@ static void SweepRobot_BuzzerTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(str);
 
-    OSTimeDlyHMSM(0,0,2,0);
+    OSTimeDlyHMSM(0,0,1,0);
+    
+    hWin_SWRB_BUZZER = CreateBUZZER_TestDLG();
     
     buzzer.state = 0;
     buzzer.validCnt = 0;

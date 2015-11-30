@@ -373,7 +373,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>SWRB_TEST_TASK_RUN_OBO,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>.\BSP\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Lib\ARM;..\Middlewares\STemWinLibrary528\inc;..\Middlewares\STemWinLibrary528\Config;..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\Middlewares\FATFS\exfans;..\Middlewares\FATFS\src;..\Middlewares\FONTS\inc;..\Middlewares\UCOSII\CONFIG;..\Middlewares\UCOSII\CORE;..\Middlewares\UCOSII\PORT;..\Libraries\CMSIS\Devices\ST;..\Libraries\STM32F4xx_Ext\inc;..\Project;.\Framework\GUI\inc;.\APP\inc;.\Framework\GUI\res\inc</IncludePath>
+              <IncludePath>..\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\Project;..\Framework\GUI\inc;..\APP\inc;..\Framework\GUI\res\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -419,107 +419,107 @@
             <File>
               <FileName>24cxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\24cxx.c</FilePath>
-            </File>
-            <File>
-              <FileName>ctiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ctiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>ft5206.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ft5206.c</FilePath>
-            </File>
-            <File>
-              <FileName>gt9147.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\gt9147.c</FilePath>
-            </File>
-            <File>
-              <FileName>key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\key.c</FilePath>
-            </File>
-            <File>
-              <FileName>ILI93xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ILI93xx.c</FilePath>
-            </File>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>malloc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\malloc.c</FilePath>
-            </File>
-            <File>
-              <FileName>myiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\myiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>ott2001a.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ott2001a.c</FilePath>
-            </File>
-            <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>sdio_sdcard.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sdio_sdcard.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>sram.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sram.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>touch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>w25qxx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\w25qxx.c</FilePath>
+              <FilePath>..\BSP\src\24cxx.c</FilePath>
             </File>
             <File>
               <FileName>crypto_tea.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\crypto_tea.c</FilePath>
+              <FilePath>..\BSP\src\crypto_tea.c</FilePath>
+            </File>
+            <File>
+              <FileName>ctiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ctiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>ft5206.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ft5206.c</FilePath>
+            </File>
+            <File>
+              <FileName>gt9147.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\gt9147.c</FilePath>
+            </File>
+            <File>
+              <FileName>ILI93xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ILI93xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\key.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\malloc.c</FilePath>
+            </File>
+            <File>
+              <FileName>myiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\myiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>ott2001a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ott2001a.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdio_sdcard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sdio_sdcard.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>sram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sram.c</FilePath>
+            </File>
+            <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\touch.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\w25qxx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -529,27 +529,27 @@
             <File>
               <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
+              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
+              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Freamwork\gui\res</GroupName>
+          <GroupName>Freamwork\res</GroupName>
           <Files>
             <File>
               <FileName>eje_logo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\res\src\eje_logo.c</FilePath>
+              <FilePath>..\Framework\GUI\res\src\eje_logo.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -557,14 +557,14 @@
           <GroupName>Libararies\dsp_lib</GroupName>
           <Files>
             <File>
-              <FileName>arm_cortexM4lf_math.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Libraries\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
-            </File>
-            <File>
               <FileName>arm_math.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Libraries\CMSIS\Include\arm_math.h</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Include\arm_math.h</FilePath>
+            </File>
+            <File>
+              <FileName>arm_cortexM4lf_math.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\Libraries\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -574,177 +574,177 @@
             <File>
               <FileName>misc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\misc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\misc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_can.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_can.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_crc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_crc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_crc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_aes.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_aes.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_des.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_des.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_des.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_tdes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_tdes.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_tdes.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dac.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dac.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dbgmcu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dbgmcu.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dbgmcu.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dcmi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dcmi.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dcmi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma2d.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma2d.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma2d.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_flash_ramfunc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash_ramfunc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash_ramfunc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_fsmc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_fsmc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_fsmc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash_md5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_md5.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_md5.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash_sha1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_sha1.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_sha1.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_i2c.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_i2c.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_iwdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_iwdg.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_iwdg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_ltdc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_ltdc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_ltdc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_pwr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_pwr.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_pwr.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rng.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rng.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rng.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rtc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rtc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_sai.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sai.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sai.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_sdio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sdio.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sdio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_syscfg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_wwdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_wwdg.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_wwdg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -754,17 +754,17 @@
             <File>
               <FileName>core_cm4.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Libraries\CMSIS\Include\core_cm4.h</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Include\core_cm4.h</FilePath>
             </File>
             <File>
               <FileName>core_cm4_simd.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Libraries\CMSIS\Include\core_cm4_simd.h</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Include\core_cm4_simd.h</FilePath>
             </File>
             <File>
               <FileName>startup_stm32f40_41xxx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\Libraries\CMSIS\Devices\ST\startup_stm32f40_41xxx.s</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Devices\ST\MDK\startup_stm32f40_41xxx.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -774,27 +774,32 @@
             <File>
               <FileName>diskio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\src\diskio.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\src\diskio.c</FilePath>
             </File>
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\src\ff.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\src\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>syscall.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FATFS\src\option\syscall.c</FilePath>
             </File>
             <File>
               <FileName>exfans.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\exfans\exfans.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\exfans\exfans.c</FilePath>
             </File>
             <File>
               <FileName>fattester.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\exfans\fattester.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\exfans\fattester.c</FilePath>
             </File>
             <File>
               <FileName>mycc936.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\exfans\mycc936.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\exfans\mycc936.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -804,12 +809,12 @@
             <File>
               <FileName>fontupd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FONTS\src\fontupd.c</FilePath>
+              <FilePath>..\..\Middlewares\FONTS\src\fontupd.c</FilePath>
             </File>
             <File>
               <FileName>mytext.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FONTS\src\mytext.c</FilePath>
+              <FilePath>..\..\Middlewares\FONTS\src\mytext.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -819,42 +824,42 @@
             <File>
               <FileName>GUI_X_Touch_Analog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUI_X_Touch_Analog.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
               <FileName>GUIConf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUIConf.c</FilePath>
             </File>
             <File>
               <FileName>GUIDRV_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIDRV_Template.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUIDRV_Template.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf_FlexColor_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf_FlexColor_Template.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\LCDConf_FlexColor_Template.c</FilePath>
             </File>
             <File>
               <FileName>GUI_X_UCOSII.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\OS\GUI_X_UCOSII.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\OS\GUI_X_UCOSII.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf.h</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\LCDConf.h</FilePath>
             </File>
             <File>
               <FileName>GUIConf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.h</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUIConf.h</FilePath>
             </File>
             <File>
               <FileName>STemWin528_CM4_OS_Keil.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -864,52 +869,52 @@
             <File>
               <FileName>os_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_core.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_core.c</FilePath>
             </File>
             <File>
               <FileName>os_flag.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_flag.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_flag.c</FilePath>
             </File>
             <File>
               <FileName>os_mbox.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_mbox.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_mbox.c</FilePath>
             </File>
             <File>
               <FileName>os_mem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_mem.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_mem.c</FilePath>
             </File>
             <File>
               <FileName>os_mutex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_mutex.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_mutex.c</FilePath>
             </File>
             <File>
               <FileName>os_q.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_q.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_q.c</FilePath>
             </File>
             <File>
               <FileName>os_sem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_sem.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_sem.c</FilePath>
             </File>
             <File>
               <FileName>os_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_task.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_task.c</FilePath>
             </File>
             <File>
               <FileName>os_time.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_time.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_time.c</FilePath>
             </File>
             <File>
               <FileName>os_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_tmr.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_tmr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -919,17 +924,17 @@
             <File>
               <FileName>os_cpu_c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\PORT\os_cpu_c.c</FilePath>
-            </File>
-            <File>
-              <FileName>os_cpu_a.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\Middlewares\UCOSII\PORT\os_cpu_a.asm</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\PORT\os_cpu_c.c</FilePath>
             </File>
             <File>
               <FileName>os_cpu.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\UCOSII\PORT\os_cpu.h</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\PORT\os_cpu.h</FilePath>
+            </File>
+            <File>
+              <FileName>os_cpu_a.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\Middlewares\UCOSII\PORT\os_cpu_a.asm</FilePath>
             </File>
           </Files>
         </Group>
@@ -939,12 +944,12 @@
             <File>
               <FileName>includes.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\UCOSII\CONFIG\includes.h</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CONFIG\includes.h</FilePath>
             </File>
             <File>
               <FileName>os_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\UCOSII\CONFIG\os_cfg.h</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CONFIG\os_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -954,72 +959,72 @@
             <File>
               <FileName>sweeprobot_testing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_wheel.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_wheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_brush.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_brush.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_brush.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_fan.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_fan.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_fan.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ifrd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_ifrd.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_collision.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_collision.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_collision.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel_float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ash_tray.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_uniwheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_key.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_key.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_key.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_irda.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_irda.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_irda.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_buzzer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_buzzer.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_buzzer.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_rgb_led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_charge.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_charge.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1029,17 +1034,17 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FilePath>..\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\stm32f4xx_it.c</FilePath>
+              <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\system_stm32f4xx.c</FilePath>
+              <FilePath>..\system_stm32f4xx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1458,107 +1463,107 @@
             <File>
               <FileName>24cxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\24cxx.c</FilePath>
-            </File>
-            <File>
-              <FileName>ctiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ctiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>ft5206.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ft5206.c</FilePath>
-            </File>
-            <File>
-              <FileName>gt9147.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\gt9147.c</FilePath>
-            </File>
-            <File>
-              <FileName>key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\key.c</FilePath>
-            </File>
-            <File>
-              <FileName>ILI93xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ILI93xx.c</FilePath>
-            </File>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>malloc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\malloc.c</FilePath>
-            </File>
-            <File>
-              <FileName>myiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\myiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>ott2001a.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\ott2001a.c</FilePath>
-            </File>
-            <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>sdio_sdcard.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sdio_sdcard.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>sram.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sram.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>touch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>w25qxx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BSP\src\w25qxx.c</FilePath>
+              <FilePath>..\BSP\src\24cxx.c</FilePath>
             </File>
             <File>
               <FileName>crypto_tea.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\BSP\src\crypto_tea.c</FilePath>
+              <FilePath>..\BSP\src\crypto_tea.c</FilePath>
+            </File>
+            <File>
+              <FileName>ctiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ctiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>ft5206.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ft5206.c</FilePath>
+            </File>
+            <File>
+              <FileName>gt9147.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\gt9147.c</FilePath>
+            </File>
+            <File>
+              <FileName>ILI93xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ILI93xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\key.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\malloc.c</FilePath>
+            </File>
+            <File>
+              <FileName>myiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\myiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>ott2001a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\ott2001a.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdio_sdcard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sdio_sdcard.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>sram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sram.c</FilePath>
+            </File>
+            <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\touch.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\w25qxx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1568,27 +1573,27 @@
             <File>
               <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
+              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
+              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Freamwork\gui\res</GroupName>
+          <GroupName>Freamwork\res</GroupName>
           <Files>
             <File>
               <FileName>eje_logo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\res\src\eje_logo.c</FilePath>
+              <FilePath>..\Framework\GUI\res\src\eje_logo.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1596,14 +1601,14 @@
           <GroupName>Libararies\dsp_lib</GroupName>
           <Files>
             <File>
-              <FileName>arm_cortexM4lf_math.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Libraries\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
-            </File>
-            <File>
               <FileName>arm_math.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Libraries\CMSIS\Include\arm_math.h</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Include\arm_math.h</FilePath>
+            </File>
+            <File>
+              <FileName>arm_cortexM4lf_math.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\Libraries\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -1613,177 +1618,177 @@
             <File>
               <FileName>misc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\misc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\misc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_adc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_can.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_can.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_crc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_crc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_crc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_aes.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_aes.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_des.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_des.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_des.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_cryp_tdes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_tdes.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_cryp_tdes.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dac.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dac.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dbgmcu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dbgmcu.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dbgmcu.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dcmi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dcmi.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dcmi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_dma2d.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma2d.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_dma2d.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_exti.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_flash_ramfunc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash_ramfunc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_flash_ramfunc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_fsmc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_fsmc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_fsmc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_gpio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash_md5.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_md5.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_md5.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hash_sha1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_sha1.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_hash_sha1.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_i2c.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_i2c.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_iwdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_iwdg.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_iwdg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_ltdc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_ltdc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_ltdc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_pwr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_pwr.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_pwr.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rcc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rng.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rng.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rng.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rtc.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rtc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_sai.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sai.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sai.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_sdio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sdio.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_sdio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_syscfg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_syscfg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_tim.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_usart.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_wwdg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_wwdg.c</FilePath>
+              <FilePath>..\..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_wwdg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1793,17 +1798,17 @@
             <File>
               <FileName>core_cm4.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Libraries\CMSIS\Include\core_cm4.h</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Include\core_cm4.h</FilePath>
             </File>
             <File>
               <FileName>core_cm4_simd.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Libraries\CMSIS\Include\core_cm4_simd.h</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Include\core_cm4_simd.h</FilePath>
             </File>
             <File>
               <FileName>startup_stm32f40_41xxx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\Libraries\CMSIS\Devices\ST\startup_stm32f40_41xxx.s</FilePath>
+              <FilePath>..\..\Libraries\CMSIS\Devices\ST\MDK\startup_stm32f40_41xxx.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -1813,27 +1818,32 @@
             <File>
               <FileName>diskio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\src\diskio.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\src\diskio.c</FilePath>
             </File>
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\src\ff.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\src\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>syscall.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FATFS\src\option\syscall.c</FilePath>
             </File>
             <File>
               <FileName>exfans.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\exfans\exfans.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\exfans\exfans.c</FilePath>
             </File>
             <File>
               <FileName>fattester.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\exfans\fattester.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\exfans\fattester.c</FilePath>
             </File>
             <File>
               <FileName>mycc936.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FATFS\exfans\mycc936.c</FilePath>
+              <FilePath>..\..\Middlewares\FATFS\exfans\mycc936.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1843,12 +1853,12 @@
             <File>
               <FileName>fontupd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FONTS\src\fontupd.c</FilePath>
+              <FilePath>..\..\Middlewares\FONTS\src\fontupd.c</FilePath>
             </File>
             <File>
               <FileName>mytext.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\FONTS\src\mytext.c</FilePath>
+              <FilePath>..\..\Middlewares\FONTS\src\mytext.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1858,42 +1868,42 @@
             <File>
               <FileName>GUI_X_Touch_Analog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUI_X_Touch_Analog.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
               <FileName>GUIConf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUIConf.c</FilePath>
             </File>
             <File>
               <FileName>GUIDRV_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIDRV_Template.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUIDRV_Template.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf_FlexColor_Template.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf_FlexColor_Template.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\LCDConf_FlexColor_Template.c</FilePath>
             </File>
             <File>
               <FileName>GUI_X_UCOSII.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\OS\GUI_X_UCOSII.c</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\OS\GUI_X_UCOSII.c</FilePath>
             </File>
             <File>
               <FileName>LCDConf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\LCDConf.h</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\LCDConf.h</FilePath>
             </File>
             <File>
               <FileName>GUIConf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Config\GUIConf.h</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Config\GUIConf.h</FilePath>
             </File>
             <File>
               <FileName>STemWin528_CM4_OS_Keil.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\Middlewares\STemWinLibrary528\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
+              <FilePath>..\..\Middlewares\STemWinLibrary528\Lib\STemWin528_CM4_OS_Keil.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -1903,52 +1913,52 @@
             <File>
               <FileName>os_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_core.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_core.c</FilePath>
             </File>
             <File>
               <FileName>os_flag.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_flag.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_flag.c</FilePath>
             </File>
             <File>
               <FileName>os_mbox.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_mbox.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_mbox.c</FilePath>
             </File>
             <File>
               <FileName>os_mem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_mem.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_mem.c</FilePath>
             </File>
             <File>
               <FileName>os_mutex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_mutex.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_mutex.c</FilePath>
             </File>
             <File>
               <FileName>os_q.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_q.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_q.c</FilePath>
             </File>
             <File>
               <FileName>os_sem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_sem.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_sem.c</FilePath>
             </File>
             <File>
               <FileName>os_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_task.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_task.c</FilePath>
             </File>
             <File>
               <FileName>os_time.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_time.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_time.c</FilePath>
             </File>
             <File>
               <FileName>os_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\CORE\os_tmr.c</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CORE\os_tmr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1958,17 +1968,17 @@
             <File>
               <FileName>os_cpu_c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Middlewares\UCOSII\PORT\os_cpu_c.c</FilePath>
-            </File>
-            <File>
-              <FileName>os_cpu_a.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\Middlewares\UCOSII\PORT\os_cpu_a.asm</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\PORT\os_cpu_c.c</FilePath>
             </File>
             <File>
               <FileName>os_cpu.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\UCOSII\PORT\os_cpu.h</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\PORT\os_cpu.h</FilePath>
+            </File>
+            <File>
+              <FileName>os_cpu_a.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\Middlewares\UCOSII\PORT\os_cpu_a.asm</FilePath>
             </File>
           </Files>
         </Group>
@@ -1978,12 +1988,12 @@
             <File>
               <FileName>includes.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\UCOSII\CONFIG\includes.h</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CONFIG\includes.h</FilePath>
             </File>
             <File>
               <FileName>os_cfg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Middlewares\UCOSII\CONFIG\os_cfg.h</FilePath>
+              <FilePath>..\..\Middlewares\UCOSII\CONFIG\os_cfg.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1993,72 +2003,72 @@
             <File>
               <FileName>sweeprobot_testing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_wheel.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_wheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_brush.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_brush.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_brush.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_fan.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_fan.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_fan.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ifrd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_ifrd.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_collision.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_collision.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_collision.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel_float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ash_tray.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_uniwheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_key.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_key.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_key.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_irda.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_irda.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_irda.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_buzzer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_buzzer.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_buzzer.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_rgb_led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\APP\src\sweeprobot_testing_charge.c</FilePath>
+              <FilePath>..\APP\src\sweeprobot_testing_charge.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2068,17 +2078,17 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FilePath>..\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\stm32f4xx_it.c</FilePath>
+              <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\system_stm32f4xx.c</FilePath>
+              <FilePath>..\system_stm32f4xx.c</FilePath>
             </File>
           </Files>
         </Group>

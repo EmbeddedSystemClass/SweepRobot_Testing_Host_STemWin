@@ -1,4 +1,6 @@
-#include "sweepRobot_testing_irda.h"
+#include "sweeprobot_testing_irda.h"
+
+#include "sweeprobot_testing.h"
 
 #include "usart.h"
 #include "includes.h"

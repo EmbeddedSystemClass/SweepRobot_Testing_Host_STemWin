@@ -1,4 +1,6 @@
-#include "sweepRobot_testing_brush.h"
+#include "sweeprobot_testing_brush.h"
+
+#include "sweeprobot_testing.h"
 
 #include "usart.h"
 #include "includes.h"

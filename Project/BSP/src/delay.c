@@ -42,7 +42,7 @@ void delay_init(u8 SYSCLK)
 	SysTick->CTRL|=SysTick_CTRL_TICKINT_Msk;
 	SysTick->LOAD=reload;
 	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk;
-  plat_int_reg_cb(STM32F4xx_INT_SYSTICK, SysTick_ISR);
+  plat_int_reg_cb(STM32F4xx_INT_SYSTICK, (void*)SysTick_ISR);
 #else
 	fac_ms=(u16)fac_us*1000;
 #endif
