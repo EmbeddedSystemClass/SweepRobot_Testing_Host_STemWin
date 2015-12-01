@@ -9,7 +9,9 @@ typedef struct{
     u8 validFlag;
 }BUZZER_TestTypeDef;
 
-void SweepRobot_Buzzer_Test_Task(void *pdata);
+void SweepRobot_BuzzerTestTask(void *pdata);
 void BUZZER_TestDataSave(void);
+void BUZZER_TestStateSet(u8 stateValue);
+void BUZZER_TestValidFlagSet(u8 flagValue);
 
 #endif

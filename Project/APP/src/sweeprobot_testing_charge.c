@@ -17,12 +17,12 @@ static u8 swrbChargeTestStateMap = 0;
 #define SWRB_TEST_FAULT_CHARGE_CUR_MASK     0x01
 #define SWRB_TEST_FAULT_CHARGE_VOL_MASK     0x02
 
-#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     100
+#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     1000
 #define SWRB_TEST_CHARGE_CUR_LOW_BOUND      0
 
 #define SWRB_TEST_CHARGE_OC_THRESHOLD       0
 
-#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     100
+#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     3000
 #define SWRB_TEST_CHARGE_VOL_LOW_BOUND      0
 
 #define SWRB_TEST_CHARGE_OV_THRESHOLD       0
@@ -102,7 +102,6 @@ static void SweepRobot_ChargeTestProc(void)
             charge.curValidCnt++;
         }else{
             swrbChargeTestStateMap |= (1<<SWRB_TEST_CHARGE_CUR_POS);
-            charge.curValidCnt = 0;
         }
 
         if(charge.curValidCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -130,7 +129,6 @@ static void SweepRobot_ChargeTestProc(void)
             charge.volValidCnt++;
         }else{
             swrbChargeTestStateMap |= (1<<SWRB_TEST_CHARGE_VOL_POS);
-            charge.volValidCnt = 0;
         }
 
         if(charge.volValidCnt > SWRB_TEST_VALID_COMP_TIMES){

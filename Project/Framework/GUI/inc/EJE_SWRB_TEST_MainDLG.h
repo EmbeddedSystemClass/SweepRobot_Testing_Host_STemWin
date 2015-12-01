@@ -66,16 +66,18 @@
 #define ID_BUTTON_6     (GUI_ID_USER + 0x36)
 #define ID_BUTTON_7     (GUI_ID_USER + 0x37)
 #define ID_BUTTON_8     (GUI_ID_USER + 0x38)
-#define ID_FRAMEWIN_0		(GUI_ID_USER + 0x3A)
-#define ID_FRAMEWIN_1       (GUI_ID_USER + 0x3B)
-#define ID_FRAMEWIN_2       (GUI_ID_USER + 0x3C)
-#define ID_MULTIPAGE_0      (GUI_ID_USER + 0x40)
-#define ID_PROGBAR_0		(GUI_ID_USER + 0x41)
-#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x42)
-#define ID_GRAPH_0		(GUI_ID_USER + 0x43)
-#define ID_WINDOW_0     (GUI_ID_USER + 0x44)
-#define ID_TEXT_0       (GUI_ID_USER + 0x45)
-#define ID_TEXT_1       (GUI_ID_USER + 0x46)
+#define ID_BUTTON_9     (GUI_ID_USER + 0x39)
+#define ID_BUTTON_10    (GUI_ID_USER + 0x3A)
+#define ID_FRAMEWIN_0		(GUI_ID_USER + 0x40)
+#define ID_FRAMEWIN_1       (GUI_ID_USER + 0x41)
+#define ID_FRAMEWIN_2       (GUI_ID_USER + 0x42)
+#define ID_MULTIPAGE_0      (GUI_ID_USER + 0x43)
+#define ID_PROGBAR_0		(GUI_ID_USER + 0x44)
+#define ID_MULTIEDIT_0		(GUI_ID_USER + 0x45)
+#define ID_GRAPH_0		(GUI_ID_USER + 0x46)
+#define ID_WINDOW_0     (GUI_ID_USER + 0x47)
+#define ID_TEXT_0       (GUI_ID_USER + 0x48)
+#define ID_TEXT_1       (GUI_ID_USER + 0x49)
 #define ID_MAIN_BOUND   (GUI_ID_USER + 0x50)
 
 
@@ -85,6 +87,8 @@ enum MainDLG_BUTTON{
     ID_BUTTON_SET,
     ID_BUTTON_STOP,
     ID_BUTTON_EXIT,
+    ID_BUTTON_SET_SN,
+    ID_BUTTON_SET_TIME,
     ID_BUTTON_RGB_LED_OK,
     ID_BUTTON_RGB_LED_ERR,
     ID_BUTTON_BUZZER_OK,

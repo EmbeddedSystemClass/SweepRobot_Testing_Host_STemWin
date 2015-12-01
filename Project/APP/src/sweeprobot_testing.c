@@ -300,7 +300,7 @@ void SWRB_TestCtrlTask(void *pdata)
     OSTaskCreate(SweepRobot_UniWheel_Test_Task,(void*)0,(OS_STK*)&SWRB_UNIWHEEL_TEST_TASK_STK[SWRB_UNIWHEEL_TEST_STK_SIZE-1],SWRB_UNIWHEEL_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_KeyTestTask,(void*)0,(OS_STK*)&SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE-1],SWRB_KEY_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_IrDATestTask,(void*)0,(OS_STK*)&SWRB_IRDA_TEST_TASK_STK[SWRB_IRDA_TEST_STK_SIZE-1],SWRB_IRDA_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_Buzzer_Test_Task,(void*)0,(OS_STK*)&SWRB_BUZZER_TEST_TASK_STK[SWRB_BUZZER_TEST_STK_SIZE-1],SWRB_BUZZER_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_BuzzerTestTask,(void*)0,(OS_STK*)&SWRB_BUZZER_TEST_TASK_STK[SWRB_BUZZER_TEST_STK_SIZE-1],SWRB_BUZZER_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_RGBLEDTestTask,(void*)0,(OS_STK*)&SWRB_RGB_LED_TEST_TASK_STK[SWRB_RGB_LED_TEST_STK_SIZE-1],SWRB_RGB_LED_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_ChargeTestTask,(void*)0,(OS_STK*)&SWRB_CHARGE_TEST_TASK_STK[SWRB_CHARGE_TEST_STK_SIZE-1],SWRB_CHARGE_TEST_TASK_PRIO);
 
@@ -349,6 +349,10 @@ void SWRB_TestCtrlTask(void *pdata)
 void SWRB_ExceptionCheckTask(void *pdata)
 {
     while(1){
+        
+        if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+            
+        }
         
         OSTimeDlyHMSM(0,0,1,0);
     }
@@ -412,6 +416,26 @@ void SweepRobot_TestStartProc(void)
 }
 
 void SweepRobot_TestSetProc(void)
+{
+    WM_HWIN hItem;
+
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+        gSwrbTestMode = SWRB_TEST_MODE_SET;
+        gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SET_BUTTON_SNSET);
+        BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+        BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+        BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+
+        SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+
+        WM_HideWin(hWin_SWRB_MAIN);
+        WM_ShowWin(hWin_SWRB_SNSETTING);
+    }
+}
+
+void SweepRobot_TestSetSNPressedProc(void)
 {
     WM_HWIN hItem;
 
@@ -565,10 +589,12 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
 
     gSwrbTestValidTaskCnt--;
 
-    OS_ENTER_CRITICAL();
-
     if(gSwrbTestValidTaskCnt){
+        OS_ENTER_CRITICAL();
+        
         OSTaskResume(taskPrio+1);
+        
+        OS_EXIT_CRITICAL();
     }else{
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
@@ -578,12 +604,12 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
         str = "\r\n***TEST FINISHED***\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text("\r\n>>>Start Encrypt TestData<<<\r\n");
-        if(gSwrbTestDataFileCrptoFlag == EncryptMode)
+        if(gSwrbTestDataFileCrptoFlag == EncryptMode){
+            MultiEdit_Add_Text("\r\n>>>Start Encrypting TestData<<<\r\n");
             SWRB_TestDataFileCrypt(EncryptMode);
-        
-//        SWRB_TestDataFileCrypt(DecryptMode);
-        MultiEdit_Add_Text("\r\n***TestData Encrypting finished***\r\n");
+//            SWRB_TestDataFileCrypt(DecryptMode);
+            MultiEdit_Add_Text("\r\n***TestData Encrypting Finished*****\r\n");
+        }
         
         MultiEdit_Add_Text(str);
         Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
@@ -595,6 +621,8 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
         SWRB_ListWheelSNInc(&hWin_SWRB_SNSETTING);
     }
 
+    OS_ENTER_CRITICAL();
+    
     OSTaskSuspend(OS_PRIO_SELF);
 
     OS_EXIT_CRITICAL();

@@ -43,7 +43,6 @@ WM_HWIN hWin_SWRB_TIMESETTING;
 
 // USER START (Optionally insert additional static data)
 static int  lastLwIndex[6];
-static u8 timeSetValue[6];
 static RTC_DateTypeDef rtcDate;
 static RTC_TimeTypeDef rtcTime;
 // USER END
@@ -102,8 +101,6 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
-    ErrorStatus err;
-    
     TimeStr_Comb(hWin, ID_TIMESET_EDIT_SETVALUE);
     PWR_BackupAccessCmd(ENABLE);
     while(!(RTC_SetDate(RTC_Format_BIN, &rtcDate)));

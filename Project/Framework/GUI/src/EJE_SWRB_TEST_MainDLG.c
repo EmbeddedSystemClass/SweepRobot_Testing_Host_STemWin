@@ -24,6 +24,7 @@
 #include "sweeprobot_testing.h"
 
 #include "sweeprobot_testing_rgb_led.h"
+#include "sweeprobot_testing_buzzer.h"
 
 #include "usart.h"
 #include "led.h"
@@ -60,14 +61,14 @@ WM_HWIN hWin_SWRB_BUZZER;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 //    { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-
     { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-
 //    { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
     { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_MULTIEDIT_MAIN, 10, 77, 440, 330, 0, 0x0, 0 },
     { PROGBAR_CreateIndirect,   "Progbar",        ID_PROGBAR_MAIN, 10, 442, 440, 20, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "START", ID_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SET",   ID_BUTTON_SET,  700, 120, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SET SN",  ID_BUTTON_SET_SN, 500, 120, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SET TIME",  ID_BUTTON_SET_TIME, 600, 180, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STOP",  ID_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "EXIT",  ID_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
     { CHECKBOX_CreateIndirect,  "cbxWheel",       ID_CHECKBOX_WHEEL, 460, 17, 210, 25, 0, 0x0, 0 },
@@ -165,6 +166,20 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_SET);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+    //
+    // Initialization of 'SET SN'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_SET_SN);
+    Button_Init(hItem);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+    WM_HideWin(hItem);
+    //
+    // Initialization of 'SET TIME'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_SET_TIME);
+    Button_Init(hItem);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+    WM_HideWin(hItem);
     //
     // Initialization of 'STOP'
     //
@@ -338,6 +353,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
         SweepRobot_TestSetProc();
+//        hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_SET_SN);
+//        WM_ShowWin(hItem);
+//        WM_SetWindowPos(hItem, 500, 120, 100, 60);
+//        hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_SET_TIME);
+//        WM_ShowWin(hItem);
+//        WM_SetWindowPos(hItem, 600, 180, 100, 60);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -345,6 +366,22 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
+    case ID_BUTTON_SET_SN:
+        switch(NCode) {
+            case WM_NOTIFICATION_CLICKED:
+                // USER START (Optionally insert code for reacting on notification message)
+                // USER END
+                break;
+            case WM_NOTIFICATION_RELEASED:
+                // USER START (Optionally insert code for reacting on notification message)
+                //        SweepRobot_TestSetProc();
+                // USER END
+                break;
+            // USER START (Optionally insert additional code for further notification handling)
+
+            // USER END
+        }
+        break;
     case ID_BUTTON_STOP: // Notifications sent by 'STOP'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -688,7 +725,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
             TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
             TEXT_SetText(hItem, "RGB LED TEST");
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            TEXT_SetTextColor(hItem, 0x000000FF);
+            TEXT_SetTextColor(hItem, GUI_RED);
             
             break;
         case WM_NOTIFY_PARENT:
@@ -738,24 +775,47 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
 
-            //
-            // Initialization of 'BUZZER FRAMEWIN'
-            //
             hItem = WM_GetDialogItem(pMsg->hWin,ID_FRAMEWIN_BUZZER);
             WM_AttachWindowAt(hItem, hWin_SWRB_MAIN, 10, 77);
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_BUZZER_OK);
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_BUZZER_ERR);
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_BUZZER);
+            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+            TEXT_SetText(hItem, "BUZZER TEST");
+            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            TEXT_SetTextColor(hItem, GUI_BLACK);
         
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
             NCode = pMsg->Data.v;
             switch(Id) {
-                case ID_BUTTON_RGB_LED_OK: // Notifications sent by 'RGB LED OK'
+                case ID_BUTTON_BUZZER_OK: // Notifications sent by 'BUZZER OK'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
 
                             break;
                         case WM_NOTIFICATION_RELEASED:
+                            BUZZER_TestStateSet(1);
+                            BUZZER_TestValidFlagSet(1);
+                            WM_HideWin(hWin_SWRB_BUZZER);
+                            break;
+                    }
+                    break;
+                case ID_BUTTON_BUZZER_ERR: // Notifications sent by 'BUZZER ERROR'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
 
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            BUZZER_TestStateSet(0);
+                            BUZZER_TestValidFlagSet(1);
+                            WM_HideWin(hWin_SWRB_BUZZER);
                             break;
                     }
                     break;
@@ -790,7 +850,7 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, WM_HBKWIN, 180, 135);
+    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_MAIN, 180, 135);
     return hWin;
 }
 
@@ -798,7 +858,7 @@ WM_HWIN CreateBUZZER_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, WM_HBKWIN, 180, 135);
+    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_MAIN, 180, 135);
     return hWin;
 }
 

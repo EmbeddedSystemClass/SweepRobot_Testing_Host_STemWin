@@ -14,7 +14,7 @@ int main(void)
     TIM3_Int_Init(9999,168-1);
 
     if(SD_Init()){
-//        goto NO_SD_FAULT;
+        goto NO_SD_FAULT;
     }
 //    W25QXX_Init();
     FSMC_SRAM_Init();
@@ -65,7 +65,7 @@ NO_SD_FAULT:
 
 INFINITY_LOOP:
 	while(1){
-
+        
 	}
 
     /* XXX: should never get here */
