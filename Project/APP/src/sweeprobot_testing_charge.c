@@ -13,17 +13,19 @@ static u8 swrbChargeTestStateMap = 0;
 
 #define SWRB_TEST_CHARGE_CUR_POS            0
 #define SWRB_TEST_CHARGE_VOL_POS            1
+#define SWRB_TEST_CHARGE_24V_POS            2
 
 #define SWRB_TEST_FAULT_CHARGE_CUR_MASK     0x01
 #define SWRB_TEST_FAULT_CHARGE_VOL_MASK     0x02
+#define SWRB_TEST_FAULT_CHARGE_24V_MASK     0x04
 
-#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     1000
+#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     100
 #define SWRB_TEST_CHARGE_CUR_LOW_BOUND      0
 
 #define SWRB_TEST_CHARGE_OC_THRESHOLD       0
 
-#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     3000
-#define SWRB_TEST_CHARGE_VOL_LOW_BOUND      0
+#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     4000
+#define SWRB_TEST_CHARGE_VOL_LOW_BOUND      2000
 
 #define SWRB_TEST_CHARGE_OV_THRESHOLD       0
 
@@ -75,6 +77,9 @@ static void SweepRobot_ChargeTestInit(void)
     charge.voltage = 0;
     charge.volValidCnt = 0;
     charge.volValidFlag = 0;
+    charge.charge24vState = 0;
+    charge.charge24vValidCnt = 0;
+    charge.charge24vValidFlag = 0;
 }
 
 static void SweepRobot_ChargeTestProc(void)
@@ -135,14 +140,39 @@ static void SweepRobot_ChargeTestProc(void)
             charge.volValidFlag = 1;
         }
     }
+    
+    if(!charge.charge24vValidFlag){
+        for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
+            printf("CHARGE->READ=2\r\n");
+            OSTimeDlyHMSM(0,0,0,6);
+            if(usartRxFlag){
+                Edit_Set_Value(ID_EDIT_U3, usartRxNum);
+                charge.charge24vState = usartRxNum;
+                usartRxNum = 0;
+                usartRxFlag = 0;
+                break;
+            }else{
+                continue;
+            }
+        }
 
-    if(charge.curValidFlag && charge.volValidFlag){
+        if(charge.charge24vState){
+            swrbChargeTestStateMap &= ~(1<<SWRB_TEST_CHARGE_24V_POS);
+            charge.charge24vValidCnt++;
+        }else{
+            swrbChargeTestStateMap |= (1<<SWRB_TEST_CHARGE_24V_POS);
+        }
+
+        if(charge.charge24vValidCnt > SWRB_TEST_VALID_COMP_TIMES){
+            charge.charge24vValidFlag = 1;
+        }
+    }
+
+    if(charge.curValidFlag && charge.volValidFlag && charge.charge24vValidFlag){
         gSwrbTestTaskRunCnt = 0;
         printf("CHARGE->OFF\r\n");
         SweepRobot_Charge24VOff();
         
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS] = charge.current;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
         SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
         
         str = "CHARGE OK\r\n";
@@ -151,7 +181,6 @@ static void SweepRobot_ChargeTestProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE OK");
-        Progbar_Set_Percent(SWRB_TEST_STATE_CHARGE);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
@@ -165,9 +194,7 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
     gSwrbTestTaskRunCnt = 0;
     printf("CHARGE->OFF\r\n");
     SweepRobot_Charge24VOff();
-    
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS] = charge.current;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
+
     SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
     
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
@@ -180,9 +207,13 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(str);
     }
+    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_24V_MASK){
+        str = "ERROR->CHARGE 24V\r\n";
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(str);
+    }
     Checkbox_Set_Text_Color(ID_CHECKBOX_CHARGE, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_CHARGE);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
@@ -201,14 +232,14 @@ void SweepRobot_ChargeTestTask(void *pdata)
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
-               SweepRobot_ChargeTestInit();
+                SweepRobot_ChargeTestInit();
             }
 
-            if(gSwrbTestStateMap > 1){
+            if(gSwrbTestTaskRunCnt > 1){
                 SweepRobot_ChargeTestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 20){
+            if(gSwrbTestTaskRunCnt > 60){
                 SweepRobot_ChargeTestOverTimeProc();
             }
 
@@ -219,6 +250,11 @@ void SweepRobot_ChargeTestTask(void *pdata)
 
 void CHARGE_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS] = charge.current;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_24V_POS] = charge.charge24vState;
+    
     SWRB_TestDataFileWriteData("CHARGE->Vol=", charge.voltage, 1);
     SWRB_TestDataFileWriteData("CHARGE->Cur=", charge.current, 1);
+    SWRB_TestDataFileWriteData("CHARGE->24V=", charge.charge24vState, 1);
 }

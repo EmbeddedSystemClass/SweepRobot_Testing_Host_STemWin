@@ -78,7 +78,6 @@ static void SweepRobot_BuzzerTestOKProc(void)
     MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_BUZZER, GUI_BLUE);
     Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER OK");
-    Progbar_Set_Percent(SWRB_TEST_STATE_BUZZER);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
@@ -100,7 +99,6 @@ static void SweepRobot_BuzzerTestErrProc(void)
     MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_BUZZER, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_BUZZER, "BUZZER ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_BUZZER);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);

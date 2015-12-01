@@ -29,9 +29,23 @@ static void SweepRobot_IrDATestGPIOInit(void)
                                   IRDA_TEST_TX_M_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(IRDA_TEST_TX_GPIO, &GPIO_InitStructure);
+}
+
+static void SweepRobot_IrDATestGPIOPINSet(void)
+{
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_L_PIN);
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_R_PIN);
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_M_PIN);
+}
+
+static void SweepRobot_IrDATestGPIOPINReset(void)
+{
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_L_PIN);
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_R_PIN);
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
 }
 
 void SweepRobot_IrDATestTxSendCmd(u8 code)
@@ -40,37 +54,25 @@ void SweepRobot_IrDATestTxSendCmd(u8 code)
     OS_CPU_SR cpu_sr;
     OS_ENTER_CRITICAL();
 
-    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_L_PIN);
-    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_R_PIN);
-    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_M_PIN);
+    SweepRobot_IrDATestGPIOPINSet();
     delay_us(3000);
 
     for(i=0;i<8;i++){
         if(code & 0x80){
-            IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_L_PIN);
-            IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_R_PIN);
-            IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
+            SweepRobot_IrDATestGPIOPINReset();
             delay_us(1600);
-            IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_L_PIN);
-            IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_R_PIN);
-            IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_M_PIN);
+            SweepRobot_IrDATestGPIOPINSet();
             delay_us(800);
         }else{
-            IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_L_PIN);
-            IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_R_PIN);
-            IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
+            SweepRobot_IrDATestGPIOPINReset();
             delay_us(800);
-            IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_L_PIN);
-            IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_R_PIN);
-            IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_M_PIN);
+            SweepRobot_IrDATestGPIOPINSet();
             delay_us(1600);
         }
         code<<=1;
     }
 
-    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_L_PIN);
-    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_R_PIN);
-    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
+    SweepRobot_IrDATestGPIOPINReset();
 
     OS_EXIT_CRITICAL();
 }
@@ -146,9 +148,6 @@ static void SweepRobot_IrDATestProc(void)
         
         printf("IRDA->OFF\r\n");
         
-        for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
-        }
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
         str = "IRDA OK\r\n";
@@ -157,7 +156,6 @@ static void SweepRobot_IrDATestProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA OK");
-        Progbar_Set_Percent(SWRB_TEST_STATE_IRDA);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
@@ -166,16 +164,12 @@ static void SweepRobot_IrDATestProc(void)
 
 static void SweepRobot_IrDATestOverTimeProc(void)
 {
-    u8 i;
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
     
     printf("IRDA->OFF\r\n");
 
-    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
-    }
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
@@ -205,7 +199,6 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_IRDA, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_IRDA, "IRDA ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_IRDA);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
@@ -241,6 +234,12 @@ void SweepRobot_IrDATestTask(void *pdata)
 
 void IRDA_TestDataSave(void)
 {
+    u8 i;
+    
+    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
+    }
+    
     SWRB_TestDataFileWriteData("IRDA->B_Code=", IrDA[0].code, 1);
     SWRB_TestDataFileWriteData("IRDA->L_Code=", IrDA[1].code, 1);
     SWRB_TestDataFileWriteData("IRDA->FL_Code=", IrDA[2].code, 1);

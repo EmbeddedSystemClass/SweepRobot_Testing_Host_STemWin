@@ -76,7 +76,6 @@ static void SWRB_BrushTestProc(void)
                 brush[i].validCnt++;
             }else{
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_BRUSH_L_STATE_POS+i));
-//                brush[i].validCnt=0;
             }
             
             if( brush[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -88,10 +87,7 @@ static void SWRB_BrushTestProc(void)
 
     if(brush[BRUSH_CHAN_L].validFlag && brush[BRUSH_CHAN_R].validFlag && brush[BRUSH_CHAN_M].validFlag){
         gSwrbTestTaskRunCnt = 0;
-        
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[BRUSH_CHAN_L].current;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[BRUSH_CHAN_R].current;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[BRUSH_CHAN_M].current;
+
         SWRB_TestDataSaveToFile(Brush_TestDataSave);
         
         str = "BRUSH OK\r\n";
@@ -101,7 +97,6 @@ static void SWRB_BrushTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH OK");
         Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Progbar_Set_Percent(SWRB_TEST_STATE_BRUSH);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
@@ -117,9 +112,6 @@ void SWRB_BrushTestOverTimeProc(void)
     printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_R);
     printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_M);
     
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[BRUSH_CHAN_L].current;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[BRUSH_CHAN_R].current;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[BRUSH_CHAN_M].current;
     SWRB_TestDataSaveToFile(Brush_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
@@ -140,7 +132,6 @@ void SWRB_BrushTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH ERROR");
     Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Progbar_Set_Percent(SWRB_TEST_STATE_BRUSH);
     Edit_Clear();
     
     SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
@@ -172,6 +163,10 @@ void SweepRobot_BrushTestTask(void *pdata)
 
 void Brush_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_L_CUR_POS] = brush[BRUSH_CHAN_L].current;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_R_CUR_POS] = brush[BRUSH_CHAN_R].current;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_BRUSH_M_CUR_POS] = brush[BRUSH_CHAN_M].current;
+    
     SWRB_TestDataFileWriteData("LBRUSH->CURRENT=", brush[BRUSH_CHAN_L].current, 1);
     SWRB_TestDataFileWriteData("RBRUSH->CURRENT=", brush[BRUSH_CHAN_R].current, 1);
     SWRB_TestDataFileWriteData("MBRUSH->CURRENT=", brush[BRUSH_CHAN_M].current, 1);

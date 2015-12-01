@@ -183,7 +183,7 @@ enum SWRB_TEST_DATA_POS{
     SWRB_TEST_DATA_IFRD_FR_TxOff_POS,
     SWRB_TEST_DATA_IFRD_L_TxOff_POS,
     SWRB_TEST_DATA_IFRD_R_TxOff_POS,
-    SWRB_TEST_DATA_IFRD_B_FL_TxOff_POS,
+    SWRB_TEST_DATA_IFRD_B_FL_TxOff_POS,//19
     SWRB_TEST_DATA_IFRD_B_FR_TxOff_POS,
     SWRB_TEST_DATA_IFRD_B_SL_TxOff_POS,
     SWRB_TEST_DATA_IFRD_B_SR_TxOff_POS,
@@ -200,7 +200,7 @@ enum SWRB_TEST_DATA_POS{
     SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOn_POS,
     SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS,
     
-    SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS,
+    SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS,//32
     SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS,
     
     SWRB_TEST_DATA_KEY_VALUE_POS,
@@ -217,7 +217,7 @@ enum SWRB_TEST_DATA_POS{
     
     SWRB_TEST_DATA_CHARGE_CUR_POS,
     SWRB_TEST_DATA_CHARGE_VOL_POS,
- 
+    SWRB_TEST_DATA_CHARGE_24V_POS,
 };
 
 enum SWRB_TEST_TASK_PRIO{
@@ -241,7 +241,7 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_BUZZER_TEST_TASK_PRIO,
     SWRB_RGB_LED_TEST_TASK_PRIO,
     SWRB_CHARGE_TEST_TASK_PRIO,
-    SWRB_TEST_TASK_PRIO_BOUND,//22
+    SWRB_TEST_TASK_PRIO_BOUND,//23
     USART_TASK_PRIO,
     RTC_TASK_PRIO,
     LED_TASK_PRIO,
@@ -277,8 +277,8 @@ enum SWRB_TEST_TASK_PRIO{
 #define KEYMSG_Q_NUM	                    1
 #define DATAMSG_Q_NUM	                    4
 
-#define SWRB_TEST_USART_READ_TIMES          5
-#define SWRB_TEST_VALID_COMP_TIMES          5
+#define SWRB_TEST_USART_READ_TIMES          3
+#define SWRB_TEST_VALID_COMP_TIMES          3
 
 extern u8 usartRxFlag;
 extern int usartRxNum;
@@ -291,6 +291,7 @@ extern u32 lastSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
 extern int gSwrbTestValidTaskCnt;
+extern int gSwrbTestValidTaskCntTotal;
 
 void OS_Task_Create(void);
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio);

@@ -116,7 +116,6 @@ static void SweepRobot_CollisionTestProc(void)
                 collision[i].validCnt++;
             }else{
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
-                collision[i].validCnt = 0;
             }
 
             if(collision[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -129,9 +128,6 @@ static void SweepRobot_CollisionTestProc(void)
         gSwrbTestTaskRunCnt = 0;
         SweepRobot_CollisionCtrlOff();
 
-        for(i=0;i<COLLISION_CHAN_NUM;i++){
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS+i] = collision[i].value;
-        }
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
         
         str = "COLLISION OK\r\n";
@@ -140,7 +136,6 @@ static void SweepRobot_CollisionTestProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION OK");
-        Progbar_Set_Percent(SWRB_TEST_STATE_COLLISION);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
@@ -149,15 +144,11 @@ static void SweepRobot_CollisionTestProc(void)
 
 static void SweepRobot_CollisionTestOverTimeProc(void)
 {
-    u8 i;
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
     SweepRobot_CollisionCtrlOff();
 
-    for(i=0;i<COLLISION_CHAN_NUM;i++){
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS+i] = collision[i].value;
-    }
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
@@ -183,7 +174,6 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
     
     Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_COLLISION);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
@@ -219,6 +209,12 @@ void SweepRobot_CollisionTestTask(void *pdata)
 
 void Collision_TestDataSave(void)
 {
+    u8 i;
+    
+    for(i=0;i<COLLISION_CHAN_NUM;i++){
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS+i] = collision[i].value;
+    }
+    
     SWRB_TestDataFileWriteData("COLLISION->L_Value=", collision[COLLISION_CHAN_L].value, 1);
     SWRB_TestDataFileWriteData("COLLISION->FL_Value=", collision[COLLISION_CHAN_FL].value, 1);
     SWRB_TestDataFileWriteData("COLLISION->R_Value=", collision[COLLISION_CHAN_R].value, 1);

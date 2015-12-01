@@ -70,7 +70,6 @@ static void SweepRobot_RGBLEDTestProc(void)
         MultiEdit_Add_Text(str);
         Checkbox_Set_Text_Color(ID_CHECKBOX_RGB_LED, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED OK");
-        Progbar_Set_Percent(SWRB_TEST_STATE_RGB_LED);
         Edit_Clear();
         
         SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
@@ -104,7 +103,6 @@ static void SweepRobot_RGBLEDTestErrProc(void)
     
     Checkbox_Set_Text_Color(ID_CHECKBOX_RGB_LED, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_RGB_LED);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);

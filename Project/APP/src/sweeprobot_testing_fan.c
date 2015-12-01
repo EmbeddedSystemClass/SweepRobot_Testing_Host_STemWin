@@ -55,7 +55,6 @@ static void SweepRobot_FanTestProc(void)
         fan.validCnt++;
     }else{
         gSwrbTestStateMap |= (1<<SWRB_TEST_FAN_POS);
-//        fan.validCnt = 0;
     }
 
     if(fan.validCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -66,7 +65,6 @@ static void SweepRobot_FanTestProc(void)
     if(fan.validFlag){
         gSwrbTestTaskRunCnt = 0;
         
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
         SWRB_TestDataSaveToFile(Fan_TestDataSave);
         
         str = "FAN OK\r\n";
@@ -76,7 +74,6 @@ static void SweepRobot_FanTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
         Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
@@ -89,8 +86,7 @@ static void SweepRobot_FanTestOverTimeProc(void)
     
     gSwrbTestTaskRunCnt = 0;
     printf("FAN->SPEED=0\r\n");
-    
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
+
     SWRB_TestDataSaveToFile(Fan_TestDataSave);
     
     str = "ERROR->FAN\r\n";
@@ -100,7 +96,6 @@ static void SweepRobot_FanTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
     Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Progbar_Set_Percent(SWRB_TEST_STATE_FAN);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
@@ -135,5 +130,6 @@ void SweepRobot_FanTestTask(void *pdata)
 
 void Fan_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_FAN_CUR_POS] = fan.current;
     SWRB_TestDataFileWriteData("FAN->CUR=", fan.current, 1);
 }

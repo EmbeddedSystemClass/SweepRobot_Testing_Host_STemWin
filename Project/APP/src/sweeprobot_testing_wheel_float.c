@@ -144,7 +144,6 @@ static void SweepRobot_WheelFloatTestProc(void)
                 wheelFloat[i].validCnt++;
             }else{
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
-                wheelFloat[i].validCnt = 0;
             }
             if(wheelFloat[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 wheelFloat[i].validFlag = 1;
@@ -156,8 +155,6 @@ static void SweepRobot_WheelFloatTestProc(void)
         gSwrbTestTaskRunCnt = 0;
         SweepRobot_WheelFloatCtrlIdlePos();
 
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_L].value;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_R].value;
         SWRB_TestDataSaveToFile(WHEEL_FLOAT_TestDataSave);
         
         str = "WHEEL FLOAT OK\r\n";
@@ -166,7 +163,6 @@ static void SweepRobot_WheelFloatTestProc(void)
 
         Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
-        Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL_FLOAT);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
@@ -180,8 +176,6 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     gSwrbTestTaskRunCnt = 0;
     SweepRobot_WheelFloatCtrlIdlePos();
     
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_L].value;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_R].value;
     SWRB_TestDataSaveToFile(WHEEL_FLOAT_TestDataSave);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
@@ -196,7 +190,6 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL_FLOAT);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
@@ -233,6 +226,8 @@ void SweepRobot_WheelFloatTestTask(void *pdata)
 
 void WHEEL_FLOAT_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_L].value;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_R].value;
     SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=", wheelFloat[WHEEL_FLOAT_CHAN_L].value, 1);
     SWRB_TestDataFileWriteData("WHEEL_FLOAT->R_Value=", wheelFloat[WHEEL_FLOAT_CHAN_R].value, 1);
 }

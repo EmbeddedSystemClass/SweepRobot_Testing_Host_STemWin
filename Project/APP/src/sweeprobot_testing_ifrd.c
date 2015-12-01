@@ -105,7 +105,6 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                     ifrd[i].validCnt++;
                 }else{
                     gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
-//                    ifrd[i].validCnt = 0;
                 }
                 
                 if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -125,11 +124,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         gSwrbTestTaskRunCnt = 0;
         printf("SENSOR->IFRD_LED=0\r\n");
         printf("SENSOR->B_SWITCH=0\r\n");
-            
-        for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
-        }
+        
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
         
         str = "IFRD OK\r\n";
@@ -138,7 +133,6 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD OK");
         Checkbox_Set_Box_Back_Color(ID_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
@@ -147,17 +141,12 @@ static void SweepRobot_IFRDTestTxOnProc(void)
 
 static void SweepRobot_IFRDTestOverTimeProc(void)
 {
-    u8 i;
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
     printf("SENSOR->B_SWITCH=0\r\n");
 
-    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
-    }
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FL_MASK){
@@ -203,7 +192,6 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_IFRD, "IFRD ERROR");
     Checkbox_Set_Box_Back_Color(ID_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Progbar_Set_Percent(SWRB_TEST_STATE_IFRD);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
@@ -239,6 +227,13 @@ void SweepRobot_IFRDTestTask(void *pdata)
 
 void IFRD_TestDataSave(void)
 {
+    u8 i;
+    
+    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
+    }
+    
     SWRB_TestDataFileWriteData("IFRD->FL_onValue=", ifrd[0].onValue, 1);
     SWRB_TestDataFileWriteData("IFRD->FL_offValue=", ifrd[0].offValue, 1);
     SWRB_TestDataFileWriteData("IFRD->FR_onValue=", ifrd[1].onValue, 1);

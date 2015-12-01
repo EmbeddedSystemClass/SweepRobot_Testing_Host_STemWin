@@ -1734,6 +1734,9 @@ extern const tGUI_XBF_APIList GUI_XBF_APIList_Prop_AA4_Ext;
 #define GUI_ORANGE        0x0000A5FF
 #define GUI_TRANSPARENT   0xFF000000
 
+#define GUI_USER_204153051      0x00CC9933
+#define GUI_USER_102051000      0x00663300
+
 #define GUI_INVALID_COLOR 0xFFFFFFF      /* Invalid color - more than 24 bits */
 
 /*********************************************************************

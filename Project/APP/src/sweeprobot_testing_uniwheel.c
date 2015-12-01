@@ -78,7 +78,6 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             uniwheel.validCnt++;
         }else{
             gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
-            uniwheel.validCnt = 0;
         }
         
         if(uniwheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -88,9 +87,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
         if(uniwheel.validFlag){
             gSwrbTestTaskRunCnt = 0;
             printf("SENSOR->IFRD_LED=0\r\n");
-            
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS] = uniwheel.onValue;
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
+
             SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
             
             str = "UNIWHEEL OK\r\n";
@@ -99,7 +96,6 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             MultiEdit_Add_Text(str);
             Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_BLUE);
             Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL OK");
-            Progbar_Set_Percent(SWRB_TEST_STATE_UNIWHEEL);
             Edit_Clear();
 
             SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
@@ -114,8 +110,6 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
     
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS] = uniwheel.onValue;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
     SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
     
     str = "ERROR->UNIWHEEL\r\n";
@@ -124,7 +118,6 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_UNIWHEEL);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
@@ -161,6 +154,8 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
 
 void UNIWHEEL_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOn_POS] = uniwheel.onValue;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_UNIWHEEL_VALUE_TxOff_POS] = uniwheel.offValue;
     SWRB_TestDataFileWriteData("UNIWHEEL->onValue=", uniwheel.onValue, 1);
     SWRB_TestDataFileWriteData("UNIWHEEL->offValue=", uniwheel.offValue, 1);
 }

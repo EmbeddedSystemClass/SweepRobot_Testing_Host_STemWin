@@ -75,8 +75,6 @@ static void SWRB_WheelTestProc(void)
                 wheel[i].validCnt++;
             }else{
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_WHEEL_L_STATE_POS+i));
-                /* FIXME: to avoid error judgement,comment this */
-//                wheel[i].validCnt = 0;
             }
         
             if(wheel[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
@@ -89,8 +87,6 @@ static void SWRB_WheelTestProc(void)
     if(wheel[WHEEL_CHAN_L].validFlag && wheel[WHEEL_CHAN_R].validFlag ){
         gSwrbTestTaskRunCnt = 0;
 
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = wheel[WHEEL_CHAN_L].speed;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = wheel[WHEEL_CHAN_R].speed;
         SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
         str = "WHEEL OK\r\n";
@@ -100,7 +96,6 @@ static void SWRB_WheelTestProc(void)
         Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL OK");
         Checkbox_Set_Box_Back_Color(ID_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
@@ -116,8 +111,6 @@ static void SWRB_WheelTestOverTimeProc(void)
     printf("WHEEL->OFF=0\r\n");
     printf("WHEEL->OFF=1\r\n");
     
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = wheel[WHEEL_CHAN_L].speed;
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = wheel[WHEEL_CHAN_R].speed;
     SWRB_TestDataSaveToFile(Wheel_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
@@ -133,7 +126,6 @@ static void SWRB_WheelTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_WHEEL, "WHEEL ERROR");
     Checkbox_Set_Box_Back_Color(ID_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Progbar_Set_Percent(SWRB_TEST_STATE_WHEEL);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
@@ -168,6 +160,9 @@ void SweepRobot_WheelTestTask(void *pdata)
 
 void Wheel_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_L_SPEED_POS] = wheel[WHEEL_CHAN_L].speed;
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_R_SPEED_POS] = wheel[WHEEL_CHAN_R].speed;
+    
     SWRB_TestDataFileWriteData("LWHEEL->SPEED=", wheel[WHEEL_CHAN_L].speed, 1);
     SWRB_TestDataFileWriteData("RWHEEL->SPEED=", wheel[WHEEL_CHAN_R].speed, 1);
 }

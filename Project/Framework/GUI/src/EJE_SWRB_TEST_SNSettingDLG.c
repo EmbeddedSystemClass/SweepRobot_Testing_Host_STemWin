@@ -324,7 +324,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SET_LISTWHEEL_YEAR);
             ListWheel_Init(hItem);
-            LISTWHEEL_AddString(hItem, "2014");
             LISTWHEEL_AddString(hItem, "2015");
             LISTWHEEL_AddString(hItem, "2016");
             LISTWHEEL_AddString(hItem, "2017");

@@ -129,7 +129,6 @@ static void SweepRobot_KeyTestProc(void)
         gSwrbTestTaskRunCnt = 0;
         SweepRobot_KeyTestCtrlIdlePos();
 
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
         SWRB_TestDataSaveToFile(KEY_TestDataSave);
         
         str = "ERROR->KEY\r\n";
@@ -138,7 +137,6 @@ static void SweepRobot_KeyTestProc(void)
         MultiEdit_Add_Text("KEY OK\r\n");
         Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_BLUE);
         Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY OK");
-        Progbar_Set_Percent(SWRB_TEST_STATE_KEY);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
@@ -152,7 +150,6 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     gSwrbTestTaskRunCnt = 0;
     SweepRobot_KeyTestCtrlIdlePos();
 
-    gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
     SWRB_TestDataSaveToFile(KEY_TestDataSave);
 
     str = "ERROR->KEY\r\n";
@@ -161,7 +158,6 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     MultiEdit_Add_Text(str);
     Checkbox_Set_Text_Color(ID_CHECKBOX_KEY, GUI_RED);
     Checkbox_Set_Text(ID_CHECKBOX_KEY, "KEY ERROR");
-    Progbar_Set_Percent(SWRB_TEST_STATE_KEY);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
@@ -197,5 +193,6 @@ void SweepRobot_KeyTestTask(void *pdata)
 
 void KEY_TestDataSave(void)
 {
+    gSwrbTestAcquiredData[SWRB_TEST_DATA_KEY_VALUE_POS] = key.value;
     SWRB_TestDataFileWriteData("KEY->Value=", key.value, 1);
 }

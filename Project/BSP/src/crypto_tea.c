@@ -2,14 +2,12 @@
 
 #include "malloc.h"
 
-#define DELTA 0x9e3779b9
-
-const uint32_t TEAKey[4] = {0x95a8882d, 0x9d2cc114, 0x815aa0ce, 0xa1c489f8};
+static const uint32_t DELTA=0x9e3779b9;
+static const uint32_t TEAKey[4] = {0x95a8882d, 0x9d2cc114, 0x815aa0ce, 0xa1c489f8};
 
 void SWRB_StrEncrypt(char * buffer)
 {
     uint32_t datablock[2];
-
 
     datablock[0] = (buffer[0] << 24) | (buffer[1] << 16)  | (buffer[2] << 8) | (buffer[3]);
     datablock[1] = (buffer[4] << 24) | (buffer[5] << 16)  | (buffer[6] << 8) | (buffer[7]);

@@ -25,6 +25,7 @@ u32 gSwrbTestStateMap = 0;
 u32 lastSwrbTestStateMap = 0;
 u16 gSwrbTestTaskRunCnt = 0;
 int gSwrbTestValidTaskCnt;
+int gSwrbTestValidTaskCntTotal;
 int gSwrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
 
 static u8 gkeyCode = 0;
@@ -89,7 +90,6 @@ void Start_Task(void *pdata)
     OS_ENTER_CRITICAL();
 
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWIN_TASK_PRIO);
-    OSTaskCreate(SWRB_TestCtrlTask,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
     OSTaskCreate(SWRB_ExceptionCheckTask, (void*)0,(OS_STK*)&SWRB_TEST_EXCEPTION_CHECK_TASK_STK[SWRB_TEST_EXCEPTION_CHECK_STK_SIZE-1],SWRB_TEST_EXCEPTION_CHECK_TASK_PRIO);
 
     OS_EXIT_CRITICAL();
@@ -116,7 +116,7 @@ void emWin_Maintask(void *pdata)
     GUI_Clear();
     GUI_DrawBitmap( &bmeje_logo, 320, 214);
     OSTimeDlyHMSM(0,0,1,500);
-    
+
     hWin_SWRB_MAIN = CreateEJE_SweepRobot_test_System();
     hWin_SWRB_SNSETTING = CreateSNSettingDLG();
     hWin_SWRB_TIMESETTING = CreateTimeSettingDLG();
@@ -126,6 +126,7 @@ void emWin_Maintask(void *pdata)
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Rtc_Task,(void*)0,(OS_STK*)&RTC_TASK_STK[RTC_STK_SIZE-1],RTC_TASK_PRIO);
     OSTaskCreate(Usart_Task,(void*)0,(OS_STK*)&USART_TASK_STK[USART_STK_SIZE-1],USART_TASK_PRIO);
+    OSTaskCreate(SWRB_TestCtrlTask,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
 
     gSwrbTestValidTaskCnt = 0;
     SweepRobot_TestCkbStateSet(1);
@@ -212,7 +213,7 @@ void SWRB_TestDataFileWriteString(char *str)
 void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 {
     char *dataStr;
-    
+
     dataStr = mymalloc(SRAMIN, sizeof(char)*10);
     mymemset(dataStr, 0, sizeof(char)*10);
     if(CRflag){
@@ -227,16 +228,16 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 void SWRB_TestDataFileWriteDate(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
 {
     char *dateStr;
-    
+
     dateStr = mymalloc(SRAMIN, sizeof(char)*40);
     *dateStr = 0;
-    
+
     SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
-    
+
     sprintf(dateStr, "Test Time:20%d/%d/%d %d:%d:%d\r\n",date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
     f_puts(dateStr, file);
     f_close(file);
-    
+
     myfree(SRAMIN, dateStr);
 }
 
@@ -245,17 +246,17 @@ void SWRB_TestDataFileCrypt(enum CryptoMode mode)
     FRESULT flErr;
     int i;
     int fileLength, leftFileLength;
-    
+
     flErr = flErr;
     leftFileLength = leftFileLength;
-    
+
     SWRB_TestDataFileOpen(FA_READ|FA_OPEN_ALWAYS);
-    
+
     fileLength = f_size(file);
     leftFileLength = fileLength%8;
-    
+
     f_close(file);
-    
+
     gEncryptStr = mymalloc(SRAMIN, sizeof(char)*10);
 
     if(fileLength>>3){
@@ -265,20 +266,20 @@ void SWRB_TestDataFileCrypt(enum CryptoMode mode)
 
             *gEncryptStr = 0;
             flErr = f_read(file, gEncryptStr, 8, &br);
-        
+
             if(mode == EncryptMode){
                 SWRB_StrEncrypt(gEncryptStr);
             }else{
                 SWRB_StrDecrypt(gEncryptStr);
             }
-            
+
             f_lseek(file, 8*i);
             flErr = f_write(file, gEncryptStr, 8, &bw);
-            
+
             f_close(file);
         }
     }else{
-        
+
     }
     myfree(SRAMIN, gEncryptStr);
 }
@@ -289,7 +290,7 @@ void SWRB_TestCtrlTask(void *pdata)
     OS_CPU_SR cpu_sr;
 
     OS_ENTER_CRITICAL();
-    
+
     OSTaskCreate(SweepRobot_WheelTestTask,(void*)0,(OS_STK*)&SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE-1],SWRB_WHEEL_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_BrushTestTask,(void*)0,(OS_STK*)&SWRB_BRUSH_TEST_TASK_STK[SWRB_BRUSH_TEST_STK_SIZE-1],SWRB_BRUSH_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_FanTestTask,(void*)0,(OS_STK*)&SWRB_FAN_TEST_TASK_STK[SWRB_FAN_TEST_STK_SIZE-1],SWRB_FAN_TEST_TASK_PRIO);
@@ -308,17 +309,18 @@ void SWRB_TestCtrlTask(void *pdata)
         OSTaskSuspend(i);
     }
 
+    OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
+    OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
+
     OS_EXIT_CRITICAL();
 
     SweepRobot_TestInitProc();
     MultiEdit_Add_Text("PLEASE PRESS SET TO SET SERIAL NUMBER BEFORE TEST\r\n");
-    OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
-    OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
 
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     while(1){
-        if(gkeyCodeGetFinishFlag == 1){
+        if(gkeyCodeGetFinishFlag){
             switch(gkeyCode){
                 /* TEST START/PAUSE/RESUME PRESSED*/
                 case 1:
@@ -349,11 +351,11 @@ void SWRB_TestCtrlTask(void *pdata)
 void SWRB_ExceptionCheckTask(void *pdata)
 {
     while(1){
-        
+
         if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-            
+
         }
-        
+
         OSTimeDlyHMSM(0,0,1,0);
     }
 }
@@ -373,9 +375,12 @@ void SweepRobot_TestStartProc(void)
             MultiEdit_Add_Text("TEST RESUMED\r\n");
         }else{
             MultiEdit_Set_Text("\r\n");
+            Progbar_Set_Value(0);
         }
 
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
+
+        SWRB_TestCheckboxDisable();
 
         Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTRED);
         Button_Set_Text(ID_BUTTON_START, "PAUSE");
@@ -391,12 +396,15 @@ void SweepRobot_TestStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
+        SWRB_TestCheckboxEnable();
+
+        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_USER_204153051);
         Button_Set_Text(ID_BUTTON_START, "RESUME");
-        
+
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
+
         printf("LWHEEL->SPEED=0\r\n");
         printf("RWHEEL->SPEED=0\r\n");
         printf("LBRUSH->SPEED=0\r\n");
@@ -464,6 +472,8 @@ void SweepRobot_TestStopProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
+        SWRB_TestCheckboxEnable();
+
         Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
         Button_Set_Text(ID_BUTTON_START, "START");
 
@@ -489,10 +499,14 @@ void SweepRobot_TestExitProc(void)
 
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
+        SWRB_TestCheckboxEnable();
+
         mf_close();
+        
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
+        
         SweepRobot_TestInitProc();
         printf("TEST->OFF\r\n");
 
@@ -547,8 +561,6 @@ void SweepRobot_TestInitProc(void)
     Checkbox_Set_Text(ID_CHECKBOX_RGB_LED, "RGB LED");
     Checkbox_Set_Text(ID_CHECKBOX_CHARGE, "CHARGE");
 
-    Progbar_Set_Value(0);
-
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_START_TASK_BOUND+1);
@@ -564,9 +576,11 @@ static void SWRB_ValidTestTaskCntGet(void)
 
     for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
         hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
-        if(CHECKBOX_GetState(hItem))
+        if(CHECKBOX_GetState(hItem)){
             gSwrbTestValidTaskCnt++;
+        }
     }
+    gSwrbTestValidTaskCntTotal = gSwrbTestValidTaskCnt;
 }
 
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio)
@@ -574,10 +588,8 @@ void SWRB_NextTestTaskResumePreAct(u8 taskPrio)
     OS_CPU_SR cpu_sr;
 
     OS_ENTER_CRITICAL();
-
     OSTaskResume(taskPrio+1);
     OSTaskSuspend(OS_PRIO_SELF);
-
     OS_EXIT_CRITICAL();
 }
 
@@ -589,28 +601,30 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
 
     gSwrbTestValidTaskCnt--;
 
+    Progbar_Set_Percent();
+
     if(gSwrbTestValidTaskCnt){
         OS_ENTER_CRITICAL();
-        
         OSTaskResume(taskPrio+1);
-        
         OS_EXIT_CRITICAL();
     }else{
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
         SWRB_ValidTestTaskCntGet();
+        SWRB_TestCheckboxEnable();
+
         SweepRobot_TestInitProc();
 
         str = "\r\n***TEST FINISHED***\r\n";
         SWRB_TestDataFileWriteString(str);
-        
+
         if(gSwrbTestDataFileCrptoFlag == EncryptMode){
             MultiEdit_Add_Text("\r\n>>>Start Encrypting TestData<<<\r\n");
             SWRB_TestDataFileCrypt(EncryptMode);
 //            SWRB_TestDataFileCrypt(DecryptMode);
             MultiEdit_Add_Text("\r\n***TestData Encrypting Finished*****\r\n");
         }
-        
+
         MultiEdit_Add_Text(str);
         Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_BUTTON_START, GUI_LIGHTBLUE);
         Button_Set_Text(ID_BUTTON_START, "START");
@@ -622,9 +636,7 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     }
 
     OS_ENTER_CRITICAL();
-    
     OSTaskSuspend(OS_PRIO_SELF);
-
     OS_EXIT_CRITICAL();
 }
 

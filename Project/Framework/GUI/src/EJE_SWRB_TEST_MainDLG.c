@@ -158,7 +158,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_START);
     Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_USER_102051000);
 //    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
     //
     // Initialization of 'SET'
@@ -185,7 +185,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_STOP);
     Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_USER_102051000);
     //
     // Initialization of 'EXIT'
     //
@@ -877,6 +877,20 @@ void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, color);
 }
 
+void Button_SetEnable(WM_HWIN hWin, int buttonId)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, buttonId);
+    WM_EnableWindow(hItem);
+}
+
+void Button_SetDisable(WM_HWIN hWin, int buttonId)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, buttonId);
+    WM_DisableWindow(hItem);
+}
+
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
@@ -884,9 +898,9 @@ void Progbar_Set_Value(int progbarValue)
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
-void Progbar_Set_Percent(u8 teststate)
+void Progbar_Set_Percent(void)
 {
-    Progbar_Set_Value( (u8)( (float)(teststate) / (float)(SWRB_TEST_STATE_BOUND-2)*100) );
+    Progbar_Set_Value( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal)*100 );
 }
 
 void Edit_Set_Value(int editId, long editValue)
@@ -939,23 +953,58 @@ int Checkbox_Get_State(int checkboxId)
     return(CHECKBOX_GetState(hItem));
 }
 
+void Checkbox_Set_State(int checkboxId, unsigned int checkboxState)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
+    CHECKBOX_SetState(hItem, checkboxState);
+}
+
+void SWRB_TestCheckboxStateSet(u8 stateNum)
+{
+    int i;
+    WM_HWIN hItem;
+    
+    for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
+        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        CHECKBOX_SetState(hItem, stateNum);
+    }
+}
+
+void SWRB_TestCheckboxEnable(void)
+{
+    int i;
+    WM_HWIN hItem;
+    
+    for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
+        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        WM_EnableWindow(hItem);
+    }
+}
+
+void SWRB_TestCheckboxDisable(void)
+{
+    int i;
+    WM_HWIN hItem;
+    
+    for(i=ID_CHECKBOX_WHEEL;i<ID_CHECKBOX_BOUND;i++){
+        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        WM_DisableWindow(hItem);
+    }
+}
+
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, id);
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
         if(CHECKBOX_GetState(hItem)){
             gSwrbTestValidTaskCnt++;
+            gSwrbTestValidTaskCntTotal++;
         }else{
             gSwrbTestValidTaskCnt--;
+            gSwrbTestValidTaskCntTotal--;
         }
     }
-}
-
-void Checkbox_Set_State(int checkboxId, unsigned int checkboxState)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
-    CHECKBOX_SetState(hItem, checkboxState);
 }
 
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxtextcolor)
