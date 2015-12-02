@@ -25,6 +25,8 @@
 
 #include "DIALOG.h"
 
+#include "EJE_SWRB_TEST_SNSettingDLG.h"
+
 /*********************************************************************
 *
 *       Defines

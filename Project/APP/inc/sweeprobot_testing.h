@@ -29,9 +29,11 @@
 #include "WM.h"
 #include "DIALOG.h"
 
+#include "EJE_SWRB_TEST_StartDLG.h"
 #include "EJE_SWRB_TEST_MainDLG.h"
 #include "EJE_SWRB_TEST_SNSettingDLG.h"
 #include "EJE_SWRB_TEST_TimeSettingDLG.h"
+#include "EJE_SWRB_TEST_PowerStationDLG.h"
 #include "eje_logo.h"
 
 enum SWRB_Test_State_Pos{
@@ -218,7 +220,26 @@ enum SWRB_TEST_DATA_POS{
     SWRB_TEST_DATA_CHARGE_CUR_POS,
     SWRB_TEST_DATA_CHARGE_VOL_POS,
     SWRB_TEST_DATA_CHARGE_24V_POS,
+    
+    SWRB_TEST_DATA_POWER_STATION_SIG_LL_POS,
+    SWRB_TEST_DATA_POWER_STATION_SIG_LS_POS,
+    SWRB_TEST_DATA_POWER_STATION_BKOFF_SIG_L_POS,
+    SWRB_TEST_DATA_POWER_STATION_SIG_CENTER_POS,
+    SWRB_TEST_DATA_POWER_STATION_BKOFF_SIG_R_POS,
+    SWRB_TEST_DATA_POWER_STATION_SIG_RS_POS,
+    SWRB_TEST_DATA_POWER_STATION_SIG_RL_POS,
+    SWRB_TEST_DATA_POWER_STATION_24V_STATE_POS,
 };
+
+/*
+    PWR_STATION_BACKOFF_SIG_L   = 0x46,
+    PWR_STATION_BACKOFF_SIG_R   = 0x45,
+    PWR_STATION_HOME_SIG_LL     = 0x41,
+    PWR_STATION_HOME_SIG_LS     = 0x44,
+    PWR_STATION_HOME_SIG_RL     = 0x43,
+    PWR_STATION_HOME_SIG_RS     = 0x42,
+    PWR_STATION_HOME_SIG_CENTER = 0x40,
+*/
 
 enum SWRB_TEST_TASK_PRIO{
 
@@ -227,7 +248,7 @@ enum SWRB_TEST_TASK_PRIO{
     EMWIN_TASK_PRIO,
     SWRB_TEST_CTRL_TASK_PRIO,
     SWRB_TEST_EXCEPTION_CHECK_TASK_PRIO,
-    SWRB_TEST_START_TASK_BOUND,
+    SWRB_TEST_TASK_PRIO_START_BOUND,
     SWRB_WHEEL_TEST_TASK_PRIO,//9
     SWRB_BRUSH_TEST_TASK_PRIO,
     SWRB_FAN_TEST_TASK_PRIO,
@@ -241,7 +262,8 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_BUZZER_TEST_TASK_PRIO,
     SWRB_RGB_LED_TEST_TASK_PRIO,
     SWRB_CHARGE_TEST_TASK_PRIO,
-    SWRB_TEST_TASK_PRIO_BOUND,//23
+    SWRB_TEST_TASK_PRIO_END_BOUND,//23
+    SWRB_POWER_STATION_TEST_TASK_PRIO,
     USART_TASK_PRIO,
     RTC_TASK_PRIO,
     LED_TASK_PRIO,
@@ -273,6 +295,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_BUZZER_TEST_STK_SIZE           256
 #define SWRB_RGB_LED_TEST_STK_SIZE          256
 #define SWRB_CHARGE_TEST_STK_SIZE           256
+#define SWRB_POWER_STATION_TEST_STK_SIZE    256
 
 #define KEYMSG_Q_NUM	                    1
 #define DATAMSG_Q_NUM	                    4
@@ -305,5 +328,12 @@ void SweepRobot_TestStartProc(void);
 void SweepRobot_TestSetProc(void);
 void SweepRobot_TestStopProc(void);
 void SweepRobot_TestExitProc(void);
+
+void SweepRobot_StartDlgPCBBtnClickProc(void);
+void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
+
+void SweepRobot_PowerStationTestStartProc(void);
+void SweepRobot_PowerStationTestStopProc(void);
+void SweepRobot_PowerStationTestExitProc(void);
 
 #endif

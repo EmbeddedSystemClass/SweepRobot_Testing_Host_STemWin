@@ -245,7 +245,7 @@
             <Ro3Chk>0</Ro3Chk>
             <Ir1Chk>1</Ir1Chk>
             <Ir2Chk>0</Ir2Chk>
-            <Ra1Chk>0</Ra1Chk>
+            <Ra1Chk>1</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
@@ -323,8 +323,8 @@
               </OCR_RVCT5>
               <OCR_RVCT6>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x68000000</StartAddress>
+                <Size>0x200000</Size>
               </OCR_RVCT6>
               <OCR_RVCT7>
                 <Type>0</Type>
@@ -371,7 +371,7 @@
             <vShortWch>0</vShortWch>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>SWRB_TEST_TASK_RUN_OBO,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
+              <Define>SWRB_TEST_TASK_RUN_OBO, STM32F40_41xxx, USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
               <IncludePath>.\BSP\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Lib\ARM;..\Middlewares\STemWinLibrary528\inc;..\Middlewares\STemWinLibrary528\Config;..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\Middlewares\FATFS\exfans;..\Middlewares\FATFS\src;..\Middlewares\FATFS\inc;..\Middlewares\FONTS\inc;..\Middlewares\UCOSII\CONFIG;..\Middlewares\UCOSII\CORE;..\Middlewares\UCOSII\PORT;..\Libraries\CMSIS\Devices\ST;..\Libraries\STM32F4xx_Ext\inc;..\Project;.\Framework\GUI\inc;.\APP\inc;.\Framework\GUI\res\inc</IncludePath>
             </VariousControls>
@@ -527,6 +527,11 @@
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
+              <FileName>EJE_SWRB_TEST_StartDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_StartDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
@@ -541,15 +546,25 @@
               <FileType>1</FileType>
               <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
             </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_PowerStationDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_PowerStationDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Freamwork\gui\res</GroupName>
           <Files>
             <File>
-              <FileName>eje_logo.c</FileName>
+              <FileName>eje_logo_char.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\res\src\eje_logo.c</FilePath>
+              <FilePath>.\Framework\GUI\res\src\eje_logo_char.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1020,6 +1035,11 @@
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\APP\src\sweeprobot_testing_charge.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_power_station.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_power_station.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1566,6 +1586,11 @@
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
+              <FileName>EJE_SWRB_TEST_StartDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_StartDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
@@ -1580,15 +1605,25 @@
               <FileType>1</FileType>
               <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
             </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_PowerStationDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_PowerStationDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Freamwork\gui\res</GroupName>
           <Files>
             <File>
-              <FileName>eje_logo.c</FileName>
+              <FileName>eje_logo_char.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Framework\GUI\res\src\eje_logo.c</FilePath>
+              <FilePath>.\Framework\GUI\res\src\eje_logo_char.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2059,6 +2094,11 @@
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\APP\src\sweeprobot_testing_charge.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_power_station.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\src\sweeprobot_testing_power_station.c</FilePath>
             </File>
           </Files>
         </Group>

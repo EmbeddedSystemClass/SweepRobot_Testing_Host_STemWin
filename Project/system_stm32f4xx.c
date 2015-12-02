@@ -261,6 +261,8 @@
 
 #include "stm32f4xx.h"
 
+#include "sram.h"
+
 /**
   * @}
   */
@@ -788,149 +790,151 @@ static void SetSysClock(void)
   */
 void SystemInit_ExtMemCtl(void)
 {
-/*-- GPIOs Configuration -----------------------------------------------------*/
-/*
- +-------------------+--------------------+------------------+--------------+
- +                       SRAM pins assignment                               +
- +-------------------+--------------------+------------------+--------------+
- | PD0  <-> FMC_D2  | PE0  <-> FMC_NBL0 | PF0  <-> FMC_A0 | PG0 <-> FMC_A10 | 
- | PD1  <-> FMC_D3  | PE1  <-> FMC_NBL1 | PF1  <-> FMC_A1 | PG1 <-> FMC_A11 | 
- | PD4  <-> FMC_NOE | PE3  <-> FMC_A19  | PF2  <-> FMC_A2 | PG2 <-> FMC_A12 | 
- | PD5  <-> FMC_NWE | PE4  <-> FMC_A20  | PF3  <-> FMC_A3 | PG3 <-> FMC_A13 | 
- | PD8  <-> FMC_D13 | PE7  <-> FMC_D4   | PF4  <-> FMC_A4 | PG4 <-> FMC_A14 | 
- | PD9  <-> FMC_D14 | PE8  <-> FMC_D5   | PF5  <-> FMC_A5 | PG5 <-> FMC_A15 | 
- | PD10 <-> FMC_D15 | PE9  <-> FMC_D6   | PF12 <-> FMC_A6 | PG9 <-> FMC_NE2 | 
- | PD11 <-> FMC_A16 | PE10 <-> FMC_D7   | PF13 <-> FMC_A7 |-----------------+
- | PD12 <-> FMC_A17 | PE11 <-> FMC_D8   | PF14 <-> FMC_A8 | 
- | PD13 <-> FMC_A18 | PE12 <-> FMC_D9   | PF15 <-> FMC_A9 | 
- | PD14 <-> FMC_D0  | PE13 <-> FMC_D10  |-----------------+
- | PD15 <-> FMC_D1  | PE14 <-> FMC_D11  |
- |                  | PE15 <-> FMC_D12  |
- +------------------+------------------+
-*/
-   /* Enable GPIOD, GPIOE, GPIOF and GPIOG interface clock */
-  RCC->AHB1ENR   |= 0x00000078;
-  
-  /* Connect PDx pins to FMC Alternate function */
-  GPIOD->AFR[0]  = 0x00cc00cc;
-  GPIOD->AFR[1]  = 0xcccccccc;
-  /* Configure PDx pins in Alternate function mode */  
-  GPIOD->MODER   = 0xaaaa0a0a;
-  /* Configure PDx pins speed to 100 MHz */  
-  GPIOD->OSPEEDR = 0xffff0f0f;
-  /* Configure PDx pins Output type to push-pull */  
-  GPIOD->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PDx pins */ 
-  GPIOD->PUPDR   = 0x00000000;
+//    FSMC_SRAM_Init();
+    
+///*-- GPIOs Configuration -----------------------------------------------------*/
+///*
+// +-------------------+--------------------+------------------+--------------+
+// +                       SRAM pins assignment                               +
+// +-------------------+--------------------+------------------+--------------+
+// | PD0  <-> FMC_D2  | PE0  <-> FMC_NBL0 | PF0  <-> FMC_A0 | PG0 <-> FMC_A10 | 
+// | PD1  <-> FMC_D3  | PE1  <-> FMC_NBL1 | PF1  <-> FMC_A1 | PG1 <-> FMC_A11 | 
+// | PD4  <-> FMC_NOE | PE3  <-> FMC_A19  | PF2  <-> FMC_A2 | PG2 <-> FMC_A12 | 
+// | PD5  <-> FMC_NWE | PE4  <-> FMC_A20  | PF3  <-> FMC_A3 | PG3 <-> FMC_A13 | 
+// | PD8  <-> FMC_D13 | PE7  <-> FMC_D4   | PF4  <-> FMC_A4 | PG4 <-> FMC_A14 | 
+// | PD9  <-> FMC_D14 | PE8  <-> FMC_D5   | PF5  <-> FMC_A5 | PG5 <-> FMC_A15 | 
+// | PD10 <-> FMC_D15 | PE9  <-> FMC_D6   | PF12 <-> FMC_A6 | PG9 <-> FMC_NE2 | 
+// | PD11 <-> FMC_A16 | PE10 <-> FMC_D7   | PF13 <-> FMC_A7 |-----------------+
+// | PD12 <-> FMC_A17 | PE11 <-> FMC_D8   | PF14 <-> FMC_A8 | 
+// | PD13 <-> FMC_A18 | PE12 <-> FMC_D9   | PF15 <-> FMC_A9 | 
+// | PD14 <-> FMC_D0  | PE13 <-> FMC_D10  |-----------------+
+// | PD15 <-> FMC_D1  | PE14 <-> FMC_D11  |
+// |                  | PE15 <-> FMC_D12  |
+// +------------------+------------------+
+//*/
+//   /* Enable GPIOD, GPIOE, GPIOF and GPIOG interface clock */
+//  RCC->AHB1ENR   |= 0x00000078;
+//  
+//  /* Connect PDx pins to FMC Alternate function */
+//  GPIOD->AFR[0]  = 0x00cc00cc;
+//  GPIOD->AFR[1]  = 0xcccccccc;
+//  /* Configure PDx pins in Alternate function mode */  
+//  GPIOD->MODER   = 0xaaaa0a0a;
+//  /* Configure PDx pins speed to 100 MHz */  
+//  GPIOD->OSPEEDR = 0xffff0f0f;
+//  /* Configure PDx pins Output type to push-pull */  
+//  GPIOD->OTYPER  = 0x00000000;
+//  /* No pull-up, pull-down for PDx pins */ 
+//  GPIOD->PUPDR   = 0x00000000;
 
-  /* Connect PEx pins to FMC Alternate function */
-  GPIOE->AFR[0]  = 0xcccccccc;
-  GPIOE->AFR[1]  = 0xcccccccc;
-  /* Configure PEx pins in Alternate function mode */ 
-  GPIOE->MODER   = 0xaaaaaaaa;
-  /* Configure PEx pins speed to 100 MHz */ 
-  GPIOE->OSPEEDR = 0xffffffff;
-  /* Configure PEx pins Output type to push-pull */  
-  GPIOE->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PEx pins */ 
-  GPIOE->PUPDR   = 0x00000000;
+//  /* Connect PEx pins to FMC Alternate function */
+//  GPIOE->AFR[0]  = 0xcccccccc;
+//  GPIOE->AFR[1]  = 0xcccccccc;
+//  /* Configure PEx pins in Alternate function mode */ 
+//  GPIOE->MODER   = 0xaaaaaaaa;
+//  /* Configure PEx pins speed to 100 MHz */ 
+//  GPIOE->OSPEEDR = 0xffffffff;
+//  /* Configure PEx pins Output type to push-pull */  
+//  GPIOE->OTYPER  = 0x00000000;
+//  /* No pull-up, pull-down for PEx pins */ 
+//  GPIOE->PUPDR   = 0x00000000;
 
-  /* Connect PFx pins to FMC Alternate function */
-  GPIOF->AFR[0]  = 0x00cccccc;
-  GPIOF->AFR[1]  = 0xcccc0000;
-  /* Configure PFx pins in Alternate function mode */   
-  GPIOF->MODER   = 0xaa000aaa;
-  /* Configure PFx pins speed to 100 MHz */ 
-  GPIOF->OSPEEDR = 0xff000fff;
-  /* Configure PFx pins Output type to push-pull */  
-  GPIOF->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PFx pins */ 
-  GPIOF->PUPDR   = 0x00000000;
+//  /* Connect PFx pins to FMC Alternate function */
+//  GPIOF->AFR[0]  = 0x00cccccc;
+//  GPIOF->AFR[1]  = 0xcccc0000;
+//  /* Configure PFx pins in Alternate function mode */   
+//  GPIOF->MODER   = 0xaa000aaa;
+//  /* Configure PFx pins speed to 100 MHz */ 
+//  GPIOF->OSPEEDR = 0xff000fff;
+//  /* Configure PFx pins Output type to push-pull */  
+//  GPIOF->OTYPER  = 0x00000000;
+//  /* No pull-up, pull-down for PFx pins */ 
+//  GPIOF->PUPDR   = 0x00000000;
 
-  /* Connect PGx pins to FMC Alternate function */
-  GPIOG->AFR[0]  = 0x00cccccc;
-  GPIOG->AFR[1]  = 0x000000c0;
-  /* Configure PGx pins in Alternate function mode */ 
-  GPIOG->MODER   = 0x00080aaa;
-  /* Configure PGx pins speed to 100 MHz */ 
-  GPIOG->OSPEEDR = 0x000c0fff;
-  /* Configure PGx pins Output type to push-pull */  
-  GPIOG->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PGx pins */ 
-  GPIOG->PUPDR   = 0x00000000;
-  
-/*-- FMC Configuration ------------------------------------------------------*/
-  /* Enable the FMC/FSMC interface clock */
-  RCC->AHB3ENR         |= 0x00000001;
-  
-#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
-  /* Configure and enable Bank1_SRAM2 */
-  FMC_Bank1->BTCR[2]  = 0x00001011;
-  FMC_Bank1->BTCR[3]  = 0x00000201;
-  FMC_Bank1E->BWTR[2] = 0x0fffffff;
-#endif /* STM32F427_437xx || STM32F429_439xx */ 
+//  /* Connect PGx pins to FMC Alternate function */
+//  GPIOG->AFR[0]  = 0x00cccccc;
+//  GPIOG->AFR[1]  = 0x000000c0;
+//  /* Configure PGx pins in Alternate function mode */ 
+//  GPIOG->MODER   = 0x00080aaa;
+//  /* Configure PGx pins speed to 100 MHz */ 
+//  GPIOG->OSPEEDR = 0x000c0fff;
+//  /* Configure PGx pins Output type to push-pull */  
+//  GPIOG->OTYPER  = 0x00000000;
+//  /* No pull-up, pull-down for PGx pins */ 
+//  GPIOG->PUPDR   = 0x00000000;
+//  
+///*-- FMC Configuration ------------------------------------------------------*/
+//  /* Enable the FMC/FSMC interface clock */
+//  RCC->AHB3ENR         |= 0x00000001;
+//  
+//#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
+//  /* Configure and enable Bank1_SRAM2 */
+//  FMC_Bank1->BTCR[2]  = 0x00001011;
+//  FMC_Bank1->BTCR[3]  = 0x00000201;
+//  FMC_Bank1E->BWTR[2] = 0x0fffffff;
+//#endif /* STM32F427_437xx || STM32F429_439xx */ 
 
-#if defined (STM32F40_41xxx)
-  /* Configure and enable Bank1_SRAM2 */
-  FSMC_Bank1->BTCR[2]  = 0x00001011;
-  FSMC_Bank1->BTCR[3]  = 0x00000201;
-  FSMC_Bank1E->BWTR[2] = 0x0fffffff;
-#endif  /* STM32F40_41xxx */
+//#if defined (STM32F40_41xxx)
+//  /* Configure and enable Bank1_SRAM2 */
+//  FSMC_Bank1->BTCR[2]  = 0x00001011;
+//  FSMC_Bank1->BTCR[3]  = 0x00000201;
+//  FSMC_Bank1E->BWTR[2] = 0x0fffffff;
+//#endif  /* STM32F40_41xxx */
 
-/*
-  Bank1_SRAM2 is configured as follow:
-  In case of FSMC configuration 
-  NORSRAMTimingStructure.FSMC_AddressSetupTime = 1;
-  NORSRAMTimingStructure.FSMC_AddressHoldTime = 0;
-  NORSRAMTimingStructure.FSMC_DataSetupTime = 2;
-  NORSRAMTimingStructure.FSMC_BusTurnAroundDuration = 0;
-  NORSRAMTimingStructure.FSMC_CLKDivision = 0;
-  NORSRAMTimingStructure.FSMC_DataLatency = 0;
-  NORSRAMTimingStructure.FSMC_AccessMode = FMC_AccessMode_A;
+///*
+//  Bank1_SRAM2 is configured as follow:
+//  In case of FSMC configuration 
+//  NORSRAMTimingStructure.FSMC_AddressSetupTime = 1;
+//  NORSRAMTimingStructure.FSMC_AddressHoldTime = 0;
+//  NORSRAMTimingStructure.FSMC_DataSetupTime = 2;
+//  NORSRAMTimingStructure.FSMC_BusTurnAroundDuration = 0;
+//  NORSRAMTimingStructure.FSMC_CLKDivision = 0;
+//  NORSRAMTimingStructure.FSMC_DataLatency = 0;
+//  NORSRAMTimingStructure.FSMC_AccessMode = FMC_AccessMode_A;
 
-  FSMC_NORSRAMInitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM2;
-  FSMC_NORSRAMInitStructure.FSMC_DataAddressMux = FSMC_DataAddressMux_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_MemoryType = FSMC_MemoryType_SRAM;
-  FSMC_NORSRAMInitStructure.FSMC_MemoryDataWidth = FSMC_MemoryDataWidth_16b;
-  FSMC_NORSRAMInitStructure.FSMC_BurstAccessMode = FSMC_BurstAccessMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_AsynchronousWait = FSMC_AsynchronousWait_Disable;  
-  FSMC_NORSRAMInitStructure.FSMC_WaitSignalPolarity = FSMC_WaitSignalPolarity_Low;
-  FSMC_NORSRAMInitStructure.FSMC_WrapMode = FSMC_WrapMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_WaitSignalActive = FSMC_WaitSignalActive_BeforeWaitState;
-  FSMC_NORSRAMInitStructure.FSMC_WriteOperation = FSMC_WriteOperation_Enable;
-  FSMC_NORSRAMInitStructure.FSMC_WaitSignal = FSMC_WaitSignal_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_ReadWriteTimingStruct = &NORSRAMTimingStructure;
-  FSMC_NORSRAMInitStructure.FSMC_WriteTimingStruct = &NORSRAMTimingStructure;
+//  FSMC_NORSRAMInitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM2;
+//  FSMC_NORSRAMInitStructure.FSMC_DataAddressMux = FSMC_DataAddressMux_Disable;
+//  FSMC_NORSRAMInitStructure.FSMC_MemoryType = FSMC_MemoryType_SRAM;
+//  FSMC_NORSRAMInitStructure.FSMC_MemoryDataWidth = FSMC_MemoryDataWidth_16b;
+//  FSMC_NORSRAMInitStructure.FSMC_BurstAccessMode = FSMC_BurstAccessMode_Disable;
+//  FSMC_NORSRAMInitStructure.FSMC_AsynchronousWait = FSMC_AsynchronousWait_Disable;  
+//  FSMC_NORSRAMInitStructure.FSMC_WaitSignalPolarity = FSMC_WaitSignalPolarity_Low;
+//  FSMC_NORSRAMInitStructure.FSMC_WrapMode = FSMC_WrapMode_Disable;
+//  FSMC_NORSRAMInitStructure.FSMC_WaitSignalActive = FSMC_WaitSignalActive_BeforeWaitState;
+//  FSMC_NORSRAMInitStructure.FSMC_WriteOperation = FSMC_WriteOperation_Enable;
+//  FSMC_NORSRAMInitStructure.FSMC_WaitSignal = FSMC_WaitSignal_Disable;
+//  FSMC_NORSRAMInitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Disable;
+//  FSMC_NORSRAMInitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Disable;
+//  FSMC_NORSRAMInitStructure.FSMC_ReadWriteTimingStruct = &NORSRAMTimingStructure;
+//  FSMC_NORSRAMInitStructure.FSMC_WriteTimingStruct = &NORSRAMTimingStructure;
 
-  In case of FMC configuration   
-  NORSRAMTimingStructure.FMC_AddressSetupTime = 1;
-  NORSRAMTimingStructure.FMC_AddressHoldTime = 0;
-  NORSRAMTimingStructure.FMC_DataSetupTime = 2;
-  NORSRAMTimingStructure.FMC_BusTurnAroundDuration = 0;
-  NORSRAMTimingStructure.FMC_CLKDivision = 0;
-  NORSRAMTimingStructure.FMC_DataLatency = 0;
-  NORSRAMTimingStructure.FMC_AccessMode = FMC_AccessMode_A;
+//  In case of FMC configuration   
+//  NORSRAMTimingStructure.FMC_AddressSetupTime = 1;
+//  NORSRAMTimingStructure.FMC_AddressHoldTime = 0;
+//  NORSRAMTimingStructure.FMC_DataSetupTime = 2;
+//  NORSRAMTimingStructure.FMC_BusTurnAroundDuration = 0;
+//  NORSRAMTimingStructure.FMC_CLKDivision = 0;
+//  NORSRAMTimingStructure.FMC_DataLatency = 0;
+//  NORSRAMTimingStructure.FMC_AccessMode = FMC_AccessMode_A;
 
-  FMC_NORSRAMInitStructure.FMC_Bank = FMC_Bank1_NORSRAM2;
-  FMC_NORSRAMInitStructure.FMC_DataAddressMux = FMC_DataAddressMux_Disable;
-  FMC_NORSRAMInitStructure.FMC_MemoryType = FMC_MemoryType_SRAM;
-  FMC_NORSRAMInitStructure.FMC_MemoryDataWidth = FMC_MemoryDataWidth_16b;
-  FMC_NORSRAMInitStructure.FMC_BurstAccessMode = FMC_BurstAccessMode_Disable;
-  FMC_NORSRAMInitStructure.FMC_AsynchronousWait = FMC_AsynchronousWait_Disable;  
-  FMC_NORSRAMInitStructure.FMC_WaitSignalPolarity = FMC_WaitSignalPolarity_Low;
-  FMC_NORSRAMInitStructure.FMC_WrapMode = FMC_WrapMode_Disable;
-  FMC_NORSRAMInitStructure.FMC_WaitSignalActive = FMC_WaitSignalActive_BeforeWaitState;
-  FMC_NORSRAMInitStructure.FMC_WriteOperation = FMC_WriteOperation_Enable;
-  FMC_NORSRAMInitStructure.FMC_WaitSignal = FMC_WaitSignal_Disable;
-  FMC_NORSRAMInitStructure.FMC_ExtendedMode = FMC_ExtendedMode_Disable;
-  FMC_NORSRAMInitStructure.FMC_WriteBurst = FMC_WriteBurst_Disable;
-  FMC_NORSRAMInitStructure.FMC_ContinousClock = FMC_CClock_SyncOnly;
-  FMC_NORSRAMInitStructure.FMC_ReadWriteTimingStruct = &NORSRAMTimingStructure;
-  FMC_NORSRAMInitStructure.FMC_WriteTimingStruct = &NORSRAMTimingStructure;
-*/
-  
+//  FMC_NORSRAMInitStructure.FMC_Bank = FMC_Bank1_NORSRAM2;
+//  FMC_NORSRAMInitStructure.FMC_DataAddressMux = FMC_DataAddressMux_Disable;
+//  FMC_NORSRAMInitStructure.FMC_MemoryType = FMC_MemoryType_SRAM;
+//  FMC_NORSRAMInitStructure.FMC_MemoryDataWidth = FMC_MemoryDataWidth_16b;
+//  FMC_NORSRAMInitStructure.FMC_BurstAccessMode = FMC_BurstAccessMode_Disable;
+//  FMC_NORSRAMInitStructure.FMC_AsynchronousWait = FMC_AsynchronousWait_Disable;  
+//  FMC_NORSRAMInitStructure.FMC_WaitSignalPolarity = FMC_WaitSignalPolarity_Low;
+//  FMC_NORSRAMInitStructure.FMC_WrapMode = FMC_WrapMode_Disable;
+//  FMC_NORSRAMInitStructure.FMC_WaitSignalActive = FMC_WaitSignalActive_BeforeWaitState;
+//  FMC_NORSRAMInitStructure.FMC_WriteOperation = FMC_WriteOperation_Enable;
+//  FMC_NORSRAMInitStructure.FMC_WaitSignal = FMC_WaitSignal_Disable;
+//  FMC_NORSRAMInitStructure.FMC_ExtendedMode = FMC_ExtendedMode_Disable;
+//  FMC_NORSRAMInitStructure.FMC_WriteBurst = FMC_WriteBurst_Disable;
+//  FMC_NORSRAMInitStructure.FMC_ContinousClock = FMC_CClock_SyncOnly;
+//  FMC_NORSRAMInitStructure.FMC_ReadWriteTimingStruct = &NORSRAMTimingStructure;
+//  FMC_NORSRAMInitStructure.FMC_WriteTimingStruct = &NORSRAMTimingStructure;
+//*/
+//  
 }
 #endif /* DATA_IN_ExtSRAM */
   

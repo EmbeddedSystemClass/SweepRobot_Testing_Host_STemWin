@@ -273,7 +273,7 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
     hItem = WM_GetDialogItem(hWin, ID_SET_EDIT_COMB);
     EDIT_SetText(hItem, swrbTestDataFilePath);
     
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_EDIT_SN);
+    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_EDIT_SN);
     EDIT_SetText(hItem, swrbTestDataFilePath);
     
     sprintf(dest_str, "%s", swrbTestDataFilePath);
@@ -719,7 +719,7 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
             }else{
                 str = "SerialNumber is larger than 999, return to 0\r\n";
                 SWRB_TestDataFileWriteString(str);
-                MultiEdit_Add_Text(str);
+                MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
                 hItem = WM_GetDialogItem(*hWin, ID_SET_LISTWHEEL_SN1);
                 LISTWHEEL_SetPos(hItem, 0);
                 LISTWHEEL_SetSel(hItem, 0);

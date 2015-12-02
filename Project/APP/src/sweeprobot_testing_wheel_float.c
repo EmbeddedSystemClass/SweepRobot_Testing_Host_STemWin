@@ -105,7 +105,7 @@ void SweepRobot_WheelFloatTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(str);
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     
     SweepRobot_WheelFloatCtrlTestPos();
     
@@ -131,7 +131,7 @@ static void SweepRobot_WheelFloatTestProc(void)
                 OSTimeDlyHMSM(0,0,0,6);
                 if(usartRxFlag){
                     wheelFloat[i].value = usartRxNum;
-                    Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
+                    Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     break;
@@ -159,10 +159,10 @@ static void SweepRobot_WheelFloatTestProc(void)
         
         str = "WHEEL FLOAT OK\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
 
-        Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
-        Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
+        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
@@ -181,15 +181,15 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
         str = "ERROR->WHEEL FLOAT L\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
         str = "ERROR->WHEEL FLOAT R\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
-    Checkbox_Set_Text_Color(ID_CHECKBOX_WHEEL_FLOAT, GUI_RED);
-    Checkbox_Set_Text(ID_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
+    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_WHEEL_FLOAT, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
@@ -202,7 +202,7 @@ void SweepRobot_WheelFloatTestTask(void *pdata)
 
     while(1){
         
-        if(!Checkbox_Get_State(ID_CHECKBOX_WHEEL_FLOAT)){
+        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_WHEEL_FLOAT)){
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
         }else{
         

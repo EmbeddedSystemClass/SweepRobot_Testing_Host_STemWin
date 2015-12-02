@@ -35,7 +35,7 @@ void RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
     if(gSwrbTestMode == SWRB_TEST_MODE_SET){
         Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
     }else{
-        Edit_Set_Text(hWin_SWRB_MAIN, ID_EDIT_DATE, str);
+        Edit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_EDIT_DATE, str);
     }
     myfree(SRAMIN, str);
 }
@@ -63,8 +63,8 @@ u8 My_RTC_Init(void)
         RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;
         RTC_Init(&RTC_InitStructure);
 
-        RTC_Set_Time(4,0,1,RTC_H12_AM);
-        RTC_Set_Date(15,11,23,48);
+        RTC_Set_Time(6,0,0,RTC_H12_PM);
+        RTC_Set_Date(15,12,03,49);
 
         RTC_WriteBackupRegister(RTC_BKP_DR0,0x5050);
     }
