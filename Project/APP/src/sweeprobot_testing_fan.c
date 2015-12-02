@@ -21,7 +21,7 @@ static void SweepRobot_FanTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(str);
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     
     OSTimeDlyHMSM(0,0,1,0);
     
@@ -41,7 +41,7 @@ static void SweepRobot_FanTestProc(void)
         OSTimeDlyHMSM(0,0,0,6);
         if(usartRxFlag){
             fan.current = usartRxNum;
-            Edit_Set_Value(ID_EDIT_U1, usartRxNum);
+            Edit_Set_Value(ID_MAIN_EDIT_U1, usartRxNum);
             /* TODO: add fan over current protection here */
             usartRxNum = 0;
             usartRxFlag = 0;
@@ -70,10 +70,10 @@ static void SweepRobot_FanTestProc(void)
         str = "FAN OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(str);
-        Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_BLUE);
-        Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN OK");
-        Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_FAN, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_FAN, "FAN OK");
+        Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
@@ -92,10 +92,10 @@ static void SweepRobot_FanTestOverTimeProc(void)
     str = "ERROR->FAN\r\n";
     SWRB_TestDataFileWriteString(str);
     
-    MultiEdit_Add_Text(str);
-    Checkbox_Set_Text_Color(ID_CHECKBOX_FAN, GUI_RED);
-    Checkbox_Set_Text(ID_CHECKBOX_FAN, "FAN ERROR");
-    Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_FAN, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_FAN, "FAN ERROR");
+    Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
@@ -105,12 +105,12 @@ void SweepRobot_FanTestTask(void *pdata)
 {
     while(1){
         
-        if(!Checkbox_Get_State(ID_CHECKBOX_FAN)){
+        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_FAN)){
             SWRB_NextTestTaskResumePreAct(SWRB_FAN_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
             
-            Checkbox_Set_Box_Back_Color(ID_CHECKBOX_FAN, GUI_GREEN, CHECKBOX_CI_ENABLED);
+            Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_FAN, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_FanTestInit();

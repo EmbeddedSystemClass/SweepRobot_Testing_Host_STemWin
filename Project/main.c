@@ -16,8 +16,13 @@ int main(void)
     if(SD_Init()){
         goto NO_SD_FAULT;
     }
+
+#ifdef DATA_IN_ExtSRAM
+
+#else
 //    W25QXX_Init();
     FSMC_SRAM_Init();
+#endif
 
     if(exfans_init()){
         goto MEM_INIT_FAULT;
@@ -35,7 +40,6 @@ int main(void)
 	OSStart();
 
 MEM_INIT_FAULT:
-    FSMC_SRAM_Init();
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
     WM_SetCreateFlags(WM_CF_MEMDEV);
     GUI_Init();

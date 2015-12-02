@@ -77,7 +77,7 @@ static void SweepRobot_CollisionTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(str);
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     
     SweepRobot_CollisionCtrlOn();
 
@@ -101,7 +101,7 @@ static void SweepRobot_CollisionTestProc(void)
                 printf("COLLISION->READ=%d\r\n",i);
                 OSTimeDlyHMSM(0,0,0,6);
                 if(usartRxFlag){
-                    Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
+                    Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
                     collision[i].value = usartRxNum;
                     usartRxNum = 0;
                     usartRxFlag = 0;
@@ -133,9 +133,9 @@ static void SweepRobot_CollisionTestProc(void)
         str = "COLLISION OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(str);
-        Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_BLUE);
-        Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION OK");
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_COLLISION, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_COLLISION, "COLLISION OK");
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
@@ -154,26 +154,26 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
         str = "ERROR->COLLISION_L\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FL_MASK){
         str = "ERROR->COLLISION_FL\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_R_MASK){
         str = "ERROR->COLLISION_R\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FR_MASK){
         str = "ERROR->COLLISION_FR\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     
-    Checkbox_Set_Text_Color(ID_CHECKBOX_COLLISION, GUI_RED);
-    Checkbox_Set_Text(ID_CHECKBOX_COLLISION, "COLLISION ERROR");
+    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_COLLISION, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_COLLISION, "COLLISION ERROR");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
@@ -186,7 +186,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
 
     while(1){
         
-        if(!Checkbox_Get_State(ID_CHECKBOX_COLLISION)){
+        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_COLLISION)){
             SWRB_NextTestTaskResumePreAct(SWRB_COLLISION_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

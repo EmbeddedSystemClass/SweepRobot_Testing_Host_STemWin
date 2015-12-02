@@ -19,7 +19,7 @@ static void SweepRobot_UniWheelTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(str);
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
 
     OSTimeDlyHMSM(0,0,1,0);
     
@@ -40,7 +40,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 uniwheel.offValue = usartRxNum;
-                Edit_Set_Value(ID_EDIT_U1, usartRxNum);
+                Edit_Set_Value(ID_MAIN_EDIT_U1, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
                 break;
@@ -63,7 +63,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 uniwheel.onValue = usartRxNum;
-                Edit_Set_Value(ID_EDIT_D1, usartRxNum);
+                Edit_Set_Value(ID_MAIN_EDIT_D1, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
                 break;
@@ -93,9 +93,9 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             str = "UNIWHEEL OK\r\n";
             SWRB_TestDataFileWriteString(str);
             
-            MultiEdit_Add_Text(str);
-            Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_BLUE);
-            Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL OK");
+            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+            Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_UNIWHEEL, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_UNIWHEEL, "UNIWHEEL OK");
             Edit_Clear();
 
             SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
@@ -115,9 +115,9 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     str = "ERROR->UNIWHEEL\r\n";
     SWRB_TestDataFileWriteString(str);
     
-    MultiEdit_Add_Text(str);
-    Checkbox_Set_Text_Color(ID_CHECKBOX_UNIWHEEL, GUI_RED);
-    Checkbox_Set_Text(ID_CHECKBOX_UNIWHEEL, "UNIWHEEL ERROR");
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_UNIWHEEL, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_UNIWHEEL, "UNIWHEEL ERROR");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
@@ -128,7 +128,7 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
   
     while(1){
         
-        if(!Checkbox_Get_State(ID_CHECKBOX_UNIWHEEL)){
+        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_UNIWHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

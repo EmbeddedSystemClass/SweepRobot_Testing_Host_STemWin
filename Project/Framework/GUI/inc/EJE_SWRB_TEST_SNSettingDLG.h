@@ -27,6 +27,8 @@
 #include "ff.h"
 #include "stm32f4xx.h"
 
+#include "EJE_SWRB_TEST_MainDLG.h"
+
 /*********************************************************************
 *
 *       Defines

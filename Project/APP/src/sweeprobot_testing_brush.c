@@ -30,7 +30,7 @@ static void SWRB_BrushTestTaskInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(str);
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     
     OSTimeDlyHMSM(0,0,1,0);
     
@@ -63,7 +63,7 @@ static void SWRB_BrushTestProc(void)
                 OSTimeDlyHMSM(0,0,0,6);
                 if(usartRxFlag){
                     brush[i].current = usartRxNum;
-                    Edit_Set_Value(ID_EDIT_U1+i, usartRxNum);
+                    Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     break;
@@ -92,11 +92,11 @@ static void SWRB_BrushTestProc(void)
         
         str = "BRUSH OK\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text("BRUSH OK\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  "BRUSH OK\r\n");
         
-        Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_BLUE);
-        Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH OK");
-        Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_BRUSH, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_BRUSH, "BRUSH OK");
+        Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
@@ -117,21 +117,21 @@ void SWRB_BrushTestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
         str = "ERROR->LBRUSH\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(str);
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
         str = "ERROR->RBRUSH\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text("ERROR->RBRUSH\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  "ERROR->RBRUSH\r\n");
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
         str = "ERROR->MBRUSH\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text("ERROR->MBRUSH\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  "ERROR->MBRUSH\r\n");
     }
-    Checkbox_Set_Text_Color(ID_CHECKBOX_BRUSH, GUI_RED);
-    Checkbox_Set_Text(ID_CHECKBOX_BRUSH, "BRUSH ERROR");
-    Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_BRUSH, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_BRUSH, "BRUSH ERROR");
+    Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
     
     SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
@@ -140,12 +140,12 @@ void SWRB_BrushTestOverTimeProc(void)
 void SweepRobot_BrushTestTask(void *pdata)
 {
     while(1){
-        if(!Checkbox_Get_State(ID_CHECKBOX_BRUSH)){
+        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_BRUSH)){
             SWRB_NextTestTaskResumePreAct(SWRB_BRUSH_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
             
-            Checkbox_Set_Box_Back_Color(ID_CHECKBOX_BRUSH, GUI_GREEN, CHECKBOX_CI_ENABLED);
+            Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_BRUSH, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SWRB_BrushTestTaskInit();
