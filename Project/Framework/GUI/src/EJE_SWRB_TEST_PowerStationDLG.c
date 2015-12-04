@@ -108,13 +108,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
-//    //
-//    // Initialization of 'Multipage'
-//    //
-//    hMultiPage = WM_GetDialogItem(pMsg->hWin, ID_PS_MULTIPAGE_MAIN);
-//    MULTIPAGE_AddEmptyPage(hMultiPage, 0, "PowerStation");
-//    MULTIPAGE_AddEmptyPage(hMultiPage, 1, "ChargeCurve");
-//    MULTIPAGE_SetTabHeight(hMultiPage, 40);
     //
     // Initialization of 'Image'
     //
@@ -222,6 +215,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_PROGBAR_MAIN);
     PROGBAR_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+    //
+    // Initialization of 'MULTIEDIT'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_MULTIEDIT_MAIN);
+    MULTIEDIT_SetAutoScrollV(hItem,1);
+    MULTIEDIT_SetWrapWord(hItem);
+    MULTIEDIT_SetBufferSize(hItem, 2048);
+    WM_DisableWindow(hItem);
     //
     //Hide Dialog after initial
     //

@@ -21,6 +21,7 @@ enum CryptoMode{
 static char *gEncryptStr;
 static u8 gSwrbTestDataFileCrptoFlag = EncryptMode;
 
+enum SWRB_TEST_SELECT gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 enum SWRB_TEST_SET_STATE gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
@@ -317,6 +318,64 @@ FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode)
     return flErr;
 }
 
+static void SWRB_TEST_BUTTON_CTRL_Start(void)
+{
+    switch(gSwrbTestSelectFlag){
+        case SWRB_TEST_SELECT_NONE:
+            break;
+        case SWRB_TEST_SELECT_PCB:
+            SweepRobot_PCBTestStartProc();
+            break;
+        case SWRB_TEST_SELECT_POWER_STATION:
+            SweepRobot_PowerStationTestStartProc();
+            break;
+    }
+}
+
+static void SWRB_TEST_BUTTON_CTRL_Set(void)
+{
+    switch(gSwrbTestSelectFlag){
+        case SWRB_TEST_SELECT_NONE:
+            break;
+        case SWRB_TEST_SELECT_PCB:
+            SweepRobot_PCBTestSetProc();
+            break;
+        case SWRB_TEST_SELECT_POWER_STATION:
+            ;
+            break;
+    }
+}
+
+static void SWRB_TEST_BUTTON_CTRL_Stop(void)
+{
+    switch(gSwrbTestSelectFlag){
+        case SWRB_TEST_SELECT_NONE:
+            SweepRobot_StartDlgPCBBtnClickProc();
+            break;
+        case SWRB_TEST_SELECT_PCB:
+            SweepRobot_PCBTestStopProc();
+            break;
+        case SWRB_TEST_SELECT_POWER_STATION:
+            SweepRobot_PowerStationTestStopProc();
+            break;
+    }
+}
+
+static void SWRB_TEST_BUTTON_CTRL_Exit(void)
+{
+    switch(gSwrbTestSelectFlag){
+        case SWRB_TEST_SELECT_NONE:
+            SweepRobot_StartDlgPowerStationBtnClickPorc();
+            break;
+        case SWRB_TEST_SELECT_PCB:
+            SweepRobot_PCBTestExitProc();
+            break;
+        case SWRB_TEST_SELECT_POWER_STATION:
+            SweepRobot_PowerStationTestExitProc();
+            break;
+    }
+}
+
 void SWRB_TestCtrlTask(void *pdata)
 {
     u8 i;
@@ -360,27 +419,27 @@ void SWRB_TestCtrlTask(void *pdata)
             switch(gkeyCode){
                 /* TEST START/PAUSE/RESUME PRESSED*/
                 case 1:
-                    SweepRobot_TestStartProc();
+                    SWRB_TEST_BUTTON_CTRL_Start();
                     break;
                 /* TEST SET PRESSED */
                 case 2:
-                    SweepRobot_TestSetProc();
+                    SWRB_TEST_BUTTON_CTRL_Set();
                     break;
                 /* TEST STOP PRESSED */
                 case 3:
-                    SweepRobot_TestStopProc();
+                    SWRB_TEST_BUTTON_CTRL_Stop();
                     break;
                 /* TEST EXIT PRESSED */
                 case 4:
-                    SweepRobot_TestExitProc();
+                    SWRB_TEST_BUTTON_CTRL_Exit();
                     break;
                 default:
-                    gkeyCode = 0;
-                    gkeyCodeGetFinishFlag = 0;
-                break;
+                    break;
             }
+            gkeyCode = 0;
+            gkeyCodeGetFinishFlag = 0;
         }
-        OSTimeDlyHMSM(0,0,0,50);
+        OSTimeDlyHMSM(0,0,0,40);
     }
 }
 
@@ -399,7 +458,7 @@ void SWRB_ExceptionCheckTask(void *pdata)
 }
 */
 
-void SweepRobot_TestStartProc(void)
+void SweepRobot_PCBTestStartProc(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -431,9 +490,6 @@ void SweepRobot_TestStartProc(void)
         OS_ENTER_CRITICAL();
         OSTaskResume(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
-
-        gkeyCode = 0;
-        gkeyCodeGetFinishFlag = 0;
     }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
@@ -461,13 +517,10 @@ void SweepRobot_TestStartProc(void)
         printf("IRDA->OFF\r\n");
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "PRESS RESUME TO RESUME TEST\r\n");
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "TEST PAUSED\r\n");
-
-        gkeyCode = 0;
-        gkeyCodeGetFinishFlag = 0;
     }
 }
 
-void SweepRobot_TestSetProc(void)
+void SweepRobot_PCBTestSetProc(void)
 {
     WM_HWIN hItem;
 
@@ -510,7 +563,7 @@ void SweepRobot_TestSetSNPressedProc(void)
     }
 }
 
-void SweepRobot_TestStopProc(void)
+void SweepRobot_PCBTestStopProc(void)
 {
     OS_CPU_SR cpu_sr;
     int i;
@@ -539,19 +592,19 @@ void SweepRobot_TestStopProc(void)
         }
 
         SweepRobot_TestInitProc();
-        gkeyCode = 0;
-        gkeyCodeGetFinishFlag = 0;
     }
 }
 
-void SweepRobot_TestExitProc(void)
+void SweepRobot_PCBTestExitProc(void)
 {
     OS_CPU_SR cpu_sr;
 
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
+        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        
         SWRB_TestCheckboxEnable();
-
+        
         mf_close();
 
         OS_ENTER_CRITICAL();
@@ -570,9 +623,6 @@ void SweepRobot_TestExitProc(void)
 
         WM_HideWin(hWin_SWRB_MAIN);
         WM_ShowWin(hWin_SWRB_START);
-
-        gkeyCode = 0;
-        gkeyCodeGetFinishFlag = 0;
     }
 }
 
@@ -619,9 +669,6 @@ void SweepRobot_TestInitProc(void)
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
-
-    gkeyCode = 0;
-    gkeyCodeGetFinishFlag = 0;
 }
 
 static void SWRB_ValidTestTaskCntGet(void)
@@ -717,13 +764,15 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     OSTaskSuspend(OS_PRIO_SELF);
 
     /* FIXME: add this for test */
-//    SweepRobot_TestStartProc();
+//    SweepRobot_PCBTestStartProc();
 
     OS_EXIT_CRITICAL();
 }
 
 void SweepRobot_StartDlgPCBBtnClickProc(void)
 {
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_PCB;
+    
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 
     SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START);
@@ -735,6 +784,8 @@ void SweepRobot_StartDlgPCBBtnClickProc(void)
 
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
 {
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_POWER_STATION;
+    
     gSwrbTestRuningTaskPrio = SWRB_POWER_STATION_TEST_TASK_PRIO;
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_POWER_STATION);
@@ -786,6 +837,8 @@ void SweepRobot_PowerStationTestStartProc(void)
     }else{
         
     }
+    
+    
 }
 
 void SweepRobot_PowerStationTestStopProc(void)
@@ -828,6 +881,8 @@ void SweepRobot_PowerStationTestExitProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
+        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        
         printf("TEST->OFF\r\n");
         WM_HideWin(hWin_SWRB_POWER_STATION);
         WM_ShowWin(hWin_SWRB_START);

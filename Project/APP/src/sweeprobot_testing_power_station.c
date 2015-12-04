@@ -55,12 +55,19 @@ static void SweepRobot_PowerStationTestInit(void)
 
 static void SweepRobot_PowerStationTestSigGet(u8 codePos, u8 code)
 {
+    char *str;
+    
     if(!powerStation[codePos].validFlag){
         if(gIrDATmpCode == code){
             gSwrbTestStateMap &= ~(1<<(SWRB_TEST_PS_RX_LL_POS+codePos));
             powerStation[0].validFlag = 1;
             Checkbox_Set_State(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_LL+codePos, 1);
             Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_LL+codePos, GUI_GREEN, CHECKBOX_CI_DISABLED);
+            
+            str = mymalloc(SRAMIN, sizeof(char)*30);
+            sprintf(str, "RECEIVED CODE->%x\r\n",code);
+            MultiEdit_Add_Text(hWin_SWRB_POWER_STATION, ID_PS_MULTIEDIT_MAIN, str);
+            myfree(SRAMIN, str);
         }else{
             gSwrbTestStateMap |= (1<<(SWRB_TEST_PS_RX_LL_POS+codePos));
         }
@@ -88,9 +95,9 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
 
         if(powerStation24V.state == 1){
             gSwrbTestStateMap &= ~(1<<SWRB_TEST_PS_24V_STATE_POS);
-            powerStation24V.validFlag = 1;
             Checkbox_Set_State(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_24V, 1);
             Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_24V, GUI_GREEN, CHECKBOX_CI_DISABLED);
+            powerStation24V.validFlag = 1;
         }else{
             gSwrbTestStateMap |= (1<<SWRB_TEST_PS_24V_STATE_POS);
         }
@@ -115,7 +122,6 @@ static void SweepRobot_PowerStationTestProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 gIrDATmpCode = usartRxNum;
-//                    Edit_Set_Value(ID_EDIT_U1+i, powerStation[i].code);
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 break;
@@ -150,30 +156,20 @@ static void SweepRobot_PowerStationTestProc(void)
     }
 }
 
-//static void SweepRobot_PowerStationTestOverTimeProc(void)
-//{
-//    
-//}
-
 void SweepRobot_PowerStationTestTask(void *pdata)
 {
     while(1){
-        
-//        if(!Checkbox_Get_State(ID_CHECKBOX_IRDA)){
-//            SWRB_NextTestTaskResumePreAct(SWRB_POWER_STATION_TEST_TASK_PRIO);
-//        }else{
-            gSwrbTestTaskRunCnt++;
+        gSwrbTestTaskRunCnt++;
 
-            if(gSwrbTestTaskRunCnt == 1){
-                SweepRobot_PowerStationTestInit();
-            }
+        if(gSwrbTestTaskRunCnt == 1){
+            SweepRobot_PowerStationTestInit();
+        }
 
-            if(gSwrbTestTaskRunCnt > 1){
-                SweepRobot_PowerStationTestProc();
-            }
+        if(gSwrbTestTaskRunCnt > 1){
+            SweepRobot_PowerStationTestProc();
+        }
 
-            OSTimeDlyHMSM(0,0,0,50);
-//        }
+        OSTimeDlyHMSM(0,0,0,50);
     }
 }
 

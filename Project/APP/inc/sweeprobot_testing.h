@@ -99,6 +99,12 @@ enum SWRB_TEST_STATE{
   SWRB_TEST_STATE_BOUND,
 };
 
+enum SWRB_TEST_SELECT{
+    SWRB_TEST_SELECT_NONE,
+    SWRB_TEST_SELECT_PCB,
+    SWRB_TEST_SELECT_POWER_STATION,
+};
+
 enum SWRB_TEST_MODE{
     SWRB_TEST_MODE_IDLE,
     SWRB_TEST_MODE_SET,
@@ -295,6 +301,7 @@ enum SWRB_TEST_TASK_PRIO{
 extern u8 usartRxFlag;
 extern int usartRxNum;
 
+extern enum SWRB_TEST_SELECT gSwrbTestSelectFlag;
 extern enum SWRB_TEST_MODE gSwrbTestMode;
 extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
@@ -313,10 +320,10 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);
 void SWRB_TestDataFileWriteDate(RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 
-void SweepRobot_TestStartProc(void);
-void SweepRobot_TestSetProc(void);
-void SweepRobot_TestStopProc(void);
-void SweepRobot_TestExitProc(void);
+void SweepRobot_PCBTestStartProc(void);
+void SweepRobot_PCBTestSetProc(void);
+void SweepRobot_PCBTestStopProc(void);
+void SweepRobot_PCBTestExitProc(void);
 
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);

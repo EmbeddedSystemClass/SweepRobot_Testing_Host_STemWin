@@ -326,7 +326,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-                        SweepRobot_TestStartProc();
+                        SweepRobot_PCBTestStartProc();
                         break;
                 }
                 break;
@@ -335,7 +335,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-                        SweepRobot_TestSetProc();
+                        SweepRobot_PCBTestSetProc();
                         break;
                 }
                 break;
@@ -344,7 +344,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-//                        SweepRobot_TestSetProc();
+//                        SweepRobot_PCBTestSetProc();
                         break;
                 }
                 break;
@@ -353,7 +353,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-                        SweepRobot_TestStopProc();
+                        SweepRobot_PCBTestStopProc();
                         break;
                 }
                 break;
@@ -362,7 +362,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-                        SweepRobot_TestExitProc();
+                        SweepRobot_PCBTestExitProc();
                         break;
                 }
                 break;
