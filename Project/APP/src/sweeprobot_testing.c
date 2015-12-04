@@ -1,3 +1,6 @@
+
+
+
 #include "sweeprobot_testing.h"
 #include "sweeprobot_testing_conf.h"
 
@@ -6,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  50
+#define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  60
 
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
@@ -571,7 +574,7 @@ void SweepRobot_TestInitProc(void)
 
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestCtrlIdlePos();
-    SweepRobot_CollisionCtrlOff();
+    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlIdlePos();
     SweepRobot_AshTrayTestInsCtrlIdlePos();
 
@@ -768,6 +771,7 @@ void SweepRobot_PowerStationTestStopProc(void)
             hItem = WM_GetDialogItem(hWin_SWRB_POWER_STATION, i);
             WM_EnableWindow(hItem);
             Checkbox_Set_State(hWin_SWRB_POWER_STATION, i, 0);
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, i, GUI_LIGHTGRAY, CHECKBOX_CI_DISABLED);
             WM_DisableWindow(hItem);
         }
 

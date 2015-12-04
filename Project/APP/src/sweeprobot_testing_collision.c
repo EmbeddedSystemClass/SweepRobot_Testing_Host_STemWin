@@ -17,13 +17,6 @@
     
 #define COLLISION_CHAN_NUM  4
 
-enum CollisionChan{
-    COLLISION_CHAN_L,
-    COLLISION_CHAN_FL,
-    COLLISION_CHAN_R,
-    COLLISION_CHAN_FR,
-};
-
 static COLLISION_TestTypeDef collision[COLLISION_CHAN_NUM];
 
 static void SweepRobot_CollisionTestGPIOInit(void)
@@ -50,20 +43,52 @@ static void SweepRobot_CollisionTestGPIOInit(void)
     GPIO_Init(COLLISION_FRONT_TEST_CTRL_GPIO, &GPIO_InitStructure);
 }
 
-void SweepRobot_CollisionCtrlOn(void)
+void SweepRobot_CollisionCtrlOn(enum CollisionChan chan)
 {
-    GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
-    GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
-    GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
-    GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+    switch(chan){
+        case COLLISION_CHAN_L:
+            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+            break;
+        case COLLISION_CHAN_FL:
+            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
+            break;
+        case COLLISION_CHAN_R:
+            GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
+            break;
+        case COLLISION_CHAN_FR:
+            GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+            break;
+        case COLLISION_CHAN_ALL:
+            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
+            GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
+            GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+            break;
+    }
 }
 
-void SweepRobot_CollisionCtrlOff(void)
+void SweepRobot_CollisionCtrlOff(enum CollisionChan chan)
 {
-    GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
-    GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
-    GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
-    GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+    switch(chan){
+        case COLLISION_CHAN_L:
+            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+            break;
+        case COLLISION_CHAN_FL:
+            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
+            break;
+        case COLLISION_CHAN_R:
+            GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
+            break;
+        case COLLISION_CHAN_FR:
+            GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+            break;
+        case COLLISION_CHAN_ALL:
+            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
+            GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
+            GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+            break;
+    }
 }
 
 static void SweepRobot_CollisionTestInit(void)
@@ -79,13 +104,14 @@ static void SweepRobot_CollisionTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     
-    SweepRobot_CollisionCtrlOn();
-
     OSTimeDlyHMSM(0,0,1,0);
 
     for(i=0;i<COLLISION_CHAN_NUM;i++){
-        collision[i].value = 0;
-        collision[i].validCnt = 0;
+        collision[i].onValue = 0;
+        collision[i].offValue = 0;
+        collision[i].onValidCnt = 0;
+        collision[i].offValidCnt = 0;
+        collision[i].onValidFlag = 0;
         collision[i].validFlag = 0;
     }
 }
@@ -97,36 +123,67 @@ static void SweepRobot_CollisionTestProc(void)
     
     for(i=0;i<COLLISION_CHAN_NUM;i++){
         if(!collision[i].validFlag){
-            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                printf("COLLISION->READ=%d\r\n",i);
-                OSTimeDlyHMSM(0,0,0,6);
-                if(usartRxFlag){
-                    Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
-                    collision[i].value = usartRxNum;
-                    usartRxNum = 0;
-                    usartRxFlag = 0;
-                    break;
-                }else{
-                    continue;
+            if(!collision[i].onValidFlag){
+                SweepRobot_CollisionCtrlOn((enum CollisionChan)i);
+                OSTimeDlyHMSM(0,0,0,2);
+                for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                    printf("COLLISION->READ=%d\r\n",i);
+                    OSTimeDlyHMSM(0,0,0,6);
+                    if(usartRxFlag){
+                        Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
+                        collision[i].onValue = usartRxNum;
+                        usartRxNum = 0;
+                        usartRxFlag = 0;
+                        break;
+                    }else{
+                        continue;
+                    }
                 }
-            }
 
-            if(!collision[i].value){
-                gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+i));
-                collision[i].validCnt++;
+                if(!collision[i].onValue){
+                    collision[i].onValidCnt++;
+                }else{
+                    gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
+                }
+
+                if(collision[i].onValidCnt){
+                    collision[i].onValidFlag = 1;
+                }
             }else{
-                gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
-            }
+                SweepRobot_CollisionCtrlOff((enum CollisionChan)i);
+                OSTimeDlyHMSM(0,0,0,2);
+                for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                    printf("COLLISION->READ=%d\r\n",i);
+                    OSTimeDlyHMSM(0,0,0,6);
+                    if(usartRxFlag){
+                        Edit_Set_Value(ID_MAIN_EDIT_D1+i, usartRxNum);
+                        collision[i].offValue = usartRxNum;
+                        usartRxNum = 0;
+                        usartRxFlag = 0;
+                        break;
+                    }else{
+                        continue;
+                    }
+                }
 
-            if(collision[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
-                collision[i].validFlag = 1;
+                if(collision[i].offValue){
+                    collision[i].offValidCnt++;
+                    gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+i));
+                }else{
+                    gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
+                }
+
+                if(collision[i].offValidCnt){
+                    collision[i].validFlag = 1;
+                }
             }
         }
     }
     
     if(collision[COLLISION_CHAN_L].validFlag && collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_R].validFlag && collision[COLLISION_CHAN_FR].validFlag){
         gSwrbTestTaskRunCnt = 0;
-        SweepRobot_CollisionCtrlOff();
+        
+        SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
 
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
         
@@ -147,8 +204,9 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    SweepRobot_CollisionCtrlOff();
-
+    
+    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
+    
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
@@ -212,11 +270,16 @@ void Collision_TestDataSave(void)
     u8 i;
     
     for(i=0;i<COLLISION_CHAN_NUM;i++){
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_VALUE_POS+i] = collision[i].value;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_ON_VALUE_POS+i] = collision[i].onValue;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_OFF_VALUE_POS+i] = collision[i].offValue;
     }
     
-    SWRB_TestDataFileWriteData("COLLISION->L_Value=", collision[COLLISION_CHAN_L].value, 1);
-    SWRB_TestDataFileWriteData("COLLISION->FL_Value=", collision[COLLISION_CHAN_FL].value, 1);
-    SWRB_TestDataFileWriteData("COLLISION->R_Value=", collision[COLLISION_CHAN_R].value, 1);
-    SWRB_TestDataFileWriteData("COLLISION->FR_Value=", collision[COLLISION_CHAN_FR].value, 1);
+    SWRB_TestDataFileWriteData("COLLISION->L_onValue=", collision[COLLISION_CHAN_L].onValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->FL_onValue=", collision[COLLISION_CHAN_FL].onValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->R_onValue=", collision[COLLISION_CHAN_R].onValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->FR_onValue=", collision[COLLISION_CHAN_FR].onValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->L_offValue=", collision[COLLISION_CHAN_L].offValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->FL_offValue=", collision[COLLISION_CHAN_FL].offValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->R_offValue=", collision[COLLISION_CHAN_R].offValue, 1);
+    SWRB_TestDataFileWriteData("COLLISION->FR_offValue=", collision[COLLISION_CHAN_FR].offValue, 1);
 }

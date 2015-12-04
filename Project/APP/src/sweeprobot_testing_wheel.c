@@ -95,7 +95,7 @@ static void SWRB_WheelTestProc(void)
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, "WHEEL OK");
-        Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+        Checkbox_Set_Box_Back_Color(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
@@ -125,7 +125,7 @@ static void SWRB_WheelTestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, "WHEEL ERROR");
-    Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+    Checkbox_Set_Box_Back_Color(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
@@ -140,7 +140,8 @@ void SweepRobot_WheelTestTask(void *pdata)
         }else{
             gSwrbTestTaskRunCnt++;
             
-            Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_GREEN, CHECKBOX_CI_ENABLED);
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, GUI_GREEN, CHECKBOX_CI_ENABLED);
+            
 
             if(gSwrbTestTaskRunCnt == 1){
                 SWRB_WheelTestInit();

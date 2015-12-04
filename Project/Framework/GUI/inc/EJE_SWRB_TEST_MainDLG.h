@@ -190,7 +190,7 @@ void SWRB_TestCheckboxDisable(void);
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxcolor);
 void Checkbox_Set_TextAlign(int checkboxId, int align);
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor);
-void Checkbox_Set_Box_Back_Color(int checkboxId, GUI_COLOR boxBkColor, int Index);
+void Checkbox_Set_Box_Back_Color(WM_HWIN hWin, int checkboxId, GUI_COLOR boxBkColor, int Index);
 void MULTIEDIT_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s);

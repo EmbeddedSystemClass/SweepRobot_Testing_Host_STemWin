@@ -49,6 +49,7 @@ static void SweepRobot_PowerStationTestInit(void)
     
     for(i=ID_PS_CHECKBOX_LL;i<=ID_PS_CHECKBOX_24V;i++){
         Checkbox_Set_State(hWin_SWRB_POWER_STATION, i, 0);
+        Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, i, GUI_LIGHTGRAY, CHECKBOX_CI_DISABLED);
     }
 }
 
@@ -59,6 +60,7 @@ static void SweepRobot_PowerStationTestSigGet(u8 codePos, u8 code)
             gSwrbTestStateMap &= ~(1<<(SWRB_TEST_PS_RX_LL_POS+codePos));
             powerStation[0].validFlag = 1;
             Checkbox_Set_State(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_LL+codePos, 1);
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_LL+codePos, GUI_GREEN, CHECKBOX_CI_DISABLED);
         }else{
             gSwrbTestStateMap |= (1<<(SWRB_TEST_PS_RX_LL_POS+codePos));
         }
@@ -88,6 +90,7 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
             gSwrbTestStateMap &= ~(1<<SWRB_TEST_PS_24V_STATE_POS);
             powerStation24V.validFlag = 1;
             Checkbox_Set_State(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_24V, 1);
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_24V, GUI_GREEN, CHECKBOX_CI_DISABLED);
         }else{
             gSwrbTestStateMap |= (1<<SWRB_TEST_PS_24V_STATE_POS);
         }

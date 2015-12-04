@@ -138,6 +138,12 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetFocussable(hItem, DISABLE);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
+
+static void Checkbox_Init(WM_HWIN hItem)
+{
+    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
+}
 // USER END
 
 /*********************************************************************
@@ -227,80 +233,80 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL);
     CHECKBOX_SetText(hItem, "WHEEL");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
-    CHECKBOX_SetDefaultSkin(CHECKBOX_SKIN_FLEX);
+    CHECKBOX_SetDefaultSkinClassic();
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxSBrush Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_BRUSH);
     CHECKBOX_SetText(hItem, "BRUSH");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxFan Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_FAN);
     CHECKBOX_SetText(hItem, "FAN");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxIFRD Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_IFRD);
     CHECKBOX_SetText(hItem, "IFRD");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxCollision Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_COLLISION);
     CHECKBOX_SetText(hItem, "COLLISION");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxWheelFloat Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL_FLOAT);
     CHECKBOX_SetText(hItem, "WHEEL FLOAT");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxAshTray Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_ASH_TRAY);
     CHECKBOX_SetText(hItem, "ASH TRAY");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxUniWheel Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_UNIWHEEL);
     CHECKBOX_SetText(hItem, "UNIWHEEL");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxKey Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_KEY);
     CHECKBOX_SetText(hItem, "KEY");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxIRDA Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_IRDA);
     CHECKBOX_SetText(hItem, "IRDA");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxBuzzer Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_BUZZER);
     CHECKBOX_SetText(hItem, "BUZZER");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxRgbLED Test'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_RGB_LED);
     CHECKBOX_SetText(hItem, "RGB LED");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
     //
     // Initialization of 'cbxCharge'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_CHARGE);
     CHECKBOX_SetText(hItem, "CHARGE");
-    CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
+    Checkbox_Init(hItem);
 //    //
 //    // Initialization of 'Graph'
 //    //
@@ -1043,10 +1049,10 @@ void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor)
     CHECKBOX_SetBkColor(hItem, checkboxbkcolor);
 }
 
-void Checkbox_Set_Box_Back_Color(int checkboxId, GUI_COLOR boxBkColor, int Index)
+void Checkbox_Set_Box_Back_Color(WM_HWIN hWin, int checkboxId, GUI_COLOR boxBkColor, int Index)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin, checkboxId);
     CHECKBOX_SetBoxBkColor(hItem, boxBkColor, Index);
 }
 

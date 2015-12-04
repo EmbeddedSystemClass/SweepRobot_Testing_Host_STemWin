@@ -132,7 +132,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IFRD, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IFRD, "IFRD OK");
-        Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+        Checkbox_Set_Box_Back_Color(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
@@ -191,7 +191,7 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IFRD, "IFRD ERROR");
-    Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+    Checkbox_Set_Box_Back_Color(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
@@ -205,7 +205,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
         }else{
             gSwrbTestTaskRunCnt++;
             
-            Checkbox_Set_Box_Back_Color(ID_MAIN_CHECKBOX_IFRD, GUI_GREEN, CHECKBOX_CI_ENABLED);
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IFRD, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_IFRDTestInit();
