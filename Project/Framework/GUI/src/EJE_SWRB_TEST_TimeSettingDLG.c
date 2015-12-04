@@ -159,20 +159,6 @@ static void ListWheel_SelChangeProc(WM_HWIN hWin, int lwId, int editId)
     myfree(SRAMIN, lwBuf);
 }
 
-static void ListWheel_GetText(WM_HWIN *hWin,int id, char *str)
-{
-    WM_HWIN hItem;
-    int     lwItemIndex;
-    char    *lwBuf;
-   
-    hItem = WM_GetDialogItem(*hWin, id);
-    lwItemIndex = LISTWHEEL_GetPos(hItem);
-    lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
-    LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-    mymemcpy(str,lwBuf,1);
-    myfree(SRAMIN, lwBuf);
-}
-
 static void ListWheel_ResetToLastPos(WM_HWIN hWin)
 {
     WM_HWIN hItem;
@@ -552,7 +538,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             // USER START (Optionally insert code for reacting on notification message)
-                            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SET_BUTTON_SNSET);
+                            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
                             BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);

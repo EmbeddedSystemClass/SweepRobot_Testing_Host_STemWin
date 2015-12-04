@@ -38,7 +38,7 @@ static u8 gkeyCodeGetFinishFlag = 0;
 static RTC_TimeTypeDef rtcTime;
 static RTC_DateTypeDef rtcDate;
 
-static WM_MESSAGE *pWmMsg;
+//static WM_MESSAGE *pWmMsg;
 
 static void Start_Task(void *pdata);
 static void emWin_Maintask(void *pdata);
@@ -48,7 +48,8 @@ static void Key_Task(void *pdata);
 static void Rtc_Task(void *pdata);
 static void Usart_Task(void *pdata);
 static void SWRB_TestCtrlTask(void *pdata);
-static void SWRB_ExceptionCheckTask(void *pdata);
+/* TODO: Add Exception Check */
+//static void SWRB_ExceptionCheckTask(void *pdata);
 
 static FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode);
 
@@ -97,6 +98,7 @@ void Start_Task(void *pdata)
 
     OS_ENTER_CRITICAL();
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWIN_TASK_PRIO);
+    /* TODO: Add Exception Check */
 //    OSTaskCreate(SWRB_ExceptionCheckTask, (void*)0,(OS_STK*)&SWRB_TEST_EXCEPTION_CHECK_TASK_STK[SWRB_TEST_EXCEPTION_CHECK_STK_SIZE-1],SWRB_TEST_EXCEPTION_CHECK_TASK_PRIO);
     OS_EXIT_CRITICAL();
 
@@ -137,7 +139,10 @@ void emWin_Maintask(void *pdata)
     OS_EXIT_CRITICAL();
 
     gSwrbTestValidTaskCnt = 0;
+    
     SweepRobot_TestCkbStateSet(1);
+    SWRB_ListWheelRTCDateUpdate(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_LISTWHEEL_DAY);
+    SWRB_ListWheelRTCDateUpdate(hWin_SWRB_TIMESETTING, ID_TIMESET_LISTWHEEL_YEAR, ID_TIMESET_LISTWHEEL_MONTH, ID_TIMESET_LISTWHEEL_DAY);
 
     while(1)
     {
@@ -376,6 +381,8 @@ void SWRB_TestCtrlTask(void *pdata)
     }
 }
 
+/* TODO: Add Exception Check */
+/*
 void SWRB_ExceptionCheckTask(void *pdata)
 {
     while(1){
@@ -387,6 +394,7 @@ void SWRB_ExceptionCheckTask(void *pdata)
         OSTimeDlyHMSM(0,0,1,0);
     }
 }
+*/
 
 void SweepRobot_TestStartProc(void)
 {
@@ -461,7 +469,7 @@ void SweepRobot_TestSetProc(void)
         gSwrbTestMode = SWRB_TEST_MODE_SET;
         gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 
-        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SET_BUTTON_SNSET);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
         BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
         BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
         BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
@@ -481,7 +489,7 @@ void SweepRobot_TestSetSNPressedProc(void)
         gSwrbTestMode = SWRB_TEST_MODE_SET;
         gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 
-        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SET_BUTTON_SNSET);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
         BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
         BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
         BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);

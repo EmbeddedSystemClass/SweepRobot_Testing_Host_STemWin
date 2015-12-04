@@ -231,16 +231,6 @@ enum SWRB_TEST_DATA_POS{
     SWRB_TEST_DATA_POWER_STATION_24V_STATE_POS,
 };
 
-/*
-    PWR_STATION_BACKOFF_SIG_L   = 0x46,
-    PWR_STATION_BACKOFF_SIG_R   = 0x45,
-    PWR_STATION_HOME_SIG_LL     = 0x41,
-    PWR_STATION_HOME_SIG_LS     = 0x44,
-    PWR_STATION_HOME_SIG_RL     = 0x43,
-    PWR_STATION_HOME_SIG_RS     = 0x42,
-    PWR_STATION_HOME_SIG_CENTER = 0x40,
-*/
-
 enum SWRB_TEST_TASK_PRIO{
 
     KEY_TASK_PRIO=3,
@@ -271,15 +261,13 @@ enum SWRB_TEST_TASK_PRIO{
     TASK_PRIO_BOUND,
 };
 
-#define SWRB_TEST_TASK_PRIO_BOUND_MINUS_NUM     7
-
 #define START_STK_SIZE                      128
 #define TOUCH_STK_SIZE                      128
 #define KEY_STK_SIZE                        128
 #define USART_STK_SIZE                      512
 #define RTC_STK_SIZE                        128
-#define EMWINDEMO_STK_SIZE		            1024+512
-#define LED_STK_SIZE				        64
+#define EMWINDEMO_STK_SIZE		            1024
+#define LED_STK_SIZE				        128
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
@@ -293,12 +281,9 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_KEY_TEST_STK_SIZE              256
 #define SWRB_IRDA_TEST_STK_SIZE             256
 #define SWRB_BUZZER_TEST_STK_SIZE           256
-#define SWRB_RGB_LED_TEST_STK_SIZE          256
+#define SWRB_RGB_LED_TEST_STK_SIZE          128
 #define SWRB_CHARGE_TEST_STK_SIZE           256
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
-
-#define KEYMSG_Q_NUM	                    1
-#define DATAMSG_Q_NUM	                    4
 
 #define SWRB_TEST_USART_READ_TIMES          3
 #define SWRB_TEST_VALID_COMP_TIMES          3

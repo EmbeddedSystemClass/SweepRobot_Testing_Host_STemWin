@@ -112,7 +112,7 @@ static void Button_Init(WM_HWIN hItem)
 static void _cbDialog(WM_MESSAGE * pMsg) {
   const void * pData;
   WM_HWIN      hItem;
-  MULTIPAGE_Handle hMultiPage;
+//  MULTIPAGE_Handle hMultiPage;
   U32          FileSize;
   int          NCode;
   int          Id;
