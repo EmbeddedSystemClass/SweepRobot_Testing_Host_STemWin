@@ -13,8 +13,8 @@
 #ifndef __EJE_SWRB_TEST_MAINDLG_H
 #define __EJE_SWRB_TEST_MAINDLG_H
 
-// USER START (Optionally insert additional includes)
-// USER END
+
+
 
 #include "DIALOG.h"
 #include "stm32f4xx.h"
@@ -83,7 +83,7 @@
 #define ID_MAIN_BOUND   (ID_START_BOUND + 0x50)
 
 
-// USER START (Optionally insert additional defines)
+
 enum MainDLG_BUTTON{
     ID_MAIN_BUTTON_START = ID_MAIN_BUTTON_1,
     ID_MAIN_BUTTON_SET,
@@ -148,7 +148,7 @@ enum GUI_ID_MAIN_EDIT{
     ID_MAIN_EDIT_BOUND,
 };
 
-// USER END
+
 
 extern WM_HWIN hWin_SWRB_MAIN;
 extern WM_HWIN hWin_SWRB_RGB_LED;
@@ -168,7 +168,7 @@ WM_HWIN CreateEJE_SWRB_TEST_MainDLG(void);
 WM_HWIN CreateRGB_LED_TestDLG(void);
 WM_HWIN CreateBUZZER_TestDLG(void);
 
-// USER START (Optionally insert additional public code)
+
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str);
 void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Button_SetEnable(WM_HWIN hWin, int buttonId);
@@ -195,11 +195,9 @@ void MULTIEDIT_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor);
-
 void SweepRobot_MainTestIndicateBtnToggle(void);
-
-// USER END
-
+void SWRB_WM_EnableWindow(WM_HWIN hWin, int id);
+void SWRB_WM_DisableWindow(WM_HWIN hWin, int id);
 
 #endif
 /*************************** End of file ****************************/

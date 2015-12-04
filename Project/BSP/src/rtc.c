@@ -78,7 +78,7 @@ void RTC_Set_AlarmA(u8 week,u8 hour,u8 min,u8 sec)
     RTC_AlarmTypeDef RTC_AlarmTypeInitStructure;
     RTC_TimeTypeDef RTC_TimeTypeInitStructure;
 
-    RTC_AlarmCmd(RTC_Alarm_A,DISABLE);//关闭闹钟A
+    RTC_AlarmCmd(RTC_Alarm_A,DISABLE);
 
     RTC_TimeTypeInitStructure.RTC_Hours=hour;//小时
     RTC_TimeTypeInitStructure.RTC_Minutes=min;//分钟

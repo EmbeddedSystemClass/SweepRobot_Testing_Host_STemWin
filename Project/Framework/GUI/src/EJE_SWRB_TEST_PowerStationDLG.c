@@ -18,9 +18,6 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
-
 #include "sweeprobot_testing.h"
 
 #include "eje_logo_char.h"
@@ -32,9 +29,8 @@
 *
 **********************************************************************
 */
+
 WM_HWIN hWin_SWRB_POWER_STATION;
-// USER START (Optionally insert additional defines)
-// USER END
 
 /*********************************************************************
 *
@@ -42,39 +38,33 @@ WM_HWIN hWin_SWRB_POWER_STATION;
 *
 **********************************************************************
 */
-/*********************************************************************
-*
-*       _acImage_0, "D:\works\project\SweepRobot_Testing_Project\software\SweepRobot_Testing_Host\Project\Framework\GUI\res\pic\PowerStation157x200.bmp", ID_PS_IMAGE_0_IMAGE_0
-*/
-
-// USER START (Optionally insert additional static data)
-// USER END
 
 /*********************************************************************
 *
 *       _aDialogCreate
 */
+
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "Window", ID_PS_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-  { IMAGE_CreateIndirect, "Image", ID_PS_IMAGE_PS, 305, 44, 150, 200, 0, 0, 0 },
+//  { IMAGE_CreateIndirect, "Image", ID_PS_IMAGE_PS, 305, 44, 150, 200, 0, 0, 0 },
   { BUTTON_CreateIndirect, "btnStart", ID_PS_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnSet", ID_PS_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnStop", ID_PS_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_PS_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnIndicate", ID_PS_BUTTON_INDICATE, 200, 40, 30, 30, 0, 0x0, 0 },
-//  { MULTIPAGE_CreateIndirect, "Multipage", ID_PS_MULTIPAGE_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_LL(0x41)", ID_PS_CHECKBOX_LL, 480, 400, 150, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_LS(0x44)", ID_PS_CHECKBOX_LS, 480, 340, 150, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_L(0x46)", ID_PS_CHECKBOX_L, 480, 280, 150, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_M(0x40)", ID_PS_CHECKBOX_M, 340, 280, 120, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_R(0x45)", ID_PS_CHECKBOX_R, 200, 279, 120, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_RS(0x42)", ID_PS_CHECKBOX_RS, 200, 340, 150, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "Sig_RL(0x43)", ID_PS_CHECKBOX_RL, 200, 400, 120, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "24V Out", ID_PS_CHECKBOX_24V, 480, 90, 120, 30, 0, 0x0, 0 },
-  { CHECKBOX_CreateIndirect, "PowerStation", ID_PS_CHECKBOX_INDICATE, 480, 40, 200, 30, 0, 0x0, 0 },
-  { MULTIEDIT_CreateIndirect, "MultiEdit", ID_PS_MULTIEDIT_MAIN, 20, 40, 130, 400, 0, 0x0, 0 },
-  // USER START (Optionally insert additional widgets)
-  // USER END
+  { BUTTON_CreateIndirect, "btnIndicate", ID_PS_BUTTON_INDICATE, 470, 50, 30, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_LL(0x41)", ID_PS_CHECKBOX_LL, 530, 135, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_LS(0x44)", ID_PS_CHECKBOX_LS, 530, 180, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_L(0x46)", ID_PS_CHECKBOX_L, 530, 225, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_M(0x40)", ID_PS_CHECKBOX_M, 530, 270, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_R(0x45)", ID_PS_CHECKBOX_R, 530, 315, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_RS(0x42)", ID_PS_CHECKBOX_RS, 530, 360, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "Sig_RL(0x43)", ID_PS_CHECKBOX_RL, 530, 405, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "24V Out", ID_PS_CHECKBOX_24V, 530, 90, 120, 30, 0, 0x0, 0 },
+  { CHECKBOX_CreateIndirect, "PowerStation", ID_PS_CHECKBOX_INDICATE, 530, 40, 120, 30, 0, 0x0, 0 },
+  { MULTIEDIT_CreateIndirect, "MultiEdit", ID_PS_MULTIEDIT_MAIN, 20, 40, 130, 395, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_PS_GRAPH_MAIN, 170, 40, 340, 395, 0, 0x0, 0 },
+  { PROGBAR_CreateIndirect, "Progbar", ID_PS_PROGBAR_MAIN, 20, 450, 630, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "PowerStation Test", ID_PS_TEXT_TITLE, 20, 8, 200, 30, 0, 0x0, 0 },
 };
 
 /*********************************************************************
@@ -96,14 +86,12 @@ static const void * _GetImageById(U32 Id, U32 * pSize) {
   return NULL;
 }
 
-// USER START (Optionally insert additional static code)
 static void Button_Init(WM_HWIN hItem)
 {
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     BUTTON_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
-// USER END
 
 /*********************************************************************
 *
@@ -116,9 +104,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   U32          FileSize;
   int          NCode;
   int          Id;
-  // USER START (Optionally insert additional variables)
   int          i;
-  // USER END
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
@@ -141,8 +127,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_START);
     BUTTON_SetText(hItem, "START");
     Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_USER_102051000);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_USER_102051000);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTBLUE);
     //
     // Initialization of 'btnSet'
     //
@@ -150,6 +136,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetText(hItem, "SET");
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTCYAN);
     //
     // Initialization of 'btnStop'
     //
@@ -157,6 +144,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetText(hItem, "STOP");
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
     //
     // Initialization of 'btnExit'
     //
@@ -164,12 +152,32 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetText(hItem, "EXIT");
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
     //
     // Initialization of 'btnIndicate'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_INDICATE);
+    WM_BringToTop(hItem);
     BUTTON_SetText(hItem, " ");
     Button_Init(hItem);
+    BUTTON_SetFocussable(hItem, 0);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_TEXT_TITLE);
+    TEXT_SetFont(hItem, GUI_FONT_24B_ASCII);
+    TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
+    TEXT_SetText(hItem, "PowerStation Test");
+    //
+    // Initialization of 'Graph'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_GRAPH_MAIN);
+    GRAPH_SetBorder(hItem, 40, 10, 10, 40);
+    GRAPH_SCALE_Create(10, GUI_TA_HCENTER|GUI_TA_VCENTER, GRAPH_SCALE_CF_HORIZONTAL, 10);
+    GRAPH_SCALE_Create(10, GUI_TA_HCENTER|GUI_TA_VCENTER, GRAPH_SCALE_CF_VERTICAL, 10);
+    hGraphPowerStation = GRAPH_DATA_YT_Create(GUI_RED, 500, pDataGraph, 10);
+    for(i=0;i<=100;i++)
+        GRAPH_DATA_YT_AddValue(hGraphPowerStation, i);
 //    WM_DisableWindow(hItem);
     //
     // Initialization of 'Checkbox'
@@ -209,11 +217,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         }
     }
     //
+    // Initialization of 'PROGBAR'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_PROGBAR_MAIN);
+    PROGBAR_SetSkinClassic(hItem);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+    //
     //Hide Dialog after initial
     //
     WM_HideWin(pMsg->hWin);
-    // USER START (Optionally insert additional code for further widget initialization)
-    // USER END
     break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
@@ -222,221 +234,138 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         case ID_PS_MULTIPAGE_MAIN: // Notifications sent by 'Multipage'
             switch(NCode) {
                 case WM_NOTIFICATION_CLICKED:
-                // USER START (Optionally insert code for reacting on notification message)
-                // USER END
                 break;
                 case WM_NOTIFICATION_RELEASED:
-                // USER START (Optionally insert code for reacting on notification message)
-                // USER END
                 break;
                 case WM_NOTIFICATION_MOVED_OUT:
-                // USER START (Optionally insert code for reacting on notification message)
-                // USER END
                 break;
                 case WM_NOTIFICATION_VALUE_CHANGED:
-                // USER START (Optionally insert code for reacting on notification message)
-                // USER END
                 break;
-                // USER START (Optionally insert additional code for further notification handling)
-                // USER END
             }
             break;
     case ID_PS_BUTTON_START: // Notifications sent by 'btnStart'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
         SweepRobot_PowerStationTestStartProc();
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_BUTTON_SET: // Notifications sent by 'btnSet'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_BUTTON_STOP: // Notifications sent by 'btnStop'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
         SweepRobot_PowerStationTestStopProc();
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_BUTTON_EXIT: // Notifications sent by 'btnExit'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
         SweepRobot_PowerStationTestExitProc();
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_LL: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_LS: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_L: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_M: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_R: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_RS: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_PS_CHECKBOX_RL: // Notifications sent by 'Checkbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
-    // USER START (Optionally insert additional code for further Ids)
-    // USER END
     }
     break;
-  // USER START (Optionally insert additional message handling)
-  // USER END
   default:
     WM_DefaultProc(pMsg);
     break;
   }
 }
+
+
+/*********************************************************************
+*
+*       Public data
+*
+**********************************************************************
+*/
+
+GRAPH_DATA_Handle hGraphPowerStation;
+int16_t pDataGraph[500] = {0x0100, 0x0010, 0x1100, 0x0011, 0x0101, 0x01101, 0x0000, 0x0010, 0x0011, 0x0110};
 
 /*********************************************************************
 *
@@ -448,6 +377,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 *       CreateWindow
 */
+
 WM_HWIN CreateEJE_SWRB_TEST_PowerStationDLG(void)
 {
   WM_HWIN hWin;
@@ -455,8 +385,5 @@ WM_HWIN CreateEJE_SWRB_TEST_PowerStationDLG(void)
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
   return hWin;
 }
-
-// USER START (Optionally insert additional public code)
-// USER END
 
 /*************************** End of file ****************************/

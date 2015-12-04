@@ -18,8 +18,8 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
+
+
 
 #include "sweeprobot_testing.h"
 
@@ -30,9 +30,9 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional defines)
 
-// USER END
+
+
 
 /*********************************************************************
 *
@@ -41,12 +41,12 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional static data)
+
 WM_HWIN hWin_SWRB_SNSETTING;
 
 static int  lastLwIndex[6];
 static RTC_DateTypeDef rtcDate;
-// USER END
+
 
 /*********************************************************************
 *
@@ -78,8 +78,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { EDIT_CreateIndirect, "editSN1", ID_SNSET_EDIT_SN1, 350, 300, 110, 40, 0 ,0x0, 0 },
     { EDIT_CreateIndirect, "editSN2", ID_SNSET_EDIT_SN2, 460, 300, 110, 40, 0 ,0x0, 0 },
     { EDIT_CreateIndirect, "editSN3", ID_SNSET_EDIT_SN3, 570, 300, 110, 40, 0 ,0x0, 0 },
-    // USER START (Optionally insert additional widgets)
-    // USER END
+
+    
 };
 
 /*********************************************************************
@@ -93,7 +93,7 @@ static void ListWheel_ResetToLastPos(WM_HWIN hWin);
 static void ListWheel_ResetToZero(WM_HWIN hWin);
 static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str);
 
-// USER START (Optionally insert additional static code)
+
 static void Button_Init(WM_HWIN hItem)
 {
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -285,7 +285,7 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
 }
 
 
-// USER END
+
 
 /*********************************************************************
 *
@@ -295,9 +295,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     WM_HWIN hItem;
     int     NCode;
     int     Id;
-    // USER START (Optionally insert additional variables)
+
     int     i;
-    // USER END
+    
 
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
@@ -421,9 +421,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             }
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_EDIT_COMB);
             EDIT_SetMaxLen(hItem, 50);
-            // USER START (Optionally insert additional code for further widget initialization)
+            
             WM_HideWin(pMsg->hWin);
-            // USER END
+            
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -432,85 +432,85 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 case ID_SNSET_BUTTON_CONFIRM: // Notifications sent by 'Confirm'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             Button_ConfirmProc(pMsg->hWin);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_BUTTON_CHECK: // Notifications sent by 'Check'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             Button_CheckProc(pMsg->hWin);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_BUTTON_RESET: // Notifications sent by 'Reset'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             Button_ResetProc(pMsg->hWin);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_BUTTON_CANCEL: // Notifications sent by 'Cancel'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             Button_CancelProc(pMsg->hWin);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_BUTTON_SNSET: // Notifications sent by 'SnSET'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_BUTTON_TIMESET: // Notifications sent by 'TimeSET'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TIMESET_BUTTON_TIMESET);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
@@ -521,130 +521,130 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 //                            for(i=0;i<700;i++){
 //                                WM_SetWindowPos(hItem, i, 420, 100, 60);
 //                            }
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_YEAR: // Notifications sent by 'lwYear'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
 
-                            // USER END
+                            
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_EDIT_YEAR);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_MONTH: // Notifications sent by 'lwMonth'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_EDIT_MONTH);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_DAY: // Notifications sent by 'lwDay'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_DAY, ID_SNSET_EDIT_DAY);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further notification handling)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_SN1: // Notifications sent by 'lwSN1'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_SN1, ID_SNSET_EDIT_SN1);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further Ids)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_SN2: // Notifications sent by 'lwSN2'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_SN2, ID_SNSET_EDIT_SN2);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further Ids)
-                        // USER END
+                        
+                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_SN3: // Notifications sent by 'lwSN3'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            // USER START (Optionally insert code for reacting on notification message)
-                            // USER END
+                    
+                            
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                            // USER START (Optionally insert code for reacting on notification message)
+                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_SN3, ID_SNSET_EDIT_SN3);
-                            // USER END
+                            
                             break;
-                        // USER START (Optionally insert additional code for further Ids)
-                        // USER END
+                        
+                        
                     }
                     break;
                 }
-        // USER START (Optionally insert additional message handling)
-        // USER END
+        
+        
         default:
             WM_DefaultProc(pMsg);
             break;
@@ -668,7 +668,7 @@ WM_HWIN CreateSNSettingDLG(void) {
     return hWin;
 }
 
-// USER START (Optionally insert additional public code)
+
 void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin)
 {
     WM_HWIN hItem;
@@ -844,6 +844,6 @@ void SWRB_SET_EditTextUpdate(void)
     }
 }
 
-// USER END
+
 
 /*************************** End of file ****************************/

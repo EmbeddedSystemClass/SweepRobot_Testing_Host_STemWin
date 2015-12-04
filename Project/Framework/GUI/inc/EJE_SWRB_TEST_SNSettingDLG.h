@@ -20,8 +20,8 @@
 #ifndef __EJE_SWRB_TEST_SNSETTINGDLG_H
 #define __EJE_SWRB_TEST_SNSETTINGDLG_H
 
-// USER START (Optionally insert additional includes)
-// USER END
+
+
 
 #include "DIALOG.h"
 #include "ff.h"
@@ -87,8 +87,8 @@
 #define ID_SNSET_FRAMEWIN         ID_SNSET_FRAMEWIN_0
 #define ID_SNSET_WINDOW           ID_SNSET_WINDOW_0
 
-// USER START (Optionally insert additional defines)
-// USER END
+
+
 
 /*********************************************************************
 *
@@ -111,7 +111,7 @@ extern WM_HWIN hWin_SWRB_SNSETTING;
 */
 WM_HWIN CreateSNSettingDLG(void);
 
-// USER START (Optionally insert additional public code)
+
 FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode);
 void SWRB_TestDataSaveToFile(void dataSaveProc(void));
 void SWRB_TestDataFileWriteSN(WM_HWIN hWin);
@@ -120,7 +120,7 @@ void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin);
 void SWRB_ListWheelSNInc(WM_HWIN *hWin);
 void SWRB_SET_ListwheelSnapPosUpdate(void);
 void SWRB_SET_EditTextUpdate(void);
-// USER END
+
 
 
 #endif

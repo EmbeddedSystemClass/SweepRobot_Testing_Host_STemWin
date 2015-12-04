@@ -18,17 +18,12 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
-
 #include "sweeprobot_testing.h"
-
 #include "sweeprobot_testing_rgb_led.h"
 #include "sweeprobot_testing_buzzer.h"
 
 #include "usart.h"
 #include "led.h"
-
 
 /*********************************************************************
 *
@@ -37,13 +32,7 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional defines)
-WM_HWIN hWin_SWRB_MAIN;
-WM_HWIN hWin_SWRB_RGB_LED;
-WM_HWIN hWin_SWRB_BUZZER;
-
 #define ID_IMAGE_0_IMAGE_0 0x00
-// USER END
 
 /*********************************************************************
 *
@@ -52,9 +41,11 @@ WM_HWIN hWin_SWRB_BUZZER;
 **********************************************************************
 */
 
-// USER START (Optionally insert additional static data)
+WM_HWIN hWin_SWRB_MAIN;
+WM_HWIN hWin_SWRB_RGB_LED;
+WM_HWIN hWin_SWRB_BUZZER;
+
 static u8 gMainDLGIndicateFlag = 0;
-// USER END
 
 /*********************************************************************
 *
@@ -105,8 +96,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { EDIT_CreateIndirect, "EditD8", ID_MAIN_EDIT_D8, 395, 47, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditSN", ID_MAIN_EDIT_SN, 190, 407, 230, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditDate", ID_MAIN_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
-    // USER START (Optionally insert additional widgets)
-    // USER END
 };
 
 static const GUI_WIDGET_CREATE_INFO _RgbLEDTestDialogCreate[] = {
@@ -130,7 +119,6 @@ static const GUI_WIDGET_CREATE_INFO _BuzzerTestDialogCreate[] = {
 **********************************************************************
 */
 
-// USER START (Optionally insert additional static code)
 static void Button_Init(WM_HWIN hItem)
 {
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -144,587 +132,415 @@ static void Checkbox_Init(WM_HWIN hItem)
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
 }
-// USER END
 
 /*********************************************************************
 *
 *       _cbDialog
 */
-static void _cbDialog(WM_MESSAGE * pMsg) {
+static void _cbDialog(WM_MESSAGE * pMsg) 
+{
     WM_HWIN hItem;
-//    MULTIPAGE_Handle hMultipage;
     int     NCode;
     int     Id;
     u32     i;
-    // USER START (Optionally insert additional variables)
-    // USER END
 
-  switch (pMsg->MsgId) {
-    case WM_INIT_DIALOG:
-    //
-    // Initialization of 'START'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_START);
-    Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_USER_102051000);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_USER_102051000);
-//    BUTTON_SetDefaultSkin(BUTTON_SKIN_FLEX);
-    //
-    // Initialization of 'SET'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET);
-    Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
-    //
-    // Initialization of 'SET SN'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET_SN);
-    Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
-    WM_HideWin(hItem);
-    //
-    // Initialization of 'SET TIME'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET_TIME);
-    Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
-    WM_HideWin(hItem);
-    //
-    // Initialization of 'STOP'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_STOP);
-    Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
-    //
-    // Initialization of 'EXIT'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_EXIT);
-    Button_Init(hItem);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
-    //
-    // Initialization of 'Indicate'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_INDICATE);
-    WM_BringToTop(hItem);
-    BUTTON_SetSkinClassic(hItem);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
-    Button_Set_unPressedBkColor(hWin_SWRB_MAIN,ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
-    Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, " ");
-//    //
-//    // Initialization of "Multipage_Main"
-//    //
-//    hMultipage = WM_GetDialogItem(pMsg->hWin, ID_MAIN_MULTIPAGE_MAIN);
-//    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_START);
-//    MULTIPAGE_AddEmptyPage(hMultipage, hItem, "TEST");
-//    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET);
-//    MULTIPAGE_AttachWindow(hMultipage, 0, hItem);
-    //
-    // Initialization of 'Msg Multiedit'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_MULTIEDIT_MAIN);
-    MULTIEDIT_SetText(hItem, "Waiting for Start");
-    MULTIEDIT_SetFont(hItem, GUI_FONT_16_ASCII);
-    MULTIEDIT_SetAutoScrollV(hItem,1);
-    MULTIEDIT_SetWrapWord(hItem);
-    MULTIEDIT_SetBufferSize(hItem, 2048);
-    WM_DisableWindow(hItem);
-    //
-    // Initialization of 'cbxWheel Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL);
-    CHECKBOX_SetText(hItem, "WHEEL");
-    CHECKBOX_SetDefaultSkinClassic();
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxSBrush Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_BRUSH);
-    CHECKBOX_SetText(hItem, "BRUSH");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxFan Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_FAN);
-    CHECKBOX_SetText(hItem, "FAN");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxIFRD Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_IFRD);
-    CHECKBOX_SetText(hItem, "IFRD");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxCollision Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_COLLISION);
-    CHECKBOX_SetText(hItem, "COLLISION");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxWheelFloat Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL_FLOAT);
-    CHECKBOX_SetText(hItem, "WHEEL FLOAT");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxAshTray Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_ASH_TRAY);
-    CHECKBOX_SetText(hItem, "ASH TRAY");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxUniWheel Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_UNIWHEEL);
-    CHECKBOX_SetText(hItem, "UNIWHEEL");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxKey Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_KEY);
-    CHECKBOX_SetText(hItem, "KEY");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxIRDA Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_IRDA);
-    CHECKBOX_SetText(hItem, "IRDA");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxBuzzer Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_BUZZER);
-    CHECKBOX_SetText(hItem, "BUZZER");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxRgbLED Test'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_RGB_LED);
-    CHECKBOX_SetText(hItem, "RGB LED");
-    Checkbox_Init(hItem);
-    //
-    // Initialization of 'cbxCharge'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_CHARGE);
-    CHECKBOX_SetText(hItem, "CHARGE");
-    Checkbox_Init(hItem);
-//    //
-//    // Initialization of 'Graph'
-//    //
-//    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_GRAPH_0);
-//    GRAPH_SetBorder(hItem, 20, 5, 5, 5);
-    //
-    // Initialization of 'Edit'
-    //
-    for(i=ID_MAIN_EDIT_U1;i<=ID_MAIN_EDIT_D8;i++){
-        hItem = WM_GetDialogItem(pMsg->hWin, i);
-        EDIT_SetFont(hItem, &GUI_Font20_ASCII);
-        EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_NORMAL);
-        EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    switch (pMsg->MsgId) {
+        case WM_INIT_DIALOG:
+            //
+            // Initialization of 'START'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_START);
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTBLUE);
+            //
+            // Initialization of 'SET'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET);
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+            //
+            // Initialization of 'SET SN'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET_SN);
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+            WM_HideWin(hItem);
+            //
+            // Initialization of 'SET TIME'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET_TIME);
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTCYAN);
+            WM_HideWin(hItem);
+            //
+            // Initialization of 'STOP'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_STOP);
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
+            //
+            // Initialization of 'EXIT'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_EXIT);
+            Button_Init(hItem);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
+            //
+            // Initialization of 'Indicate'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_INDICATE);
+            WM_BringToTop(hItem);
+            BUTTON_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
+            Button_Set_unPressedBkColor(hWin_SWRB_MAIN,ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+            Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, " ");
+            BUTTON_SetFocussable(hItem, 0);
+            //
+            // Initialization of 'Msg Multiedit'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_MULTIEDIT_MAIN);
+            MULTIEDIT_SetText(hItem, "Waiting for Start");
+            MULTIEDIT_SetFont(hItem, GUI_FONT_16_ASCII);
+            MULTIEDIT_SetAutoScrollV(hItem,1);
+            MULTIEDIT_SetWrapWord(hItem);
+            MULTIEDIT_SetBufferSize(hItem, 2048);
+            WM_DisableWindow(hItem);
+            //
+            // Initialization of 'cbxWheel Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL);
+            CHECKBOX_SetText(hItem, "WHEEL");
+            CHECKBOX_SetDefaultSkinClassic();
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxSBrush Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_BRUSH);
+            CHECKBOX_SetText(hItem, "BRUSH");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxFan Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_FAN);
+            CHECKBOX_SetText(hItem, "FAN");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxIFRD Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_IFRD);
+            CHECKBOX_SetText(hItem, "IFRD");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxCollision Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_COLLISION);
+            CHECKBOX_SetText(hItem, "COLLISION");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxWheelFloat Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL_FLOAT);
+            CHECKBOX_SetText(hItem, "WHEEL FLOAT");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxAshTray Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_ASH_TRAY);
+            CHECKBOX_SetText(hItem, "ASH TRAY");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxUniWheel Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_UNIWHEEL);
+            CHECKBOX_SetText(hItem, "UNIWHEEL");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxKey Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_KEY);
+            CHECKBOX_SetText(hItem, "KEY");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxIRDA Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_IRDA);
+            CHECKBOX_SetText(hItem, "IRDA");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxBuzzer Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_BUZZER);
+            CHECKBOX_SetText(hItem, "BUZZER");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxRgbLED Test'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_RGB_LED);
+            CHECKBOX_SetText(hItem, "RGB LED");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'cbxCharge'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_CHECKBOX_CHARGE);
+            CHECKBOX_SetText(hItem, "CHARGE");
+            Checkbox_Init(hItem);
+            //
+            // Initialization of 'Edit'
+            //
+            for(i=ID_MAIN_EDIT_U1;i<=ID_MAIN_EDIT_D8;i++){
+                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                EDIT_SetFont(hItem, &GUI_Font20_ASCII);
+                EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_NORMAL);
+                EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            }
+            //
+            // Initialization of 'EditDate'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_EDIT_DATE);
+            EDIT_SetFont(hItem, &GUI_Font20_ASCII);
+            EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            //
+            // Initialization of 'EditSN'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_EDIT_SN);
+            EDIT_SetFont(hItem, &GUI_Font20_ASCII);
+            EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            //
+            // Initialization of 'PROGBAR'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_PROGBAR_MAIN);
+            PROGBAR_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+
+            WM_HideWin(pMsg->hWin);
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id) {
+            case ID_MAIN_BUTTON_START: // Notifications sent by 'START'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        SweepRobot_TestStartProc();
+                        break;
+                }
+                break;
+            case ID_MAIN_BUTTON_SET: // Notifications sent by 'SET'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        SweepRobot_TestSetProc();
+                        break;
+                }
+                break;
+            case ID_MAIN_BUTTON_SET_SN:
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+//                        SweepRobot_TestSetProc();
+                        break;
+                }
+                break;
+            case ID_MAIN_BUTTON_STOP: // Notifications sent by 'STOP'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        SweepRobot_TestStopProc();
+                        break;
+                }
+                break;
+            case ID_MAIN_BUTTON_EXIT: // Notifications sent by 'EXIT'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        SweepRobot_TestExitProc();
+                        break;
+                }
+                break;
+            case ID_MAIN_MULTIEDIT_MAIN: // Notifications sent by 'Msg Multiedit'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_WHEEL: // Notifications sent by 'cbxWheel Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL, SWRB_WHEEL_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_BRUSH: // Notifications sent by 'cbxBrush Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_BRUSH, SWRB_BRUSH_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_FAN: // Notifications sent by 'cbxFan Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_FAN, SWRB_FAN_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_IFRD: // Notifications sent by 'cbxIFRD Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_IFRD, SWRB_IFRD_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_COLLISION: // Notifications sent by 'cbxCollision Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_COLLISION, SWRB_COLLISION_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_WHEEL_FLOAT: // Notifications sent by 'cbxWheelFloat Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                            break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL_FLOAT, SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_ASH_TRAY: // Notifications sent by 'cbxAshTray Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_ASH_TRAY, SWRB_ASH_TRAY_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_UNIWHEEL: // Notifications sent by 'cbxUniWheel Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_UNIWHEEL, SWRB_UNIWHEEL_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_KEY: // Notifications sent by 'cbxKey Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_KEY, SWRB_KEY_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_IRDA: // Notifications sent by 'cbxIRDA Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_IRDA, SWRB_IRDA_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_BUZZER: // Notifications sent by 'cbxBuzzer Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_BUZZER, SWRB_BUZZER_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_RGB_LED: // Notifications sent by 'cbxRgbLed Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_RGB_LED, SWRB_RGB_LED_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_CHECKBOX_CHARGE: // Notifications sent by 'cbxCharge Test'
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_CHARGE, SWRB_CHARGE_TEST_TASK_PRIO);
+                        break;
+                }
+                break;
+            case ID_MAIN_EDIT_SN:
+                switch(NCode){
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        break;
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        break;
+                }
+                break;
+            case ID_MAIN_PROGBAR_MAIN:
+                switch(NCode) {
+                    case WM_NOTIFICATION_VALUE_CHANGED:
+                        break;
+                }
+                break;
+            }
+            break;
+        default:
+            WM_DefaultProc(pMsg);
+            break;
     }
-    //
-    // Initialization of 'EditDate'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_EDIT_DATE);
-    EDIT_SetFont(hItem, &GUI_Font20_ASCII);
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-    //
-    // Initialization of 'EditSN'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_EDIT_SN);
-    EDIT_SetFont(hItem, &GUI_Font20_ASCII);
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-    //
-    // Initialization of 'PROGBAR'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_PROGBAR_MAIN);
-    PROGBAR_SetSkinClassic(hItem);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
-//    PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX);
-    
-    WM_HideWin(pMsg->hWin);
-
-    // USER START (Optionally insert additional code for further widget initialization)
-    // USER END
-    break;
-  case WM_NOTIFY_PARENT:
-    Id    = WM_GetId(pMsg->hWinSrc);
-    NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_MAIN_BUTTON_START: // Notifications sent by 'START'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestStartProc();
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_BUTTON_SET: // Notifications sent by 'SET'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestSetProc();
-//        hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET_SN);
-//        WM_ShowWin(hItem);
-//        WM_SetWindowPos(hItem, 500, 120, 100, 60);
-//        hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET_TIME);
-//        WM_ShowWin(hItem);
-//        WM_SetWindowPos(hItem, 600, 180, 100, 60);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      
-      // USER END
-      }
-      break;
-    case ID_MAIN_BUTTON_SET_SN:
-        switch(NCode) {
-            case WM_NOTIFICATION_CLICKED:
-                // USER START (Optionally insert code for reacting on notification message)
-                // USER END
-                break;
-            case WM_NOTIFICATION_RELEASED:
-                // USER START (Optionally insert code for reacting on notification message)
-                //        SweepRobot_TestSetProc();
-                // USER END
-                break;
-            // USER START (Optionally insert additional code for further notification handling)
-
-            // USER END
-        }
-        break;
-    case ID_MAIN_BUTTON_STOP: // Notifications sent by 'STOP'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestStopProc();
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_BUTTON_EXIT: // Notifications sent by 'EXIT'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SweepRobot_TestExitProc();
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_MULTIEDIT_MAIN: // Notifications sent by 'Msg Multiedit'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_WHEEL: // Notifications sent by 'cbxWheel Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL, SWRB_WHEEL_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_BRUSH: // Notifications sent by 'cbxBrush Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_BRUSH, SWRB_BRUSH_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_FAN: // Notifications sent by 'cbxFan Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_FAN, SWRB_FAN_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_IFRD: // Notifications sent by 'cbxIFRD Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_IFRD, SWRB_IFRD_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_COLLISION: // Notifications sent by 'cbxCollision Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_COLLISION, SWRB_COLLISION_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_WHEEL_FLOAT: // Notifications sent by 'cbxWheelFloat Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_WHEEL_FLOAT, SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_ASH_TRAY: // Notifications sent by 'cbxAshTray Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_ASH_TRAY, SWRB_ASH_TRAY_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_UNIWHEEL: // Notifications sent by 'cbxUniWheel Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_UNIWHEEL, SWRB_UNIWHEEL_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_KEY: // Notifications sent by 'cbxKey Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_KEY, SWRB_KEY_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_IRDA: // Notifications sent by 'cbxIRDA Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_IRDA, SWRB_IRDA_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_BUZZER: // Notifications sent by 'cbxBuzzer Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_BUZZER, SWRB_BUZZER_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_RGB_LED: // Notifications sent by 'cbxRgbLed Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_RGB_LED, SWRB_RGB_LED_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_CHECKBOX_CHARGE: // Notifications sent by 'cbxCharge Test'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SWRB_TestCheckboxStateGet(pMsg->hWin, ID_MAIN_CHECKBOX_CHARGE, SWRB_CHARGE_TEST_TASK_PRIO);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_MAIN_EDIT_SN:
-        switch(NCode){
-            case WM_NOTIFICATION_CLICKED:
-                break;
-            case WM_NOTIFICATION_RELEASED:
-                break;
-            case WM_NOTIFICATION_VALUE_CHANGED:
-                break;
-        }
-        break;
-    case ID_MAIN_PROGBAR_MAIN:
-        switch(NCode) {
-            case WM_NOTIFICATION_VALUE_CHANGED:
-
-                break;
-        }
-        break;
-    // USER START (Optionally insert additional code for further Ids)
-    // USER END
-    }
-    break;
-  // USER START (Optionally insert additional message handling)
-  // USER END
-  default:
-    WM_DefaultProc(pMsg);
-    break;
-  }
 }
 
 static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
@@ -847,8 +663,6 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
     }
 }
 
-    
-
 /*********************************************************************
 *
 *       Public code
@@ -883,7 +697,7 @@ WM_HWIN CreateBUZZER_TestDLG(void)
     return hWin;
 }
 
-// USER START (Optionally insert additional public code)
+
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
 {
     WM_HWIN hItem;
@@ -1103,7 +917,20 @@ void SweepRobot_MainTestIndicateBtnToggle(void)
     }
 }
 
+void SWRB_WM_EnableWindow(WM_HWIN hWin, int id)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin, id);
+    WM_EnableWindow(hItem);
+}
 
-// USER END
+void SWRB_WM_DisableWindow(WM_HWIN hWin, int id)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin, id);
+    WM_DisableWindow(hItem);
+}
 
 /*************************** End of file ****************************/

@@ -97,6 +97,13 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
     }
 }
 
+static void SweepRobot_PowerStationDrawGraph(void)
+{
+    if(powerStation24V.state == 1){
+        
+    }
+}
+
 static void SweepRobot_PowerStationTestProc(void)
 {
     u8 i,j;

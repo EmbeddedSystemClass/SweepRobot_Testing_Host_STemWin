@@ -13,8 +13,8 @@
 #ifndef __EJE_SWRB_TEST_POWERSTATIONDLG_H
 #define __EJE_SWRB_TEST_POWERSTATIONDLG_H
 
-// USER START (Optionally insert additional includes)
-// USER END
+
+
 
 #include "DIALOG.h"
 #include "stm32f4xx.h"
@@ -46,12 +46,15 @@
 #define ID_PS_IMAGE_0     (ID_TIMESET_BOUND + 0x20)
 #define ID_PS_MULTIPAGE_0     (ID_TIMESET_BOUND + 0x21)
 #define ID_PS_MULTIEDIT_0   (ID_TIMESET_BOUND + 0x22)
-#define ID_PS_BOUND     (ID_TIMESET_BOUND + 0x23)
+#define ID_PS_GRAPH_0   (ID_TIMESET_BOUND + 0x23)
+#define ID_PS_PROGBAR_0 (ID_TIMESET_BOUND + 0x24)
+#define ID_PS_TEXT_0    (ID_TIMESET_BOUND + 0x25)
+#define ID_PS_BOUND     (ID_TIMESET_BOUND + 0x40)
 
 #define ID_PS_IMAGE_0_IMAGE_0     0x00
 
 
-// USER START (Optionally insert additional defines)
+
 enum PSDLG_BUTTON{
     ID_PS_BUTTON_START = ID_PS_BUTTON_0,
     ID_PS_BUTTON_SET,
@@ -76,8 +79,11 @@ enum PSDLG_CHECKBOX{
 #define ID_PS_MULTIPAGE_MAIN      ID_PS_MULTIPAGE_0
 #define ID_PS_MULTIEDIT_MAIN        ID_PS_MULTIEDIT_0
 #define ID_PS_IMAGE_PS     ID_PS_IMAGE_0
+#define ID_PS_GRAPH_MAIN    ID_PS_GRAPH_0
+#define ID_PS_PROGBAR_MAIN  ID_PS_PROGBAR_0
+#define ID_PS_TEXT_TITLE    ID_PS_TEXT_0
 
-// USER END
+
 
 extern WM_HWIN hWin_SWRB_POWER_STATION;
 
@@ -93,8 +99,8 @@ extern WM_HWIN hWin_SWRB_POWER_STATION;
 */
 WM_HWIN CreateEJE_SWRB_TEST_PowerStationDLG(void);
 
-// USER START (Optionally insert additional public code)
-// USER END
+
+
 
 
 #endif

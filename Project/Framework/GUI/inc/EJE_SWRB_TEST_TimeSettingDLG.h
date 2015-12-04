@@ -20,8 +20,8 @@
 #ifndef __EJE_SWRB_TEST_TIMESETTINGDLG_H
 #define __EJE_SWRB_TEST_TIMESETTINGDLG_H
 
-// USER START (Optionally insert additional includes)
-// USER END
+
+
 
 #include "DIALOG.h"
 
@@ -87,8 +87,8 @@
 #define ID_TIMESET_FRAMEWIN         ID_TIMESET_FRAMEWIN_0
 #define ID_TIMESET_WINDOW           ID_TIMESET_WINDOW_0
 
-// USER START (Optionally insert additional defines)
-// USER END
+
+
 
 /*********************************************************************
 *
@@ -111,8 +111,8 @@ extern WM_HWIN hWin_SWRB_TIMESETTING;
 */
 WM_HWIN CreateTimeSettingDLG(void);
 
-// USER START (Optionally insert additional public code)
-// USER END
+
+
 
 
 #endif
