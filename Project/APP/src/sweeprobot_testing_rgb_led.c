@@ -125,7 +125,7 @@ void SweepRobot_RGBLEDTestTask(void *pdata)
                 SweepRobot_RGBLEDTestProc();
             }
 
-            OSTimeDlyHMSM(0,0,0,50);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

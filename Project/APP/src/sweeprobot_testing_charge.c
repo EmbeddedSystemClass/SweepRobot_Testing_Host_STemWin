@@ -96,6 +96,7 @@ static void SweepRobot_ChargeTestProc(void)
                 charge.current = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 continue;
@@ -123,6 +124,7 @@ static void SweepRobot_ChargeTestProc(void)
                 charge.voltage = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 continue;
@@ -150,6 +152,7 @@ static void SweepRobot_ChargeTestProc(void)
                 charge.charge24vState = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 continue;
@@ -239,11 +242,11 @@ void SweepRobot_ChargeTestTask(void *pdata)
                 SweepRobot_ChargeTestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 100){
+            if(gSwrbTestTaskRunCnt > 600){
                 SweepRobot_ChargeTestOverTimeProc();
             }
 
-            OSTimeDlyHMSM(0,0,0,50);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

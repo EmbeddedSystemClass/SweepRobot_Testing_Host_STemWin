@@ -3,6 +3,8 @@
 #include "malloc.h"
 #include "stm32f4xx_it.h"
 
+#include "sweeprobot_testing.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -142,10 +144,13 @@ void USART1_ISR(void)
 					USART_RX_STA=0;
 				else{
 					USART_RX_STA|=0x8000;
-          usartRxLen = USART_RX_STA&USART_CNT_MASK;
+                    usartRxLen = USART_RX_STA&USART_CNT_MASK;
+                    USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum);
+                    usartRxFlag = 1;
+//                    USART_RX_STA = 0;
+                    OSTimeDlyResume(gSwrbTestRuningTaskPrio);
 				}
-			}
-			else{
+			}else{
 				if(Res==0x0d)
 					USART_RX_STA|=0x4000;
 				else{
@@ -156,7 +161,7 @@ void USART1_ISR(void)
 				}		 
 			}
 		}   		 
-  } 
+  }
 	
 #if SYSTEM_SUPPORT_UCOS  
 	OSIntExit();

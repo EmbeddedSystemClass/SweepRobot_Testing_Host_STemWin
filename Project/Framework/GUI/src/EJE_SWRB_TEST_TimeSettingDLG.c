@@ -693,6 +693,4 @@ WM_HWIN CreateTimeSettingDLG(void) {
 
 
 
-
-
 /*************************** End of file ****************************/

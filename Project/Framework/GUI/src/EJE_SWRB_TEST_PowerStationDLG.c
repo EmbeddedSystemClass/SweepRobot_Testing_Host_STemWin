@@ -77,14 +77,14 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 *       _GetImageById
 */
-static const void * _GetImageById(U32 Id, U32 * pSize) {
-  switch (Id) {
-  case ID_PS_IMAGE_0_IMAGE_0:
-    *pSize = sizeof(_acImage_power_station);
-    return (const void *)_acImage_power_station;
-  }
-  return NULL;
-}
+//static const void * _GetImageById(U32 Id, U32 * pSize) {
+//  switch (Id) {
+//  case ID_PS_IMAGE_0_IMAGE_0:
+//    *pSize = sizeof(_acImage_power_station);
+//    return (const void *)_acImage_power_station;
+//  }
+//  return NULL;
+//}
 
 static void Button_Init(WM_HWIN hItem)
 {
@@ -98,27 +98,29 @@ static void Button_Init(WM_HWIN hItem)
 *       _cbDialog
 */
 static void _cbDialog(WM_MESSAGE * pMsg) {
-  const void * pData;
+//  const void * pData;
   WM_HWIN      hItem;
 //  MULTIPAGE_Handle hMultiPage;
-  U32          FileSize;
+//  U32          FileSize;
   int          NCode;
   int          Id;
   int          i;
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
-    //
-    // Initialization of 'Image'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_IMAGE_PS);
-    pData = _GetImageById(ID_PS_IMAGE_0_IMAGE_0, &FileSize);
-    IMAGE_SetBMP(hItem, pData, FileSize);
+//    //
+//    // Initialization of 'Image'
+//    //
+//    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_IMAGE_PS);
+//    pData = _GetImageById(ID_PS_IMAGE_0_IMAGE_0, &FileSize);
+//    IMAGE_SetBMP(hItem, pData, FileSize);
     //
     // Initialization of 'btnStart'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_START);
-    BUTTON_SetText(hItem, "START");
+//    BUTTON_SetText(hItem, "START");
+    BUTTON_SetText(hItem, " ");
+    BUTTON_Disp_Start_CHNStr(pMsg->hWin, ID_PS_BUTTON_START, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTBLUE);
@@ -126,7 +128,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'btnSet'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_SET);
-    BUTTON_SetText(hItem, "SET");
+//    BUTTON_SetText(hItem, "SET");
+    BUTTON_SetText(hItem, " ");
+    BUTTON_Disp_Set_CHNStr(pMsg->hWin, ID_PS_BUTTON_SET, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTCYAN);
@@ -134,7 +138,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'btnStop'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_STOP);
-    BUTTON_SetText(hItem, "STOP");
+//    BUTTON_SetText(hItem, "STOP");
+    BUTTON_SetText(hItem, " ");
+    BUTTON_Disp_Stop_CHNStr(pMsg->hWin, ID_PS_BUTTON_STOP, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
@@ -142,7 +148,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'btnExit'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_EXIT);
-    BUTTON_SetText(hItem, "EXIT");
+//    BUTTON_SetText(hItem, "EXIT");
+    BUTTON_SetText(hItem, " ");
+    BUTTON_Disp_Exit_CHNStr(pMsg->hWin, ID_PS_BUTTON_EXIT, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);

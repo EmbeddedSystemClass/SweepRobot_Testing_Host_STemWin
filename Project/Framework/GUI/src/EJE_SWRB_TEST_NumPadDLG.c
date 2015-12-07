@@ -330,7 +330,7 @@ void MainTask(void) {
     GUI_ExecDialogBox(_aDialogUser, 
                       GUI_COUNTOF(_aDialogUser), 
                       _cbDialogUser, WM_HBKWIN, 0, 0);             /* Execute the user dialog */
-    OSTimeDlyHMSM(0,0,0,50);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
   }
 }
 

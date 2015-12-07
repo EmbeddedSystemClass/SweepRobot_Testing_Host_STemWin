@@ -63,6 +63,7 @@ static void SWRB_WheelTestProc(void)
                     wheel[i].speed = (u8)usartRxNum;
                     usartRxNum = 0;
                     usartRxFlag = 0;
+                    USART_RX_STA = 0;
                     Edit_Set_Value(ID_MAIN_EDIT_U1, wheel[i].speed);
                     break;
                 }else{
@@ -146,14 +147,15 @@ void SweepRobot_WheelTestTask(void *pdata)
                 SWRB_WheelTestInit();
             }
 
-            if(gSwrbTestTaskRunCnt > 4){
+            if(4 < gSwrbTestTaskRunCnt){
                 SWRB_WheelTestProc();
             }
 
             if(20 < gSwrbTestTaskRunCnt){
                 SWRB_WheelTestOverTimeProc();
             }
-            OSTimeDlyHMSM(0,0,0,50);
+//            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

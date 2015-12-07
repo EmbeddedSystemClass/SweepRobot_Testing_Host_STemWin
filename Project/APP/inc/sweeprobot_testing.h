@@ -34,7 +34,8 @@
 #include "EJE_SWRB_TEST_SNSettingDLG.h"
 #include "EJE_SWRB_TEST_TimeSettingDLG.h"
 #include "EJE_SWRB_TEST_PowerStationDLG.h"
-#include "eje_logo.h"
+#include "eje_logo_char.h"
+#include "myChineseText.h"
 
 enum SWRB_Test_State_Pos{
 
@@ -274,7 +275,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define START_STK_SIZE                      128
 #define TOUCH_STK_SIZE                      128
 #define KEY_STK_SIZE                        128
-#define USART_STK_SIZE                      512
+//#define USART_STK_SIZE                      512
 #define RTC_STK_SIZE                        128
 #define EMWINDEMO_STK_SIZE		            1024
 #define LED_STK_SIZE				        128
@@ -297,6 +298,7 @@ enum SWRB_TEST_TASK_PRIO{
 
 #define SWRB_TEST_USART_READ_TIMES          3
 #define SWRB_TEST_VALID_COMP_TIMES          3
+#define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   5
 
 extern u8 usartRxFlag;
 extern int usartRxNum;
@@ -318,7 +320,7 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio);
 
 void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);
-void SWRB_TestDataFileWriteDate(RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
+void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 
 void SweepRobot_PCBTestStartProc(void);
 void SweepRobot_PCBTestSetProc(void);

@@ -86,6 +86,7 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
                 powerStation24V.state = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 powerStation24V.state = 0;
@@ -124,6 +125,7 @@ static void SweepRobot_PowerStationTestProc(void)
                 gIrDATmpCode = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 gIrDATmpCode = 0;
@@ -169,7 +171,7 @@ void SweepRobot_PowerStationTestTask(void *pdata)
             SweepRobot_PowerStationTestProc();
         }
 
-        OSTimeDlyHMSM(0,0,0,50);
+        OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
     }
 }
 

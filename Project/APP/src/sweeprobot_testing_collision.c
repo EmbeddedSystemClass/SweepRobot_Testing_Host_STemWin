@@ -134,6 +134,7 @@ static void SweepRobot_CollisionTestProc(void)
                         collision[i].onValue = usartRxNum;
                         usartRxNum = 0;
                         usartRxFlag = 0;
+                        USART_RX_STA = 0;
                         break;
                     }else{
                         continue;
@@ -160,6 +161,7 @@ static void SweepRobot_CollisionTestProc(void)
                         collision[i].offValue = usartRxNum;
                         usartRxNum = 0;
                         usartRxFlag = 0;
+                        USART_RX_STA = 0;
                         break;
                     }else{
                         continue;
@@ -260,7 +262,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 20){
                 SweepRobot_CollisionTestOverTimeProc();
             }
-            OSTimeDlyHMSM(0,0,0,50);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

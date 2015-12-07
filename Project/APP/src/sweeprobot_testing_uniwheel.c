@@ -43,6 +43,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
                 Edit_Set_Value(ID_MAIN_EDIT_U1, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 continue;
@@ -66,6 +67,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
                 Edit_Set_Value(ID_MAIN_EDIT_D1, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
+                USART_RX_STA = 0;
                 break;
             }else{
                 continue;
@@ -125,9 +127,7 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
 
 void SweepRobot_UniWheel_Test_Task(void *pdata)
 {
-  
     while(1){
-        
         if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_UNIWHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
         }else{
@@ -147,7 +147,7 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
                 SweepRobot_UniwheelTestOverTimeProc();
             }
             
-            OSTimeDlyHMSM(0,0,0,50);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

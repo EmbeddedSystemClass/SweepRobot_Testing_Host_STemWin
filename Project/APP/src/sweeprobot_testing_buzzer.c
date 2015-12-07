@@ -117,13 +117,13 @@ void SweepRobot_BuzzerTestTask(void *pdata)
                 SweepRobot_BuzzerTestInit();
             }
 
-            if(gSwrbTestTaskRunCnt%20){
+            if(gSwrbTestTaskRunCnt%200){
                 
             }else{
                 SweepRobot_BuzzerTestProc();
             }
 
-            OSTimeDlyHMSM(0,0,0,50);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

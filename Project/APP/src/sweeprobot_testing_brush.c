@@ -66,6 +66,7 @@ static void SWRB_BrushTestProc(void)
                     Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
+                    USART_RX_STA = 0;
                     break;
                 }else{
                     continue;
@@ -156,7 +157,7 @@ void SweepRobot_BrushTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 20){
                 SWRB_BrushTestOverTimeProc();
             }
-            OSTimeDlyHMSM(0,0,0,50);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

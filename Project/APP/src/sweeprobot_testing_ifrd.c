@@ -59,6 +59,7 @@ static void SweepRobot_IFRDTestTxOffProc(void)
                     Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
+                    USART_RX_STA = 0;
                     break;
                 }else{
                     continue;
@@ -93,6 +94,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                     Edit_Set_Value(ID_MAIN_EDIT_D1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
+                    USART_RX_STA = 0;
                     break;
                 }else{
                     continue;
@@ -220,7 +222,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 50){
                 SweepRobot_IFRDTestOverTimeProc();
             }
-            OSTimeDlyHMSM(0,0,0,10);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
 }

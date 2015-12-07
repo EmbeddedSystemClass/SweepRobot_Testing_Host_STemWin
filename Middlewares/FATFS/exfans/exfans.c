@@ -16,7 +16,7 @@ const u8 *FILE_TYPE_TBL[6][13]=
 	{"BMP","JPG","JPEG","GIF"},//图片文件
 };
 
-FATFS *fs[1];		//逻辑磁盘工作区
+FATFS *fs[2];		//逻辑磁盘工作区
 FIL *file; 			//文件1
 FIL *ftemp;			//文件2
 UINT br,bw;			//读写变量
