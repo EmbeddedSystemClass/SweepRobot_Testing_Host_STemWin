@@ -20,7 +20,7 @@ static void SweepRobot_RGBLEDTestInit(void)
 
     MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
 
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
     hWin_SWRB_RGB_LED = CreateRGB_LED_TestDLG();
     

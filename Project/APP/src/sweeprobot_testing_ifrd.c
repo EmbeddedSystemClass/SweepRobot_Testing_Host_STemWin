@@ -27,7 +27,7 @@ static void SweepRobot_IFRDTestInit(void)
     printf("SENSOR->IFRD_LED=0\r\n");
     printf("SENSOR->B_SWITCH=0\r\n");
     
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         ifrd[i].offValue = 0;

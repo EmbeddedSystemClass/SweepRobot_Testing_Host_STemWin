@@ -29,11 +29,17 @@
 #include "WM.h"
 #include "DIALOG.h"
 
+/* TODO: add Login, NumPad, Graph, Decrypto Dialog */
+#include "EJE_SWRB_TEST_LoginDLG.h"
 #include "EJE_SWRB_TEST_StartDLG.h"
+#include "EJE_SWRB_TEST_PowerStationDLG.h"
 #include "EJE_SWRB_TEST_MainDLG.h"
 #include "EJE_SWRB_TEST_SNSettingDLG.h"
 #include "EJE_SWRB_TEST_TimeSettingDLG.h"
-#include "EJE_SWRB_TEST_PowerStationDLG.h"
+#include "EJE_SWRB_TEST_NumPadDLG.h"
+#include "EJE_SWRB_TEST_GraphDLG.h"
+#include "EJE_SWRB_TEST_DecryptoDLG.h"
+
 #include "eje_logo_char.h"
 #include "myChineseText.h"
 
@@ -292,13 +298,14 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_KEY_TEST_STK_SIZE              256
 #define SWRB_IRDA_TEST_STK_SIZE             256
 #define SWRB_BUZZER_TEST_STK_SIZE           256
-#define SWRB_RGB_LED_TEST_STK_SIZE          128
+#define SWRB_RGB_LED_TEST_STK_SIZE          256
 #define SWRB_CHARGE_TEST_STK_SIZE           256
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
 
 #define SWRB_TEST_USART_READ_TIMES          3
 #define SWRB_TEST_VALID_COMP_TIMES          3
-#define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   5
+#define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   1
+#define SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS   50
 
 extern u8 usartRxFlag;
 extern int usartRxNum;

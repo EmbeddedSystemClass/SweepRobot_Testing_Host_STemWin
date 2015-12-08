@@ -68,7 +68,7 @@ static void SweepRobot_ChargeTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
 
     SweepRobot_Charge24VOn();
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
     printf("CHARGE->ON\r\n");
     charge.current = 0;
@@ -224,6 +224,8 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
 
 void SweepRobot_ChargeTestTask(void *pdata)
 {
+    u16 overTimeWaitTime;
+    
     SweepRobot_ChargeTestGPIOInit();
 
     while(1){
@@ -241,11 +243,17 @@ void SweepRobot_ChargeTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 1){
                 SweepRobot_ChargeTestProc();
             }
-
-            if(gSwrbTestTaskRunCnt > 600){
+            
+            if(charge.charge24vState){
+                overTimeWaitTime = 600;
+            }else{
+                overTimeWaitTime = 100;
+            }
+            
+            if(gSwrbTestTaskRunCnt > overTimeWaitTime){
                 SweepRobot_ChargeTestOverTimeProc();
             }
-
+            
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }

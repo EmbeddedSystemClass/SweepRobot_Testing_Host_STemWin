@@ -127,9 +127,6 @@ void emWin_Maintask(void *pdata)
 //    MainTask();
     
     GUI_Init();
-//    GUI_SetFont(&GUI_FontmySongti33);
-//    GUI_UC_SetEncodeUTF8();
-//    GUI_DispStringAt(_apPCBTestStr, 0, 0);
 
     OS_ENTER_CRITICAL();
 

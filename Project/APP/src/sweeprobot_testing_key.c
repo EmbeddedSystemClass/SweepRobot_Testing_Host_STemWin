@@ -89,7 +89,7 @@ static void SweepRobot_KeyTestInit(void)
     
     SweepRobot_KeyTestCtrlTestPos();
     
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
     key.value = 0;
     key.validCnt = 0;

@@ -24,6 +24,8 @@ static PowerStation_TestTypeDef powerStation24V;
 static u8 gIrDATmpCode;
 static u8 gIndicateFlag = 0;
 
+static void SweepRobot_PowerStationDrawGraph(void);
+
 static void SweepRobot_PowerStationTestInit(void)
 {
     int i;
@@ -35,7 +37,7 @@ static void SweepRobot_PowerStationTestInit(void)
     SWRB_TestDataFileWriteString(str);
 
     printf("IRDA->OFF\r\n");
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_TEST_PS_TX_SIG_NUM;i++){
         powerStation[i].code = 0;
@@ -55,7 +57,9 @@ static void SweepRobot_PowerStationTestInit(void)
 
 static void SweepRobot_PowerStationTestSigGet(u8 codePos, u8 code)
 {
+    static u8 codeRecCnt = 0;
     char *str;
+    
     
     if(!powerStation[codePos].validFlag){
         if(gIrDATmpCode == code){
@@ -65,7 +69,8 @@ static void SweepRobot_PowerStationTestSigGet(u8 codePos, u8 code)
             Checkbox_Set_Box_Back_Color(hWin_SWRB_POWER_STATION, ID_PS_CHECKBOX_LL+codePos, GUI_GREEN, CHECKBOX_CI_DISABLED);
             
             str = mymalloc(SRAMIN, sizeof(char)*30);
-            sprintf(str, "RECEIVED CODE->%x\r\n",code);
+            codeRecCnt++;
+            sprintf(str, "CODE[%d]->%x\r\n", codeRecCnt, code);
             MultiEdit_Add_Text(hWin_SWRB_POWER_STATION, ID_PS_MULTIEDIT_MAIN, str);
             myfree(SRAMIN, str);
         }else{
@@ -105,12 +110,24 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
     }
 }
 
+static void SweepRobot_PowerStationTestChargeVolGet(void)
+{
+    
+}
+
+static void SweepRobot_PowerStationTestChargeCurGet(void)
+{
+    
+}
+
+/* TODO: add charge voltage and current graph display function */
 static void SweepRobot_PowerStationDrawGraph(void)
 {
     if(powerStation24V.state == 1){
         
     }
 }
+
 
 static void SweepRobot_PowerStationTestProc(void)
 {

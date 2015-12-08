@@ -76,7 +76,7 @@ void SweepRobot_AshTrayTestInsCtrlOff(void)
 {
     TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
     
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,50);
     
     TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, DISABLE);
 }
@@ -96,7 +96,7 @@ static void SweepRobot_AshTrayTestInit(void)
     printf("SENSOR->IFRD_LED=0\r\n");
     SweepRobot_AshTrayTestInsCtrlTestPos();
     
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_AshTrayInsTestProc(void)

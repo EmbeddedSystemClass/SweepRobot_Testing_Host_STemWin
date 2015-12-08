@@ -92,7 +92,7 @@ void SweepRobot_WheelFloatCtrlOff(void)
     TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
     TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
     
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, DISABLE);
 }
@@ -112,7 +112,7 @@ void SweepRobot_WheelFloatTestInit(void)
     
     SweepRobot_WheelFloatCtrlTestPos();
     
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
     for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
         wheelFloat[i].value = 0;

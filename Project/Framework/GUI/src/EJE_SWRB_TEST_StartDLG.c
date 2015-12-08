@@ -21,8 +21,6 @@
 #include "sweeprobot_testing.h"
 #include "eje_logo_char.h"
 
-extern GUI_CONST_STORAGE GUI_FONT GUI_FontmySongti33;
-
 /*********************************************************************
 *
 *       Defines

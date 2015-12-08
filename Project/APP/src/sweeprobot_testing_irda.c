@@ -90,7 +90,7 @@ static void SweepRobot_IrDATestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
 
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
         IrDA[i].code = 0;
@@ -110,7 +110,7 @@ static void SweepRobot_IrDATestProc(void)
             printf("IRDA->ON=%d\r\n",i);
             OSTimeDlyHMSM(0,0,0,1);
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-//                SweepRobot_IrDATestTxSendCmd(42);
+                SweepRobot_IrDATestTxSendCmd(42);
 //                printf("IRDA->ON=42\r\n");
 //                OSTimeDlyHMSM(0,0,0,24);
                 printf("IRDA->READ\r\n");
