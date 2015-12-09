@@ -53,7 +53,7 @@ static void SweepRobot_IFRDTestTxOffProc(void)
                 }else{
                     printf("SENSOR->READ=%d\r\n", i-1);
                 }
-                OSTimeDlyHMSM(0,0,0,6);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     ifrd[i].offValue = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, usartRxNum);
@@ -88,7 +88,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 }else{
                     printf("SENSOR->READ=%d\r\n", i-1);
                 }
-                OSTimeDlyHMSM(0,0,0,6);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     ifrd[i].onValue = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D1+i, usartRxNum);

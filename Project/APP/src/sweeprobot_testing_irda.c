@@ -114,7 +114,7 @@ static void SweepRobot_IrDATestProc(void)
 //                printf("IRDA->ON=42\r\n");
 //                OSTimeDlyHMSM(0,0,0,24);
                 printf("IRDA->READ\r\n");
-                OSTimeDlyHMSM(0,0,0,6);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     IrDA[i].code = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, IrDA[i].code);

@@ -38,7 +38,7 @@ static void SweepRobot_FanTestProc(void)
     
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
         printf("FAN->READ\r\n");
-        OSTimeDlyHMSM(0,0,0,6);
+        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
             fan.current = usartRxNum;
             Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);

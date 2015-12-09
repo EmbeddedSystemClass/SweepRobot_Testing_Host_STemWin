@@ -106,7 +106,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
     if(!ashTrayIns.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("ASH_TRAY->READ=0\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayIns.value = usartRxNum;
                 Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
@@ -141,7 +141,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("SENSOR->READ=15\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.offValue = usartRxNum;
                 Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U2, usartRxNum);
@@ -164,7 +164,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("SENSOR->READ=15\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.onValue = usartRxNum;
                 Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D2, usartRxNum);

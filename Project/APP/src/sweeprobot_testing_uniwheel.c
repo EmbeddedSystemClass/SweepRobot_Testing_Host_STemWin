@@ -37,7 +37,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
     if(!uniwheel.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("SENSOR->READ=8\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 uniwheel.offValue = usartRxNum;
                 Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
@@ -61,7 +61,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
     if(!uniwheel.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("SENSOR->READ=8\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 uniwheel.onValue = usartRxNum;
                 Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D1, usartRxNum);

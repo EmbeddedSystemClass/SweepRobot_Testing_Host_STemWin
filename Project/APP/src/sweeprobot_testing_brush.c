@@ -60,7 +60,7 @@ static void SWRB_BrushTestProc(void)
         if(!brush[i].validFlag){
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                 printf("BRUSH->READ=%d\r\n",i);
-                OSTimeDlyHMSM(0,0,0,6);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     brush[i].current = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, usartRxNum);

@@ -131,7 +131,7 @@ static void SweepRobot_WheelFloatTestProc(void)
         if(!wheelFloat[i].validFlag){
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                 printf("WHEEL_FLOAT->READ=%d\r\n",i);
-                OSTimeDlyHMSM(0,0,0,6);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     wheelFloat[i].value = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, usartRxNum);

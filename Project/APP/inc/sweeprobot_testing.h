@@ -279,12 +279,11 @@ enum SWRB_TEST_TASK_PRIO{
 };
 
 #define START_STK_SIZE                      128
-#define TOUCH_STK_SIZE                      128
+#define TOUCH_STK_SIZE                      256
 #define KEY_STK_SIZE                        128
-//#define USART_STK_SIZE                      512
-#define RTC_STK_SIZE                        128
+#define RTC_STK_SIZE                        256
 #define EMWINDEMO_STK_SIZE		            1024
-#define LED_STK_SIZE				        128
+#define LED_STK_SIZE				        256
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
@@ -303,6 +302,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
 
 #define SWRB_TEST_USART_READ_TIMES          3
+#define SWRB_TEST_USART_READ_WAIT_TIME      3
 #define SWRB_TEST_VALID_COMP_TIMES          3
 #define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   1
 #define SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS   50

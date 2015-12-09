@@ -234,6 +234,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTCYAN);
+    WM_DisableWindow(hItem);
     //
     // Initialization of 'btnStop'
     //
@@ -244,6 +245,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
+    WM_DisableWindow(hItem);
     //
     // Initialization of 'btnExit'
     //

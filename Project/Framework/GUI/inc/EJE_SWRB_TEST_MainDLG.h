@@ -170,7 +170,7 @@ WM_HWIN CreateBUZZER_TestDLG(void);
 
 
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str);
-void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
+void Button_Set_BkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Button_SetEnable(WM_HWIN hWin, int buttonId);
 void Button_SetDisable(WM_HWIN hWin, int buttonId);
 void BUTTON_Set_Bitmap_Ex(WM_HWIN hWin, int buttonId, const GUI_BITMAP *pBitmap, int x, int y);

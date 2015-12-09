@@ -200,6 +200,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_MAIN_BUTTON_STOP, &_bmStopCHN, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
+            WM_DisableWindow(hItem);
             //
             // Initialization of 'EXIT'
             //
@@ -216,7 +217,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             WM_BringToTop(hItem);
             BUTTON_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
-            Button_Set_unPressedBkColor(hWin_SWRB_MAIN,ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+            Button_Set_BkColor(hWin_SWRB_MAIN,ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
             Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, " ");
             BUTTON_SetFocussable(hItem, 0);
             //
@@ -726,11 +727,12 @@ void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
     BUTTON_SetText(hItem, str);
 }
 
-void Button_Set_unPressedBkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
+void Button_Set_BkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
 {
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, buttonId);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, color);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, color);
 }
 
 void Button_SetEnable(WM_HWIN hWin, int buttonId)
@@ -1002,9 +1004,9 @@ GRAPH_DATA_Handle Graph_Data_YT_Create(GUI_COLOR color, u32 maxNumItems, int16_t
 void SweepRobot_MainTestIndicateBtnToggle(void)
 {
     if(++gMainDLGIndicateFlag%2){
-        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_DARKRED);
+        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_DARKRED);
     }else{
-        Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
     }
 }
 

@@ -103,7 +103,7 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
     if(!powerStation24V.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("CHARGE->READ=%d\r\n",CHARGE_RX_Chan_24Vstate);
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 powerStation24V.state = usartRxNum;
                 usartRxNum = 0;
@@ -134,8 +134,8 @@ static void SweepRobot_PowerStationTestChargeVolGet(void)
     if(powerStation24V.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("CHARGE->READ=%d\r\n", CHARGE_RX_Chan_Voltage);
-            OSTimeDlyHMSM(0,0,0,6);
-            if(usartRxFlag){
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+            if(usartRxFlag && (usartRxNum > 1000) ){
                 powerStation24V.charge.voltage = usartRxNum;
                 GRAPH_DATA_YT_AddValue(hDataVol, powerStation24V.charge.voltage);
                 Edit_Set_Value(hWin_SWRB_POWER_STATION, ID_PS_EDIT_VOLTAGE, powerStation24V.charge.voltage);
@@ -144,7 +144,7 @@ static void SweepRobot_PowerStationTestChargeVolGet(void)
                 USART_RX_STA = 0;
                 break;
             }else{
-                powerStation24V.state = 0;
+                powerStation24V.charge.voltage = 0;
                 continue;
             }
         }
@@ -158,8 +158,8 @@ static void SweepRobot_PowerStationTestChargeCurGet(void)
     if(powerStation24V.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("CHARGE->READ=%d\r\n", CHARGE_RX_Chan_Current);
-            OSTimeDlyHMSM(0,0,0,6);
-            if(usartRxFlag){
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+            if(usartRxFlag && (usartRxNum < 1000) ){
                 powerStation24V.charge.current = usartRxNum;
                 GRAPH_DATA_YT_AddValue(hDataCur, powerStation24V.charge.current);
                 Edit_Set_Value(hWin_SWRB_POWER_STATION, ID_PS_EDIT_CURRENT, powerStation24V.charge.current);
@@ -168,7 +168,7 @@ static void SweepRobot_PowerStationTestChargeCurGet(void)
                 USART_RX_STA = 0;
                 break;
             }else{
-                powerStation24V.state = 0;
+                powerStation24V.charge.current = 0;
                 continue;
             }
         }
@@ -193,7 +193,10 @@ static void SweepRobot_PowerStationGraphInit(void)
     GRAPH_AttachScale(hGraph, hScaleVol);
     GRAPH_AttachScale(hGraph, hScaleCur);
     
-    GRAPH_SetVSizeY(hGraph, 4095);
+    GRAPH_DATA_YT_SetOffY(hDataVol, -3100);
+    GRAPH_SCALE_SetOff(hScaleVol, -3100);
+    
+    GRAPH_SetVSizeY(hGraph, 1000);
 }
 
 static void SweepRobot_PowerStationDrawGraph(void)
@@ -201,7 +204,6 @@ static void SweepRobot_PowerStationDrawGraph(void)
     SweepRobot_PowerStationTestChargeVolGet();
     SweepRobot_PowerStationTestChargeCurGet();
 }
-
 
 static void SweepRobot_PowerStationTestProc(void)
 {
@@ -212,7 +214,7 @@ static void SweepRobot_PowerStationTestProc(void)
         
         for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
             printf("POWER_STATION->READ\r\n");
-            OSTimeDlyHMSM(0,0,0,6);
+            OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 gIrDATmpCode = usartRxNum;
                 usartRxNum = 0;
@@ -291,14 +293,19 @@ void PowerStation_TestDataSave(void)
 void SweepRobot_PowerStationIndicateBtnToggle(void)
 {
     if(++gIndicateFlag%2){
-        Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_DARKRED);
+        Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_DARKRED);
     }else{
-        Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_LIGHTGRAY);
     }
 }
 
 void SweepRobot_PowerStationTestGraphClear(void)
 {
-    GRAPH_DATA_YT_Clear(hDataCur);
     GRAPH_DATA_YT_Clear(hDataVol);
+    GRAPH_DATA_YT_SetOffY(hDataVol, 0);
+    GRAPH_SCALE_SetOff(hScaleVol, 0);
+    
+    GRAPH_DATA_YT_Clear(hDataCur);
+    GRAPH_DATA_YT_SetOffY(hDataCur, 0);
+    GRAPH_SCALE_SetOff(hScaleCur, 0);
 }
