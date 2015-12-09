@@ -18,9 +18,6 @@
 **********************************************************************
 */
 
-
-
-
 #include "sweeprobot_testing.h"
 
 /*********************************************************************
@@ -30,9 +27,10 @@
 **********************************************************************
 */
 
-
-
-
+extern GUI_CONST_STORAGE GUI_BITMAP _bmConfirmCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmCheckCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmResetCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
 
 /*********************************************************************
 *
@@ -41,12 +39,10 @@
 **********************************************************************
 */
 
-
 WM_HWIN hWin_SWRB_SNSETTING;
 
 static int  lastLwIndex[6];
 static RTC_DateTypeDef rtcDate;
-
 
 /*********************************************************************
 *
@@ -78,8 +74,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { EDIT_CreateIndirect, "editSN1", ID_SNSET_EDIT_SN1, 350, 300, 110, 40, 0 ,0x0, 0 },
     { EDIT_CreateIndirect, "editSN2", ID_SNSET_EDIT_SN2, 460, 300, 110, 40, 0 ,0x0, 0 },
     { EDIT_CreateIndirect, "editSN3", ID_SNSET_EDIT_SN3, 570, 300, 110, 40, 0 ,0x0, 0 },
-
-    
 };
 
 /*********************************************************************
@@ -105,7 +99,7 @@ static void Button_Init(WM_HWIN hItem)
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
     char *str;
-    
+
     ListWheel_TestDataFilePathGet(hWin,str);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
@@ -115,7 +109,7 @@ static void Button_ConfirmProc(WM_HWIN hWin)
 static void Button_CheckProc(WM_HWIN hWin)
 {
     char *str;
-    
+
     ListWheel_TestDataFilePathGet(hWin, str);
 }
 
@@ -139,7 +133,7 @@ static void Edit_Update(WM_HWIN hWin, int editStartId, int editStopId, int lwId)
     char *str;
     LISTWHEEL_Handle hListWheel;
     WM_HWIN hItem;
-    
+
     for(i=editStartId,j=lwId;i<=editStopId;i++,j++){
             hListWheel = WM_GetDialogItem(hWin, j);
             lwItemIndex = LISTWHEEL_GetPos(hListWheel);
@@ -171,7 +165,7 @@ static void ListWheel_SelChangeProc(WM_HWIN hWin, int lwId, int editId)
     int  lwItemIndex;
     char *lwBuf;
     WM_HWIN hItem;
-    
+
     hItem = WM_GetDialogItem(hWin, lwId);
     lwItemIndex = LISTWHEEL_GetPos(hItem);
     LISTWHEEL_SetSel(hItem, lwItemIndex);
@@ -187,7 +181,7 @@ static void ListWheel_GetText(WM_HWIN *hWin,int id, char *str)
     WM_HWIN hItem;
     int     lwItemIndex;
     char    *lwBuf;
-   
+
     hItem = WM_GetDialogItem(*hWin, id);
     lwItemIndex = LISTWHEEL_GetPos(hItem);
     lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
@@ -201,7 +195,7 @@ static void ListWheel_ResetToLastPos(WM_HWIN hWin)
     WM_HWIN hItem;
     int i;
     u8 j;
-    
+
     for(i=ID_SNSET_LISTWHEEL_YEAR,j=0;i<=ID_SNSET_LISTWHEEL_SN3;i++,j++){
         hItem = WM_GetDialogItem(hWin, i);
         LISTWHEEL_SetPos(hItem, lastLwIndex[j]);
@@ -212,7 +206,7 @@ static void ListWheel_ResetToZero(WM_HWIN hWin)
 {
     WM_HWIN hItem;
     int i;
-    
+
     for(i=ID_SNSET_LISTWHEEL_0;i<=ID_SNSET_LISTWHEEL_5;i++){
         hItem = WM_GetDialogItem(hWin, i);
         LISTWHEEL_MoveToPos(hItem, 0);
@@ -224,7 +218,7 @@ static void SerialNum_Comb(WM_HWIN hWin, int id, char *dest_SNumStr)
     WM_HWIN hItem;
     int     lwItemIndex;
     char    *lwBuf;
-    
+
     hItem = WM_GetDialogItem(hWin, id);
     lwItemIndex = LISTWHEEL_GetPos(hItem);
     lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
@@ -241,7 +235,7 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
     char *swrbTestDataFilePath;
 
     flErr = flErr;
-    
+
     swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
     *swrbTestDataFilePath = 0;
 
@@ -251,21 +245,21 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_YEAR, swrbTestDataFilePath);
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_MONTH, swrbTestDataFilePath);
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_DAY, swrbTestDataFilePath);
-    
+
     flErr = f_mkdir(swrbTestDataFilePath);
-    
+
     *swrbTestDataFilePath = 0;
-    
+
     lwBuf = "0:/";
     swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
-    
+
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_YEAR, swrbTestDataFilePath);
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_MONTH, swrbTestDataFilePath);
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_DAY, swrbTestDataFilePath);
-    
+
     lwBuf = "/";
     swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
-    
+
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN1, swrbTestDataFilePath);
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN2, swrbTestDataFilePath);
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN3, swrbTestDataFilePath);
@@ -275,12 +269,12 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
 
     hItem = WM_GetDialogItem(hWin, ID_SNSET_EDIT_COMB);
     EDIT_SetText(hItem, swrbTestDataFilePath);
-    
+
     hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_EDIT_SN);
     EDIT_SetText(hItem, swrbTestDataFilePath);
-    
+
     sprintf(dest_str, "%s", swrbTestDataFilePath);
-    
+
     myfree(SRAMIN, swrbTestDataFilePath);
 }
 
@@ -297,7 +291,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     int     Id;
 
     int     i;
-    
+
 
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
@@ -321,9 +315,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 if(i%2){
                     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGRAY);
                 }else{
-                    
+
                 }
             }
+            BUTTON_Disp_Confirm_CHNStr(pMsg->hWin, ID_SNSET_BUTTON_CONFIRM, 18, 43);
+            BUTTON_Disp_Check_CHNStr(pMsg->hWin, ID_SNSET_BUTTON_CHECK, 18, 43);
+            BUTTON_Disp_Reset_CHNStr(pMsg->hWin, ID_SNSET_BUTTON_RESET, 18, 43);
+            BUTTON_Disp_Cancel_CHNStr(pMsg->hWin, ID_SNSET_BUTTON_CANCEL, 18, 43);
+            BUTTON_Disp_SerialNum_CHNStr(pMsg->hWin, ID_SNSET_BUTTON_SNSET, 14, 18);
+            BUTTON_Disp_Time_CHNStr(pMsg->hWin, ID_SNSET_BUTTON_TIMESET, 26, 18);
             //
             // Initialization of 'lwYear'
             //
@@ -421,9 +421,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             }
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_EDIT_COMB);
             EDIT_SetMaxLen(hItem, 50);
-            
+
             WM_HideWin(pMsg->hWin);
-            
+
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -432,85 +432,85 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 case ID_SNSET_BUTTON_CONFIRM: // Notifications sent by 'Confirm'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
+
                             Button_ConfirmProc(pMsg->hWin);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_BUTTON_CHECK: // Notifications sent by 'Check'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
+
                             Button_CheckProc(pMsg->hWin);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_BUTTON_RESET: // Notifications sent by 'Reset'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
+
                             Button_ResetProc(pMsg->hWin);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_BUTTON_CANCEL: // Notifications sent by 'Cancel'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
+
                             Button_CancelProc(pMsg->hWin);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_BUTTON_SNSET: // Notifications sent by 'SnSET'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
-                            
+
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_BUTTON_TIMESET: // Notifications sent by 'TimeSET'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
+
                             hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TIMESET_BUTTON_TIMESET);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
@@ -521,130 +521,126 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 //                            for(i=0;i<700;i++){
 //                                WM_SetWindowPos(hItem, i, 420, 100, 60);
 //                            }
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_YEAR: // Notifications sent by 'lwYear'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
 
-                            
+
+
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                    
+
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_EDIT_YEAR);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_MONTH: // Notifications sent by 'lwMonth'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                    
+
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_EDIT_MONTH);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_DAY: // Notifications sent by 'lwDay'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                    
+
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_DAY, ID_SNSET_EDIT_DAY);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_SN1: // Notifications sent by 'lwSN1'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                    
+
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_SN1, ID_SNSET_EDIT_SN1);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_SN2: // Notifications sent by 'lwSN2'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                    
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_SN2, ID_SNSET_EDIT_SN2);
-                            
                             break;
-                        
-                        
                     }
                     break;
                 case ID_SNSET_LISTWHEEL_SN3: // Notifications sent by 'lwSN3'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                    
-                            
+
+
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-                    
+
                             ListWheel_SelChangeProc(pMsg->hWin, ID_SNSET_LISTWHEEL_SN3, ID_SNSET_EDIT_SN3);
-                            
+
                             break;
-                        
-                        
+
+
                     }
                     break;
                 }
-        
-        
+
+
         default:
             WM_DefaultProc(pMsg);
             break;
@@ -674,7 +670,7 @@ void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin)
     WM_HWIN hItem;
     int i;
     u8 j;
-    
+
     for(i=ID_SNSET_LISTWHEEL_YEAR,j=0;i<=ID_SNSET_LISTWHEEL_SN3;i++,j++){
         hItem = WM_GetDialogItem(hWin, i);
         lastLwIndex[j] = LISTWHEEL_GetPos(hItem);
@@ -685,20 +681,20 @@ void SWRB_ListWheelRTCDateUpdate(WM_HWIN hWin, int idYear, int idMonth, int idDa
 {
     WM_HWIN hItem;
     int     lwItemIndex;
-    
+
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
-    
+
     /*ListWheel Date Update */
     lwItemIndex = rtcDate.RTC_Year-15;
     hItem = WM_GetDialogItem(hWin, idYear);
     LISTWHEEL_SetPos(hItem, lwItemIndex);
     LISTWHEEL_SetSel(hItem, lwItemIndex);
-    
+
     lwItemIndex = rtcDate.RTC_Month-1;
     hItem = WM_GetDialogItem(hWin, idMonth);
     LISTWHEEL_SetPos(hItem, lwItemIndex);
     LISTWHEEL_SetSel(hItem, lwItemIndex);
-    
+
     lwItemIndex = rtcDate.RTC_Date-1;
     hItem = WM_GetDialogItem(hWin, idDay);
     LISTWHEEL_SetPos(hItem, lwItemIndex);
@@ -711,11 +707,11 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
     int     lwItemIndex;
     char    *strSN1,*strSN2,*strSN3;
     char *str;
-    
+
     strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
     strSN2 = mymalloc(SRAMIN, sizeof(char)*3);
     strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
-    
+
     ListWheel_GetText(hWin, ID_SNSET_LISTWHEEL_SN3, strSN3);
     if(*strSN3 != '9'){
         hItem = WM_GetDialogItem(*hWin, ID_SNSET_LISTWHEEL_SN3);
@@ -726,7 +722,7 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
         hItem = WM_GetDialogItem(*hWin, ID_SNSET_LISTWHEEL_SN3);
         LISTWHEEL_SetPos(hItem, 0);
         LISTWHEEL_SetSel(hItem, 0);
-        
+
         ListWheel_GetText(hWin, ID_SNSET_LISTWHEEL_SN2, strSN2);
         if(*strSN2 != '9'){
             hItem = WM_GetDialogItem(*hWin, ID_SNSET_LISTWHEEL_SN2);
@@ -737,7 +733,7 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
             hItem = WM_GetDialogItem(*hWin, ID_SNSET_LISTWHEEL_SN2);
             LISTWHEEL_SetPos(hItem, 0);
             LISTWHEEL_SetSel(hItem, 0);
-            
+
             ListWheel_GetText(hWin, ID_SNSET_LISTWHEEL_SN1, strSN1);
             if(*strSN1 != '9'){
                 hItem = WM_GetDialogItem(*hWin, ID_SNSET_LISTWHEEL_SN1);
@@ -754,7 +750,7 @@ void SWRB_ListWheelSNInc(WM_HWIN *hWin)
             }
         }
     }
-    
+
     myfree(SRAMIN, strSN1);
     myfree(SRAMIN, strSN2);
     myfree(SRAMIN, strSN3);
@@ -764,15 +760,15 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 {
     FRESULT flErr;
     char *pathStr;
-    
+
     pathStr = mymalloc(SRAMIN, sizeof(char)*40);
     *pathStr = 0;
-    
+
     ListWheel_TestDataFilePathGet(hWin_SWRB_SNSETTING, pathStr);
     flErr = f_open(file, pathStr, fileOpenMode);
     myfree(SRAMIN, pathStr);
     f_lseek(file, file->fsize);
-    
+
     return flErr;
 }
 
@@ -787,16 +783,16 @@ void SWRB_TestDataFileWriteSN(WM_HWIN hWin)
 {
     char *gSwrbTestSerialNum;
     char *cBuf;
-    
+
     SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
 
     gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
     mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);
-    
+
     *gSwrbTestSerialNum = 0;
-    
+
     cBuf = "\nSerialNumber:";
-    
+
     gSwrbTestSerialNum = strcat(gSwrbTestSerialNum, cBuf);
 
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
@@ -807,9 +803,9 @@ void SWRB_TestDataFileWriteSN(WM_HWIN hWin)
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN3, gSwrbTestSerialNum);
 
     f_printf(file, "%s\r\n", gSwrbTestSerialNum);
-    
+
     f_close(file);
-    
+
     myfree(SRAMIN, gSwrbTestSerialNum);
 }
 
@@ -817,7 +813,7 @@ void SWRB_SET_ListwheelSnapPosUpdate(void)
 {
     int i,j;
     WM_HWIN hItem;
-    
+
     if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
         for(i=ID_SNSET_LISTWHEEL_YEAR;i<=ID_SNSET_LISTWHEEL_SN3;i++){
             hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, i);
@@ -831,7 +827,7 @@ void SWRB_SET_ListwheelSnapPosUpdate(void)
             LISTWHEEL_SetSel(hItem, j);
         }
     }else{
-        
+
     }
 }
 

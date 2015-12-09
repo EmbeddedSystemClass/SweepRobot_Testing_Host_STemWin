@@ -30,8 +30,8 @@ static PowerStation_TestTypeDef powerStation24V;
 static u8 gIrDATmpCode;
 static u8 gIndicateFlag = 0;
 
-static u32 MaxNumDataItems=255, NumDataItems=10;
-static I16 aVoltageValue[255], aCurrentValue[255];
+static u32 MaxNumDataItems=245, NumDataItems=10;
+static I16 aVoltageValue[245], aCurrentValue[245];
 
 static void SweepRobot_PowerStationGraphInit(void);
 static void SweepRobot_PowerStationDrawGraph(void);
@@ -178,10 +178,14 @@ static void SweepRobot_PowerStationTestChargeCurGet(void)
 static void SweepRobot_PowerStationGraphInit(void)
 {
     hGraph = WM_GetDialogItem(hWin_SWRB_POWER_STATION, ID_PS_GRAPH_MAIN);
+    
     hDataVol = GRAPH_DATA_YT_Create(GUI_BLUE, MaxNumDataItems, aVoltageValue, NumDataItems);
     hDataCur = GRAPH_DATA_YT_Create(GUI_DARKGREEN, MaxNumDataItems, aCurrentValue, NumDataItems);
     GRAPH_AttachData(hGraph, hDataVol);
     GRAPH_AttachData(hGraph, hDataCur);
+    GRAPH_DATA_YT_SetAlign(hDataVol, GRAPH_ALIGN_LEFT);
+    GRAPH_DATA_YT_SetAlign(hDataCur, GRAPH_ALIGN_LEFT);
+    
     hScaleVol = GRAPH_SCALE_Create(320, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 20);
     hScaleCur = GRAPH_SCALE_Create(28, GUI_TA_RIGHT, GRAPH_SCALE_CF_VERTICAL, 20);
     GRAPH_SCALE_SetTextColor(hScaleVol, GUI_BLUE);
@@ -189,7 +193,6 @@ static void SweepRobot_PowerStationGraphInit(void)
     GRAPH_AttachScale(hGraph, hScaleVol);
     GRAPH_AttachScale(hGraph, hScaleCur);
     
-    GRAPH_SetVSizeX(hGraph, 1000);
     GRAPH_SetVSizeY(hGraph, 4095);
 }
 
@@ -288,7 +291,7 @@ void PowerStation_TestDataSave(void)
 void SweepRobot_PowerStationIndicateBtnToggle(void)
 {
     if(++gIndicateFlag%2){
-        Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_DARKGREEN);
+        Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_DARKRED);
     }else{
         Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_LIGHTGRAY);
     }

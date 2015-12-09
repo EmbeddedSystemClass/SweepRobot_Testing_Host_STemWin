@@ -14,7 +14,7 @@
 #define COLLISION_FRONT_TEST_CTRL_GPIO        GPIOE
 #define COLLISION_FRONT_TEST_CTRL_L_PIN       GPIO_Pin_5
 #define COLLISION_FRONT_TEST_CTRL_R_PIN       GPIO_Pin_6
-    
+
 #define COLLISION_CHAN_NUM  4
 
 static COLLISION_TestTypeDef collision[COLLISION_CHAN_NUM];
@@ -33,7 +33,7 @@ static void SweepRobot_CollisionTestGPIOInit(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(COLLISION_SIDE_TEST_CTRL_GPIO, &GPIO_InitStructure);
-    
+
     GPIO_InitStructure.GPIO_Pin = COLLISION_FRONT_TEST_CTRL_L_PIN |\
                                   COLLISION_FRONT_TEST_CTRL_R_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
@@ -95,15 +95,15 @@ static void SweepRobot_CollisionTestInit(void)
 {
     u8 i;
     char *str;
-    
+
     gSwrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
-    
+
     str = "\r\n>>>COLLISION TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
-    
+
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
     for(i=0;i<COLLISION_CHAN_NUM;i++){
@@ -120,7 +120,7 @@ static void SweepRobot_CollisionTestProc(void)
 {
     u8 i,j;
     char *str;
-    
+
     for(i=0;i<COLLISION_CHAN_NUM;i++){
         if(!collision[i].validFlag){
             if(!collision[i].onValidFlag){
@@ -145,9 +145,10 @@ static void SweepRobot_CollisionTestProc(void)
                     collision[i].onValidCnt++;
                 }else{
                     gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
+                    collision[i].onValidCnt = 0;
                 }
 
-                if(collision[i].onValidCnt){
+                if(collision[i].onValidCnt > 1){
                     collision[i].onValidFlag = 1;
                 }
             }else{
@@ -173,25 +174,26 @@ static void SweepRobot_CollisionTestProc(void)
                     gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+i));
                 }else{
                     gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+i));
+                    collision[i].offValidCnt = 0;
                 }
 
-                if(collision[i].offValidCnt){
+                if(collision[i].offValidCnt > 1){
                     collision[i].validFlag = 1;
                 }
             }
         }
     }
-    
+
     if(collision[COLLISION_CHAN_L].validFlag && collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_R].validFlag && collision[COLLISION_CHAN_FR].validFlag){
         gSwrbTestTaskRunCnt = 0;
-        
+
         SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
 
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
-        
+
         str = "COLLISION OK\r\n";
         SWRB_TestDataFileWriteString(str);
-        
+
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_COLLISION, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_COLLISION, "COLLISION OK");
@@ -204,13 +206,13 @@ static void SweepRobot_CollisionTestProc(void)
 static void SweepRobot_CollisionTestOverTimeProc(void)
 {
     char *str;
-    
+
     gSwrbTestTaskRunCnt = 0;
-    
+
     SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
-    
+
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
-    
+
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
         str = "ERROR->COLLISION_L\r\n";
         SWRB_TestDataFileWriteString(str);
@@ -231,7 +233,7 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
-    
+
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_COLLISION, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_COLLISION, "COLLISION ERROR");
     Edit_Clear();
@@ -241,11 +243,11 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
 
 void SweepRobot_CollisionTestTask(void *pdata)
 {
-    
+
     SweepRobot_CollisionTestGPIOInit();
 
     while(1){
-        
+
         if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_COLLISION)){
             SWRB_NextTestTaskResumePreAct(SWRB_COLLISION_TEST_TASK_PRIO);
         }else{
@@ -270,12 +272,12 @@ void SweepRobot_CollisionTestTask(void *pdata)
 void Collision_TestDataSave(void)
 {
     u8 i;
-    
+
     for(i=0;i<COLLISION_CHAN_NUM;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_ON_VALUE_POS+i] = collision[i].onValue;
         gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_OFF_VALUE_POS+i] = collision[i].offValue;
     }
-    
+
     SWRB_TestDataFileWriteData("COLLISION->L_onValue=", collision[COLLISION_CHAN_L].onValue, 1);
     SWRB_TestDataFileWriteData("COLLISION->FL_onValue=", collision[COLLISION_CHAN_FL].onValue, 1);
     SWRB_TestDataFileWriteData("COLLISION->R_onValue=", collision[COLLISION_CHAN_R].onValue, 1);

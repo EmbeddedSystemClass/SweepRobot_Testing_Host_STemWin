@@ -1,6 +1,3 @@
-
-
-
 #include "sweeprobot_testing.h"
 #include "sweeprobot_testing_conf.h"
 
@@ -19,7 +16,6 @@ enum CryptoMode{
     EncryptMode,
 };
 static char *gEncryptStr;
-static u8 gSwrbTestDataFileCrptoFlag = DecryptMode;
 
 enum SWRB_TEST_SELECT gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
@@ -122,9 +118,9 @@ void emWin_Maintask(void *pdata)
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
 
 //    MainTask();
-    
+
     GUI_Init();
-    
+
     WM_SetCreateFlags(WM_CF_MEMDEV);
     WM_MULTIBUF_Enable(1);
 
@@ -610,9 +606,9 @@ void SweepRobot_PCBTestExitProc(void)
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
         gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
-        
+
         SWRB_TestCheckboxEnable();
-        
+
         mf_close();
 
         OS_ENTER_CRITICAL();
@@ -704,13 +700,41 @@ void SWRB_NextTestTaskResumePreAct(u8 taskPrio)
     OS_EXIT_CRITICAL();
 }
 
+static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
+{
+    int i;
+    FRESULT flErr;
+    WM_HWIN hItem;
+
+    if(ENABLE == encryptoState){
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n>>>Start Encrypting TestData<<<\r\n");
+
+        for(i=ID_MAIN_BUTTON_START;i<=ID_MAIN_BUTTON_EXIT;i++){
+            hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+            WM_DisableWindow(hItem);
+        }
+
+        flErr = SWRB_TestDataFileCrypt(EncryptMode);
+//            SWRB_TestDataFileCrypt(DecryptMode);
+
+        for(i=ID_MAIN_BUTTON_START;i<=ID_MAIN_BUTTON_EXIT;i++){
+            hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+            WM_EnableWindow(hItem);
+        }
+
+        if(flErr == FR_OK){
+            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
+        }else{
+            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
+        }
+    }
+}
+
 void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
 {
     int i;
     char *str;
     OS_CPU_SR cpu_sr;
-    WM_HWIN hItem;
-    FRESULT flErr;
 
     gSwrbTestValidTaskCnt--;
 
@@ -724,70 +748,46 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
         SweepRobot_TestInitProc();
-        
+
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
         SWRB_TestDataFileWriteDate("Test finish time", &rtcDate, &rtcTime);
 
         str = "\r\n***TEST FINISHED***\r\n";
         SWRB_TestDataFileWriteString(str);
-
-        if(gSwrbTestDataFileCrptoFlag == EncryptMode){
-            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n>>>Start Encrypting TestData<<<\r\n");
-
-            for(i=ID_MAIN_BUTTON_START;i<=ID_MAIN_BUTTON_EXIT;i++){
-                hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
-                WM_DisableWindow(hItem);
-            }
-
-            flErr = SWRB_TestDataFileCrypt(EncryptMode);
-//            SWRB_TestDataFileCrypt(DecryptMode);
-
-            for(i=ID_MAIN_BUTTON_START;i<=ID_MAIN_BUTTON_EXIT;i++){
-                hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
-                WM_EnableWindow(hItem);
-            }
-
-            if(flErr == FR_OK){
-                MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
-            }else{
-                MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
-            }
-        }
+        
+        /* Encrypt Test Data File when set enable */
+        SWRB_TestDataFileEncryptoProc(DISABLE);
 
         SWRB_ValidTestTaskCntGet();
         SWRB_TestCheckboxEnable();
 
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
-
-        TEST_LED_TASK_CB_DEREG();
         Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
         Button_Set_unPressedBkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
 //        Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, "START");
         BUTTON_Disp_Start_CHNStr(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, 18, 43);
-        
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
         for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
         }
+        
+        TEST_LED_TASK_CB_DEREG();
+        
+        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
+        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
 
         SWRB_ListWheelSNInc(&hWin_SWRB_SNSETTING);
     }
 
     OS_ENTER_CRITICAL();
     OSTaskSuspend(OS_PRIO_SELF);
-
-    /* FIXME: add this for test */
-//    SweepRobot_PCBTestStartProc();
-
     OS_EXIT_CRITICAL();
 }
 
 void SweepRobot_StartDlgPCBBtnClickProc(void)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_PCB;
-    
+
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 
     SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START);
@@ -800,7 +800,7 @@ void SweepRobot_StartDlgPCBBtnClickProc(void)
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_POWER_STATION;
-    
+
     gSwrbTestRuningTaskPrio = SWRB_POWER_STATION_TEST_TASK_PRIO;
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_POWER_STATION);
@@ -816,7 +816,7 @@ void SweepRobot_PowerStationTestStartProc(void)
     char *str;
 
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
-        
+
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
         printf("TEST->ON\r\n");
@@ -827,7 +827,7 @@ void SweepRobot_PowerStationTestStartProc(void)
         Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, GUI_LIGHTRED);
 //        Button_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, "PAUSE");
         BUTTON_Disp_Pause_CHNStr(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, 18, 43);
-        
+
         SWRB_WM_DisableWindow(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_EXIT);
         SWRB_WM_DisableWindow(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_SET);
 
@@ -835,25 +835,25 @@ void SweepRobot_PowerStationTestStartProc(void)
         MultiEdit_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_MULTIEDIT_MAIN, str);
 
         OSTaskResume(SWRB_POWER_STATION_TEST_TASK_PRIO);
-        
+
     }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
-        
+
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
-        
+
         printf("POWER_STATION->OFF\r\n");
-        
+
         TEST_LED_TASK_CB_DEREG();
-        
+
         Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, GUI_USER_204153051);
 //        Button_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, "RESUME");
         BUTTON_Disp_Resume_CHNStr(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, 18, 43);
-        
+
         str = ">>>PowerStation<<<\r\nTest Paused\r\n";
         MultiEdit_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_MULTIEDIT_MAIN, str);
-        
+
         OSTaskSuspend(SWRB_POWER_STATION_TEST_TASK_PRIO);
     }else{
-        
+
     }
 }
 
@@ -876,7 +876,7 @@ void SweepRobot_PowerStationTestStopProc(void)
 //        Button_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, "START");
         BUTTON_Disp_Start_CHNStr(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, 18, 43);
         SweepRobot_PowerStationTestGraphClear();
-        
+
         SWRB_WM_EnableWindow(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_EXIT);
         SWRB_WM_EnableWindow(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_SET);
         TEST_LED_TASK_CB_DEREG();
@@ -901,7 +901,7 @@ void SweepRobot_PowerStationTestExitProc(void)
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
         gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
-        
+
         printf("TEST->OFF\r\n");
         WM_HideWin(hWin_SWRB_POWER_STATION);
         WM_ShowWin(hWin_SWRB_START);

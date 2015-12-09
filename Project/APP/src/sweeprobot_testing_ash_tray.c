@@ -144,7 +144,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 ashTrayLvl.offValue = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U2, usartRxNum);
                 usartRxFlag=0;
                 usartRxNum=0;
                 USART_RX_STA = 0;
@@ -167,7 +167,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 ashTrayLvl.onValue = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D2, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
                 USART_RX_STA = 0;
