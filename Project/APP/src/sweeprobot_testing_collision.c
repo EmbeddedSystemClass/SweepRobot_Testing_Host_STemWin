@@ -130,7 +130,7 @@ static void SweepRobot_CollisionTestProc(void)
                     printf("COLLISION->READ=%d\r\n",i);
                     OSTimeDlyHMSM(0,0,0,6);
                     if(usartRxFlag){
-                        Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
+                        Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, usartRxNum);
                         collision[i].onValue = usartRxNum;
                         usartRxNum = 0;
                         usartRxFlag = 0;
@@ -157,7 +157,7 @@ static void SweepRobot_CollisionTestProc(void)
                     printf("COLLISION->READ=%d\r\n",i);
                     OSTimeDlyHMSM(0,0,0,6);
                     if(usartRxFlag){
-                        Edit_Set_Value(ID_MAIN_EDIT_D1+i, usartRxNum);
+                        Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D1+i, usartRxNum);
                         collision[i].offValue = usartRxNum;
                         usartRxNum = 0;
                         usartRxFlag = 0;

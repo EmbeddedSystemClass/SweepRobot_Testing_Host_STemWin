@@ -64,7 +64,7 @@ static void SWRB_WheelTestProc(void)
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;
-                    Edit_Set_Value(ID_MAIN_EDIT_U1, wheel[i].speed);
+                    Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, wheel[i].speed);
                     break;
                 }else{
                     continue;

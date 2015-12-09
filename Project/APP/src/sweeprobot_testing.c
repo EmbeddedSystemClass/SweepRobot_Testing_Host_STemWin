@@ -121,12 +121,12 @@ void emWin_Maintask(void *pdata)
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
 
-    WM_SetCreateFlags(WM_CF_MEMDEV);
-    WM_MULTIBUF_Enable(1);
-    
 //    MainTask();
     
     GUI_Init();
+    
+    WM_SetCreateFlags(WM_CF_MEMDEV);
+    WM_MULTIBUF_Enable(1);
 
     OS_ENTER_CRITICAL();
 
@@ -658,7 +658,7 @@ void SweepRobot_TestInitProc(void)
     printf("SENSOR->B_SWITCH=0\r\n");
 
     for(i=ID_MAIN_EDIT_U1;i<=ID_MAIN_EDIT_D8;i++){
-        Edit_Set_Value(i, 0);
+        Edit_Set_Value(hWin_SWRB_MAIN, i, 0);
     }
 
     Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, "WHEEL");
@@ -875,6 +875,7 @@ void SweepRobot_PowerStationTestStopProc(void)
         Button_Set_unPressedBkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, GUI_LIGHTBLUE);
 //        Button_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, "START");
         BUTTON_Disp_Start_CHNStr(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, 18, 43);
+        SweepRobot_PowerStationTestGraphClear();
         
         SWRB_WM_EnableWindow(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_EXIT);
         SWRB_WM_EnableWindow(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_SET);

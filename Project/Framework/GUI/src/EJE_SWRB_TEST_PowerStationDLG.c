@@ -39,6 +39,17 @@ WM_HWIN hWin_SWRB_POWER_STATION;
 **********************************************************************
 */
 
+//static WM_CALLBACK * _pcbCallbackCharge;
+
+//static int _VolMin = 0, _VolMax = 4095;
+//static int _CurMin = 0, _CurMax = 4095;
+
+//GUI_COLOR _ColorBackGround = GUI_RED;
+//GUI_COLOR _ColorGrid       = GUI_DARKGRAY;
+//GUI_COLOR _ColorLabel      = GUI_WHITE;
+//GUI_COLOR _ColorVoltage      = GUI_DARKGREEN;
+//GUI_COLOR _ColorCurrent      = GUI_BLUE;
+
 /*********************************************************************
 *
 *       _aDialogCreate
@@ -62,9 +73,13 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { CHECKBOX_CreateIndirect, "24V Out", ID_PS_CHECKBOX_24V, 530, 90, 120, 30, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "PowerStation", ID_PS_CHECKBOX_INDICATE, 530, 40, 120, 30, 0, 0x0, 0 },
   { MULTIEDIT_CreateIndirect, "MultiEdit", ID_PS_MULTIEDIT_MAIN, 20, 40, 130, 395, 0, 0x0, 0 },
-  { GRAPH_CreateIndirect, "Graph", ID_PS_GRAPH_MAIN, 170, 40, 340, 395, 0, 0x0, 0 },
+  { GRAPH_CreateIndirect, "Graph", ID_PS_GRAPH_MAIN, 170, 40, 340, 360, 0, 0x0, 0 },
   { PROGBAR_CreateIndirect, "Progbar", ID_PS_PROGBAR_MAIN, 20, 450, 630, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "PowerStation Test", ID_PS_TEXT_TITLE, 20, 8, 200, 30, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "PowerStation Test", ID_PS_TEXT_TITLE, 20, 8, 200, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "eVoltage", ID_PS_EDIT_VOLTAGE, 250, 410, 80, 25, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "eCurrent", ID_PS_EDIT_CURRENT, 430, 410, 80, 25, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "tVoltage", ID_PS_TEXT_VOLTAGE, 170, 410, 80, 25, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "tCurrent", ID_PS_TEXT_CURRENT, 350, 410, 80, 25, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -92,6 +107,91 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
+
+///*******************************************************************
+//*
+//*       _DrawGraph
+//*/
+//static void _DrawGraph(void) {
+//  GUI_RECT Rect;
+//  int      xSize;
+//  int      ySize;
+//  int      x;
+//  int      y;
+
+//  WM_GetClientRect(&Rect);
+//  xSize = Rect.x1;
+//  ySize = Rect.y1;
+//  GUI_SetBkColor(GUI_BLACK);
+//  GUI_ClearRect(26, 1, xSize- 21, ySize - 21);
+//  GUI_SetColor(_ColorGrid);
+//  for (y = 20; y < (ySize - 21); y += 20) {
+//    int yPos = ySize - 20 - y;
+//    GUI_DrawHLine(yPos, 26, 302);
+//  }
+//  for (x = 40; x < (xSize - 25); x += 40) {
+//    int xPos = x + 25;
+//    GUI_DrawVLine(xPos, 1, ySize - 21);
+//  }
+//  GUI_SetColor(_ColorVoltage);
+//  GUI_DrawGraph(aVoltageValue, GUI_COUNTOF(aVoltageValue), 26, ySize - 121);
+//  GUI_SetColor(_ColorCurrent);
+//  GUI_DrawGraph(aCurrentValue, GUI_COUNTOF(aCurrentValue), 26, ySize - 121);
+//}
+
+///*********************************************************************
+//*
+//*       _LabelGraph
+//*/
+//static void _LabelGraph(void) {
+//  GUI_RECT Rect;
+//  int      x;
+//  int      y;
+//  int      xSize;
+//  int      ySize;
+
+//  WM_GetClientRect(&Rect);
+//  xSize = Rect.x1;
+//  ySize = Rect.y1;
+//  GUI_SetBkColor(_ColorBackGround);
+//  GUI_Clear();
+//  GUI_SetColor(_ColorLabel);
+//  GUI_SetPenSize(1);
+//  GUI_ClearRect(0, (ySize - 21) - ySize, (xSize - 1), (ySize - 1));
+//  GUI_DrawRect(25, 0, xSize, ySize - 20);
+//  GUI_SetFont(&GUI_Font6x8);
+//  for (x = 0; x < (xSize - 20); x += 40) {
+//    int xPos = x + 25;
+//    GUI_DrawVLine(xPos, (ySize - 20), (ySize - 14));
+//    GUI_DispDecAt(x / 40, xPos - 2, (ySize - 9), 1);
+//  }
+//  for (y = 0; y < ySize - 20; y += 20) {
+//    int yPos = ySize - 20 - y;
+//    GUI_DrawHLine(yPos, 20, 25);
+//    GUI_GotoXY(1, yPos - 4);
+//    GUI_DispDecSpace(_VolMin + y, 3);
+//  }
+//}
+
+///*********************************************************************
+//*
+//*       _cbCharge
+//*
+//* Function description
+//*   Callback routine of Charge Graph window
+//*/
+//static void _cbCharge(WM_MESSAGE * pMsg) {
+//  switch (pMsg->MsgId) {
+//  case WM_PAINT:
+//    _LabelGraph();
+//    _DrawGraph();
+//    return;
+//  }
+//  if (_pcbCallbackCharge) {
+//    _pcbCallbackCharge(pMsg);
+//  }
+//}
+
 
 /*********************************************************************
 *
@@ -163,22 +263,49 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Init(hItem);
     BUTTON_SetFocussable(hItem, 0);
     //
-    // Initialization of 'Text'
+    // Initialization of 'tTitle'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_TEXT_TITLE);
     TEXT_SetFont(hItem, GUI_FONT_24B_ASCII);
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
     TEXT_SetText(hItem, "PowerStation Test");
     //
+    // Initialization of 'eVoltage'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_EDIT_VOLTAGE);
+    EDIT_SetDecMode(hItem, 0, 0, 65535, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    EDIT_SetTextAlign(hItem, GUI_TA_VCENTER|GUI_TA_LEFT);
+    EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+    //
+    // Initialization of 'eCurrent'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_EDIT_CURRENT);
+    EDIT_SetDecMode(hItem, 0, 0, 65535, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    EDIT_SetTextAlign(hItem, GUI_TA_VCENTER|GUI_TA_LEFT);
+    EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+    //
+    // Initialization of 'tVoltage'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_TEXT_VOLTAGE);
+    TEXT_SetText(hItem, "Voltage:");
+    TEXT_SetFont(hItem, GUI_FONT_24_ASCII);
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
+    //
+    // Initialization of 'tCurrent'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_TEXT_CURRENT);
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, GUI_FONT_24_ASCII);
+    TEXT_SetText(hItem, "Current:");
+    //
     // Initialization of 'Graph'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_GRAPH_MAIN);
-    GRAPH_SetBorder(hItem, 40, 10, 10, 40);
-    GRAPH_SCALE_Create(10, GUI_TA_HCENTER|GUI_TA_VCENTER, GRAPH_SCALE_CF_HORIZONTAL, 10);
-    GRAPH_SCALE_Create(10, GUI_TA_HCENTER|GUI_TA_VCENTER, GRAPH_SCALE_CF_VERTICAL, 10);
-    hGraphPowerStation = GRAPH_DATA_YT_Create(GUI_RED, 500, pDataGraph, 10);
-    for(i=0;i<=100;i++)
-        GRAPH_DATA_YT_AddValue(hGraphPowerStation, i);
+    GRAPH_SetBorder(hItem, 40, 10, 40, 40);
+    GRAPH_SetAutoScrollbar(hItem, GUI_COORD_X, ENABLE);
+    GRAPH_SetAutoScrollbar(hItem, GUI_COORD_Y, ENABLE);
+    GRAPH_SetGridVis(hItem, ENABLE);
+    GRAPH_SetGridDistY(hItem, 20);
 //    WM_DisableWindow(hItem);
     //
     // Initialization of 'Checkbox'
@@ -373,7 +500,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 **********************************************************************
 */
 
-GRAPH_DATA_Handle hGraphPowerStation;
 int16_t pDataGraph[500] = {0x0100, 0x0010, 0x1100, 0x0011, 0x0101, 0x01101, 0x0000, 0x0010, 0x0011, 0x0110};
 
 /*********************************************************************

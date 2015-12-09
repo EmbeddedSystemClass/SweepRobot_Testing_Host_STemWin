@@ -63,7 +63,7 @@ static void SWRB_BrushTestProc(void)
                 OSTimeDlyHMSM(0,0,0,6);
                 if(usartRxFlag){
                     brush[i].current = usartRxNum;
-                    Edit_Set_Value(ID_MAIN_EDIT_U1+i, usartRxNum);
+                    Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;

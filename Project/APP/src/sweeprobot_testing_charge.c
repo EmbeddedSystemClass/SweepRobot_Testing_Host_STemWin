@@ -92,7 +92,7 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CHARGE->READ=1\r\n");
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
-                Edit_Set_Value(ID_MAIN_EDIT_U1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
                 charge.current = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
@@ -120,7 +120,7 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CHARGE->READ=0\r\n");
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
-                Edit_Set_Value(ID_MAIN_EDIT_U2, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U2, usartRxNum);
                 charge.voltage = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
@@ -148,7 +148,7 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CHARGE->READ=2\r\n");
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
-                Edit_Set_Value(ID_MAIN_EDIT_U3, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U3, usartRxNum);
                 charge.charge24vState = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;

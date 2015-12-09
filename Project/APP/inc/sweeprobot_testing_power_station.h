@@ -5,17 +5,21 @@
 #include "GRAPH.h"
 
 typedef struct{
+    int voltage;
+    int current;
+}Charge_t;
+
+typedef struct{
     int code;
     int state;
+    Charge_t charge;
     u8 validCnt;
     u8 validFlag;
 }PowerStation_TestTypeDef;
 
-extern GRAPH_DATA_Handle hGraphPowerStation;
-extern int16_t pDataGraph[500];
-
 void SweepRobot_PowerStationTestTask(void *pdata);
 void PowerStation_TestDataSave(void);
 void SweepRobot_PowerStationIndicateBtnToggle(void);
+void SweepRobot_PowerStationTestGraphClear(void);
 
 #endif

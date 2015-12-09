@@ -183,7 +183,7 @@ void BUTTON_Disp_Exit_CHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
-void Edit_Set_Value(int editId, long editValue);
+void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue);
 void Edit_Clear(void);
 void Text_Set_Text(WM_HWIN hWin, int textId, char *str);
 void Text_Set_Color(WM_HWIN hWin, int textId, GUI_COLOR color);

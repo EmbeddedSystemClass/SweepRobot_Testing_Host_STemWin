@@ -96,7 +96,7 @@ static void SweepRobot_IrDATestInit(void)
         IrDA[i].code = 0;
         IrDA[i].validCnt = 0;
         IrDA[i].validFlag = 0;
-        Edit_Set_Value(ID_MAIN_EDIT_U1+i, 0);
+        Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0);
     }
 }
 
@@ -117,7 +117,7 @@ static void SweepRobot_IrDATestProc(void)
                 OSTimeDlyHMSM(0,0,0,6);
                 if(usartRxFlag){
                     IrDA[i].code = usartRxNum;
-                    Edit_Set_Value(ID_MAIN_EDIT_U1+i, IrDA[i].code);
+                    Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, IrDA[i].code);
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;

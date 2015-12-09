@@ -40,7 +40,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 uniwheel.offValue = usartRxNum;
-                Edit_Set_Value(ID_MAIN_EDIT_U1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
                 USART_RX_STA = 0;
@@ -64,7 +64,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,6);
             if(usartRxFlag){
                 uniwheel.onValue = usartRxNum;
-                Edit_Set_Value(ID_MAIN_EDIT_D1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_D1, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
                 USART_RX_STA = 0;

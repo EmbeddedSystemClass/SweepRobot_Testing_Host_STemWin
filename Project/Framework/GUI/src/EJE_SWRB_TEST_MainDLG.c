@@ -581,7 +581,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             for(i=ID_MAIN_EDIT_U1;i<=ID_MAIN_EDIT_D8;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
                 EDIT_SetFont(hItem, &GUI_Font20_ASCII);
-                EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_NORMAL);
+                EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
                 EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             }
             //
@@ -1065,10 +1065,10 @@ void Progbar_Set_Percent(void)
     Progbar_Set_Value( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal)*100 );
 }
 
-void Edit_Set_Value(int editId, long editValue)
+void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, editId);
+    hItem = WM_GetDialogItem(hWin, editId);
     EDIT_SetValue(hItem, editValue);
 }
 
@@ -1084,7 +1084,7 @@ void Edit_Clear(void)
     int i;
     
     for(i=ID_MAIN_EDIT_1;i<ID_MAIN_EDIT_SN;i++){
-        Edit_Set_Value(i, 0);
+        Edit_Set_Value(hWin_SWRB_MAIN , i, 0);
     }
 }
 

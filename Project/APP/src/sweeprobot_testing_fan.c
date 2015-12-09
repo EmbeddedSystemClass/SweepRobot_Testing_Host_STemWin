@@ -41,7 +41,7 @@ static void SweepRobot_FanTestProc(void)
         OSTimeDlyHMSM(0,0,0,6);
         if(usartRxFlag){
             fan.current = usartRxNum;
-            Edit_Set_Value(ID_MAIN_EDIT_U1, usartRxNum);
+            Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
             /* TODO: add fan over current protection here */
             usartRxNum = 0;
             usartRxFlag = 0;
