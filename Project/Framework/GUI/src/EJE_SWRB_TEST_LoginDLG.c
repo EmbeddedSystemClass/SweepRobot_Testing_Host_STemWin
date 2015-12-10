@@ -18,9 +18,14 @@
 **********************************************************************
 */
 
-#include "sweeprobot_testing.h"
-#include "eje_logo_char.h"
+// USER START (Optionally insert additional includes)
+// USER END
 
+#include "EJE_SWRB_TEST_DLG_Conf.h"
+
+#include "EJE_SWRB_TEST_LoginDLG.h"
+
+#include "sweeprobot_testing.h"
 
 /*********************************************************************
 *
@@ -29,7 +34,8 @@
 **********************************************************************
 */
 
-WM_HWIN hWin_SWRB_START;
+// USER START (Optionally insert additional defines)
+// USER END
 
 /*********************************************************************
 *
@@ -38,17 +44,21 @@ WM_HWIN hWin_SWRB_START;
 **********************************************************************
 */
 
+// USER START (Optionally insert additional static data)
+// USER END
+
 /*********************************************************************
 *
-*       _aDialogStart
+*       _aDialogCreate
 */
-static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
-    { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_START, 0, 0, 800, 480, 0, 0x0, 0 },
-    { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 247, 5, 306, 153, 0, 0, 0 },
-    { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 500, 203, 200, 180, 0, 0x0, 0 },
-//    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 203, 200, 180, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
+static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
+  { FRAMEWIN_CreateIndirect, "fwinLogin", ID_LOGIN_FRAMEWIN_MAIN, 0, 0, 440, 210, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "btnLoginOK", ID_LOGIN_BUTTON_OK, 260, 40, 120, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnLoginCancel", ID_LOGIN_BUTTON_CANCEL, 260, 110, 120, 40, 0, 0x0, 0 },
+  { EDIT_CreateIndirect, "Edit", ID_LOGIN_EDIT_PASSWORD, 50, 90, 150, 40, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_LOGIN_TEXT_PASSWORD, 30, 40, 200, 40, 0, 0x64, 0 },
+  // USER START (Optionally insert additional widgets)
+  // USER END
 };
 
 /*********************************************************************
@@ -57,111 +67,110 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
 *
 **********************************************************************
 */
-/*********************************************************************
-*
-*       _GetImageById
-*/
-static const void * _GetImageById(U32 Id, U32 * pSize) 
-{
-    switch (Id) {
-        case ID_START_IMAGE_0_IMAGE_0:
-            *pSize = sizeof(_acImage_eje_logo);
-            return (const void *)_acImage_eje_logo;
-    }
-    return NULL;
-}
-
-static void Button_Init(WM_HWIN hItem)
-{
-    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
-    BUTTON_SetSkinClassic(hItem);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
-}
 
 /*********************************************************************
 *
 *       _cbDialog
 */
-static void _cbDialog(WM_MESSAGE * pMsg) 
-{
-    const void * pData;
-    WM_HWIN      hItem;
-    U32          FileSize;
-    int          NCode;
-    int          Id;
+static void _cbDialog(WM_MESSAGE * pMsg) {
+  WM_HWIN hItem;
+  int     NCode;
+  int     Id;
+  // USER START (Optionally insert additional variables)
+  // USER END
 
-    switch (pMsg->MsgId) {
-        case WM_INIT_DIALOG:
-            //
-            // Initialization of 'Image'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_IMAGE_LOGO);
-            pData = _GetImageById(ID_START_IMAGE_0_IMAGE_0, &FileSize);
-            IMAGE_SetBMP(hItem, pData, FileSize);
-            //
-            // Initialization of 'PCB TEST'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_PCB_TEST);
-            BUTTON_SetText(hItem, "PCB TEST");
-            Button_Init(hItem);
-            //
-            // Initialization of 'POWER STATION'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
-            BUTTON_SetText(hItem, "Power Station");
-            Button_Init(hItem);
-            //
-            // Initialization of 'DECRYPTO'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_DECRYPTO);
-            BUTTON_SetText(hItem, "Decrypto");
-            Button_Init(hItem);
-            //
-            // Initialization of 'Text'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_VERSION);
-            TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
-            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            TEXT_SetText(hItem, "SWRB Fixture Ver:1.0");
-            break;
-        case WM_NOTIFY_PARENT:
-            Id    = WM_GetId(pMsg->hWinSrc);
-            NCode = pMsg->Data.v;
-            switch(Id) {
-                case ID_START_BUTTON_PCB_TEST: // Notifications sent by 'PCB TEST'
-                    switch(NCode) {
-                        case WM_NOTIFICATION_CLICKED:
-                            break;
-                        case WM_NOTIFICATION_RELEASED:
-                            SweepRobot_StartDlgPCBBtnClickProc();
-                            break;
-                    }
-                    break;
-                case ID_START_BUTTON_POWER_STATION: // Notifications sent by 'POWER STATION'
-                    switch(NCode) {
-                        case WM_NOTIFICATION_CLICKED:
-                            break;
-                        case WM_NOTIFICATION_RELEASED:
-                            SweepRobot_StartDlgPowerStationBtnClickPorc();
-                            break;
-                    }
-                    break;
-                case ID_START_BUTTON_DECRYPTO: // Notifications sent by 'Decrypto'
-                    switch(NCode) {
-                        case WM_NOTIFICATION_CLICKED:
-                            break;
-                        case WM_NOTIFICATION_RELEASED:
-//                            SweepRobot_StartDlgDecryptoBtnClickPorc();
-                            break;
-                    }
-                    break;
-            }
-            break;
-        default:
-            WM_DefaultProc(pMsg);
-            break;
+  switch (pMsg->MsgId) {
+  case WM_INIT_DIALOG:
+    //
+    // Initialization of 'fwinLogin'
+    //
+    hItem = pMsg->hWin;
+    FRAMEWIN_SetText(hItem, "Login");
+    //
+    // Initialization of 'btnLoginOK'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_BUTTON_OK);
+    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
+    BUTTON_SetText(hItem, "OK");
+    //
+    // Initialization of 'btnLoginCancel'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_BUTTON_CANCEL);
+    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
+    BUTTON_SetText(hItem, "Cancel");
+    //
+    // Initialization of 'Edit'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_EDIT_PASSWORD);
+    EDIT_SetText(hItem, "123");
+    EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    EDIT_SetBkColor(hItem, EDIT_CI_ENABELD, GUI_WHITE);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_TEXT_PASSWORD);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+    TEXT_SetText(hItem, "Please input Password");
+    /* Hide Window when create */
+    WM_HideWin(pMsg->hWin);
+    // USER START (Optionally insert additional code for further widget initialization)
+    // USER END
+    break;
+  case WM_NOTIFY_PARENT:
+    Id    = WM_GetId(pMsg->hWinSrc);
+    NCode = pMsg->Data.v;
+    switch(Id) {
+    case ID_LOGIN_BUTTON_OK: // Notifications sent by 'btnLoginOK'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_PCBTestLoginOKProc();
+        break;
+
+      }
+      break;
+    case ID_LOGIN_BUTTON_CANCEL: // Notifications sent by 'btnLoginCancel'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_PCBTestLoginCancelProc();
+        break;
+
+      }
+      break;
+    case ID_LOGIN_EDIT_PASSWORD: // Notifications sent by 'Edit'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_PCBTestLoginEditProc();
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        break;
+      }
+      break;
     }
+    break;
+  default:
+    WM_DefaultProc(pMsg);
+    break;
+  }
 }
+
+/*********************************************************************
+*
+*       Public data
+*
+**********************************************************************
+*/
+
+WM_HWIN hWin_SWRB_LOGIN;
 
 /*********************************************************************
 *
@@ -171,13 +180,16 @@ static void _cbDialog(WM_MESSAGE * pMsg)
 */
 /*********************************************************************
 *
-*       CreateWindow
+*       CreateLoginDLG
 */
-WM_HWIN CreateEJE_SWRB_TEST_StartDLG(void) {
-    WM_HWIN hWin;
+WM_HWIN CreateLoginDLG(void) {
+  WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogStart, GUI_COUNTOF(_aDialogStart), _cbDialog, WM_HBKWIN, 0, 0);
-    return hWin;
+  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 180, 135);
+  return hWin;
 }
+
+// USER START (Optionally insert additional public code)
+// USER END
 
 /*************************** End of file ****************************/

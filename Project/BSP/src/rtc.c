@@ -1,6 +1,14 @@
 #include "rtc.h"
 
+#include "delay.h"
+#include <stdio.h>
+#include "malloc.h"
+
 #include "sweeprobot_testing.h"
+
+//#include "sweeprobot_testing.h"
+
+extern enum SWRB_TEST_MODE gSwrbTestMode;
 
 NVIC_InitTypeDef   NVIC_InitStructure;
 
@@ -24,20 +32,6 @@ ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)
     RTC_DateTypeInitStructure.RTC_WeekDay=week;
     RTC_DateTypeInitStructure.RTC_Year=year;
     return RTC_SetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
-}
-
-void RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
-{
-    char *str;
-    
-    str = mymalloc(SRAMIN, sizeof(char)*30);
-    sprintf(str,"%d/%d/%d %d:%d:%d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
-    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
-        Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
-    }else{
-        Edit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_EDIT_DATE, str);
-    }
-    myfree(SRAMIN, str);
 }
 
 u8 My_RTC_Init(void)

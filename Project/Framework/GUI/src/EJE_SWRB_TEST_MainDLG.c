@@ -18,6 +18,10 @@
 **********************************************************************
 */
 
+#include "EJE_SWRB_TEST_DLG_Conf.h"
+
+#include "EJE_SWRB_TEST_MainDLG.h"
+
 #include "sweeprobot_testing.h"
 #include "sweeprobot_testing_rgb_led.h"
 #include "sweeprobot_testing_buzzer.h"
@@ -34,31 +38,12 @@
 
 #define ID_IMAGE_0_IMAGE_0 0x00
 
-extern GUI_CONST_STORAGE GUI_BITMAP _bmStartCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmPauseCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmResumeCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmSetCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmStopCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmExitCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmConfirmCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmCheckCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmResetCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN;
-
 /*********************************************************************
 *
 *       Static data
 *
 **********************************************************************
 */
-
-WM_HWIN hWin_SWRB_MAIN;
-WM_HWIN hWin_SWRB_RGB_LED;
-WM_HWIN hWin_SWRB_BUZZER;
-
-static u8 gMainDLGIndicateFlag = 0;
 
 /*********************************************************************
 *
@@ -165,7 +150,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_START);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_MAIN_BUTTON_START, &_bmStartCHN, 18, 43);
+            BUTTON_DispStartCHNStr(pMsg->hWin, ID_MAIN_BUTTON_START, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTBLUE);
             //
@@ -174,7 +159,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_SET);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_MAIN_BUTTON_SET, &_bmSetCHN, 18, 43);
+            BUTTON_DispSetCHNStr(pMsg->hWin, ID_MAIN_BUTTON_SET, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
             //
             // Initialization of 'SET SN'
@@ -197,7 +182,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_STOP);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_MAIN_BUTTON_STOP, &_bmStopCHN, 18, 43);
+            BUTTON_DispStopCHNStr(pMsg->hWin, ID_MAIN_BUTTON_STOP, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
             WM_DisableWindow(hItem);
@@ -207,7 +192,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_EXIT);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_MAIN_BUTTON_EXIT, &_bmExitCHN, 18, 43);
+            BUTTON_DispExitCHNStr(pMsg->hWin, ID_MAIN_BUTTON_EXIT, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
             //
@@ -357,7 +342,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-                        SweepRobot_PCBTestSetProc();
+                        SweepRobot_PCBTestLoginProc();
                         break;
                 }
                 break;
@@ -366,7 +351,14 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     case WM_NOTIFICATION_CLICKED:
                         break;
                     case WM_NOTIFICATION_RELEASED:
-//                        SweepRobot_PCBTestSetProc();
+                        break;
+                }
+                break;
+            case ID_MAIN_BUTTON_SET_TIME:
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
                         break;
                 }
                 break;
@@ -687,10 +679,22 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
 
 /*********************************************************************
 *
+*       Public data
+*
+**********************************************************************
+*/
+
+WM_HWIN hWin_SWRB_MAIN;
+WM_HWIN hWin_SWRB_RGB_LED;
+WM_HWIN hWin_SWRB_BUZZER;
+
+/*********************************************************************
+*
 *       Public code
 *
 **********************************************************************
 */
+
 /*********************************************************************
 *
 *       CreateEJE_SWRB_TEST_MainDLG
@@ -717,313 +721,6 @@ WM_HWIN CreateBUZZER_TestDLG(void)
 
     hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_MAIN, 180, 135);
     return hWin;
-}
-
-
-void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, buttonId);
-    BUTTON_SetText(hItem, str);
-}
-
-void Button_Set_BkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, buttonId);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, color);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, color);
-}
-
-void Button_SetEnable(WM_HWIN hWin, int buttonId)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, buttonId);
-    WM_EnableWindow(hItem);
-}
-
-void Button_SetDisable(WM_HWIN hWin, int buttonId)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, buttonId);
-    WM_DisableWindow(hItem);
-}
-
-void BUTTON_Set_Bitmap_Ex(WM_HWIN hWin, int buttonId, const GUI_BITMAP *pBitmap, int x, int y)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, buttonId);
-    BUTTON_SetText(hItem, " ");
-    BUTTON_SetBitmapEx(hItem, BUTTON_CI_DISABLED, pBitmap, x, y);
-    BUTTON_SetBitmapEx(hItem, BUTTON_CI_PRESSED, pBitmap, x, y);
-    BUTTON_SetBitmapEx(hItem, BUTTON_CI_UNPRESSED, pBitmap, x, y);
-}
-
-void BUTTON_Disp_Start_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmStartCHN, x, y);
-}
-
-void BUTTON_Disp_Pause_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmPauseCHN, x, y);
-}
-
-void BUTTON_Disp_Resume_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmResumeCHN, x, y);
-}
-
-void BUTTON_Disp_Set_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmSetCHN, x, y);
-}
-
-void BUTTON_Disp_Stop_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmStopCHN, x, y);
-}
-
-void BUTTON_Disp_Confirm_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmConfirmCHN, x, y);
-}
-
-void BUTTON_Disp_Check_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmCheckCHN, x, y);
-}
-
-void BUTTON_Disp_Reset_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmResetCHN, x, y);
-}
-
-void BUTTON_Disp_Cancel_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmCancelCHN, x, y);
-}
-
-void BUTTON_Disp_Exit_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmExitCHN, x, y);
-}
-
-void BUTTON_Disp_SerialNum_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmSerialNumCHN, x, y);
-}
-
-void BUTTON_Disp_Time_CHNStr(WM_HWIN hWin, int buttonId, int x, int y)
-{
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmTimeCHN, x, y);
-}
-
-void Progbar_Set_Value(int progbarValue)
-{
-	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_PROGBAR_0);
-	PROGBAR_SetValue(hItem, progbarValue);
-}
-
-void Progbar_Set_Percent(void)
-{
-    Progbar_Set_Value( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal)*100 );
-}
-
-void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, editId);
-    EDIT_SetValue(hItem, editValue);
-}
-
-void Edit_Set_Text(WM_HWIN hWin, int editId, char *str)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, editId);
-    EDIT_SetText(hItem, str);
-}
-
-void Edit_Clear(void)
-{
-    int i;
-    
-    for(i=ID_MAIN_EDIT_1;i<ID_MAIN_EDIT_SN;i++){
-        Edit_Set_Value(hWin_SWRB_MAIN , i, 0);
-    }
-}
-
-void Text_Set_Text(WM_HWIN hWin, int textId, char *str)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, textId);
-    TEXT_SetText(hItem, str);
-}
-void Text_Set_Color(WM_HWIN hWin, int textId, GUI_COLOR color)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, textId);
-    TEXT_SetTextColor(hItem, color);
-}
-
-void Checkbox_Set_Text(WM_HWIN hWin, int checkboxId, char *string)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, checkboxId);
-    CHECKBOX_SetText(hItem, string);
-}
-
-int Checkbox_Get_State(int checkboxId)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
-    return(CHECKBOX_GetState(hItem));
-}
-
-void Checkbox_Set_State(WM_HWIN hWin, int checkboxId, unsigned int checkboxState)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, checkboxId);
-    CHECKBOX_SetState(hItem, checkboxState);
-}
-
-void SWRB_TestCheckboxStateSet(u8 stateNum)
-{
-    int i;
-    WM_HWIN hItem;
-    
-    for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
-        CHECKBOX_SetState(hItem, stateNum);
-    }
-}
-
-void SWRB_TestCheckboxEnable(void)
-{
-    int i;
-    WM_HWIN hItem;
-    
-    for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
-        WM_EnableWindow(hItem);
-    }
-}
-
-void SWRB_TestCheckboxDisable(void)
-{
-    int i;
-    WM_HWIN hItem;
-    
-    for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
-        WM_DisableWindow(hItem);
-    }
-}
-
-void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, id);
-    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-        if(CHECKBOX_GetState(hItem)){
-            gSwrbTestValidTaskCnt++;
-            gSwrbTestValidTaskCntTotal++;
-        }else{
-            gSwrbTestValidTaskCnt--;
-            gSwrbTestValidTaskCntTotal--;
-        }
-    }
-}
-
-void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxtextcolor)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
-    CHECKBOX_SetTextColor(hItem, checkboxtextcolor);
-}
-
-void Checkbox_Set_TextAlign(int checkboxId, int align)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
-    CHECKBOX_SetTextAlign(hItem, align);
-}
-
-void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
-    CHECKBOX_SetBkColor(hItem, checkboxbkcolor);
-}
-
-void Checkbox_Set_Box_Back_Color(WM_HWIN hWin, int checkboxId, GUI_COLOR boxBkColor, int Index)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin, checkboxId);
-    CHECKBOX_SetBoxBkColor(hItem, boxBkColor, Index);
-}
-
-void MULTIEDIT_Set_Buffer_Size(int size)
-{
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN);
-    MULTIEDIT_SetBufferSize(hItem, size);
-}
-
-void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s)
-{
-	WM_HWIN hItem;
-    
-	hItem = WM_GetDialogItem(hWin, multiEditId);
-	MULTIEDIT_SetText(hItem, s);
-}
-
-void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s)
-{
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin, multiEditId);
-    MULTIEDIT_AddText(hItem, s);
-}
-
-void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor)
-{
-    WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_0);
-    MULTIEDIT_SetTextColor(hItem, MULTIEDIT_CI_EDIT, multieditTextColor);
-}
-
-GRAPH_DATA_Handle Graph_Data_YT_Create(GUI_COLOR color, u32 maxNumItems, int16_t *pData, u32 numItems)
-{
-    GRAPH_DATA_Handle hGraphData;
-    hGraphData = GRAPH_DATA_YT_Create(color, maxNumItems, pData, numItems);
-    return hGraphData;
-}
-
-void SweepRobot_MainTestIndicateBtnToggle(void)
-{
-    if(++gMainDLGIndicateFlag%2){
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_DARKRED);
-    }else{
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
-    }
-}
-
-void SWRB_WM_EnableWindow(WM_HWIN hWin, int id)
-{
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin, id);
-    WM_EnableWindow(hItem);
-}
-
-void SWRB_WM_DisableWindow(WM_HWIN hWin, int id)
-{
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin, id);
-    WM_DisableWindow(hItem);
 }
 
 /*************************** End of file ****************************/

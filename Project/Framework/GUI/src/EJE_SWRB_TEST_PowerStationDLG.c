@@ -18,9 +18,10 @@
 **********************************************************************
 */
 
+#include "EJE_SWRB_TEST_DLG_Conf.h"
+
 #include "sweeprobot_testing.h"
 
-#include "eje_logo_char.h"
 #include "sweeprobot_testing_power_station.h"
 
 /*********************************************************************
@@ -29,8 +30,6 @@
 *
 **********************************************************************
 */
-
-WM_HWIN hWin_SWRB_POWER_STATION;
 
 /*********************************************************************
 *
@@ -62,7 +61,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "btnSet", ID_PS_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnStop", ID_PS_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_PS_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnIndicate", ID_PS_BUTTON_INDICATE, 470, 50, 30, 30, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnIndicate", ID_PS_BUTTON_INDICATE, 670, 0, 30, 30, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "Sig_LL(0x41)", ID_PS_CHECKBOX_LL, 530, 135, 120, 30, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "Sig_LS(0x44)", ID_PS_CHECKBOX_LS, 530, 180, 120, 30, 0, 0x0, 0 },
   { CHECKBOX_CreateIndirect, "Sig_L(0x46)", ID_PS_CHECKBOX_L, 530, 225, 120, 30, 0, 0x0, 0 },
@@ -89,17 +88,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 **********************************************************************
 */
 /*********************************************************************
-*
-*       _GetImageById
 */
-//static const void * _GetImageById(U32 Id, U32 * pSize) {
-//  switch (Id) {
-//  case ID_PS_IMAGE_0_IMAGE_0:
-//    *pSize = sizeof(_acImage_power_station);
-//    return (const void *)_acImage_power_station;
-//  }
-//  return NULL;
-//}
 
 static void Button_Init(WM_HWIN hItem)
 {
@@ -107,91 +96,6 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
-
-///*******************************************************************
-//*
-//*       _DrawGraph
-//*/
-//static void _DrawGraph(void) {
-//  GUI_RECT Rect;
-//  int      xSize;
-//  int      ySize;
-//  int      x;
-//  int      y;
-
-//  WM_GetClientRect(&Rect);
-//  xSize = Rect.x1;
-//  ySize = Rect.y1;
-//  GUI_SetBkColor(GUI_BLACK);
-//  GUI_ClearRect(26, 1, xSize- 21, ySize - 21);
-//  GUI_SetColor(_ColorGrid);
-//  for (y = 20; y < (ySize - 21); y += 20) {
-//    int yPos = ySize - 20 - y;
-//    GUI_DrawHLine(yPos, 26, 302);
-//  }
-//  for (x = 40; x < (xSize - 25); x += 40) {
-//    int xPos = x + 25;
-//    GUI_DrawVLine(xPos, 1, ySize - 21);
-//  }
-//  GUI_SetColor(_ColorVoltage);
-//  GUI_DrawGraph(aVoltageValue, GUI_COUNTOF(aVoltageValue), 26, ySize - 121);
-//  GUI_SetColor(_ColorCurrent);
-//  GUI_DrawGraph(aCurrentValue, GUI_COUNTOF(aCurrentValue), 26, ySize - 121);
-//}
-
-///*********************************************************************
-//*
-//*       _LabelGraph
-//*/
-//static void _LabelGraph(void) {
-//  GUI_RECT Rect;
-//  int      x;
-//  int      y;
-//  int      xSize;
-//  int      ySize;
-
-//  WM_GetClientRect(&Rect);
-//  xSize = Rect.x1;
-//  ySize = Rect.y1;
-//  GUI_SetBkColor(_ColorBackGround);
-//  GUI_Clear();
-//  GUI_SetColor(_ColorLabel);
-//  GUI_SetPenSize(1);
-//  GUI_ClearRect(0, (ySize - 21) - ySize, (xSize - 1), (ySize - 1));
-//  GUI_DrawRect(25, 0, xSize, ySize - 20);
-//  GUI_SetFont(&GUI_Font6x8);
-//  for (x = 0; x < (xSize - 20); x += 40) {
-//    int xPos = x + 25;
-//    GUI_DrawVLine(xPos, (ySize - 20), (ySize - 14));
-//    GUI_DispDecAt(x / 40, xPos - 2, (ySize - 9), 1);
-//  }
-//  for (y = 0; y < ySize - 20; y += 20) {
-//    int yPos = ySize - 20 - y;
-//    GUI_DrawHLine(yPos, 20, 25);
-//    GUI_GotoXY(1, yPos - 4);
-//    GUI_DispDecSpace(_VolMin + y, 3);
-//  }
-//}
-
-///*********************************************************************
-//*
-//*       _cbCharge
-//*
-//* Function description
-//*   Callback routine of Charge Graph window
-//*/
-//static void _cbCharge(WM_MESSAGE * pMsg) {
-//  switch (pMsg->MsgId) {
-//  case WM_PAINT:
-//    _LabelGraph();
-//    _DrawGraph();
-//    return;
-//  }
-//  if (_pcbCallbackCharge) {
-//    _pcbCallbackCharge(pMsg);
-//  }
-//}
-
 
 /*********************************************************************
 *
@@ -220,7 +124,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_START);
 //    BUTTON_SetText(hItem, "START");
     BUTTON_SetText(hItem, " ");
-    BUTTON_Disp_Start_CHNStr(pMsg->hWin, ID_PS_BUTTON_START, 18, 43);
+    BUTTON_DispStartCHNStr(pMsg->hWin, ID_PS_BUTTON_START, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTBLUE);
@@ -230,7 +134,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_SET);
 //    BUTTON_SetText(hItem, "SET");
     BUTTON_SetText(hItem, " ");
-    BUTTON_Disp_Set_CHNStr(pMsg->hWin, ID_PS_BUTTON_SET, 18, 43);
+    BUTTON_DispSetCHNStr(pMsg->hWin, ID_PS_BUTTON_SET, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTCYAN);
@@ -241,7 +145,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_STOP);
 //    BUTTON_SetText(hItem, "STOP");
     BUTTON_SetText(hItem, " ");
-    BUTTON_Disp_Stop_CHNStr(pMsg->hWin, ID_PS_BUTTON_STOP, 18, 43);
+    BUTTON_DispStopCHNStr(pMsg->hWin, ID_PS_BUTTON_STOP, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
@@ -252,7 +156,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_PS_BUTTON_EXIT);
 //    BUTTON_SetText(hItem, "EXIT");
     BUTTON_SetText(hItem, " ");
-    BUTTON_Disp_Exit_CHNStr(pMsg->hWin, ID_PS_BUTTON_EXIT, 18, 43);
+    BUTTON_DispExitCHNStr(pMsg->hWin, ID_PS_BUTTON_EXIT, 18, 43);
     Button_Init(hItem);
     BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
     BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
@@ -369,18 +273,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
     switch(Id) {
-        case ID_PS_MULTIPAGE_MAIN: // Notifications sent by 'Multipage'
-            switch(NCode) {
-                case WM_NOTIFICATION_CLICKED:
-                break;
-                case WM_NOTIFICATION_RELEASED:
-                break;
-                case WM_NOTIFICATION_MOVED_OUT:
-                break;
-                case WM_NOTIFICATION_VALUE_CHANGED:
-                break;
-            }
-            break;
     case ID_PS_BUTTON_START: // Notifications sent by 'btnStart'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
@@ -494,7 +386,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   }
 }
 
-
 /*********************************************************************
 *
 *       Public data
@@ -502,12 +393,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 **********************************************************************
 */
 
+WM_HWIN hWin_SWRB_POWER_STATION;
+
 /*********************************************************************
 *
 *       Public code
 *
 **********************************************************************
 */
+
 /*********************************************************************
 *
 *       CreateWindow

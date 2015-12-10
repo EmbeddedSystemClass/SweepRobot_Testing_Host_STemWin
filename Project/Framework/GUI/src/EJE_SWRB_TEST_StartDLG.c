@@ -18,7 +18,10 @@
 **********************************************************************
 */
 
+#include "EJE_SWRB_TEST_DLG_Conf.h"
+
 #include "sweeprobot_testing.h"
+
 #include "eje_logo_char.h"
 
 /*********************************************************************
@@ -27,8 +30,6 @@
 *
 **********************************************************************
 */
-
-WM_HWIN hWin_SWRB_START;
 
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPCBTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPSTestCHN;
@@ -45,7 +46,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmPSTestCHN;
 *       _aDialogStart
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
-    { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_START, 0, 0, 800, 480, 0, 0x0, 0 },
+    { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
     { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
@@ -67,7 +68,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
 static const void * _GetImageById(U32 Id, U32 * pSize)
 {
     switch (Id) {
-        case ID_START_IMAGE_0_IMAGE_0:
+        case ID_START_IMAGE_EJE_LOGO:
             *pSize = sizeof(_acImage_eje_logo);
             return (const void *)_acImage_eje_logo;
     }
@@ -99,7 +100,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             // Initialization of 'Image'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_IMAGE_LOGO);
-            pData = _GetImageById(ID_START_IMAGE_0_IMAGE_0, &FileSize);
+            pData = _GetImageById(ID_START_IMAGE_EJE_LOGO, &FileSize);
             IMAGE_SetBMP(hItem, pData, FileSize);
             //
             // Initialization of 'PCB TEST'
@@ -179,10 +180,20 @@ static void _cbDialog(WM_MESSAGE * pMsg)
 
 /*********************************************************************
 *
+*       Public data
+*
+**********************************************************************
+*/
+
+WM_HWIN hWin_SWRB_START;
+
+/*********************************************************************
+*
 *       Public code
 *
 **********************************************************************
 */
+
 /*********************************************************************
 *
 *       CreateWindow

@@ -2,7 +2,6 @@
 #define __SWEEPROBOT_TESTING_POWER_STATION_H
 
 #include "stm32f4xx.h"
-#include "GRAPH.h"
 
 typedef struct{
     int voltage;

@@ -18,8 +18,7 @@
 **********************************************************************
 */
 
-
-
+#include "EJE_SWRB_TEST_DLG_Conf.h"
 
 #include "sweeprobot_testing.h"
 
@@ -30,10 +29,6 @@
 **********************************************************************
 */
 
-
-WM_HWIN hWin_SWRB_TIMESETTING;
-
-
 /*********************************************************************
 *
 *       Static data
@@ -41,19 +36,17 @@ WM_HWIN hWin_SWRB_TIMESETTING;
 **********************************************************************
 */
 
-
 static int  lastLwIndex[6];
 static RTC_DateTypeDef rtcDate;
 static RTC_TimeTypeDef rtcTime;
-
 
 /*********************************************************************
 *
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-    { WINDOW_CreateIndirect, "TEST SETTING", ID_TIMESET_WINDOW, 0, 0, 800, 480, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "Set Time", ID_TIMESET_TEXT_0, 20, 10, 680, 50, 0, 0x0, 0 },
+    { WINDOW_CreateIndirect, "TEST SETTING", ID_TIMESET_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "Set Time", ID_TIMESET_TEXT_TITLE, 20, 10, 680, 50, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Confirm", ID_TIMESET_BUTTON_CONFIRM, 700, 0, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Check", ID_TIMESET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Reset", ID_TIMESET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
@@ -284,176 +277,43 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
                 }
             }
-            BUTTON_Disp_Confirm_CHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CONFIRM, 18, 43);
-            BUTTON_Disp_Check_CHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CHECK, 18, 43);
-            BUTTON_Disp_Reset_CHNStr(pMsg->hWin, ID_TIMESET_BUTTON_RESET, 18, 43);
-            BUTTON_Disp_Cancel_CHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CANCEL, 18, 43);
-            BUTTON_Disp_SerialNum_CHNStr(pMsg->hWin, ID_TIMESET_BUTTON_SNSET, 14, 18);
-            BUTTON_Disp_Time_CHNStr(pMsg->hWin, ID_TIMESET_BUTTON_TIMESET, 26, 18);
+            BUTTON_DispConfirmCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CONFIRM, 18, 43);
+            BUTTON_DispCheckCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CHECK, 18, 43);
+            BUTTON_DispResetCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_RESET, 18, 43);
+            BUTTON_DispCancelCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CANCEL, 18, 43);
+            BUTTON_DispSerialNumCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_SNSET, 14, 18);
+            BUTTON_DispTimeCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_TIMESET, 26, 18);
             //
             // Initialization of 'lwYear'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_LISTWHEEL_YEAR);
             ListWheel_Init(hItem);
-            LISTWHEEL_AddString(hItem, "2015");
-            LISTWHEEL_AddString(hItem, "2016");
-            LISTWHEEL_AddString(hItem, "2017");
-            LISTWHEEL_AddString(hItem, "2018");
-            LISTWHEEL_AddString(hItem, "2019");
-            LISTWHEEL_AddString(hItem, "2020");
-            LISTWHEEL_AddString(hItem, "2021");
-            LISTWHEEL_AddString(hItem, "2022");
-            LISTWHEEL_AddString(hItem, "2023");
-            LISTWHEEL_AddString(hItem, "2024");
-            LISTWHEEL_AddString(hItem, "2025");
+            ListWheel_AddNumString(hItem, 2015, 2025);
             //
             // Initialization of 'lwMonth'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_LISTWHEEL_MONTH);
             ListWheel_Init(hItem);
-            LISTWHEEL_AddString(hItem, "01");
-            LISTWHEEL_AddString(hItem, "02");
-            LISTWHEEL_AddString(hItem, "03");
-            LISTWHEEL_AddString(hItem, "04");
-            LISTWHEEL_AddString(hItem, "05");
-            LISTWHEEL_AddString(hItem, "06");
-            LISTWHEEL_AddString(hItem, "07");
-            LISTWHEEL_AddString(hItem, "08");
-            LISTWHEEL_AddString(hItem, "09");
-            LISTWHEEL_AddString(hItem, "10");
-            LISTWHEEL_AddString(hItem, "11");
-            LISTWHEEL_AddString(hItem, "12");
+            ListWheel_AddNumString(hItem, 1, 12);
             //
             // Initialization of 'lwDay'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_LISTWHEEL_DAY);
             ListWheel_Init(hItem);
-            LISTWHEEL_AddString(hItem, "01");
-            LISTWHEEL_AddString(hItem, "02");
-            LISTWHEEL_AddString(hItem, "03");
-            LISTWHEEL_AddString(hItem, "04");
-            LISTWHEEL_AddString(hItem, "05");
-            LISTWHEEL_AddString(hItem, "06");
-            LISTWHEEL_AddString(hItem, "07");
-            LISTWHEEL_AddString(hItem, "08");
-            LISTWHEEL_AddString(hItem, "09");
-            LISTWHEEL_AddString(hItem, "10");
-            LISTWHEEL_AddString(hItem, "11");
-            LISTWHEEL_AddString(hItem, "12");
-            LISTWHEEL_AddString(hItem, "13");
-            LISTWHEEL_AddString(hItem, "14");
-            LISTWHEEL_AddString(hItem, "15");
-            LISTWHEEL_AddString(hItem, "16");
-            LISTWHEEL_AddString(hItem, "17");
-            LISTWHEEL_AddString(hItem, "18");
-            LISTWHEEL_AddString(hItem, "19");
-            LISTWHEEL_AddString(hItem, "20");
-            LISTWHEEL_AddString(hItem, "21");
-            LISTWHEEL_AddString(hItem, "22");
-            LISTWHEEL_AddString(hItem, "23");
-            LISTWHEEL_AddString(hItem, "24");
-            LISTWHEEL_AddString(hItem, "25");
-            LISTWHEEL_AddString(hItem, "26");
-            LISTWHEEL_AddString(hItem, "27");
-            LISTWHEEL_AddString(hItem, "28");
-            LISTWHEEL_AddString(hItem, "29");
-            LISTWHEEL_AddString(hItem, "30");
-            LISTWHEEL_AddString(hItem, "31");
+            ListWheel_AddNumString(hItem, 1, 31);
             //
             // Initialization of 'lwHour'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_LISTWHEEL_HOUR);
             ListWheel_Init(hItem);
-            LISTWHEEL_AddString(hItem, "00");
-            LISTWHEEL_AddString(hItem, "01");
-            LISTWHEEL_AddString(hItem, "02");
-            LISTWHEEL_AddString(hItem, "03");
-            LISTWHEEL_AddString(hItem, "04");
-            LISTWHEEL_AddString(hItem, "05");
-            LISTWHEEL_AddString(hItem, "06");
-            LISTWHEEL_AddString(hItem, "07");
-            LISTWHEEL_AddString(hItem, "08");
-            LISTWHEEL_AddString(hItem, "09");
-            LISTWHEEL_AddString(hItem, "10");
-            LISTWHEEL_AddString(hItem, "11");
-            LISTWHEEL_AddString(hItem, "12");
-            LISTWHEEL_AddString(hItem, "13");
-            LISTWHEEL_AddString(hItem, "14");
-            LISTWHEEL_AddString(hItem, "15");
-            LISTWHEEL_AddString(hItem, "16");
-            LISTWHEEL_AddString(hItem, "17");
-            LISTWHEEL_AddString(hItem, "18");
-            LISTWHEEL_AddString(hItem, "19");
-            LISTWHEEL_AddString(hItem, "20");
-            LISTWHEEL_AddString(hItem, "21");
-            LISTWHEEL_AddString(hItem, "22");
-            LISTWHEEL_AddString(hItem, "23");
+            ListWheel_AddNumString(hItem, 0, 23);
             //
             // Initialization of 'lwMin,lwSec'
             //
             for(i=ID_TIMESET_LISTWHEEL_MIN;i<=ID_TIMESET_LISTWHEEL_SEC;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
                 ListWheel_Init(hItem);
-                LISTWHEEL_AddString(hItem, "0");
-                LISTWHEEL_AddString(hItem, "1");
-                LISTWHEEL_AddString(hItem, "2");
-                LISTWHEEL_AddString(hItem, "3");
-                LISTWHEEL_AddString(hItem, "4");
-                LISTWHEEL_AddString(hItem, "5");
-                LISTWHEEL_AddString(hItem, "6");
-                LISTWHEEL_AddString(hItem, "7");
-                LISTWHEEL_AddString(hItem, "8");
-                LISTWHEEL_AddString(hItem, "9");
-                LISTWHEEL_AddString(hItem, "10");
-                LISTWHEEL_AddString(hItem, "11");
-                LISTWHEEL_AddString(hItem, "12");
-                LISTWHEEL_AddString(hItem, "13");
-                LISTWHEEL_AddString(hItem, "14");
-                LISTWHEEL_AddString(hItem, "15");
-                LISTWHEEL_AddString(hItem, "16");
-                LISTWHEEL_AddString(hItem, "17");
-                LISTWHEEL_AddString(hItem, "18");
-                LISTWHEEL_AddString(hItem, "19");
-                LISTWHEEL_AddString(hItem, "20");
-                LISTWHEEL_AddString(hItem, "21");
-                LISTWHEEL_AddString(hItem, "22");
-                LISTWHEEL_AddString(hItem, "23");
-                LISTWHEEL_AddString(hItem, "24");
-                LISTWHEEL_AddString(hItem, "25");
-                LISTWHEEL_AddString(hItem, "26");
-                LISTWHEEL_AddString(hItem, "27");
-                LISTWHEEL_AddString(hItem, "28");
-                LISTWHEEL_AddString(hItem, "29");
-                LISTWHEEL_AddString(hItem, "30");
-                LISTWHEEL_AddString(hItem, "31");
-                LISTWHEEL_AddString(hItem, "32");
-                LISTWHEEL_AddString(hItem, "33");
-                LISTWHEEL_AddString(hItem, "34");
-                LISTWHEEL_AddString(hItem, "35");
-                LISTWHEEL_AddString(hItem, "36");
-                LISTWHEEL_AddString(hItem, "37");
-                LISTWHEEL_AddString(hItem, "38");
-                LISTWHEEL_AddString(hItem, "39");
-                LISTWHEEL_AddString(hItem, "40");
-                LISTWHEEL_AddString(hItem, "41");
-                LISTWHEEL_AddString(hItem, "42");
-                LISTWHEEL_AddString(hItem, "43");
-                LISTWHEEL_AddString(hItem, "44");
-                LISTWHEEL_AddString(hItem, "45");
-                LISTWHEEL_AddString(hItem, "46");
-                LISTWHEEL_AddString(hItem, "47");
-                LISTWHEEL_AddString(hItem, "48");
-                LISTWHEEL_AddString(hItem, "49");
-                LISTWHEEL_AddString(hItem, "50");
-                LISTWHEEL_AddString(hItem, "51");
-                LISTWHEEL_AddString(hItem, "52");
-                LISTWHEEL_AddString(hItem, "53");
-                LISTWHEEL_AddString(hItem, "54");
-                LISTWHEEL_AddString(hItem, "55");
-                LISTWHEEL_AddString(hItem, "56");
-                LISTWHEEL_AddString(hItem, "57");
-                LISTWHEEL_AddString(hItem, "58");
-                LISTWHEEL_AddString(hItem, "59");
+                ListWheel_AddNumString(hItem, 0, 59);
             }
             //
             // Initialization of 'edit'
@@ -676,6 +536,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
 /*********************************************************************
 *
+*       Public data
+*
+**********************************************************************
+*/
+
+WM_HWIN hWin_SWRB_TIMESETTING;
+
+/*********************************************************************
+*
 *       Public code
 *
 **********************************************************************
@@ -687,7 +556,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 WM_HWIN CreateTimeSettingDLG(void) {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 0, 0);
     return hWin;
 }
 

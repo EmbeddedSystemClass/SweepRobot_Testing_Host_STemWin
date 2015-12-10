@@ -1,5 +1,5 @@
 #include "sweeprobot_testing_wheel_float.h"
-
+#include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "sweeprobot_testing.h"
 
 #include "usart.h"

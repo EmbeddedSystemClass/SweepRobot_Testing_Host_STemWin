@@ -1,6 +1,9 @@
 #include "includes.h"
-
 #include "sweeprobot_testing.h"
+
+#include "GUI.h"
+#include "WM.h"
+#include "DIALOG.h"
 
 extern GUI_CONST_STORAGE GUI_FONT GUI_FontSDErrCHN;
 

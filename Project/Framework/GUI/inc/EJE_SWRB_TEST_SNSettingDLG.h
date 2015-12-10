@@ -20,14 +20,9 @@
 #ifndef __EJE_SWRB_TEST_SNSETTINGDLG_H
 #define __EJE_SWRB_TEST_SNSETTINGDLG_H
 
-
-
-
 #include "DIALOG.h"
 #include "ff.h"
 #include "stm32f4xx.h"
-
-#include "EJE_SWRB_TEST_MainDLG.h"
 
 /*********************************************************************
 *
@@ -35,60 +30,6 @@
 *
 **********************************************************************
 */
-#define ID_SNSET_LISTWHEEL_0 (ID_MAIN_BOUND + 0x00)
-#define ID_SNSET_LISTWHEEL_1 (ID_MAIN_BOUND + 0x01)
-#define ID_SNSET_LISTWHEEL_2 (ID_MAIN_BOUND + 0x02)
-#define ID_SNSET_LISTWHEEL_3 (ID_MAIN_BOUND + 0x03)
-#define ID_SNSET_LISTWHEEL_4 (ID_MAIN_BOUND + 0x04)
-#define ID_SNSET_LISTWHEEL_5 (ID_MAIN_BOUND + 0x05)
-#define ID_SNSET_EDIT_0 (ID_MAIN_BOUND + 0x10)
-#define ID_SNSET_EDIT_1 (ID_MAIN_BOUND + 0x11)
-#define ID_SNSET_EDIT_2 (ID_MAIN_BOUND + 0x12)
-#define ID_SNSET_EDIT_3 (ID_MAIN_BOUND + 0x13)
-#define ID_SNSET_EDIT_4 (ID_MAIN_BOUND + 0x14)
-#define ID_SNSET_EDIT_5 (ID_MAIN_BOUND + 0x15)
-#define ID_SNSET_EDIT_6 (ID_MAIN_BOUND + 0x16)
-#define ID_SNSET_FRAMEWIN_0 (ID_MAIN_BOUND + 0x20)
-#define ID_SNSET_WINDOW_0 (ID_MAIN_BOUND + 0x21)
-#define ID_SNSET_BUTTON_0 (ID_MAIN_BOUND + 0x30)
-#define ID_SNSET_BUTTON_1 (ID_MAIN_BOUND + 0x31)
-#define ID_SNSET_BUTTON_2 (ID_MAIN_BOUND + 0x32)
-#define ID_SNSET_BUTTON_3 (ID_MAIN_BOUND + 0x33)
-#define ID_SNSET_BUTTON_4 (ID_MAIN_BOUND + 0x34)
-#define ID_SNSET_BUTTON_5 (ID_MAIN_BOUND + 0x35)
-#define ID_SNSET_BUTTON_6 (ID_MAIN_BOUND + 0x36)
-#define ID_SNSET_BUTTON_7 (ID_MAIN_BOUND + 0x37)
-#define ID_SNSET_BUTTON_8 (ID_MAIN_BOUND + 0x38)
-#define ID_SNSET_TEXT_0 (ID_MAIN_BOUND + 0x40)
-#define ID_SNSET_BOUND (ID_MAIN_BOUND + 0x50)
-
-#define ID_SNSET_LISTWHEEL_YEAR   ID_SNSET_LISTWHEEL_0
-#define ID_SNSET_LISTWHEEL_MONTH  ID_SNSET_LISTWHEEL_1
-#define ID_SNSET_LISTWHEEL_DAY    ID_SNSET_LISTWHEEL_2
-#define ID_SNSET_LISTWHEEL_SN1    ID_SNSET_LISTWHEEL_3
-#define ID_SNSET_LISTWHEEL_SN2    ID_SNSET_LISTWHEEL_4
-#define ID_SNSET_LISTWHEEL_SN3    ID_SNSET_LISTWHEEL_5
-#define ID_SNSET_EDIT_COMB        ID_SNSET_EDIT_0
-#define ID_SNSET_EDIT_YEAR        ID_SNSET_EDIT_1
-#define ID_SNSET_EDIT_MONTH       ID_SNSET_EDIT_2
-#define ID_SNSET_EDIT_DAY         ID_SNSET_EDIT_3
-#define ID_SNSET_EDIT_SN1         ID_SNSET_EDIT_4
-#define ID_SNSET_EDIT_SN2         ID_SNSET_EDIT_5
-#define ID_SNSET_EDIT_SN3         ID_SNSET_EDIT_6
-#define ID_SNSET_BUTTON_CONFIRM   ID_SNSET_BUTTON_0
-#define ID_SNSET_BUTTON_CHECK     ID_SNSET_BUTTON_1
-#define ID_SNSET_BUTTON_RESET     ID_SNSET_BUTTON_2
-#define ID_SNSET_BUTTON_CANCEL    ID_SNSET_BUTTON_3
-#define ID_SNSET_BUTTON_SNSET     ID_SNSET_BUTTON_4
-#define ID_SNSET_BUTTON_TIMESET   ID_SNSET_BUTTON_5
-#define ID_SNSET_BUTTON_RESERVE1  ID_SNSET_BUTTON_6
-#define ID_SNSET_BUTTON_RESERVE2  ID_SNSET_BUTTON_7
-#define ID_SNSET_BUTTON_RESERVE3  ID_SNSET_BUTTON_8
-#define ID_SNSET_FRAMEWIN         ID_SNSET_FRAMEWIN_0
-#define ID_SNSET_WINDOW           ID_SNSET_WINDOW_0
-
-
-
 
 /*********************************************************************
 *
@@ -96,8 +37,6 @@
 *
 **********************************************************************
 */
-
-extern WM_HWIN hWin_SWRB_SNSETTING;
 
 /*********************************************************************
 *
@@ -111,17 +50,15 @@ extern WM_HWIN hWin_SWRB_SNSETTING;
 */
 WM_HWIN CreateSNSettingDLG(void);
 
-
 FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode);
 void SWRB_TestDataSaveToFile(void dataSaveProc(void));
-void SWRB_TestDataFileWriteSN(WM_HWIN hWin);
+void SWRB_TestDataFileWriteSN(void);
+void SWRB_TestDUTWriteSN(void);
 void SWRB_ListWheelRTCDateUpdate(WM_HWIN hWin, int idYear, int idMonth, int idDay);
 void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin);
-void SWRB_ListWheelSNInc(WM_HWIN *hWin);
+void SWRB_ListWheelSNInc(WM_HWIN hWin);
 void SWRB_SET_ListwheelSnapPosUpdate(void);
 void SWRB_SET_EditTextUpdate(void);
-
-
 
 #endif
 /*************************** End of file ****************************/
