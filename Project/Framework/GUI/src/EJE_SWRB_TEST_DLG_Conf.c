@@ -24,6 +24,8 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN;
 
 static u8 gMainDLGIndicateFlag = 0;
+static WM_HWIN hLastShowWin = 0;
+static int gLastShowId = 0;
 
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
 {
@@ -148,6 +150,27 @@ void Edit_Set_Text(WM_HWIN hWin, int editId, char *str)
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, editId);
     EDIT_SetText(hItem, str);
+}
+
+void Edit_Get_Text(WM_HWIN hWin, int editId, char *str)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, editId);
+    EDIT_GetText(hItem, str, EDIT_GetNumChars(hItem)+1);
+}
+ 
+void Edit_Set_HexMode(WM_HWIN hWin, int editId, long value, long min, long max)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, editId);
+    EDIT_SetHexMode(hItem, value, min, max);
+}
+
+void Edit_Set_DecMode(WM_HWIN hWin, int editId, long value, long min, long max, int shift, unsigned char flags)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, editId);
+    EDIT_SetDecMode(hItem, value, min, max, shift, flags);
 }
 
 void Edit_Clear(void)
@@ -358,3 +381,20 @@ void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
     }
     myfree(SRAMIN, str);
 }
+
+void SWRB_LastCallNumpadEditSave(WM_MESSAGE *pMsg)
+{
+    hLastShowWin = pMsg->hWin;
+    gLastShowId = WM_GetId(pMsg->hWinSrc);
+}
+
+WM_HWIN SWRB_LastCallNumpadEditWinGet(void)
+{
+    return hLastShowWin;
+}
+
+int SWRB_LastCallNumpadEditIdGet(void)
+{
+    return gLastShowId;
+}
+

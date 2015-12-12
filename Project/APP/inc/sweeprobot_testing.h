@@ -15,6 +15,8 @@
 #include "w25qxx.h"
 #include "fattester.h"
 
+#include "DIALOG.h"
+
 #include "sram.h"
 #include "RTC.h"
 #include "ILI93xx.h"
@@ -287,6 +289,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
 
 #define SWRB_TEST_USART_READ_TIMES          3
+#define SWRB_TEST_USART_IRDA_READ_TIMES     25
 #define SWRB_TEST_USART_READ_WAIT_TIME      3
 #define SWRB_TEST_VALID_COMP_TIMES          3
 #define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   1
@@ -319,7 +322,7 @@ void SweepRobot_PCBTestStartProc(void);
 void SweepRobot_PCBTestLoginProc(void);
 void SweepRobot_PCBTestLoginOKProc(void);
 void SweepRobot_PCBTestLoginCancelProc(void);
-void SweepRobot_PCBTestLoginEditProc(void);
+void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg);
 void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopProc(void);
 void SweepRobot_PCBTestExitProc(void);

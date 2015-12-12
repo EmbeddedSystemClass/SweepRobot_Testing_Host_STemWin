@@ -4,6 +4,6 @@
 #include "DIALOG.h"
 
 WM_HWIN CreateNumPadDLG(void);
-
+void SWRB_NumpadInputNumGet(char *numStr);
 
 #endif

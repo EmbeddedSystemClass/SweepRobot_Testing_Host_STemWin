@@ -17,6 +17,8 @@
 
 #define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  60
 
+static char* gLoginPassWord = "123456";
+
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
@@ -132,7 +134,7 @@ void emWin_Maintask(void *pdata)
     hWin_SWRB_MAIN = CreateEJE_SWRB_TEST_MainDLG();
     hWin_SWRB_POWER_STATION = CreateEJE_SWRB_TEST_PowerStationDLG();
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
-    
+
 
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Rtc_Task,(void*)0,(OS_STK*)&RTC_TASK_STK[RTC_STK_SIZE-1],RTC_TASK_PRIO);
@@ -458,7 +460,7 @@ void SweepRobot_PCBTestStartProc(void)
             SWRB_TestDataFileWriteSN();
             SWRB_TestDataFileWriteDate("Test Start Time", &rtcDate, &rtcTime);
             OS_EXIT_CRITICAL();
-            
+
             MultiEdit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n");
             str = mymalloc(SRAMIN, sizeof(char)*50);
             sprintf(str, "\r\nTest Start Time:20%d/%d/%d %d:%d:%d\r\n",\
@@ -519,63 +521,94 @@ void SweepRobot_PCBTestStartProc(void)
 void SweepRobot_PCBTestLoginProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-        
+
         gSwrbTestMode = SWRB_TEST_MODE_SET;
-        
+
+        Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Please Input Password");
+        Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_BLACK);
+
         SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
         SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
-        
-        WM_HideWin(hWin_SWRB_MAIN);
+
         WM_ShowWin(hWin_SWRB_LOGIN);
+        WM_BringToTop(hWin_SWRB_LOGIN);
     }
 }
 
 void SweepRobot_PCBTestLoginOKProc(void)
 {
     WM_HWIN hItem;
+    char *str;
 
     if(gSwrbTestMode == SWRB_TEST_MODE_SET){
-        
-        gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 
-        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-        BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-        BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-        BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+        hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
 
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START);
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
+        str = mymalloc(SRAMIN, sizeof(char)*11);
+        *str = 0;
+        Edit_Get_Text(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD, str);
 
-        SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+        if(!(strcmp(str,gLoginPassWord))){
 
-        WM_HideWin(hWin_SWRB_LOGIN);
-        WM_HideWin(hWin_SWRB_MAIN);
-        WM_ShowWin(hWin_SWRB_SNSETTING);
+            gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+
+            Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Please Input Password");
+            Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_BLACK);
+
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+
+            SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START);
+            SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
+            SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
+
+            SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_MAIN);
+            WM_ShowWin(hWin_SWRB_SNSETTING);
+        }else{
+            Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Password Error");
+            Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_RED);
+        }
+
+        myfree(SRAMIN, str);
     }
 }
 
 void SweepRobot_PCBTestLoginCancelProc(void)
 {
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-    
+
     SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
     SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
-    
+
     WM_HideWin(hWin_SWRB_LOGIN);
     WM_ShowWin(hWin_SWRB_MAIN);
 }
 
-void SweepRobot_PCBTestLoginEditProc(void)
-{    
+void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg)
+{
+    SWRB_LastCallNumpadEditSave(pMsg);
     WM_ShowWin(hWin_SWRB_NUMPAD);
     WM_BringToTop(hWin_SWRB_NUMPAD);
 }
 
 void SweepRobot_PCBTestNumPadOKProc(void)
 {
+    char *str;
+
+    str = mymalloc(SRAMIN, sizeof(char)*10);
+    SWRB_NumpadInputNumGet(str);
+    Edit_Set_Text(SWRB_LastCallNumpadEditWinGet(), SWRB_LastCallNumpadEditIdGet(), str);
+    myfree(SRAMIN, str);
+
     WM_HideWin(hWin_SWRB_NUMPAD);
     WM_BringToBottom(hWin_SWRB_NUMPAD);
+    WM_BringToTop(hWin_SWRB_MAIN);
+    WM_BringToTop(hWin_SWRB_LOGIN);
 }
 
 void SweepRobot_TestSetSNPressedProc(void)
@@ -583,7 +616,7 @@ void SweepRobot_TestSetSNPressedProc(void)
     WM_HWIN hItem;
 
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-        
+
         gSwrbTestMode = SWRB_TEST_MODE_SET;
         gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 
@@ -620,7 +653,7 @@ void SweepRobot_PCBTestStopProc(void)
         SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
         SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
         SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_STOP);
-        
+
         str = mymalloc(SRAMIN, sizeof(char)*50);
         sprintf(str, "\r\nTest Stop Time:20%d/%d/%d %d:%d:%d\r\n",\
         rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
@@ -777,7 +810,7 @@ static void SWRB_TestFinishProc(void)
 {
     int i;
     char *str;
-    
+
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     SweepRobot_TestInitProc();
@@ -785,9 +818,9 @@ static void SWRB_TestFinishProc(void)
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
     SWRB_TestDataFileWriteDate("Test finish time", &rtcDate, &rtcTime);
-    
+
     SWRB_TestDUTWriteSN();
-    
+
     str = mymalloc(SRAMIN, sizeof(char)*50);
     sprintf(str, "\r\nTest Finish Time:20%d/%d/%d %d:%d:%d\r\n",\
     rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
@@ -796,7 +829,7 @@ static void SWRB_TestFinishProc(void)
 
     str = "\r\n***TEST FINISHED***\r\n";
     SWRB_TestDataFileWriteString(str);
-    
+
     /* Encrypt Test Data File when set enable */
     SWRB_TestDataFileEncryptoProc(DISABLE);
 
@@ -811,9 +844,9 @@ static void SWRB_TestFinishProc(void)
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
         Checkbox_Set_Text_Color(i, GUI_BLACK);
     }
-    
+
     TEST_LED_TASK_CB_DEREG();
-    
+
     SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_STOP);
     SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
     SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
@@ -866,7 +899,7 @@ void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
 
 void SweepRobot_StartDlgDecryptoBtnClickProc(void)
 {
-    
+
 }
 
 void SweepRobot_PowerStationTestStartProc(void)
@@ -875,6 +908,10 @@ void SweepRobot_PowerStationTestStartProc(void)
 
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
 
+        if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+            SweepRobot_PowerStationTestGraphClear();
+        }
+        
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
         printf("TEST->ON\r\n");
@@ -953,7 +990,6 @@ void SweepRobot_PowerStationTestStopProc(void)
         }
 
         OS_ENTER_CRITICAL();
-        SweepRobot_PowerStationTestGraphClear();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
     }

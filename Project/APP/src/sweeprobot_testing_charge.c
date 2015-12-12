@@ -69,8 +69,9 @@ static void SweepRobot_ChargeTestInit(void)
 
     SweepRobot_Charge24VOn();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
-
-    printf("CHARGE->ON\r\n");
+    printf("CHARGE->ON=10\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    
     charge.current = 0;
     charge.curValidCnt = 0;
     charge.curValidFlag = 0;

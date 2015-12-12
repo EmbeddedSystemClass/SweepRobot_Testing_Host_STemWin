@@ -109,14 +109,15 @@ static void SweepRobot_IrDATestProc(void)
         if(!IrDA[i].validFlag){
             printf("IRDA->ON=%d\r\n",i);
             OSTimeDlyHMSM(0,0,0,1);
-            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                SweepRobot_IrDATestTxSendCmd(42);
+            for(j=0;j<SWRB_TEST_USART_IRDA_READ_TIMES;j++){
+//                SweepRobot_IrDATestTxSendCmd(42);
 //                printf("IRDA->ON=42\r\n");
 //                OSTimeDlyHMSM(0,0,0,24);
                 printf("IRDA->READ\r\n");
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     IrDA[i].code = usartRxNum;
+                    Edit_Set_HexMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 65535);
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, IrDA[i].code);
                     usartRxNum = 0;
                     usartRxFlag = 0;
@@ -159,6 +160,9 @@ static void SweepRobot_IrDATestProc(void)
         MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA OK");
+        for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+            Edit_Set_DecMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+        }
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
@@ -167,6 +171,7 @@ static void SweepRobot_IrDATestProc(void)
 
 static void SweepRobot_IrDATestOverTimeProc(void)
 {
+    u8 i;
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
@@ -202,6 +207,9 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IRDA, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA ERROR");
+    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+        Edit_Set_DecMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    }
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);

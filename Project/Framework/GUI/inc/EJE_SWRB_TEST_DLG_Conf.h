@@ -628,6 +628,9 @@ void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue);
+void Edit_Get_Text(WM_HWIN hWin, int editId, char *str);
+void Edit_Set_HexMode(WM_HWIN hWin, int editId, long value, long min, long max);
+void Edit_Set_DecMode(WM_HWIN hWin, int editId, long value, long min, long max, int shift, unsigned char flags);
 void Edit_Clear(void);
 void Text_Set_Text(WM_HWIN hWin, int textId, char *str);
 void Text_Set_Color(WM_HWIN hWin, int textId, GUI_COLOR color);
@@ -651,6 +654,9 @@ void SWRB_TestCheckboxEnable(void);
 void SWRB_TestCheckboxDisable(void);
 void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 void SweepRobot_MainTestIndicateBtnToggle(void);
+void SWRB_LastCallNumpadEditSave(WM_MESSAGE *pMsg);
+WM_HWIN SWRB_LastCallNumpadEditWinGet(void);
+int SWRB_LastCallNumpadEditIdGet(void);
 
 #endif
 /*************************** End of file ****************************/

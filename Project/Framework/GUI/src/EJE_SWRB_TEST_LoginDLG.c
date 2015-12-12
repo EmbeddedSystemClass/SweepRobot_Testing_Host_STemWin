@@ -102,10 +102,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'Edit'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_EDIT_PASSWORD);
-    EDIT_SetText(hItem, "123");
+    EDIT_SetText(hItem, "******");
     EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     EDIT_SetBkColor(hItem, EDIT_CI_ENABELD, GUI_WHITE);
+    EDIT_SetMaxLen(hItem, 10);
     //
     // Initialization of 'Text'
     //
@@ -149,7 +150,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_PCBTestLoginEditProc();
+        SweepRobot_PCBTestLoginEditProc(pMsg);
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
         break;

@@ -18,9 +18,6 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
-
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 
 #include "sweeprobot_testing.h"
@@ -36,6 +33,17 @@
 **********************************************************************
 */
 
+#define IS_NUMPAD_BUTTON_ID_NUM(ID)       ( ( ID == ID_NUMPAD_BUTTON_NUM0 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM1 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM2 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM3 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM4 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM5 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM6 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM7 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM8 ) ||\
+                                            ( ID == ID_NUMPAD_BUTTON_NUM9 ) )
+
 /*********************************************************************
 *
 *       Static data
@@ -50,6 +58,7 @@
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { FRAMEWIN_CreateIndirect, "NumPad", ID_NUMPAD_FRAMEWIN_MAIN, 0, 0, 400, 300, 0, 0x0, 0 },
   { EDIT_CreateIndirect, "Edit", ID_NUMPAD_EDIT_MAIN, 35, 15, 330, 40, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "btn0", ID_NUMPAD_BUTTON_NUM0, 305, 210, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btn1", ID_NUMPAD_BUTTON_NUM1, 35, 70, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btn2", ID_NUMPAD_BUTTON_NUM2, 125, 70, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btn3", ID_NUMPAD_BUTTON_NUM3, 215, 70, 60, 50, 0, 0x0, 0 },
@@ -59,11 +68,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "btn7", ID_NUMPAD_BUTTON_NUM7, 35, 210, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btn8", ID_NUMPAD_BUTTON_NUM8, 125, 210, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btn9", ID_NUMPAD_BUTTON_NUM9, 215, 210, 60, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btn0", ID_NUMPAD_BUTTON_NUM0, 305, 210, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnDel", ID_NUMPAD_BUTTON_DEL, 305, 140, 60, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnOK", ID_NUMPAD_BUTTON_OK, 305, 70, 60, 50, 0, 0x0, 0 },
-  // USER START (Optionally insert additional widgets)
-  // USER END
 };
 
 /*********************************************************************
@@ -73,311 +79,102 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 **********************************************************************
 */
 
-// USER START (Optionally insert additional static code)
-// USER END
-
 /*********************************************************************
 *
 *       _cbDialog
 */
 static void _cbDialog(WM_MESSAGE * pMsg) {
-  WM_HWIN hItem;
-  int     NCode;
-  int     Id;
-  int     i;
-  char    *str;
+    WM_HWIN hItem;
+    int     NCode;
+    int     Id;
+    int     i;
+    char    *str;
 
-  switch (pMsg->MsgId) {
-  case WM_INIT_DIALOG:
-    //
-    // Initialization of 'Edit'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_EDIT_MAIN);
-    EDIT_SetText(hItem, "123");
-    EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
-    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-    for(i=ID_NUMPAD_BUTTON_NUM0;i<ID_NUMPAD_BUTTON_BOUND;i++){
-        hItem = WM_GetDialogItem(pMsg->hWin, i);
-        BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-        if(i == ID_NUMPAD_BUTTON_OK){
-            BUTTON_SetText(hItem, "OK");
-        }else if (i == ID_NUMPAD_BUTTON_DEL){
-            BUTTON_SetText(hItem, "Del");
-        }else{
-            str = mymalloc(SRAMIN, sizeof(char)*2);
-            sprintf(str, "%d", i-ID_NUMPAD_BUTTON_NUM0);
-            BUTTON_SetText(hItem, str);
-            myfree(SRAMIN, str);
-        }
+    switch (pMsg->MsgId) {
+        case WM_INIT_DIALOG:
+            //
+            // Initialization of 'Edit'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_EDIT_MAIN);
+            EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+            EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            EDIT_SetInsertMode(hItem, ENABLE);
+            EDIT_SetMaxLen(hItem, 10);
+            //
+            // Initialization of 'Button'
+            //
+            for(i=ID_NUMPAD_BUTTON_NUM0;i<ID_NUMPAD_BUTTON_BOUND;i++){
+                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+                if(i == ID_NUMPAD_BUTTON_OK){
+                    BUTTON_SetText(hItem, "OK");
+                }else if (i == ID_NUMPAD_BUTTON_DEL){
+                    BUTTON_SetText(hItem, "Del");
+                }else{
+                    str = mymalloc(SRAMIN, sizeof(char)*2);
+                    sprintf(str, "%d", i-ID_NUMPAD_BUTTON_NUM0);
+                    BUTTON_SetText(hItem, str);
+                    myfree(SRAMIN, str);
+                }
+            }
+            /* Hide Dialog when create */
+            WM_HideWin(pMsg->hWin);
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+
+            if(IS_NUMPAD_BUTTON_ID_NUM(Id)){
+                switch(NCode) {
+                    case WM_NOTIFICATION_CLICKED:
+                        break;
+                    case WM_NOTIFICATION_RELEASED:
+                        hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_EDIT_MAIN);
+                        EDIT_AddKey(hItem, '0' + (Id-ID_NUMPAD_BUTTON_NUM0) );
+                        break;
+                    }
+                    break;
+            }else{
+                switch(Id) {
+                    case ID_NUMPAD_BUTTON_OK: // Notifications sent by 'btnOK'
+                        switch(NCode) {
+                            case WM_NOTIFICATION_CLICKED:
+                                break;
+                            case WM_NOTIFICATION_RELEASED:
+                                SweepRobot_PCBTestNumPadOKProc();
+                                break;
+                        }
+                        break;
+                    case ID_NUMPAD_BUTTON_DEL: // Notifications sent by 'btnDel'
+                        switch(NCode) {
+                            case WM_NOTIFICATION_CLICKED:
+                                break;
+                            case WM_NOTIFICATION_RELEASED:
+                                hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_EDIT_MAIN);
+                                EDIT_AddKey(hItem, '\b');
+                                break;
+                        }
+                        break;
+                    case ID_NUMPAD_EDIT_MAIN: // Notifications sent by 'Edit'
+                        switch(NCode) {
+                            case WM_NOTIFICATION_CLICKED:
+
+                                break;
+                            case WM_NOTIFICATION_RELEASED:
+
+                                break;
+                            case WM_NOTIFICATION_VALUE_CHANGED:
+
+                                break;
+                        }
+                        break;
+                }
+            }
+            break;
+        default:
+            WM_DefaultProc(pMsg);
+            break;
     }
-    //
-    // Initialization of 'btn1'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM1);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "1");
-    //
-    // Initialization of 'btn2'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM2);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "2");
-    //
-    // Initialization of 'btn3'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM3);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "3");
-    //
-    // Initialization of 'btn4'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM4);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "4");
-    //
-    // Initialization of 'btn5'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM5);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "5");
-    //
-    // Initialization of 'btn6'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM6);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "6");
-    //
-    // Initialization of 'Button'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM7);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "7");
-    //
-    // Initialization of 'Button'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM8);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "8");
-    //
-    // Initialization of 'Button'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM9);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "9");
-    //
-    // Initialization of 'btn0'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_NUM0);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "0");
-    //
-    // Initialization of 'btnDel'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_DEL);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "Del");
-    //
-    // Initialization of 'btnOK'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_NUMPAD_BUTTON_OK);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "OK");
-    /* Hide Dialog when create */
-    WM_HideWin(pMsg->hWin);
-    // USER START (Optionally insert additional code for further widget initialization)
-    // USER END
-    break;
-  case WM_NOTIFY_PARENT:
-    Id    = WM_GetId(pMsg->hWinSrc);
-    NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_NUMPAD_BUTTON_NUM1: // Notifications sent by 'btn1'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM2: // Notifications sent by 'btn2'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM3: // Notifications sent by 'btn3'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM4: // Notifications sent by 'btn4'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM5: // Notifications sent by 'btn5'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM6: // Notifications sent by 'btn6'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM7: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_EDIT_MAIN: // Notifications sent by 'Edit'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM8: // Notifications sent by 'btn8'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM9: // Notifications sent by 'btn9'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_NUM0: // Notifications sent by 'btn0'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_DEL: // Notifications sent by 'btnDel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_NUMPAD_BUTTON_OK: // Notifications sent by 'btnOK'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        SweepRobot_PCBTestNumPadOKProc();
-        break;
-      }
-      break;
-    }
-    break;
-  default:
-    WM_DefaultProc(pMsg);
-    break;
-  }
 }
 
 /*********************************************************************
@@ -401,13 +198,18 @@ WM_HWIN hWin_SWRB_NUMPAD;
 */
 
 WM_HWIN CreateNumPadDLG(void) {
-  WM_HWIN hWin;
+    WM_HWIN hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 0, 90);
-  return hWin;
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 300, 90);
+    return hWin;
 }
 
-// USER START (Optionally insert additional public code)
-// USER END
+void SWRB_NumpadInputNumGet(char *numStr)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_NUMPAD, ID_NUMPAD_EDIT_MAIN);
+    EDIT_GetText(hItem, numStr, EDIT_GetNumChars(hItem)+1);
+}
 
 /*************************** End of file ****************************/
