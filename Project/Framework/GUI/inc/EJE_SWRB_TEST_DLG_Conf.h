@@ -1,4 +1,4 @@
-/******************** (C) COPYRIGHT 2008 EJE ***********************************************************
+/******************** (C) COPYRIGHT 2007 EJE ***********************************************************
 * File Name          : EJE_SWRB_TEST_DLG_Conf.h
 * Author             : MeredithRowe@163.com
 * Version            : V1.0
@@ -16,6 +16,7 @@
 #define __EJE_SWRB_TEST_TIMESETTING_DLG     1
 #define __EJE_SWRB_TEST_LOGIN_DLG           1
 #define __EJE_SWRB_TEST_NUMPAD_DLG          1
+#define __EJE_SWRB_TEST_SLAM_DLG            1
 #define __EJE_SWRB_TEST_DECRYPTO_DLG        0
 
 #include "stm32f4xx.h"
@@ -49,6 +50,10 @@
     #include "EJE_SWRB_TEST_NumPadDLG.h"
 #endif
 
+#if __EJE_SWRB_TEST_SLAM_DLG
+    #include "EJE_SWRB_TEST_SLAMDLG.h"
+#endif
+
 /*********************************************************************
 *
 *       Defines
@@ -67,6 +72,7 @@
         ID_START_BUTTON_0,
         ID_START_BUTTON_1,
         ID_START_BUTTON_2,
+        ID_START_BUTTON_3,
         ID_START_TEXT_0,
         ID_START_TEXT_1,
         ID_START_BOUND,
@@ -91,6 +97,7 @@
     enum ID_START_BUTTON{
         ID_START_BUTTON_PCB_TEST = ID_START_BUTTON_0,
         ID_START_BUTTON_POWER_STATION,
+        ID_START_BUTTON_SLAM,
         ID_START_BUTTON_DECRYPTO,
         ID_START_BUTTON_BOUND,
     };
@@ -547,7 +554,7 @@
     };
     
     enum ID_NUMPAD_BUTTON{
-        ID_NUMPAD_BUTTON_NUM0= ID_NUMPAD_BUTTON_0,
+        ID_NUMPAD_BUTTON_NUM0 = ID_NUMPAD_BUTTON_0,
         ID_NUMPAD_BUTTON_NUM1,
         ID_NUMPAD_BUTTON_NUM2,
         ID_NUMPAD_BUTTON_NUM3,
@@ -561,7 +568,60 @@
         ID_NUMPAD_BUTTON_DEL,
         ID_NUMPAD_BUTTON_BOUND,
     };
-#endif    
+#endif
+    
+#if __EJE_SWRB_TEST_SLAM_DLG
+    
+    enum ID_SLAM_WIDGET{
+        ID_SLAM_WINDOW_0 = ID_NUMPAD_BOUND,
+        ID_SLAM_BUTTON_0,
+        ID_SLAM_BUTTON_1,
+        ID_SLAM_BUTTON_2,
+        ID_SLAM_BUTTON_3,
+        ID_SLAM_PROGBAR_0,
+        ID_SLAM_EDIT_0,
+        ID_SLAM_EDIT_1,
+        ID_SLAM_EDIT_2,
+        ID_SLAM_TEXT_0,
+        ID_SLAM_TEXT_1,
+        ID_SLAM_TEXT_2,
+        ID_SLAM_TEXT_3,
+        ID_SLAM_BOUND,
+    };
+    
+    enum ID_SLAM_WINDOW{
+        ID_SLAM_WINDOW_MAIN = ID_SLAM_WINDOW_0,
+        ID_SLAM_WINDOW_BOUND,
+    };
+    
+    enum ID_SLAM_BUTTON{
+        ID_SLAM_BUTTON_START = ID_SLAM_BUTTON_0,
+        ID_SLAM_BUTTON_SET,
+        ID_SLAM_BUTTON_STOP,
+        ID_SLAM_BUTTON_EXIT,
+        ID_SLAM_BUTTON_BOUND,
+    };
+    
+    enum ID_SLAM_PROGBAR{
+        ID_SLAM_PROGBAR_MAIN = ID_SLAM_PROGBAR_0,
+        ID_SLAM_PROGBAR_BOUND,
+    };
+    
+    enum ID_SLAM_EDIT{
+        ID_SLAM_EDIT_XPOS = ID_SLAM_EDIT_0,
+        ID_SLAM_EDIT_YPOS,
+        ID_SLAM_EDIT_RVALUE,
+        ID_SLAM_EDIT_BOUND,
+    };
+    
+    enum ID_SLAM_TEXT{
+        ID_SLAM_TEXT_TITLE = ID_SLAM_TEXT_0,
+        ID_SLAM_TEXT_XPOS, 
+        ID_SLAM_TEXT_YPOS,
+        ID_SLAM_TEXT_RVALUE,
+        ID_SLAM_TEXT_BOUND,
+    };
+#endif
 
 /*********************************************************************
 *
@@ -579,7 +639,7 @@
 #endif
 
 #if __EJE_SWRB_TEST_MAIN_DLG
-    extern WM_HWIN hWin_SWRB_MAIN;
+    extern WM_HWIN hWin_SWRB_PCBTEST;
     extern WM_HWIN hWin_SWRB_RGB_LED;
     extern WM_HWIN hWin_SWRB_BUZZER;
 #endif
@@ -598,6 +658,10 @@
 
 #if __EJE_SWRB_TEST_NUMPAD_DLG
     extern WM_HWIN hWin_SWRB_NUMPAD;
+#endif
+
+#if __EJE_SWRB_TEST_SLAM_DLG
+    extern WM_HWIN hWin_SWRB_SLAM;
 #endif
 
 /*********************************************************************
@@ -624,6 +688,8 @@ void BUTTON_DispResetCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispCancelCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispSerialNumCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispTimeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispErrorCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
@@ -653,10 +719,12 @@ void SWRB_TestCheckboxStateSet(u8 stateNum);
 void SWRB_TestCheckboxEnable(void);
 void SWRB_TestCheckboxDisable(void);
 void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
-void SweepRobot_MainTestIndicateBtnToggle(void);
+void SWRB_IndicateButtonToggle(WM_HWIN hWin, int buttonId);
 void SWRB_LastCallNumpadEditSave(WM_MESSAGE *pMsg);
 WM_HWIN SWRB_LastCallNumpadEditWinGet(void);
 int SWRB_LastCallNumpadEditIdGet(void);
+void SWRB_SET_EditTextUpdate(void);
+void SWRB_SET_ListwheelSnapPosUpdate(void);
 
 #endif
 /*************************** End of file ****************************/

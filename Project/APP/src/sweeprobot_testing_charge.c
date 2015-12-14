@@ -65,7 +65,7 @@ static void SweepRobot_ChargeTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
 
     SweepRobot_Charge24VOn();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
@@ -93,7 +93,7 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CHARGE->READ=1\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
-                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1, usartRxNum);
                 charge.current = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
@@ -121,7 +121,7 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CHARGE->READ=0\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
-                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U2, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U2, usartRxNum);
                 charge.voltage = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
@@ -149,7 +149,7 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CHARGE->READ=2\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
-                Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U3, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U3, usartRxNum);
                 charge.charge24vState = usartRxNum;
                 usartRxNum = 0;
                 usartRxFlag = 0;
@@ -182,9 +182,9 @@ static void SweepRobot_ChargeTestProc(void)
         str = "CHARGE OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_CHARGE, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_CHARGE, "CHARGE OK");
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_CHARGE, "CHARGE OK");
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
@@ -204,20 +204,20 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
         str = "ERROR->CHARGE CUR\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK){
         str = "ERROR->CHARGE VOL\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_24V_MASK){
         str = "ERROR->CHARGE 24V\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_CHARGE, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_CHARGE, "CHARGE ERROR");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_CHARGE, "CHARGE ERROR");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);

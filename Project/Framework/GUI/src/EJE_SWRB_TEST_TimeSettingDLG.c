@@ -103,7 +103,7 @@ static void Button_ConfirmProc(WM_HWIN hWin)
 
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_MAIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
 }
 
 static void Button_CheckProc(WM_HWIN hWin)
@@ -120,7 +120,7 @@ static void Button_CancelProc(WM_HWIN hWin)
 {
     ListWheel_ResetToLastPos(hWin);
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_MAIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
 
@@ -556,7 +556,7 @@ WM_HWIN hWin_SWRB_TIMESETTING;
 WM_HWIN CreateTimeSettingDLG(void) {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 0, 0);
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 0, 0);
     return hWin;
 }
 

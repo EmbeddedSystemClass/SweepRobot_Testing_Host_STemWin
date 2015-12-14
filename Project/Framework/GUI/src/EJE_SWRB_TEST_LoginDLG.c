@@ -183,7 +183,7 @@ WM_HWIN hWin_SWRB_LOGIN;
 WM_HWIN CreateLoginDLG(void) {
   WM_HWIN hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 180, 135);
+  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 180, 135);
   return hWin;
 }
 

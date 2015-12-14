@@ -88,7 +88,7 @@ static void SweepRobot_IrDATestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
@@ -96,7 +96,7 @@ static void SweepRobot_IrDATestInit(void)
         IrDA[i].code = 0;
         IrDA[i].validCnt = 0;
         IrDA[i].validFlag = 0;
-        Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0);
+        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1+i, 0);
     }
 }
 
@@ -121,8 +121,8 @@ static void SweepRobot_IrDATestProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     IrDA[i].code = usartRxNum;
-                    Edit_Set_HexMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 255);
-                    Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, IrDA[i].code);
+                    Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1+i, 0, 0, 255);
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1+i, IrDA[i].code);
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;
@@ -161,11 +161,11 @@ static void SweepRobot_IrDATestProc(void)
         str = "IRDA OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IRDA, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA OK");
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_IRDA, "IRDA OK");
         for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
-            Edit_Set_DecMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+            Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
         }
         Edit_Clear();
 
@@ -187,32 +187,32 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
         str = "ERROR->IRDA_B\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
         str = "ERROR->IRDA_L\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
         str = "ERROR->IRDA_FL\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
         str = "ERROR->IRDA_FR\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
         str = "ERROR->IRDA_R\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
     }
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IRDA, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA ERROR");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_IRDA, "IRDA ERROR");
     for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
-        Edit_Set_DecMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+        Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     }
     Edit_Clear();
 

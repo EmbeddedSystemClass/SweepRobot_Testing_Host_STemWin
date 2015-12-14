@@ -197,7 +197,7 @@ WM_HWIN hWin_SWRB_NUMPAD;
 WM_HWIN CreateNumPadDLG(void) {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 300, 90);
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 300, 90);
     return hWin;
 }
 

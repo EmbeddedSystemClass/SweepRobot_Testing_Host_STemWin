@@ -97,6 +97,7 @@ enum SWRB_TEST_SELECT{
     SWRB_TEST_SELECT_NONE,
     SWRB_TEST_SELECT_PCB,
     SWRB_TEST_SELECT_POWER_STATION,
+    SWRB_TEST_SELECT_SLAM,
 };
 
 enum SWRB_TEST_MODE{
@@ -258,6 +259,7 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_CHARGE_TEST_TASK_PRIO,
     SWRB_TEST_TASK_PRIO_END_BOUND,//23
     SWRB_POWER_STATION_TEST_TASK_PRIO,
+    SWRB_SLAM_MONITOR_TASK_PRIO,
     USART_TASK_PRIO,
     RTC_TASK_PRIO,
     LED_TASK_PRIO,
@@ -287,14 +289,15 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_RGB_LED_TEST_STK_SIZE          256
 #define SWRB_CHARGE_TEST_STK_SIZE           256
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
+#define SWRB_SLAM_MONITOR_STK_SIZE          256
 
-#define SWRB_TEST_USART_READ_TIMES          3
-#define SWRB_TEST_USART_IRDA_READ_TIMES     25
-#define SWRB_TEST_USART_READ_WAIT_TIME      3
-#define SWRB_TEST_VALID_COMP_TIMES          3
+#define SWRB_TEST_USART_READ_TIMES              3
+#define SWRB_TEST_USART_IRDA_READ_TIMES         25
+#define SWRB_TEST_USART_READ_WAIT_TIME          3
+#define SWRB_TEST_VALID_COMP_TIMES              3
 #define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   1
 #define SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS   50
-#define SWRB_TEST_DUT_SN_WRITE_WAIT_TIME 50
+#define SWRB_TEST_DUT_SN_WRITE_WAIT_TIME        50
 
 extern u8 usartRxFlag;
 extern int usartRxNum;
@@ -329,9 +332,15 @@ void SweepRobot_PCBTestExitProc(void);
 
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
+void SweepRobot_StartDlgSLAMBtnClickProc(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);
 void SweepRobot_PowerStationTestExitProc(void);
+
+void SweepRobot_SLAMStartProc(void);
+void SweepRobot_SLAMSetProc(void);
+void SweepRobot_SLAMStopProc(void);
+void SweepRobot_SLAMExitProc(void);
 
 #endif

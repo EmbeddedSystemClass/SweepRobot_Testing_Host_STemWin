@@ -50,7 +50,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
     { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 500, 203, 200, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 500, 205, 200, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 205, 200, 180, 0, 0x0, 0 },
 //    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 203, 200, 180, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
@@ -103,18 +104,25 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             pData = _GetImageById(ID_START_IMAGE_EJE_LOGO, &FileSize);
             IMAGE_SetBMP(hItem, pData, FileSize);
             //
-            // Initialization of 'PCB TEST'
+            // Initialization of 'btnPCB TEST'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_PCB_TEST);
             BUTTON_SetText(hItem, " ");
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_PCB_TEST, &_bmPCBTestCHN, 36, 74);
             Button_Init(hItem);
             //
-            // Initialization of 'POWER STATION'
+            // Initialization of 'btnPOWER STATION'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
             BUTTON_SetText(hItem, " ");
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 20, 74);
+            Button_Init(hItem);
+            //
+            // Initialization of 'btnSLAM'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            BUTTON_SetText(hItem, "SLAM");
             Button_Init(hItem);
             //
             // Initialization of 'DECRYPTO'
@@ -158,6 +166,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             SweepRobot_StartDlgPowerStationBtnClickPorc();
+                            break;
+                    }
+                    break;
+                case ID_START_BUTTON_SLAM: // Notifications sent by 'SLAM'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            SweepRobot_StartDlgSLAMBtnClickProc();
                             break;
                     }
                     break;

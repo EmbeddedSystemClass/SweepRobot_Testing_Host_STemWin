@@ -18,7 +18,7 @@ static void SweepRobot_RGBLEDTestInit(void)
     str = "\r\n>>>RGB LED TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
@@ -37,9 +37,9 @@ static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char
     Text_Set_Text(hWin_SWRB_RGB_LED, ID_MAIN_TEXT_RGB_LED, strText);
     OSTaskSuspend(gSwrbTestRuningTaskPrio);
     if(*ledState){
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  strMultiEdit1);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  strMultiEdit1);
     }else{
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  strMultiEdit2);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  strMultiEdit2);
     }
 }
 
@@ -67,9 +67,9 @@ static void SweepRobot_RGBLEDTestProc(void)
         str = "RGB LED OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_RGB_LED, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED OK");
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED OK");
         Edit_Clear();
         
         SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
@@ -102,7 +102,7 @@ static void SweepRobot_RGBLEDTestErrProc(void)
     }
     
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_RGB_LED, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED ERROR");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED ERROR");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);

@@ -1,4 +1,4 @@
-/******************** (C) COPYRIGHT 2008 EJE ***********************************************************
+/******************** (C) COPYRIGHT 2007 EJE ***********************************************************
 * File Name          : EJE_SWRB_TEST_DLG_Conf.c
 * Author             : MeredithRowe@163.com
 * Version            : V1.0
@@ -22,10 +22,12 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmResetCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmOKCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmErrorCHN;
 
-static u8 gMainDLGIndicateFlag = 0;
 static WM_HWIN hLastShowWin = 0;
 static int gLastShowId = 0;
+static int gIndicateBtnCnt = 0;
 
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
 {
@@ -126,10 +128,20 @@ void BUTTON_DispTimeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmTimeCHN, x, y);
 }
 
+void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmOKCHN, x, y);
+}
+
+void BUTTON_DispErrorCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmErrorCHN, x, y);
+}
+
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_PROGBAR_0);
+	hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_PROGBAR_0);
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
@@ -178,7 +190,7 @@ void Edit_Clear(void)
     int i;
     
     for(i=ID_MAIN_EDIT_1;i<ID_MAIN_EDIT_SN;i++){
-        Edit_Set_Value(hWin_SWRB_MAIN , i, 0);
+        Edit_Set_Value(hWin_SWRB_PCBTEST , i, 0);
     }
 }
 
@@ -205,7 +217,7 @@ void Checkbox_Set_Text(WM_HWIN hWin, int checkboxId, char *string)
 int Checkbox_Get_State(int checkboxId)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, checkboxId);
     return(CHECKBOX_GetState(hItem));
 }
 
@@ -222,7 +234,7 @@ void SWRB_TestCheckboxStateSet(u8 stateNum)
     WM_HWIN hItem;
     
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         CHECKBOX_SetState(hItem, stateNum);
     }
 }
@@ -233,7 +245,7 @@ void SWRB_TestCheckboxEnable(void)
     WM_HWIN hItem;
     
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         WM_EnableWindow(hItem);
     }
 }
@@ -244,7 +256,7 @@ void SWRB_TestCheckboxDisable(void)
     WM_HWIN hItem;
     
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         WM_DisableWindow(hItem);
     }
 }
@@ -266,21 +278,21 @@ void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
 void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxtextcolor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, checkboxId);
     CHECKBOX_SetTextColor(hItem, checkboxtextcolor);
 }
 
 void Checkbox_Set_TextAlign(int checkboxId, int align)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, checkboxId);
     CHECKBOX_SetTextAlign(hItem, align);
 }
 
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, checkboxId);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, checkboxId);
     CHECKBOX_SetBkColor(hItem, checkboxbkcolor);
 }
 
@@ -309,7 +321,7 @@ void Multiedit_Set_Buffer_Size(int size)
 {
     WM_HWIN hItem;
     
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN);
     MULTIEDIT_SetBufferSize(hItem, size);
 }
 
@@ -332,7 +344,7 @@ void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s)
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_0);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_0);
     MULTIEDIT_SetTextColor(hItem, MULTIEDIT_CI_EDIT, multieditTextColor);
 }
 
@@ -343,12 +355,12 @@ GRAPH_DATA_Handle Graph_Data_YT_Create(GUI_COLOR color, u32 maxNumItems, int16_t
     return hGraphData;
 }
 
-void SweepRobot_MainTestIndicateBtnToggle(void)
+void SWRB_IndicateButtonToggle(WM_HWIN hWin, int buttonId)
 {
-    if(++gMainDLGIndicateFlag%2){
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_DARKRED);
+    if(++gIndicateBtnCnt%2){
+        Button_Set_BkColor(hWin, buttonId, GUI_DARKRED);
     }else{
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin, buttonId, GUI_LIGHTGRAY);
     }
 }
 
@@ -377,7 +389,7 @@ void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
     if(gSwrbTestMode == SWRB_TEST_MODE_SET){
         Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
     }else{
-        Edit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_EDIT_DATE, str);
+        Edit_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_DATE, str);
     }
     myfree(SRAMIN, str);
 }
@@ -396,5 +408,58 @@ WM_HWIN SWRB_LastCallNumpadEditWinGet(void)
 int SWRB_LastCallNumpadEditIdGet(void)
 {
     return gLastShowId;
+}
+
+static void Edit_Update(WM_HWIN hWin, int editStartId, int editStopId, int lwId)
+{
+    int i,j;
+    int lwItemIndex;
+    char *str;
+    LISTWHEEL_Handle hListWheel;
+    WM_HWIN hItem;
+
+    for(i=editStartId,j=lwId;i<=editStopId;i++,j++){
+        hListWheel = WM_GetDialogItem(hWin, j);
+        lwItemIndex = LISTWHEEL_GetPos(hListWheel);
+        str = mymalloc(SRAMIN, sizeof(char)*10);
+        if(str != NULL){
+            *str = 0;
+            LISTWHEEL_GetItemText(hListWheel, lwItemIndex, str, 10);
+            hItem = WM_GetDialogItem(hWin, i);
+            EDIT_SetText(hItem, str);
+            myfree(SRAMIN, str);
+        }
+    }
+}
+
+void SWRB_SET_EditTextUpdate(void)
+{
+    if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
+        Edit_Update(hWin_SWRB_SNSETTING, ID_SNSET_EDIT_YEAR, ID_SNSET_EDIT_SN3, ID_SNSET_LISTWHEEL_YEAR);
+    }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
+        Edit_Update(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_YEAR, ID_TIMESET_EDIT_SEC, ID_TIMESET_LISTWHEEL_YEAR);
+    }
+}
+
+void SWRB_SET_ListwheelSnapPosUpdate(void)
+{
+    int i,j;
+    WM_HWIN hItem;
+
+    if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
+        for(i=ID_SNSET_LISTWHEEL_YEAR;i<=ID_SNSET_LISTWHEEL_SN3;i++){
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, i);
+            j = LISTWHEEL_GetPos(hItem);
+            LISTWHEEL_SetSel(hItem, j);
+        }
+    }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
+        for(i=ID_TIMESET_LISTWHEEL_YEAR;i<=ID_TIMESET_LISTWHEEL_SEC;i++){
+            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, i);
+            j = LISTWHEEL_GetPos(hItem);
+            LISTWHEEL_SetSel(hItem, j);
+        }
+    }else{
+
+    }
 }
 

@@ -105,7 +105,7 @@ static void Button_ConfirmProc(WM_HWIN hWin)
     ListWheel_TestDataFilePathGet(hWin,str);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_MAIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
 }
 
 static void Button_CheckProc(WM_HWIN hWin)
@@ -124,30 +124,8 @@ static void Button_CancelProc(WM_HWIN hWin)
 {
     ListWheel_ResetToLastPos(hWin);
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_MAIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-}
-
-static void Edit_Update(WM_HWIN hWin, int editStartId, int editStopId, int lwId)
-{
-    int i,j;
-    int lwItemIndex;
-    char *str;
-    LISTWHEEL_Handle hListWheel;
-    WM_HWIN hItem;
-
-    for(i=editStartId,j=lwId;i<=editStopId;i++,j++){
-            hListWheel = WM_GetDialogItem(hWin, j);
-            lwItemIndex = LISTWHEEL_GetPos(hListWheel);
-            str = mymalloc(SRAMIN, sizeof(char)*10);
-            if(str != NULL){
-                *str = 0;
-                LISTWHEEL_GetItemText(hListWheel, lwItemIndex, str, 10);
-                hItem = WM_GetDialogItem(hWin, i);
-                EDIT_SetText(hItem, str);
-                myfree(SRAMIN, str);
-            }
-        }
 }
 
 static void ListWheel_Init(WM_HWIN hItem)
@@ -274,7 +252,7 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
     hItem = WM_GetDialogItem(hWin, ID_SNSET_EDIT_COMB_SET);
     EDIT_SetText(hItem, swrbTestDataFilePath);
 
-    hItem = WM_GetDialogItem(hWin_SWRB_MAIN, ID_MAIN_EDIT_SN);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_SN);
     EDIT_SetText(hItem, swrbTestDataFilePath);
 
     sprintf(dest_str, "%s", swrbTestDataFilePath);
@@ -524,7 +502,7 @@ WM_HWIN hWin_SWRB_SNSETTING;
 WM_HWIN CreateSNSettingDLG(void) {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_MAIN, 0, 0);
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 0, 0);
     return hWin;
 }
 
@@ -607,7 +585,7 @@ void SWRB_ListWheelSNInc(WM_HWIN hWin)
             }else{
                 str = "SerialNumber is larger than 999, return to 0\r\n";
                 SWRB_TestDataFileWriteString(str);
-                MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+                MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
                 hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN1);
                 LISTWHEEL_SetPos(hItem, 0);
                 LISTWHEEL_SetSel(hItem, 0);
@@ -716,38 +694,5 @@ void SWRB_TestDUTWriteSN(void)
     
     myfree(SRAMIN, str);
 }
-
-void SWRB_SET_ListwheelSnapPosUpdate(void)
-{
-    int i,j;
-    WM_HWIN hItem;
-
-    if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
-        for(i=ID_SNSET_LISTWHEEL_YEAR;i<=ID_SNSET_LISTWHEEL_SN3;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, i);
-            j = LISTWHEEL_GetPos(hItem);
-            LISTWHEEL_SetSel(hItem, j);
-        }
-    }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
-        for(i=ID_TIMESET_LISTWHEEL_YEAR;i<=ID_TIMESET_LISTWHEEL_SEC;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, i);
-            j = LISTWHEEL_GetPos(hItem);
-            LISTWHEEL_SetSel(hItem, j);
-        }
-    }else{
-
-    }
-}
-
-void SWRB_SET_EditTextUpdate(void)
-{
-    if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
-        Edit_Update(hWin_SWRB_SNSETTING, ID_SNSET_EDIT_YEAR, ID_SNSET_EDIT_SN3, ID_SNSET_LISTWHEEL_YEAR);
-    }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
-        Edit_Update(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_YEAR, ID_TIMESET_EDIT_SEC, ID_TIMESET_LISTWHEEL_YEAR);
-    }
-}
-
-
 
 /*************************** End of file ****************************/

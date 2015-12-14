@@ -1,4 +1,4 @@
-/******************** (C) COPYRIGHT 2008 EJE ***********************************************************
+/******************** (C) COPYRIGHT 2007 EJE ***********************************************************
 * File Name          : EJE_SWRB_TEST_DLG_Conf.h
 * Author             : MeredithRowe@163.com
 * Version            : V1.0
@@ -122,6 +122,8 @@ void emWin_Maintask(void *pdata)
 
     GUI_Init();
 
+    GUI_EnableAlpha(ENABLE);
+    
     WM_SetCreateFlags(WM_CF_MEMDEV);
     WM_MULTIBUF_Enable(1);
 
@@ -131,10 +133,10 @@ void emWin_Maintask(void *pdata)
     hWin_SWRB_TIMESETTING = CreateTimeSettingDLG();
     hWin_SWRB_LOGIN = CreateLoginDLG();
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
-    hWin_SWRB_MAIN = CreateEJE_SWRB_TEST_MainDLG();
+    hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_MainDLG();
     hWin_SWRB_POWER_STATION = CreateEJE_SWRB_TEST_PowerStationDLG();
+    hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
-
 
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Rtc_Task,(void*)0,(OS_STK*)&RTC_TASK_STK[RTC_STK_SIZE-1],RTC_TASK_PRIO);
@@ -183,6 +185,8 @@ void Led_Task(void *pdata)
 	{
 		LED0 = !LED0;
 
+        WM_InvalidateWindow(hWin_SWRB_SLAM);
+        
         if(gLedTaskCB!=NULL){
             OS_ENTER_CRITICAL();
             gLedTaskCB();
@@ -372,7 +376,7 @@ void SWRB_TestCtrlTask(void *pdata)
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     SweepRobot_TestInitProc();
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "PLEASE PRESS SET TO SET SERIAL NUMBER BEFORE TEST\r\n");
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "PLEASE PRESS SET TO SET SERIAL NUMBER BEFORE TEST\r\n");
 
     OS_ENTER_CRITICAL();
 
@@ -446,6 +450,11 @@ void SWRB_ExceptionCheckTask(void *pdata)
 }
 */
 
+static void SWRB_PCBTestIndicateButtonToggle()
+{
+    SWRB_IndicateButtonToggle(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE);
+}
+
 void SweepRobot_PCBTestStartProc(void)
 {
     char *str;
@@ -454,18 +463,18 @@ void SweepRobot_PCBTestStartProc(void)
     if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
         if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
-            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  "TEST RESUMED\r\n");
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  "TEST RESUMED\r\n");
         }else{
             OS_ENTER_CRITICAL();
             SWRB_TestDataFileWriteSN();
             SWRB_TestDataFileWriteDate("Test Start Time", &rtcDate, &rtcTime);
             OS_EXIT_CRITICAL();
 
-            MultiEdit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n");
+            MultiEdit_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "\r\n");
             str = mymalloc(SRAMIN, sizeof(char)*50);
             sprintf(str, "\r\nTest Start Time:20%d/%d/%d %d:%d:%d\r\n",\
                           rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
-            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
             myfree(SRAMIN, str);
             Progbar_Set_Value(0);
         }
@@ -474,13 +483,13 @@ void SweepRobot_PCBTestStartProc(void)
 
         SWRB_TestCheckboxDisable();
 
-        TEST_LED_TASK_CB_REG(SweepRobot_MainTestIndicateBtnToggle);
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, GUI_LIGHTRED);
-//        Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, "PAUSE");
-        BUTTON_DispPauseCHNStr(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, 18, 43);
-        SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
-        SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_STOP);
+        TEST_LED_TASK_CB_REG(SWRB_PCBTestIndicateButtonToggle);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_LIGHTRED);
+//        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "PAUSE");
+        BUTTON_DispPauseCHNStr(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, 18, 43);
+        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
+        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
+        SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_STOP);
         printf("TEST->ON\r\n");
 
         OS_ENTER_CRITICAL();
@@ -494,10 +503,10 @@ void SweepRobot_PCBTestStartProc(void)
 //        SWRB_TestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_GREEN);
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, GUI_USER_204153051);
-//        Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, "RESUME");
-        BUTTON_DispResumeCHNStr(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, 18, 43);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, GUI_GREEN);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_USER_204153051);
+//        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "RESUME");
+        BUTTON_DispResumeCHNStr(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, 18, 43);
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
@@ -513,8 +522,8 @@ void SweepRobot_PCBTestStartProc(void)
         printf("SENSOR->B_SWITCH=0\r\n");
         printf("CHARGE->OFF\r\n");
         printf("IRDA->OFF\r\n");
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "PRESS RESUME TO RESUME TEST\r\n");
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "TEST PAUSED\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "PRESS RESUME TO RESUME TEST\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "TEST PAUSED\r\n");
     }
 }
 
@@ -527,8 +536,8 @@ void SweepRobot_PCBTestLoginProc(void)
         Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Please Input Password");
         Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_BLACK);
 
-        SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-        SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
+        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
+        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
 
         WM_ShowWin(hWin_SWRB_LOGIN);
         WM_BringToTop(hWin_SWRB_LOGIN);
@@ -560,14 +569,14 @@ void SweepRobot_PCBTestLoginOKProc(void)
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
             BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
 
-            SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START);
-            SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-            SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
+            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START);
+            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
+            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
 
             SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
 
             WM_HideWin(hWin_SWRB_LOGIN);
-            WM_HideWin(hWin_SWRB_MAIN);
+            WM_HideWin(hWin_SWRB_PCBTEST);
             WM_ShowWin(hWin_SWRB_SNSETTING);
         }else{
             Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Password Error");
@@ -582,11 +591,11 @@ void SweepRobot_PCBTestLoginCancelProc(void)
 {
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-    SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
 
     WM_HideWin(hWin_SWRB_LOGIN);
-    WM_ShowWin(hWin_SWRB_MAIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
 }
 
 void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg)
@@ -607,7 +616,7 @@ void SweepRobot_PCBTestNumPadOKProc(void)
 
     WM_HideWin(hWin_SWRB_NUMPAD);
     WM_BringToBottom(hWin_SWRB_NUMPAD);
-    WM_BringToTop(hWin_SWRB_MAIN);
+    WM_BringToTop(hWin_SWRB_PCBTEST);
     WM_BringToTop(hWin_SWRB_LOGIN);
 }
 
@@ -627,7 +636,7 @@ void SweepRobot_TestSetSNPressedProc(void)
 
         SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
 
-        WM_HideWin(hWin_SWRB_MAIN);
+        WM_HideWin(hWin_SWRB_PCBTEST);
         WM_ShowWin(hWin_SWRB_SNSETTING);
     }
 }
@@ -646,21 +655,21 @@ void SweepRobot_PCBTestStopProc(void)
         SWRB_TestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
-//        Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, "START");
-        BUTTON_DispStartCHNStr(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, 18, 43);
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
-        SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-        SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_STOP);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
+//        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "START");
+        BUTTON_DispStartCHNStr(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, 18, 43);
+        SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
+        SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
+        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_STOP);
 
         str = mymalloc(SRAMIN, sizeof(char)*50);
         sprintf(str, "\r\nTest Stop Time:20%d/%d/%d %d:%d:%d\r\n",\
         rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
         myfree(SRAMIN, str);
 
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "PRESS START TO START TEST\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "PRESS START TO START TEST\r\n");
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
@@ -694,28 +703,31 @@ void SweepRobot_PCBTestExitProc(void)
         printf("TEST->OFF\r\n");
 
         TEST_LED_TASK_CB_DEREG();
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
-        Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
-//        Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, "START");
-        BUTTON_DispStartCHNStr(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, 18, 43);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
+//        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "START");
+        BUTTON_DispStartCHNStr(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, 18, 43);
 
-        MultiEdit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "PRESS START TO ENTER TEST MODE AND START TEST\r\n");
+        MultiEdit_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "PRESS START TO ENTER TEST MODE AND START TEST\r\n");
 
-        WM_HideWin(hWin_SWRB_MAIN);
+        WM_HideWin(hWin_SWRB_PCBTEST);
         WM_ShowWin(hWin_SWRB_START);
     }
 }
 
-void SweepRobot_TestInitProc(void)
+static void SweepRobot_PCBTestCtrlReset(void)
 {
-    int i;
-
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestCtrlIdlePos();
     SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlIdlePos();
     SweepRobot_AshTrayTestInsCtrlIdlePos();
+}
 
+static void SweepRobot_PCBTestGUIReset(void)
+{
+    int i;
+    
     printf("TEST->ON\r\n");
     printf("CHARGE->OFF\r\n");
     printf("IRDA->OFF\r\n");
@@ -729,22 +741,29 @@ void SweepRobot_TestInitProc(void)
     printf("SENSOR->B_SWITCH=0\r\n");
 
     for(i=ID_MAIN_EDIT_U1;i<=ID_MAIN_EDIT_D8;i++){
-        Edit_Set_Value(hWin_SWRB_MAIN, i, 0);
+        Edit_Set_Value(hWin_SWRB_PCBTEST, i, 0);
     }
 
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL, "WHEEL");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_BRUSH, "BRUSH");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_FAN, "FAN");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IFRD, "IFRD");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_COLLISION, "COLLISION");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_ASH_TRAY, "ASH TRAY");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_UNIWHEEL, "UNIWHEEL");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_KEY, "KEY");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_BUZZER, "BUZZER");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED");
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_CHARGE, "CHARGE");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, "WHEEL");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BRUSH, "BRUSH");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_FAN, "FAN");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_IFRD, "IFRD");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_COLLISION, "COLLISION");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_ASH_TRAY, "ASH TRAY");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_UNIWHEEL, "UNIWHEEL");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_KEY, "KEY");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_IRDA, "IRDA");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_CHARGE, "CHARGE");
+}
+
+void SweepRobot_TestInitProc(void)
+{
+    SweepRobot_PCBTestCtrlReset();
+
+    SweepRobot_PCBTestGUIReset();
 
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
@@ -758,7 +777,7 @@ static void SWRB_ValidTestTaskCntGet(void)
 
     gSwrbTestValidTaskCnt = 0;
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         if(CHECKBOX_GetState(hItem)){
             gSwrbTestValidTaskCnt++;
         }
@@ -783,10 +802,10 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
     WM_HWIN hItem;
 
     if(ENABLE == encryptoState){
-        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n>>>Start Encrypting TestData<<<\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "\r\n>>>Start Encrypting TestData<<<\r\n");
 
         for(i=ID_MAIN_BUTTON_START;i<=ID_MAIN_BUTTON_EXIT;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+            hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
             WM_DisableWindow(hItem);
         }
 
@@ -794,14 +813,14 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
 //            SWRB_TestDataFileCrypt(DecryptMode);
 
         for(i=ID_MAIN_BUTTON_START;i<=ID_MAIN_BUTTON_EXIT;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
+            hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
             WM_EnableWindow(hItem);
         }
 
         if(flErr == FR_OK){
-            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
         }else{
-            MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
         }
     }
 }
@@ -813,7 +832,7 @@ static void SWRB_TestFinishProc(void)
 
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    SweepRobot_TestInitProc();
+    SweepRobot_PCBTestCtrlReset();
 
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
@@ -824,7 +843,7 @@ static void SWRB_TestFinishProc(void)
     str = mymalloc(SRAMIN, sizeof(char)*50);
     sprintf(str, "\r\nTest Finish Time:20%d/%d/%d %d:%d:%d\r\n",\
     rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     myfree(SRAMIN, str);
 
     str = "\r\n***TEST FINISHED***\r\n";
@@ -836,22 +855,28 @@ static void SWRB_TestFinishProc(void)
     SWRB_ValidTestTaskCntGet();
     SWRB_TestCheckboxEnable();
 
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
-    Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
-    Button_Set_BkColor(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
-//        Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, "START");
-    BUTTON_DispStartCHNStr(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START, 18, 43);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
+    Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+    Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
+//        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "START");
+    BUTTON_DispStartCHNStr(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, 18, 43);
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
         Checkbox_Set_Text_Color(i, GUI_BLACK);
     }
+    
+    SweepRobot_PCBTestGUIReset();
+    
+    gSwrbTestTaskRunCnt = 0;
+    gSwrbTestStateMap = 0;
+    gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
+    
+    SWRB_ListWheelSNInc(hWin_SWRB_SNSETTING);
 
     TEST_LED_TASK_CB_DEREG();
 
-    SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_STOP);
-    SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_EXIT);
-    SWRB_WM_EnableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_SET);
-
-    SWRB_ListWheelSNInc(hWin_SWRB_SNSETTING);
+    SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_STOP);
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
 }
 
 void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
@@ -881,11 +906,11 @@ void SweepRobot_StartDlgPCBBtnClickProc(void)
 
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 
-    SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_START);
-    SWRB_WM_DisableWindow(hWin_SWRB_MAIN, ID_MAIN_BUTTON_STOP);
+    SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START);
+    SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_STOP);
 
     WM_HideWin(hWin_SWRB_START);
-    WM_ShowWin(hWin_SWRB_MAIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
 }
 
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
@@ -897,9 +922,23 @@ void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
     WM_ShowWin(hWin_SWRB_POWER_STATION);
 }
 
+void SweepRobot_StartDlgSLAMBtnClickProc(void)
+{
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_SLAM;
+    
+    gSwrbTestRuningTaskPrio = SWRB_SLAM_MONITOR_TASK_PRIO;
+    WM_HideWin(hWin_SWRB_START);
+    WM_ShowWin(hWin_SWRB_SLAM);
+}
+
 void SweepRobot_StartDlgDecryptoBtnClickProc(void)
 {
+    
+}
 
+static void SweepRobot_PSTestIndicateBtnToggle(void)
+{
+    SWRB_IndicateButtonToggle(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE);
 }
 
 void SweepRobot_PowerStationTestStartProc(void)
@@ -917,7 +956,7 @@ void SweepRobot_PowerStationTestStartProc(void)
         printf("TEST->ON\r\n");
         printf("POWER_STATION->ON\r\n");
 
-        TEST_LED_TASK_CB_REG(SweepRobot_PowerStationIndicateBtnToggle);
+        TEST_LED_TASK_CB_REG(SweepRobot_PSTestIndicateBtnToggle);
 
         Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, GUI_LIGHTRED);
 //        Button_Set_Text(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, "PAUSE");
@@ -1007,10 +1046,36 @@ void SweepRobot_PowerStationTestExitProc(void)
     }
 }
 
+void SweepRobot_SLAMStartProc(void)
+{
+    WM_InvalidateWindow(hWin_SWRB_SLAM);
+}
+
+void SweepRobot_SLAMSetProc(void)
+{
+    
+}
+
+void SweepRobot_SLAMStopProc(void)
+{
+    
+}
+
+void SweepRobot_SLAMExitProc(void)
+{
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+
+        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+
+        WM_HideWin(hWin_SWRB_SLAM);
+        WM_ShowWin(hWin_SWRB_START);
+    }
+}
+
 static void SweepRobot_TestCkbStateSet(u8 state)
 {
     u16 i;
 
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++)
-        Checkbox_Set_State(hWin_SWRB_MAIN, i, state);
+        Checkbox_Set_State(hWin_SWRB_PCBTEST, i, state);
 }

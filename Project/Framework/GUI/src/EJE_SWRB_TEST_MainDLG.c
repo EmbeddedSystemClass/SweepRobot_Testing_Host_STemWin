@@ -202,8 +202,8 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             WM_BringToTop(hItem);
             BUTTON_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
-            Button_Set_BkColor(hWin_SWRB_MAIN,ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
-            Button_Set_Text(hWin_SWRB_MAIN, ID_MAIN_BUTTON_INDICATE, " ");
+            Button_Set_BkColor(hWin_SWRB_PCBTEST,ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
+            Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, " ");
             BUTTON_SetFocussable(hItem, 0);
             //
             // Initialization of 'Msg Multiedit'
@@ -567,10 +567,14 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
         case WM_INIT_DIALOG:
             
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_OK);
-            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            Button_Set_Text(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_OK, "");
+            BUTTON_DispOKCHNStr(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_OK, 28, 14);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_ERR);
-            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            Button_Set_Text(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_ERR, "");
+            BUTTON_DispErrorCHNStr(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_ERR, 28, 14);
         
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_TEXT_RGB_LED);
             TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
@@ -627,13 +631,17 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
         case WM_INIT_DIALOG:
 
             hItem = WM_GetDialogItem(pMsg->hWin,ID_MAIN_FRAMEWIN_BUZZER);
-            WM_AttachWindowAt(hItem, hWin_SWRB_MAIN, 10, 77);
+            WM_AttachWindowAt(hItem, hWin_SWRB_PCBTEST, 10, 77);
         
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_BUZZER_OK);
-            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            Button_Set_Text(pMsg->hWin, ID_MAIN_BUTTON_RGB_LED_OK, "");
+            BUTTON_DispOKCHNStr(pMsg->hWin, ID_MAIN_BUTTON_BUZZER_OK, 28, 14);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_BUZZER_ERR);
-            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            Button_Set_Text(pMsg->hWin, ID_MAIN_BUTTON_BUZZER_ERR, "");
+            BUTTON_DispErrorCHNStr(pMsg->hWin, ID_MAIN_BUTTON_BUZZER_ERR, 28, 14);
         
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_TEXT_BUZZER);
             TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
@@ -684,7 +692,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
 **********************************************************************
 */
 
-WM_HWIN hWin_SWRB_MAIN;
+WM_HWIN hWin_SWRB_PCBTEST;
 WM_HWIN hWin_SWRB_RGB_LED;
 WM_HWIN hWin_SWRB_BUZZER;
 
@@ -711,7 +719,7 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_MAIN, 180, 135);
+    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
     return hWin;
 }
 
@@ -719,7 +727,7 @@ WM_HWIN CreateBUZZER_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_MAIN, 180, 135);
+    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
     return hWin;
 }
 

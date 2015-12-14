@@ -1,5 +1,5 @@
 #include "sys.h"
-#include "usart.h"	
+#include "usart.h"
 #include "malloc.h"
 #include "stm32f4xx_it.h"
 
@@ -14,32 +14,32 @@
 #endif
 
 #if 1
-#pragma import(__use_no_semihosting)             
+#pragma import(__use_no_semihosting)
 
-struct __FILE 
-{ 
-	int handle; 
-}; 
+struct __FILE
+{
+	int handle;
+};
 
-FILE __stdout;       
+FILE __stdout;
 
-int _sys_exit(int x) 
-{ 
+int _sys_exit(int x)
+{
 	x = x;
     return -1;
-} 
+}
 
 int fputc(int ch, FILE *f)
-{ 	
+{
 	while((USART1->SR&0X40)==0);
-	USART1->DR = (u8) ch;      
+	USART1->DR = (u8) ch;
 	return ch;
 }
 #endif
 
 static void USART1_ISR(void);
 static void USART3_ISR(void);
- 
+
 #if EN_USART1_RX
 
 char USART_RX_BUF[USART_REC_LEN];
@@ -103,8 +103,8 @@ void uart_init(u32 bound){
   USART_Cmd(USART3, ENABLE);
 
   USART_ClearFlag(USART3, USART_FLAG_TC);
-	
-#if EN_USART1_RX	
+
+#if EN_USART1_RX
   USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 
   //Usart1 NVIC ÅäÖÃ
@@ -133,11 +133,11 @@ void USART1_ISR(void)
 {
 	u8 Res;
 #if SYSTEM_SUPPORT_UCOS
-	OSIntEnter();    
+	OSIntEnter();
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
 		Res =USART_ReceiveData(USART1);
-		
+
 		if((USART_RX_STA&0x8000)==0){
 			if(USART_RX_STA&0x4000){
 				if(Res!=0x0a)
@@ -158,19 +158,19 @@ void USART1_ISR(void)
 					USART_RX_STA++;
 					if(USART_RX_STA>(USART_REC_LEN-1))
 						USART_RX_STA=0;
-				}		 
+				}
 			}
-		}   		 
-  }
-	
-#if SYSTEM_SUPPORT_UCOS  
+		}
+    }
+
+#if SYSTEM_SUPPORT_UCOS
 	OSIntExit();
 #endif
 }
 
 void USART3_ISR(void)
 {
-  
+
 }
 
 s8 USART_RxArrayToString(char *src_array, char* *dest_str)
@@ -178,19 +178,19 @@ s8 USART_RxArrayToString(char *src_array, char* *dest_str)
   *dest_str = (char *)mymalloc(SRAMIN ,(sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
   if(NULL==(*dest_str) )
     return -1;
-    
+
   mymemset(*dest_str, 0, (sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
   strncpy(*dest_str, src_array, (USART_RX_STA&USART_CNT_MASK) );
-  
+
   return 0;
 }
 
 s8 USART_RxArrayToNumber(char *src_array, int *dest_num)
 {
   u8 i;
-  
+
   *dest_num = 0;
-  
+
   for(i=0;i<(USART_RX_STA&USART_CNT_MASK);i++){
     if( ('0' <= (src_array[i])) && ('9' >= (src_array[i]) ) ){
       if(i){
@@ -201,16 +201,16 @@ s8 USART_RxArrayToNumber(char *src_array, int *dest_num)
       return -1;
     }
   }
-  
+
   return 0;
 }
 
 char* USART_NumberToString(int *src_num, char *dest_str)
 {
-  sprintf(dest_str, "%d", *src_num); 
+  sprintf(dest_str, "%d", *src_num);
   return dest_str;
 }
 
 
-#endif	
+#endif
 

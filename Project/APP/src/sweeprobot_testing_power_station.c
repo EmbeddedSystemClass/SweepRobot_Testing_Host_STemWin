@@ -28,7 +28,6 @@ static PowerStation_TestTypeDef powerStation[SWRB_TEST_PS_TX_SIG_NUM];
 static PowerStation_TestTypeDef powerStation24V;
 
 static u8 gIrDATmpCode;
-static u8 gIndicateFlag = 0;
 
 static u32 MaxNumDataItems=245, NumDataItems=10;
 static I16 aVoltageValue[245], aCurrentValue[245];
@@ -288,15 +287,6 @@ void PowerStation_TestDataSave(void)
     SWRB_TestDataFileWriteData("POWER_STATION->RS_Code=", powerStation[5].code, 1);
     SWRB_TestDataFileWriteData("POWER_STATION->RL_Code=", powerStation[6].code, 1);
     SWRB_TestDataFileWriteData("POWER_STATION->24V_State=", powerStation24V.state, 1);
-}
-
-void SweepRobot_PowerStationIndicateBtnToggle(void)
-{
-    if(++gIndicateFlag%2){
-        Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_DARKRED);
-    }else{
-        Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_LIGHTGRAY);
-    }
 }
 
 void SweepRobot_PowerStationTestGraphClear(void)

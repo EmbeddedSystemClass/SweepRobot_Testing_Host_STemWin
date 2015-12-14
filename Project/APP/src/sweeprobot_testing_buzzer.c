@@ -20,7 +20,7 @@ static void SweepRobot_BuzzerTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
@@ -75,9 +75,9 @@ static void SweepRobot_BuzzerTestOKProc(void)
     str = "BUZZER OK\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_BUZZER, GUI_BLUE);
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_BUZZER, "BUZZER OK");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER OK");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
@@ -96,9 +96,9 @@ static void SweepRobot_BuzzerTestErrProc(void)
     str = "ERROR->BUZZER\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_BUZZER, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_BUZZER, "BUZZER ERROR");
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER ERROR");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
@@ -117,7 +117,7 @@ void SweepRobot_BuzzerTestTask(void *pdata)
                 SweepRobot_BuzzerTestInit();
             }
 
-            if(gSwrbTestTaskRunCnt%200){
+            if(gSwrbTestTaskRunCnt%1000){
                 
             }else{
                 SweepRobot_BuzzerTestProc();
