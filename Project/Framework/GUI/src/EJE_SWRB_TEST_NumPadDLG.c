@@ -158,13 +158,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                     case ID_NUMPAD_EDIT_MAIN: // Notifications sent by 'Edit'
                         switch(NCode) {
                             case WM_NOTIFICATION_CLICKED:
-
                                 break;
                             case WM_NOTIFICATION_RELEASED:
-
                                 break;
                             case WM_NOTIFICATION_VALUE_CHANGED:
-
                                 break;
                         }
                         break;

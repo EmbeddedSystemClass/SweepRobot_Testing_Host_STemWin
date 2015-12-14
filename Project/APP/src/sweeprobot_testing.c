@@ -911,7 +911,7 @@ void SweepRobot_PowerStationTestStartProc(void)
         if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
             SweepRobot_PowerStationTestGraphClear();
         }
-        
+
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
         printf("TEST->ON\r\n");

@@ -16,6 +16,4 @@
 #include "sweeprobot_testing_charge.h"
 #include "sweeprobot_testing_power_station.h"
 
-void OS_Task_Create(void);
-
 #endif

@@ -109,15 +109,19 @@ static void SweepRobot_IrDATestProc(void)
         if(!IrDA[i].validFlag){
             printf("IRDA->ON=%d\r\n",i);
             OSTimeDlyHMSM(0,0,0,1);
+            
+            /* Send IrDA control code from Host */
+            SweepRobot_IrDATestTxSendCmd(42);
+            /* Send IrDA control code from DUT */
+//            printf("IRDA->ON=42\r\n");
+            
+            OSTimeDlyHMSM(0,0,0,24);
             for(j=0;j<SWRB_TEST_USART_IRDA_READ_TIMES;j++){
-//                SweepRobot_IrDATestTxSendCmd(42);
-//                printf("IRDA->ON=42\r\n");
-//                OSTimeDlyHMSM(0,0,0,24);
                 printf("IRDA->READ\r\n");
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     IrDA[i].code = usartRxNum;
-                    Edit_Set_HexMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 65535);
+                    Edit_Set_HexMode(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, 0, 0, 255);
                     Edit_Set_Value(hWin_SWRB_MAIN, ID_MAIN_EDIT_U1+i, IrDA[i].code);
                     usartRxNum = 0;
                     usartRxFlag = 0;

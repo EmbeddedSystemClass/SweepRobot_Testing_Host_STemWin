@@ -126,23 +126,19 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     case ID_LOGIN_BUTTON_OK: // Notifications sent by 'btnLoginOK'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-
         break;
       case WM_NOTIFICATION_RELEASED:
         SweepRobot_PCBTestLoginOKProc();
         break;
-
       }
       break;
     case ID_LOGIN_BUTTON_CANCEL: // Notifications sent by 'btnLoginCancel'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-
         break;
       case WM_NOTIFICATION_RELEASED:
         SweepRobot_PCBTestLoginCancelProc();
         break;
-
       }
       break;
     case ID_LOGIN_EDIT_PASSWORD: // Notifications sent by 'Edit'
@@ -153,6 +149,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         SweepRobot_PCBTestLoginEditProc(pMsg);
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
+        
         break;
       }
       break;
