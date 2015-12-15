@@ -22,6 +22,7 @@
 
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "GUI.h"
+#include "DIALOG.h"
 
 #include "sweeprobot_testing.h"
 
@@ -36,12 +37,58 @@ typedef void (*SLAMCbFunc_t)(void);
 
 static SLAMCbFunc_t SLAMWMPaintCb;
 
-#define SWRB_SLAM_WM_PAINT_CB_REG(f)    do{SLAMWMPaintCb=f;}while(0)
-#define SWRB_SLAM_WM_PAINT_CB_DEREG()   do{SLAMWMPaintCb=NULL;}while(0)
+#define SWRB_SLAM_WM_PAINT_CB_REG(f)        do{SLAMWMPaintCb=f;}while(0)
+#define SWRB_SLAM_WM_PAINT_CB_DEREG()       do{SLAMWMPaintCb=NULL;}while(0)
 
-#define SWRB_SLAM_START_X_POS   350
-#define SWRB_SLAM_START_Y_POS   240
-#define SWRB_SLAM_START_ANGLE   0
+#define SWRB_SLAM_MAP_X_START_POS 100
+#define SWRB_SLAM_MAP_X_STOP_POS 600
+#define SWRB_SLAM_MAP_X_AXIS_PIXEL_NUM      (SWRB_SLAM_MAP_X_STOP_POS-SWRB_SLAM_MAP_X_START_POS)
+#define SWRB_SLAM_MAP_Y_START_POS 50
+#define SWRB_SLAM_MAP_Y_STOP_POS 400
+#define SWRB_SLAM_MAP_Y_AXIS_PIXEL_NUM      (SWRB_SLAM_MAP_Y_STOP_POS-SWRB_SLAM_MAP_Y_START_POS)
+
+#define SWRB_SLAM_MAP_X_AXIS_GRID_SIZE      10
+#define SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE      10
+
+#define SWRB_SLAM_MAP_X_AXIS_GRID_NUM       (SWRB_SLAM_MAP_X_AXIS_PIXEL_NUM/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE)
+#define SWRB_SLAM_MAP_Y_AXIS_GRID_NUM       (SWRB_SLAM_MAP_Y_AXIS_PIXEL_NUM/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE)
+
+#define SWRB_SLAM_ROBOT_POS_OFFSET          SWRB_SLAM_MAP_X_AXIS_GRID_SIZE/2
+#define SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED    5
+#define SWRB_SLAM_ROBOT_NORTH_BOUND         (SWRB_SLAM_MAP_Y_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET)
+#define SWRB_SLAM_ROBOT_EAST_BOUND          (SWRB_SLAM_MAP_X_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET)
+#define SWRB_SLAM_ROBOT_SOUTH_BOUND         (SWRB_SLAM_MAP_Y_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET)
+#define SWRB_SLAM_ROBOT_WEST_BOUND          (SWRB_SLAM_MAP_X_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET)
+
+#define SWRB_SLAM_START_X_POS               345
+#define SWRB_SLAM_START_Y_POS               235
+#define SWRB_SLAM_START_ANGLE               0
+
+#define DEG2RAD                             (3.1415926f / 180)
+
+typedef struct{
+    int GridStartXpos;
+    int GridStartYpos;
+    int GridStopXpos;
+    int GridStopYpos;
+    u8  flag;
+}SWRB_SLAM_MAP_t;
+
+enum SLAM_ROBOT_POS_EDGE_FLAG{
+    
+    SLAM_ROBOT_POS_EDGE_NONE,
+    SLAM_ROBOT_POS_EDGE_HORIZON,
+    SLAM_ROBOT_POS_EDGE_VERTICAL,
+};
+
+enum SLAM_ROBOT_POS_FLAG{
+    
+    SLAM_ROBOT_POS_NORTH,
+    SLAM_ROBOT_POS_EAST,
+    SLAM_ROBOT_POS_SOUTH,
+    SLAM_ROBOT_POS_WEST,
+    SLAM_ROBOT_POS_MIDDLE,
+};
 
 /*********************************************************************
 *
@@ -50,18 +97,31 @@ static SLAMCbFunc_t SLAMWMPaintCb;
 **********************************************************************
 */
 
+static u8 gRobotXTurnFlag = 0;
+static u8 gRobotYTurnFlag = 0;
+
+static enum SLAM_ROBOT_POS_EDGE_FLAG gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_NONE;
+static enum SLAM_ROBOT_POS_FLAG gRobotPosFlag = SLAM_ROBOT_POS_MIDDLE;
+
+static int xPos=SWRB_SLAM_START_X_POS, yPos=SWRB_SLAM_START_Y_POS;
+
+static SWRB_SLAM_MAP_t gSLAMMap[SWRB_SLAM_MAP_X_AXIS_GRID_NUM][SWRB_SLAM_MAP_Y_AXIS_GRID_NUM];
+
 static GUI_POINT pPolygonRobot[] = {
-                                     {0,30},
-                                     {10,30},
-                                     {5,0}
-                                   };
+    {0,0},
+    {0,0},
+    {0,0},
+    {0,0},
+};
+static short pPolygonRobotArray[4][4][2] = {
+    {{-5,10}, {0,0}, {5,10}, {0,5}},        //North
+    {{-10,-5}, {0,0}, {-10,5}, {-5,0}},     //East
+    {{-5,-10}, {0,-5}, {5,-10}, {0,0}},     //South
+    {{10,-5}, {0,0}, {10,5}, {5,0}}         //West
+};
+
 static int gTraceNum = 0;
-static GUI_POINT pPolygonTrace[100] = { 
-                                        {0,0} 
-                                       };
-static GUI_POINT pPolygonTraceBuf[] = { 
-                                        {0,0} 
-                                      };
+static GUI_POINT gPolygonTrace[128];
 
 /*********************************************************************
 *
@@ -99,33 +159,242 @@ static void Button_Init(WM_HWIN hItem)
     WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
 }
 
-static void SLAM_WMPaint(void)
+static void SWRB_SLAM_MAP_Init(void)
+{
+    /* Initialization of user widget */
+}
+
+static void SLAM_MapPaint(void)
 {
     int i;
     
-    // Initialization of user widget
     GUI_SetColor(GUI_BLUE);
-    GUI_DrawRect(100, 50, 600, 400);
-    GUI_SetColor(GUI_RED);
+    GUI_DrawRect(SWRB_SLAM_MAP_X_START_POS, SWRB_SLAM_MAP_X_STOP_POS, SWRB_SLAM_MAP_Y_START_POS, SWRB_SLAM_MAP_Y_STOP_POS);
+    GUI_SetColor(GUI_GRAY);
+
+    /* Draw X axis Grids*/
+    for(i=SWRB_SLAM_MAP_X_START_POS;i<=SWRB_SLAM_MAP_X_STOP_POS;i+=SWRB_SLAM_MAP_X_AXIS_GRID_SIZE){
+        GUI_DrawLine(i, SWRB_SLAM_MAP_Y_START_POS, i, SWRB_SLAM_MAP_Y_STOP_POS);
+    }
+
+    /* Draw Y axis Grids*/
+    for(i=SWRB_SLAM_MAP_Y_START_POS;i<=SWRB_SLAM_MAP_Y_STOP_POS;i+=SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE){
+        GUI_DrawLine(SWRB_SLAM_MAP_X_START_POS, i, SWRB_SLAM_MAP_X_STOP_POS, i);
+    }
+}
+
+static SWRB_SLAM_MAP_t SLAM_MapGridGet(u16 x, u16 y)
+{
+    int temp;
+    SWRB_SLAM_MAP_t map;
+    u16 gridCoordX, gridCoordY;
     
-    /* move the robot polygon */
-    if(pPolygonRobot[0].y < 400-SWRB_SLAM_START_Y_POS){
-        for(i=0;i<3;i++){
-            pPolygonRobot[i].y += 5;
-        }
-    }else{
-        GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, 3, -90);
-        for(i=0;i<3;i++){
-            pPolygonRobot[i].x -= 5;
+    temp = x;
+    while((temp--)%SWRB_SLAM_MAP_X_AXIS_GRID_SIZE);
+    map.GridStartXpos = temp;
+    
+    temp = x;
+    while((temp++)%SWRB_SLAM_MAP_X_AXIS_GRID_SIZE);
+    map.GridStopXpos = temp;
+    
+    temp = y;
+    while((temp--)%SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE);
+    map.GridStartYpos = temp;
+    
+    temp = y;
+    while((temp++)%SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE);
+    map.GridStopYpos = temp;
+    
+    gridCoordX = map.GridStartXpos/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE;
+    gridCoordY = map.GridStartYpos/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE;
+    
+    gSLAMMap[gridCoordX][gridCoordY].GridStartXpos = map.GridStartXpos;
+    gSLAMMap[gridCoordX][gridCoordY].GridStartYpos = map.GridStartYpos;
+    gSLAMMap[gridCoordX][gridCoordY].GridStopXpos = map.GridStopXpos;
+    gSLAMMap[gridCoordX][gridCoordY].GridStopYpos = map.GridStopYpos;
+    gSLAMMap[gridCoordX][gridCoordY].flag = 1;
+    
+    return map;
+}
+
+static void SLAM_MapGridFlagSet(u16 gridCoordX, u16 gridCoordY, u8 flagState)
+{
+    gSLAMMap[gridCoordX][gridCoordY].flag = flagState;
+}
+
+static void SLAM_MapOneGridFill(u16 x, u16 y, GUI_COLOR color)
+{
+    SWRB_SLAM_MAP_t map;
+    GUI_COLOR lastColor;
+    
+    map = SLAM_MapGridGet(x,y);
+    
+    lastColor = GUI_GetColor();
+    GUI_SetColor(color);
+    GUI_FillRect(map.GridStartXpos, map.GridStartYpos, map.GridStopXpos, map.GridStopYpos);
+    GUI_SetColor(lastColor);
+}
+
+static void SLAM_MapGridFillStetDraw(GUI_COLOR color)
+{
+    int x,y;
+    u16 gridCoordX, gridCoordY;
+    GUI_COLOR lastColor;
+    
+    for(x=SWRB_SLAM_MAP_X_START_POS;x<=SWRB_SLAM_MAP_X_STOP_POS;x+=SWRB_SLAM_MAP_X_AXIS_GRID_SIZE){
+        gridCoordX = x/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE;
+        for(y=SWRB_SLAM_MAP_Y_START_POS;y<=SWRB_SLAM_MAP_Y_STOP_POS;y+=SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE){
+            gridCoordY = y/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE;
+            
+            if(gSLAMMap[gridCoordX][gridCoordY].flag){
+                lastColor = GUI_GetColor();
+                GUI_SetColor(color);
+                GUI_FillRect(gSLAMMap[gridCoordX][gridCoordY].GridStartXpos,\
+                             gSLAMMap[gridCoordX][gridCoordY].GridStartYpos,\
+                             gSLAMMap[gridCoordX][gridCoordY].GridStopXpos,\
+                             gSLAMMap[gridCoordX][gridCoordY].GridStopYpos);
+                GUI_SetColor(lastColor);
+            }
         }
     }
-    GUI_FillPolygon(pPolygonRobot, 3, SWRB_SLAM_START_X_POS, SWRB_SLAM_START_Y_POS);
+}
 
-    pPolygonTrace[gTraceNum].x = pPolygonRobot[0].x;
-    pPolygonTrace[gTraceNum].y = pPolygonRobot[0].y;
-    gTraceNum++;
-    GUI_SetColor(GUI_GRAY);
-    GUI_DrawPolyLine(pPolygonTrace, gTraceNum, SWRB_SLAM_START_X_POS, SWRB_SLAM_START_Y_POS);
+static void SLAM_MapGridPaint(void)
+{
+    SLAM_MapOneGridFill(xPos, yPos, GUI_GREEN);
+}
+
+static void SLAM_RobotFollowWallProc1(void)
+{
+    if(gRobotPosEdgeFlag == SLAM_ROBOT_POS_EDGE_VERTICAL){
+        if(SWRB_SLAM_ROBOT_EAST_BOUND <= xPos){
+            gRobotPosFlag = SLAM_ROBOT_POS_EAST;
+            mymemcpy(pPolygonRobot, pPolygonRobotArray[SLAM_ROBOT_POS_SOUTH], sizeof(pPolygonRobot));
+        }else if(SWRB_SLAM_ROBOT_WEST_BOUND >= xPos){
+            gRobotPosFlag = SLAM_ROBOT_POS_WEST;
+            mymemcpy(pPolygonRobot, pPolygonRobotArray[SLAM_ROBOT_POS_NORTH], sizeof(pPolygonRobot));
+        }
+    }
+    
+    if(gRobotPosEdgeFlag == SLAM_ROBOT_POS_EDGE_HORIZON){
+        if(SWRB_SLAM_ROBOT_SOUTH_BOUND <= yPos){
+            gRobotPosFlag = SLAM_ROBOT_POS_SOUTH;
+            mymemcpy(pPolygonRobot, pPolygonRobotArray[SLAM_ROBOT_POS_WEST], sizeof(pPolygonRobot));
+        }else if(SWRB_SLAM_ROBOT_NORTH_BOUND >= yPos){
+            gRobotPosFlag = SLAM_ROBOT_POS_NORTH;
+            mymemcpy(pPolygonRobot, pPolygonRobotArray[SLAM_ROBOT_POS_EAST], sizeof(pPolygonRobot));
+        }
+    }
+
+    switch(gRobotPosFlag){
+        case SLAM_ROBOT_POS_MIDDLE:
+            yPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+            if(SWRB_SLAM_ROBOT_SOUTH_BOUND <= yPos || SWRB_SLAM_ROBOT_NORTH_BOUND >= yPos){
+                gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_HORIZON;
+            }
+            break;
+        case SLAM_ROBOT_POS_NORTH:
+            xPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+            if(SWRB_SLAM_ROBOT_EAST_BOUND <= xPos || SWRB_SLAM_ROBOT_WEST_BOUND >= xPos){
+                gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_VERTICAL;
+            }
+            break;
+        case SLAM_ROBOT_POS_EAST:
+            yPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+            if(SWRB_SLAM_ROBOT_SOUTH_BOUND <= yPos || SWRB_SLAM_ROBOT_NORTH_BOUND >= yPos){
+                gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_HORIZON;
+            }
+            break;
+        case SLAM_ROBOT_POS_SOUTH:
+            xPos-=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+            if(SWRB_SLAM_ROBOT_EAST_BOUND <= xPos || SWRB_SLAM_ROBOT_WEST_BOUND >= xPos){
+                gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_VERTICAL;
+            }
+            break;
+        case SLAM_ROBOT_POS_WEST:
+            yPos-=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+            if(SWRB_SLAM_ROBOT_SOUTH_BOUND <= yPos || SWRB_SLAM_ROBOT_NORTH_BOUND >= yPos){
+                gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_HORIZON;
+            }
+            break;
+    }
+}
+
+/* move the robot polygon */
+static void SLAM_RobotFollowWallProc(void)
+{
+    if(SWRB_SLAM_ROBOT_NORTH_BOUND<yPos && SWRB_SLAM_ROBOT_SOUTH_BOUND>yPos){
+        GUI_FillPolygon(pPolygonRobot, GUI_COUNTOF(pPolygonRobot), xPos, yPos);
+        yPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+        gRobotYTurnFlag = 1;
+    }else if(SWRB_SLAM_MAP_Y_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET<=yPos){
+        if(gRobotYTurnFlag){
+            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
+            gRobotYTurnFlag=0;
+        }
+        xPos-=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+    }else if(SWRB_SLAM_MAP_Y_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET>=yPos){
+        if(gRobotYTurnFlag){
+            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
+            gRobotYTurnFlag=0;
+        }
+        xPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+    }
+    
+    if(SWRB_SLAM_ROBOT_WEST_BOUND<xPos && SWRB_SLAM_ROBOT_EAST_BOUND>xPos){
+        gRobotXTurnFlag = 1;
+    }else if(SWRB_SLAM_MAP_X_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET<=xPos){
+        if(gRobotXTurnFlag){
+            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
+            gRobotXTurnFlag=0;
+        }
+        yPos-=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+    }else if(SWRB_SLAM_MAP_X_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET>=xPos){
+        if(gRobotXTurnFlag){
+            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
+            gRobotXTurnFlag=0;
+        }
+        yPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
+    }
+}
+
+static void SLAM_RobotPaint(void)
+{
+    SLAM_RobotFollowWallProc1();
+
+    GUI_SetColor(GUI_RED);
+    GUI_FillPolygon(pPolygonRobot, GUI_COUNTOF(pPolygonRobot), xPos,yPos);
+}
+
+static void SLAM_TracePaint(void)
+{
+    if(gTraceNum < 1024){
+        gPolygonTrace[gTraceNum].x = xPos;
+        gPolygonTrace[gTraceNum].y = yPos;
+        gTraceNum++;
+        GUI_SetColor(GUI_BLUE);
+        GUI_DrawPolyLine(gPolygonTrace, gTraceNum*2, SWRB_SLAM_START_X_POS, SWRB_SLAM_START_Y_POS);
+    }
+}
+
+static void SLAM_CoordDisp(void)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_SLAM, ID_SLAM_EDIT_XPOS);
+    EDIT_SetValue(hItem, xPos);
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_SLAM, ID_SLAM_EDIT_YPOS);
+    EDIT_SetValue(hItem, yPos);
+}
+
+static void SLAM_WMPaint(void)
+{
+    SLAM_MapPaint();
+    SLAM_MapGridPaint();
+    SLAM_RobotPaint();
+//    SLAM_TracePaint();
+    SLAM_CoordDisp();
 }
 
 /*********************************************************************
@@ -176,7 +445,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'editXpos'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_SLAM_EDIT_XPOS);
-    EDIT_SetText(hItem, "123");
+    EDIT_SetDecMode(hItem, 0, 0, 65535, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'textXpos'
@@ -188,7 +457,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'editYpos'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_SLAM_EDIT_YPOS);
-    EDIT_SetText(hItem, "123");
+    EDIT_SetDecMode(hItem, 0, 0, 65535, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'textYpos'
@@ -200,7 +469,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'editRvalue'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_SLAM_EDIT_RVALUE);
-    EDIT_SetText(hItem, "123");
+    EDIT_SetDecMode(hItem, 0, 0, 65535, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     //
     // Initialization of 'textRValue'
@@ -211,7 +480,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
     /* Hide Window when created */
     WM_HideWin(pMsg->hWin);
-    
+
     break;
   case WM_PAINT:
         if(SLAMWMPaintCb != NULL)
@@ -257,7 +526,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       }
       break;
-      
+
     }
     break;
 
@@ -288,11 +557,12 @@ WM_HWIN hWin_SWRB_SLAM;
 */
 WM_HWIN CreateEJE_SWRB_TEST_SLAMDLG(void)
 {
-  WM_HWIN hWin;
+    WM_HWIN hWin;
 
-  SWRB_SLAM_WM_PAINT_CB_REG(SLAM_WMPaint);
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-  return hWin;
+    SWRB_SLAM_MAP_Init();
+    SWRB_SLAM_WM_PAINT_CB_REG(SLAM_WMPaint);
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+    return hWin;
 }
 
 void SWRB_ROTATE_Robot(float angle)

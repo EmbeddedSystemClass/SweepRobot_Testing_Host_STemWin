@@ -24,12 +24,8 @@ int main(void)
         goto NO_SD_FAULT;
     }
 
-#ifdef DATA_IN_ExtSRAM
-
-#else
     W25QXX_Init();
     FSMC_SRAM_Init();
-#endif
 
     if(exfans_init()){
         goto MEM_INIT_FAULT;

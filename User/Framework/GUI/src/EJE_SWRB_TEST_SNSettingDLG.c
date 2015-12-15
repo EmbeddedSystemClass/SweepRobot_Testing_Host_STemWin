@@ -128,6 +128,20 @@ static void Button_CancelProc(WM_HWIN hWin)
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
 
+static void ListWheel_SnapLineDraw(GUI_COLOR color)
+{
+    uint8_t prevPenSize;
+    GUI_COLOR prevColor;
+
+    prevPenSize = GUI_GetPenSize();
+    GUI_SetPenSize(10);
+    prevColor = GUI_GetColor();
+    GUI_SetColor(color);
+    GUI_DrawLine(20, 160, 570, 190);
+    GUI_SetPenSize(prevPenSize);
+    GUI_SetColor(prevColor);
+}
+
 static void ListWheel_Init(WM_HWIN hItem)
 {
     LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
@@ -342,6 +356,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             EDIT_SetMaxLen(hItem, 50);
             //Hide SNSetting Window when create
             WM_HideWin(pMsg->hWin);
+            break;
+        case WM_PAINT:
+            ListWheel_SnapLineDraw(GUI_RED);
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);

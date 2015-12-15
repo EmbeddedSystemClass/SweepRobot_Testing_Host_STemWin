@@ -8,6 +8,11 @@
 
 //#include "sweeprobot_testing.h"
 
+#define PPM_PER_STEP  0.9536743 //10^6/2^20.
+#define PPM_PER_SEC   0.3858025 //10^6/(30d*24h*3600s).
+
+u16 FastSecPer30days = 117;
+
 extern enum SWRB_TEST_MODE gSwrbTestMode;
 
 NVIC_InitTypeDef   NVIC_InitStructure;
@@ -34,12 +39,26 @@ ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)
     return RTC_SetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
 }
 
+static void MY_RTC_Calibration(void)
+{
+    ErrorStatus rtcErrorStat;
+
+    rtcErrorStat = RTC_SmoothCalibConfig(RTC_SmoothCalibPeriod_32sec, RTC_SmoothCalibPlusPulses_Reset, 0x0144);
+    
+    if(rtcErrorStat == ERROR){
+        printf("RTC Calibration Error!\r\n");
+        while(1);
+    }
+}
+
 u8 My_RTC_Init(void)
 {
     RTC_InitTypeDef RTC_InitStructure;
     u16 retry=0X1FFF;
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
     PWR_BackupAccessCmd(ENABLE);
+    
+    MY_RTC_Calibration();
 
     if(RTC_ReadBackupRegister(RTC_BKP_DR0)!=0x5050){
         RCC_LSEConfig(RCC_LSE_ON);

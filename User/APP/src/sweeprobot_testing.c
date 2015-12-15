@@ -17,7 +17,7 @@
 
 #define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  60
 
-static char* gLoginPassWord = "123456";
+static char* gLoginPassWord = "123";
 
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
@@ -73,7 +73,7 @@ OS_STK START_TASK_STK[START_STK_SIZE];
 OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
 OS_STK KEY_TASK_STK[KEY_STK_SIZE];
 OS_STK RTC_TASK_STK[RTC_STK_SIZE];
-OS_STK EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE];
+OS_STK EMWIN_TASK_STK[EMWIN_STK_SIZE];
 OS_STK LED_TASK_STK[LED_STK_SIZE];
 OS_STK SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE];
 OS_STK SWRB_TEST_EXCEPTION_CHECK_TASK_STK[SWRB_TEST_EXCEPTION_CHECK_STK_SIZE];
@@ -107,7 +107,7 @@ void Start_Task(void *pdata)
     OSStatInit();
 
     OS_ENTER_CRITICAL();
-    OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWINDEMO_TASK_STK[EMWINDEMO_STK_SIZE-1],EMWIN_TASK_PRIO);
+    OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWIN_TASK_STK[EMWIN_STK_SIZE-1],EMWIN_TASK_PRIO);
     OS_EXIT_CRITICAL();
 
     OSTaskDel(OS_PRIO_SELF);
@@ -136,7 +136,9 @@ void emWin_Maintask(void *pdata)
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_MainDLG();
     hWin_SWRB_POWER_STATION = CreateEJE_SWRB_TEST_PowerStationDLG();
+#ifdef _SHOW_SLAM_DLG
     hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
+#endif
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
 
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
@@ -159,7 +161,11 @@ void emWin_Maintask(void *pdata)
             SWRB_SET_ListwheelSnapPosUpdate();
             SWRB_SET_EditTextUpdate();
         }
-
+        
+#ifdef _SHOW_SLAM_DLG
+        WM_InvalidateWindow(hWin_SWRB_SLAM);
+#endif
+        
         GUI_Exec();
         OSTimeDlyHMSM(0,0,0,20);
     }
@@ -185,8 +191,6 @@ void Led_Task(void *pdata)
 	while(1)
 	{
 		LED0 = !LED0;
-
-        WM_InvalidateWindow(hWin_SWRB_SLAM);
         
         if(gLedTaskCB!=NULL){
             OS_ENTER_CRITICAL();
@@ -322,6 +326,8 @@ static void SWRB_TEST_BUTTON_CTRL_Start(void)
         case SWRB_TEST_SELECT_POWER_STATION:
             SweepRobot_PowerStationTestStartProc();
             break;
+        case SWRB_TEST_SELECT_SLAM:
+            break;
     }
 }
 
@@ -334,6 +340,9 @@ static void SWRB_TEST_BUTTON_CTRL_Set(void)
             SweepRobot_PCBTestLoginOKProc();
             break;
         case SWRB_TEST_SELECT_POWER_STATION:
+            ;
+            break;
+        case SWRB_TEST_SELECT_SLAM:
             ;
             break;
     }
@@ -351,6 +360,8 @@ static void SWRB_TEST_BUTTON_CTRL_Stop(void)
         case SWRB_TEST_SELECT_POWER_STATION:
             SweepRobot_PowerStationTestStopProc();
             break;
+        case SWRB_TEST_SELECT_SLAM:
+            break;
     }
 }
 
@@ -365,6 +376,8 @@ static void SWRB_TEST_BUTTON_CTRL_Exit(void)
             break;
         case SWRB_TEST_SELECT_POWER_STATION:
             SweepRobot_PowerStationTestExitProc();
+            break;
+        case SWRB_TEST_SELECT_SLAM:
             break;
     }
 }
@@ -859,7 +872,7 @@ static void SWRB_TestFinishProc(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
     Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
-//        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "START");
+//    Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "START");
     BUTTON_DispStartCHNStr(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, 18, 43);
     for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
         Checkbox_Set_Text_Color(i, GUI_BLACK);
@@ -923,6 +936,7 @@ void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
     WM_ShowWin(hWin_SWRB_POWER_STATION);
 }
 
+#ifdef _SHOW_SLAM_DLG
 void SweepRobot_StartDlgSLAMBtnClickProc(void)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_SLAM;
@@ -931,6 +945,7 @@ void SweepRobot_StartDlgSLAMBtnClickProc(void)
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_SLAM);
 }
+#endif
 
 void SweepRobot_StartDlgDecryptoBtnClickProc(void)
 {
@@ -1047,6 +1062,7 @@ void SweepRobot_PowerStationTestExitProc(void)
     }
 }
 
+#ifdef _SHOW_SLAM_DLG
 void SweepRobot_SLAMStartProc(void)
 {
     WM_InvalidateWindow(hWin_SWRB_SLAM);
@@ -1072,6 +1088,7 @@ void SweepRobot_SLAMExitProc(void)
         WM_ShowWin(hWin_SWRB_START);
     }
 }
+#endif
 
 static void SweepRobot_TestCkbStateSet(u8 state)
 {

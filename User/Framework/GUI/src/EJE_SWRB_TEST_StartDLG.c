@@ -124,7 +124,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             BUTTON_SetText(hItem, "SLAM");
             Button_Init(hItem);
-            WM_HideWin(hItem);
+//            WM_HideWin(hItem);
             //
             // Initialization of 'DECRYPTO'
             //
@@ -175,7 +175,9 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
+#ifdef _SHOW_SLAM_DLG
                             SweepRobot_StartDlgSLAMBtnClickProc();
+#endif
                             break;
                     }
                     break;

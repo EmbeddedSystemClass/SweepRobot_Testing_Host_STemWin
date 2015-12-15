@@ -275,7 +275,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define TOUCH_STK_SIZE                      256
 #define KEY_STK_SIZE                        128
 #define RTC_STK_SIZE                        256
-#define EMWINDEMO_STK_SIZE		            1024
+#define EMWIN_STK_SIZE		            1024
 #define LED_STK_SIZE				        256
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
