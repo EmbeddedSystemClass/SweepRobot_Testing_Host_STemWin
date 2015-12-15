@@ -111,11 +111,12 @@ static void SLAM_WMPaint(void)
     /* move the robot polygon */
     if(pPolygonRobot[0].y < 400-SWRB_SLAM_START_Y_POS){
         for(i=0;i<3;i++){
-            pPolygonRobot[i].y += 2;
+            pPolygonRobot[i].y += 5;
         }
     }else{
+        GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, 3, -90);
         for(i=0;i<3;i++){
-            pPolygonRobot[i].x -= 2;
+            pPolygonRobot[i].x -= 5;
         }
     }
     GUI_FillPolygon(pPolygonRobot, 3, SWRB_SLAM_START_X_POS, SWRB_SLAM_START_Y_POS);
