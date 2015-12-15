@@ -124,6 +124,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             BUTTON_SetText(hItem, "SLAM");
             Button_Init(hItem);
+            WM_HideWin(hItem);
             //
             // Initialization of 'DECRYPTO'
             //

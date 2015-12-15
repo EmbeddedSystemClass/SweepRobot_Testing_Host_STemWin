@@ -23,6 +23,7 @@ u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
 enum CryptoMode{
+    
     DecryptMode,
     EncryptMode,
 };

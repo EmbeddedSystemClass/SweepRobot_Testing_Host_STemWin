@@ -10,6 +10,7 @@
 #define SWRB_WHEEL_CHAN_NUM     2
 
 enum WheelChan{
+    
     WHEEL_CHAN_L,
     WHEEL_CHAN_R,
 };

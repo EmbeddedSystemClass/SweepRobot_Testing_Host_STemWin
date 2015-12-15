@@ -94,6 +94,7 @@ enum SWRB_TEST_STATE{
 };
 
 enum SWRB_TEST_SELECT{
+    
     SWRB_TEST_SELECT_NONE,
     SWRB_TEST_SELECT_PCB,
     SWRB_TEST_SELECT_POWER_STATION,
@@ -101,6 +102,7 @@ enum SWRB_TEST_SELECT{
 };
 
 enum SWRB_TEST_MODE{
+    
     SWRB_TEST_MODE_IDLE,
     SWRB_TEST_MODE_SET,
     SWRB_TEST_MODE_PAUSE,
@@ -108,6 +110,7 @@ enum SWRB_TEST_MODE{
 };
 
 enum SWRB_TEST_SET_STATE{
+    
     SWRB_TEST_SET_STATE_SN,
     SWRB_TEST_SET_STATE_TIME,
     SWRB_TEST_SET_STATE_RESERVE1,
@@ -164,6 +167,7 @@ enum SWRB_TEST_SET_STATE{
 #define SWRB_TEST_FAULT_RGB_LED_MASK          0x40000000
 
 enum SWRB_TEST_DATA_POS{
+    
     SWRB_TEST_DATA_WHEEL_L_SPEED_POS,
     SWRB_TEST_DATA_WHEEL_R_SPEED_POS,
     
@@ -257,7 +261,7 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_BUZZER_TEST_TASK_PRIO,
     SWRB_RGB_LED_TEST_TASK_PRIO,
     SWRB_CHARGE_TEST_TASK_PRIO,
-    SWRB_TEST_TASK_PRIO_END_BOUND,//23
+    SWRB_TEST_TASK_PRIO_END_BOUND,//22
     SWRB_POWER_STATION_TEST_TASK_PRIO,
     SWRB_SLAM_MONITOR_TASK_PRIO,
     USART_TASK_PRIO,
@@ -321,6 +325,10 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);
 void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 
+void SweepRobot_StartDlgPCBBtnClickProc(void);
+void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
+void SweepRobot_StartDlgSLAMBtnClickProc(void);
+
 void SweepRobot_PCBTestStartProc(void);
 void SweepRobot_PCBTestLoginProc(void);
 void SweepRobot_PCBTestLoginOKProc(void);
@@ -329,10 +337,6 @@ void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg);
 void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopProc(void);
 void SweepRobot_PCBTestExitProc(void);
-
-void SweepRobot_StartDlgPCBBtnClickProc(void);
-void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
-void SweepRobot_StartDlgSLAMBtnClickProc(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);
