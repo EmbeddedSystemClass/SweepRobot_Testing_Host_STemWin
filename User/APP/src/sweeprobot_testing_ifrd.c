@@ -196,7 +196,11 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_IFRDTestTask(void *pdata)

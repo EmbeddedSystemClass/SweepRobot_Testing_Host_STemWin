@@ -97,6 +97,18 @@ static void SweepRobot_AshTrayTestInit(void)
     SweepRobot_AshTrayTestInsCtrlTestPos();
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    
+    ashTrayIns.value = 0;
+    ashTrayIns.onValue = 0;
+    ashTrayIns.offValue = 0;
+    ashTrayIns.validCnt = 0;
+    ashTrayIns.validFlag = 0;
+    
+    ashTrayLvl.value = 0;
+    ashTrayLvl.onValue = 0;
+    ashTrayLvl.offValue = 0;
+    ashTrayLvl.validCnt = 0;
+    ashTrayLvl.validFlag = 0;
 }
 
 static void SweepRobot_AshTrayInsTestProc(void)
@@ -248,7 +260,11 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_ASH_TRAY, "ASH TRAY ERROR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_AshTrayTestTask(void *pdata)

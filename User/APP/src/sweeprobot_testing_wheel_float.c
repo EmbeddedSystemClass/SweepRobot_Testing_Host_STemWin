@@ -196,7 +196,11 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT ERR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_WheelFloatTestTask(void *pdata)

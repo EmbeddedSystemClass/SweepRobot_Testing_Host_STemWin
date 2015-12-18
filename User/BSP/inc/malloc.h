@@ -13,7 +13,7 @@
 #define SRAMBANK  3
 
 #define MEM1_BLOCK_SIZE	    32
-#define MEM1_MAX_SIZE		20*1024          //80*1024
+#define MEM1_MAX_SIZE		80*1024          //80*1024
 #define MEM1_ALLOC_TABLE_SIZE MEM1_MAX_SIZE/MEM1_BLOCK_SIZE
 
 #define MEM2_BLOCK_SIZE	    32

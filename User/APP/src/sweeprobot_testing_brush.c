@@ -135,7 +135,11 @@ void SWRB_BrushTestOverTimeProc(void)
     Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
     
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_BrushTestTask(void *pdata)

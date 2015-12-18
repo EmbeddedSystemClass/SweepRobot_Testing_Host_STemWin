@@ -59,7 +59,7 @@ static void SweepRobot_ChargeTestInit(void)
 {
     char *str;
     
-    gSwrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
+    gSwrbTestRuningTaskPrio = SWRB_CHARGE_TEST_TASK_PRIO;
     
     str = "\r\n>>>CHARGE TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
@@ -220,7 +220,11 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_CHARGE, "CHARGE ERROR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_ChargeTestTask(void *pdata)

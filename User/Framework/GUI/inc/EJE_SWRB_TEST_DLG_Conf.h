@@ -238,23 +238,28 @@
         ID_MAIN_BUTTON_10,
         ID_MAIN_BUTTON_11,
         ID_MAIN_BUTTON_12,
+        ID_MAIN_BUTTON_13,
+        ID_MAIN_BUTTON_14,
         ID_MAIN_FRAMEWIN_0,
         ID_MAIN_FRAMEWIN_1,
         ID_MAIN_PROGBAR_0,
         ID_MAIN_MULTIEDIT_0,
         ID_MAIN_WINDOW_0,
+        ID_MAIN_WINDOW_1,
         ID_MAIN_TEXT_0,
         ID_MAIN_TEXT_1,
         ID_MAIN_BOUND,
     };
     
     enum ID_MAIN_BUTTON{
-        ID_MAIN_BUTTON_START = ID_MAIN_BUTTON_1,
+        ID_MAIN_BUTTON_START = ID_MAIN_BUTTON_0,
         ID_MAIN_BUTTON_SET,
         ID_MAIN_BUTTON_STOP,
         ID_MAIN_BUTTON_EXIT,
         ID_MAIN_BUTTON_SET_SN,
         ID_MAIN_BUTTON_SET_TIME,
+        ID_MAIN_BUTTON_WARNING_RETEST,
+        ID_MAIN_BUTTON_WARNING_SKIP,
         ID_MAIN_BUTTON_RGB_LED_OK,
         ID_MAIN_BUTTON_RGB_LED_ERR,
         ID_MAIN_BUTTON_BUZZER_OK,
@@ -283,6 +288,7 @@
 
     enum ID_MAIN_WINDOW{
         ID_MAIN_WINDOW_MAIN = ID_MAIN_WINDOW_0,
+        ID_MAIN_WINDOW_WARNING,
         ID_MAIN_WINDOW_BOUND,
     };
     
@@ -640,6 +646,7 @@
 
 #if __EJE_SWRB_TEST_MAIN_DLG
     extern WM_HWIN hWin_SWRB_PCBTEST;
+    extern WM_HWIN hWin_SWRB_WARNING;
     extern WM_HWIN hWin_SWRB_RGB_LED;
     extern WM_HWIN hWin_SWRB_BUZZER;
 #endif
@@ -690,6 +697,8 @@ void BUTTON_DispSerialNumCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispTimeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispErrorCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispReTestCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
@@ -712,6 +721,7 @@ void Multiedit_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor);
+void WM_Set_Y_Size(WM_HWIN hWin, int id, int ySize);
 void SWRB_WM_EnableWindow(WM_HWIN hWin, int id);
 void SWRB_WM_DisableWindow(WM_HWIN hWin, int id);
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio);

@@ -105,7 +105,11 @@ static void SweepRobot_RGBLEDTestErrProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED ERROR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_RGBLEDTestTask(void *pdata)

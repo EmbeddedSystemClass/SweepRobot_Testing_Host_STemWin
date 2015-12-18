@@ -109,6 +109,12 @@ enum SWRB_TEST_MODE{
     SWRB_TEST_MODE_RUN,
 };
 
+enum SWRB_TEST_RUN_STATE{
+    SWRB_TEST_RUN_STATE_NORMAL,
+    SWRB_TEST_RUN_STATE_ERROR,
+    SWRB_TEST_RUN_STATE_RETEST,
+};
+
 enum SWRB_TEST_SET_STATE{
     
     SWRB_TEST_SET_STATE_SN,
@@ -308,6 +314,7 @@ extern int usartRxNum;
 
 extern enum SWRB_TEST_SELECT gSwrbTestSelectFlag;
 extern enum SWRB_TEST_MODE gSwrbTestMode;
+extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;
 extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 extern u32 gSwrbTestStateMap;
@@ -320,6 +327,9 @@ extern int gSwrbTestValidTaskCntTotal;
 void OS_Task_Create(void);
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio);
 void SWRB_NextTestTaskResumePostAct(u8 taskPrio);
+void SWRB_TestTaskErrorAct(void);
+void SWRB_PCBTestWarningDLGReTestProc(void);
+void SWRB_PCBTestWarningDLGSkipProc(void);
 
 void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);

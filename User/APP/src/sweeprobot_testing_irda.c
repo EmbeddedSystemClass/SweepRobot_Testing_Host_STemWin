@@ -216,7 +216,11 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     }
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_IrDATestTask(void *pdata)

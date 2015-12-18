@@ -24,6 +24,8 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmOKCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmErrorCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmReTestCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSkipCHN;
 
 static WM_HWIN hLastShowWin = 0;
 static int gLastShowId = 0;
@@ -136,6 +138,16 @@ void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 void BUTTON_DispErrorCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 {
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmErrorCHN, x, y);
+}
+
+void BUTTON_DispReTestCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmReTestCHN, x, y);
+}
+
+void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmSkipCHN, x, y);
 }
 
 void Progbar_Set_Value(int progbarValue)
@@ -353,6 +365,14 @@ GRAPH_DATA_Handle Graph_Data_YT_Create(GUI_COLOR color, u32 maxNumItems, int16_t
     GRAPH_DATA_Handle hGraphData;
     hGraphData = GRAPH_DATA_YT_Create(color, maxNumItems, pData, numItems);
     return hGraphData;
+}
+
+void WM_Set_Y_Size(WM_HWIN hWin, int id, int ySize)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin, id);
+    WM_SetYSize(hItem, ySize);
 }
 
 void SWRB_IndicateButtonToggle(WM_HWIN hWin, int buttonId)

@@ -47,9 +47,9 @@
 
 /*********************************************************************
 *
-*       _aDialogCreate
+*       _aPCBTestMainDialogCreate
 */
-static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
+static const GUI_WIDGET_CREATE_INFO _aPCBTestMainDialogCreate[] = {
 //    { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_MAIN_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
 //    { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_MAIN_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
@@ -96,17 +96,23 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { EDIT_CreateIndirect, "EditDate", ID_MAIN_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
 };
 
-static const GUI_WIDGET_CREATE_INFO _RgbLEDTestDialogCreate[] = {
+static const GUI_WIDGET_CREATE_INFO _aPCBTestWarningDialogCreate[] = {
+    { WINDOW_CreateIndirect, "WARNING", ID_MAIN_WINDOW_WARNING, 11, 348, 438, 58, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "RETEST", ID_MAIN_BUTTON_WARNING_RETEST, 0, 0, 219, 58, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "CONTINUE", ID_MAIN_BUTTON_WARNING_SKIP,  219, 0, 219, 58, 0, 0x0, 0 },
+};
+
+static const GUI_WIDGET_CREATE_INFO _aRgbLEDTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "RGB LED TEST", ID_MAIN_FRAMEWIN_RGB_LED, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "OK", ID_MAIN_BUTTON_RGB_LED_OK, 60, 100, 120, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "ERROR",   ID_MAIN_BUTTON_RGB_LED_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "ERROR", ID_MAIN_BUTTON_RGB_LED_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "RGB LED TEST", ID_MAIN_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
-static const GUI_WIDGET_CREATE_INFO _BuzzerTestDialogCreate[] = {
+static const GUI_WIDGET_CREATE_INFO _aBuzzerTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "BUZZER TEST", ID_MAIN_FRAMEWIN_BUZZER, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "OK", ID_MAIN_BUTTON_BUZZER_OK, 60, 100, 120, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "ERROR",   ID_MAIN_BUTTON_BUZZER_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "ERROR", ID_MAIN_BUTTON_BUZZER_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "BUZZER TEST", ID_MAIN_TEXT_BUZZER, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
@@ -133,9 +139,9 @@ static void Checkbox_Init(WM_HWIN hItem)
 
 /*********************************************************************
 *
-*       _cbDialog
+*       _cbPCBTestMainDialog
 */
-static void _cbDialog(WM_MESSAGE * pMsg) 
+static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg) 
 {
     WM_HWIN hItem;
     int     NCode;
@@ -210,7 +216,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_MULTIEDIT_MAIN);
             MULTIEDIT_SetText(hItem, "Waiting for Start");
-            MULTIEDIT_SetFont(hItem, GUI_FONT_16_ASCII);
+            MULTIEDIT_SetFont(hItem, GUI_FONT_24_ASCII);
             MULTIEDIT_SetAutoScrollV(hItem,1);
             MULTIEDIT_SetWrapWord(hItem);
             MULTIEDIT_SetBufferSize(hItem, 2048);
@@ -308,12 +314,14 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_EDIT_DATE);
             EDIT_SetFont(hItem, &GUI_Font20_ASCII);
+            EDIT_SetFocussable(hItem, DISABLE);
             EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             //
             // Initialization of 'EditSN'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_EDIT_SN);
             EDIT_SetFont(hItem, &GUI_Font20_ASCII);
+            EDIT_SetFocussable(hItem, DISABLE);
             EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             //
             // Initialization of 'PROGBAR'
@@ -557,6 +565,63 @@ static void _cbDialog(WM_MESSAGE * pMsg)
     }
 }
 
+static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg){
+    WM_HWIN hItem;
+    int     NCode;
+    int     Id;
+    
+    switch(pMsg->MsgId){
+        case WM_INIT_DIALOG:
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_WARNING_RETEST);
+            BUTTON_SetSkinClassic(hItem);
+            BUTTON_SetFocussable(hItem, DISABLE);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetTextAlign(hItem, GUI_TA_HCENTER|GUI_TA_VCENTER);
+            BUTTON_SetText(hItem, "");
+            BUTTON_DispReTestCHNStr(pMsg->hWin, ID_MAIN_BUTTON_WARNING_RETEST, 94, 14);
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_MAIN_BUTTON_WARNING_SKIP);
+            BUTTON_SetSkinClassic(hItem);
+            BUTTON_SetFocussable(hItem, DISABLE);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetTextAlign(hItem, GUI_TA_HCENTER|GUI_TA_VCENTER);
+            BUTTON_SetText(hItem, "");
+            BUTTON_DispSkipCHNStr(pMsg->hWin, ID_MAIN_BUTTON_WARNING_SKIP, 94, 14);
+            
+//            WM_HideWin(pMsg->hWin);
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id) {
+                case ID_MAIN_BUTTON_WARNING_RETEST: // Notifications sent by 'RETEST'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            SWRB_PCBTestWarningDLGReTestProc();
+                            break;
+                    }
+                    break;
+                case ID_MAIN_BUTTON_WARNING_SKIP: // Notifications sent by 'SKIP'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            SWRB_PCBTestWarningDLGSkipProc();
+                            break;
+                    }
+                    break;
+            }
+        default:
+            WM_DefaultProc(pMsg);
+            break;
+    }
+}
+
 static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
     WM_HWIN hItem;
     int     NCode;
@@ -693,6 +758,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
 */
 
 WM_HWIN hWin_SWRB_PCBTEST;
+WM_HWIN hWin_SWRB_WARNING;
 WM_HWIN hWin_SWRB_RGB_LED;
 WM_HWIN hWin_SWRB_BUZZER;
 
@@ -711,7 +777,15 @@ WM_HWIN CreateEJE_SWRB_TEST_MainDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+    hWin = GUI_CreateDialogBox(_aPCBTestMainDialogCreate, GUI_COUNTOF(_aPCBTestMainDialogCreate), _cbPCBTestMainDialog, WM_HBKWIN, 0, 0);
+    return hWin;
+}
+
+WM_HWIN CreateWarningDLG(void)
+{
+    WM_HWIN hWin;
+
+    hWin = GUI_CreateDialogBox(_aPCBTestWarningDialogCreate, GUI_COUNTOF(_aPCBTestWarningDialogCreate), _cbPCBTestWarningDialog, WM_HBKWIN, 0, 0);
     return hWin;
 }
 
@@ -719,7 +793,7 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_RgbLEDTestDialogCreate, GUI_COUNTOF(_RgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
+    hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
     return hWin;
 }
 
@@ -727,7 +801,7 @@ WM_HWIN CreateBUZZER_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_BuzzerTestDialogCreate, GUI_COUNTOF(_BuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
+    hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
     return hWin;
 }
 

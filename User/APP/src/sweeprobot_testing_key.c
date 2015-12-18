@@ -161,7 +161,11 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_KEY, "KEY ERROR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_KeyTestTask(void *pdata)

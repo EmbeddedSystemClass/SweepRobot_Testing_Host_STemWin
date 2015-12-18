@@ -122,7 +122,11 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_UNIWHEEL, "UNIWHEEL ERROR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_UniWheel_Test_Task(void *pdata)

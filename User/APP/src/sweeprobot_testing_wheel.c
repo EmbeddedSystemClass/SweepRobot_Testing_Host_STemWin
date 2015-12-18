@@ -131,7 +131,11 @@ static void SWRB_WheelTestOverTimeProc(void)
     Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_WheelTestTask(void *pdata)
@@ -142,8 +146,6 @@ void SweepRobot_WheelTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
-
-            Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SWRB_WheelTestInit();

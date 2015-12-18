@@ -31,6 +31,7 @@ static char *gEncryptStr;
 
 enum SWRB_TEST_SELECT gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+enum SWRB_TEST_RUN_STATE gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
 enum SWRB_TEST_SET_STATE gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 u32 gSwrbTestStateMap = 0;
@@ -65,6 +66,8 @@ static void SweepRobot_TestInitProc(void);
 static void SWRB_ValidTestTaskCntGet(void);
 static FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode);
 static void SweepRobot_TestCkbStateSet(u8 state);
+static void SWRB_TestFinishProc(void);
+static void SWRB_PCBTestWarningDlgHide(void);
 
 #define TEST_LED_TASK_CB_REG(f)             do{gLedTaskCB=f;}while(0)
 #define TEST_LED_TASK_CB_DEREG()            do{gLedTaskCB=NULL;}while(0)
@@ -113,7 +116,7 @@ void Start_Task(void *pdata)
     OSTaskDel(OS_PRIO_SELF);
 }
 
-void emWin_Maintask(void *pdata)
+static void emWin_TaskInit(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -135,6 +138,7 @@ void emWin_Maintask(void *pdata)
     hWin_SWRB_LOGIN = CreateLoginDLG();
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_MainDLG();
+//    hWin_SWRB_WARNING = CreateWarningDLG();
     hWin_SWRB_POWER_STATION = CreateEJE_SWRB_TEST_PowerStationDLG();
 #ifdef _SHOW_SLAM_DLG
     hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
@@ -154,6 +158,11 @@ void emWin_Maintask(void *pdata)
     SweepRobot_TestCkbStateSet(1);
     SWRB_ListWheelRTCDateUpdate(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_LISTWHEEL_DATE);
     SWRB_ListWheelRTCDateUpdate(hWin_SWRB_TIMESETTING, ID_TIMESET_LISTWHEEL_YEAR, ID_TIMESET_LISTWHEEL_MONTH, ID_TIMESET_LISTWHEEL_DAY);
+}
+
+void emWin_Maintask(void *pdata)
+{
+    emWin_TaskInit();
 
     while(1)
     {
@@ -167,7 +176,7 @@ void emWin_Maintask(void *pdata)
 #endif
         
         GUI_Exec();
-        OSTimeDlyHMSM(0,0,0,20);
+        OSTimeDlyHMSM(0,0,0,10);
     }
 }
 
@@ -664,6 +673,12 @@ void SweepRobot_PCBTestStopProc(void)
     if(gSwrbTestMode == SWRB_TEST_MODE_RUN || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
 
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+        
+        if(gSwrbTestRunState == SWRB_TEST_RUN_STATE_ERROR){
+            gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
+            
+            SWRB_PCBTestWarningDlgHide();
+        }
 
         SWRB_ValidTestTaskCntGet();
         SWRB_TestCheckboxEnable();
@@ -809,6 +824,78 @@ void SWRB_NextTestTaskResumePreAct(u8 taskPrio)
     OS_EXIT_CRITICAL();
 }
 
+void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
+{
+    OS_CPU_SR cpu_sr;
+
+    gSwrbTestValidTaskCnt--;
+
+    Progbar_Set_Percent();
+
+    if(gSwrbTestValidTaskCnt){
+        OS_ENTER_CRITICAL();
+        OSTaskResume(taskPrio+1);
+        OS_EXIT_CRITICAL();
+    }else{
+        SWRB_TestFinishProc();
+    }
+
+#ifdef _TASK_WAIT_WHEN_ERROR
+
+#else
+    OS_ENTER_CRITICAL();
+    OSTaskSuspend(taskPrio);
+    OS_EXIT_CRITICAL();
+#endif
+}
+
+static void SWRB_PCBTestWarningDlgHide(void)
+{
+    WM_Set_Y_Size(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, 330);
+    
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START);
+    
+//    WM_HideWin(hWin_SWRB_WARNING);
+    WM_DeleteWindow(hWin_SWRB_WARNING);
+}
+
+void SWRB_PCBTestWarningDLGReTestProc(void)
+{
+    gSwrbTestRunState = SWRB_TEST_RUN_STATE_RETEST;
+    
+    SWRB_PCBTestWarningDlgHide();
+    
+    OSTaskResume(gSwrbTestRuningTaskPrio);
+}
+
+void SWRB_PCBTestWarningDLGSkipProc(void)
+{
+    gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
+    
+    SWRB_PCBTestWarningDlgHide();
+
+    SWRB_NextTestTaskResumePostAct(gSwrbTestRuningTaskPrio);
+}
+
+void SWRB_TestTaskErrorAct(void)
+{
+    OS_CPU_SR cpu_sr;
+    
+    gSwrbTestRunState = SWRB_TEST_RUN_STATE_ERROR;
+    
+    WM_Set_Y_Size(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, 270);
+    
+    SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START);
+    
+    hWin_SWRB_WARNING = CreateWarningDLG();
+//    WM_ShowWin(hWin_SWRB_WARNING);
+//    WM_BringToTop(hWin_SWRB_WARNING);
+    
+    OS_ENTER_CRITICAL();
+    OSTaskSuspend(gSwrbTestRuningTaskPrio);
+    OS_EXIT_CRITICAL();
+}
+
 static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
 {
     int i;
@@ -856,7 +943,8 @@ static void SWRB_TestFinishProc(void)
 
     str = mymalloc(SRAMIN, sizeof(char)*50);
     sprintf(str, "\r\nTest Finish Time:20%d/%d/%d %d:%d:%d\r\n",\
-    rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
+                    rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date,\
+                    rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
     myfree(SRAMIN, str);
 
@@ -886,32 +974,11 @@ static void SWRB_TestFinishProc(void)
     
     SWRB_ListWheelSNInc(hWin_SWRB_SNSETTING);
 
-    TEST_LED_TASK_CB_DEREG();
+//    TEST_LED_TASK_CB_DEREG();
 
     SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_STOP);
     SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);
     SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_SET);
-}
-
-void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
-{
-    OS_CPU_SR cpu_sr;
-
-    gSwrbTestValidTaskCnt--;
-
-    Progbar_Set_Percent();
-
-    if(gSwrbTestValidTaskCnt){
-        OS_ENTER_CRITICAL();
-        OSTaskResume(taskPrio+1);
-        OS_EXIT_CRITICAL();
-    }else{
-        SWRB_TestFinishProc();
-    }
-
-    OS_ENTER_CRITICAL();
-    OSTaskSuspend(OS_PRIO_SELF);
-    OS_EXIT_CRITICAL();
 }
 
 void SweepRobot_StartDlgPCBBtnClickProc(void)

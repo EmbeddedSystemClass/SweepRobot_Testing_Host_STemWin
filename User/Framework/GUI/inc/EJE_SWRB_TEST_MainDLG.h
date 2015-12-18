@@ -33,9 +33,10 @@
 *
 *       CreateEJE_SWRB_TEST_MainDLG
 */
-WM_HWIN CreateEJE_SWRB_TEST_MainDLG(void);
-WM_HWIN CreateRGB_LED_TestDLG(void);
-WM_HWIN CreateBUZZER_TestDLG(void);
+extern WM_HWIN CreateEJE_SWRB_TEST_MainDLG(void);
+extern WM_HWIN CreateRGB_LED_TestDLG(void);
+extern WM_HWIN CreateBUZZER_TestDLG(void);
+extern WM_HWIN CreateWarningDLG(void);
 
 #endif
 /*************************** End of file ****************************/

@@ -40,11 +40,11 @@ static SLAMCbFunc_t SLAMWMPaintCb;
 #define SWRB_SLAM_WM_PAINT_CB_REG(f)        do{SLAMWMPaintCb=f;}while(0)
 #define SWRB_SLAM_WM_PAINT_CB_DEREG()       do{SLAMWMPaintCb=NULL;}while(0)
 
-#define SWRB_SLAM_MAP_X_START_POS 100
-#define SWRB_SLAM_MAP_X_STOP_POS 600
+#define SWRB_SLAM_MAP_X_START_POS           100
+#define SWRB_SLAM_MAP_X_STOP_POS            600
 #define SWRB_SLAM_MAP_X_AXIS_PIXEL_NUM      (SWRB_SLAM_MAP_X_STOP_POS-SWRB_SLAM_MAP_X_START_POS)
-#define SWRB_SLAM_MAP_Y_START_POS 50
-#define SWRB_SLAM_MAP_Y_STOP_POS 400
+#define SWRB_SLAM_MAP_Y_START_POS           50
+#define SWRB_SLAM_MAP_Y_STOP_POS            400
 #define SWRB_SLAM_MAP_Y_AXIS_PIXEL_NUM      (SWRB_SLAM_MAP_Y_STOP_POS-SWRB_SLAM_MAP_Y_START_POS)
 
 #define SWRB_SLAM_MAP_X_AXIS_GRID_SIZE      10
@@ -54,7 +54,7 @@ static SLAMCbFunc_t SLAMWMPaintCb;
 #define SWRB_SLAM_MAP_Y_AXIS_GRID_NUM       (SWRB_SLAM_MAP_Y_AXIS_PIXEL_NUM/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE)
 
 #define SWRB_SLAM_ROBOT_POS_OFFSET          SWRB_SLAM_MAP_X_AXIS_GRID_SIZE/2
-#define SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED    5
+#define SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED    10
 #define SWRB_SLAM_ROBOT_NORTH_BOUND         (SWRB_SLAM_MAP_Y_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET)
 #define SWRB_SLAM_ROBOT_EAST_BOUND          (SWRB_SLAM_MAP_X_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET)
 #define SWRB_SLAM_ROBOT_SOUTH_BOUND         (SWRB_SLAM_MAP_Y_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET)
@@ -97,15 +97,13 @@ enum SLAM_ROBOT_POS_FLAG{
 **********************************************************************
 */
 
-static u8 gRobotXTurnFlag = 0;
-static u8 gRobotYTurnFlag = 0;
-
 static enum SLAM_ROBOT_POS_EDGE_FLAG gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_NONE;
 static enum SLAM_ROBOT_POS_FLAG gRobotPosFlag = SLAM_ROBOT_POS_MIDDLE;
 
 static int xPos=SWRB_SLAM_START_X_POS, yPos=SWRB_SLAM_START_Y_POS;
 
-static SWRB_SLAM_MAP_t gSLAMMap[SWRB_SLAM_MAP_X_AXIS_GRID_NUM][SWRB_SLAM_MAP_Y_AXIS_GRID_NUM];
+//static SWRB_SLAM_MAP_t gSLAMMap[SWRB_SLAM_MAP_X_AXIS_GRID_NUM][SWRB_SLAM_MAP_Y_AXIS_GRID_NUM] = { 0 };
+static SWRB_SLAM_MAP_t gSLAMMap[1][1];
 
 static GUI_POINT pPolygonRobot[] = {
     {0,0},
@@ -264,7 +262,7 @@ static void SLAM_MapGridPaint(void)
     SLAM_MapOneGridFill(xPos, yPos, GUI_GREEN);
 }
 
-static void SLAM_RobotFollowWallProc1(void)
+static void SLAM_RobotFollowWallProc(void)
 {
     if(gRobotPosEdgeFlag == SLAM_ROBOT_POS_EDGE_VERTICAL){
         if(SWRB_SLAM_ROBOT_EAST_BOUND <= xPos){
@@ -292,6 +290,7 @@ static void SLAM_RobotFollowWallProc1(void)
             if(SWRB_SLAM_ROBOT_SOUTH_BOUND <= yPos || SWRB_SLAM_ROBOT_NORTH_BOUND >= yPos){
                 gRobotPosEdgeFlag = SLAM_ROBOT_POS_EDGE_HORIZON;
             }
+            mymemcpy(pPolygonRobot, pPolygonRobotArray[SLAM_ROBOT_POS_SOUTH], sizeof(pPolygonRobot));
             break;
         case SLAM_ROBOT_POS_NORTH:
             xPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
@@ -320,47 +319,9 @@ static void SLAM_RobotFollowWallProc1(void)
     }
 }
 
-/* move the robot polygon */
-static void SLAM_RobotFollowWallProc(void)
-{
-    if(SWRB_SLAM_ROBOT_NORTH_BOUND<yPos && SWRB_SLAM_ROBOT_SOUTH_BOUND>yPos){
-        GUI_FillPolygon(pPolygonRobot, GUI_COUNTOF(pPolygonRobot), xPos, yPos);
-        yPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
-        gRobotYTurnFlag = 1;
-    }else if(SWRB_SLAM_MAP_Y_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET<=yPos){
-        if(gRobotYTurnFlag){
-            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
-            gRobotYTurnFlag=0;
-        }
-        xPos-=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
-    }else if(SWRB_SLAM_MAP_Y_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET>=yPos){
-        if(gRobotYTurnFlag){
-            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
-            gRobotYTurnFlag=0;
-        }
-        xPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
-    }
-    
-    if(SWRB_SLAM_ROBOT_WEST_BOUND<xPos && SWRB_SLAM_ROBOT_EAST_BOUND>xPos){
-        gRobotXTurnFlag = 1;
-    }else if(SWRB_SLAM_MAP_X_STOP_POS-SWRB_SLAM_ROBOT_POS_OFFSET<=xPos){
-        if(gRobotXTurnFlag){
-            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
-            gRobotXTurnFlag=0;
-        }
-        yPos-=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
-    }else if(SWRB_SLAM_MAP_X_START_POS+SWRB_SLAM_ROBOT_POS_OFFSET>=xPos){
-        if(gRobotXTurnFlag){
-            GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, GUI_COUNTOF(pPolygonRobot), -90*(DEG2RAD));
-            gRobotXTurnFlag=0;
-        }
-        yPos+=SWRB_SLAM_ROBOT_MOVE_PIXEL_SPEED;
-    }
-}
-
 static void SLAM_RobotPaint(void)
 {
-    SLAM_RobotFollowWallProc1();
+    SLAM_RobotFollowWallProc();
 
     GUI_SetColor(GUI_RED);
     GUI_FillPolygon(pPolygonRobot, GUI_COUNTOF(pPolygonRobot), xPos,yPos);
@@ -391,7 +352,7 @@ static void SLAM_CoordDisp(void)
 static void SLAM_WMPaint(void)
 {
     SLAM_MapPaint();
-    SLAM_MapGridPaint();
+//    SLAM_MapGridPaint();
     SLAM_RobotPaint();
 //    SLAM_TracePaint();
     SLAM_CoordDisp();

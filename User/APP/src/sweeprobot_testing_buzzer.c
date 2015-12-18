@@ -101,7 +101,11 @@ static void SweepRobot_BuzzerTestErrProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER ERROR");
     Edit_Clear();
 
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
+#endif
 }
 
 void SweepRobot_BuzzerTestTask(void *pdata)
