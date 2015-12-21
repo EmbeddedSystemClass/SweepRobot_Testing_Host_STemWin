@@ -10,8 +10,8 @@
 **********************************************************************
 */
 
-#ifndef __EJE_SWRB_TEST_MAINDLG_H
-#define __EJE_SWRB_TEST_MAINDLG_H
+#ifndef __EJE_SWRB_TEST_PCBTESTDLG_H
+#define __EJE_SWRB_TEST_PCBTESTDLG_H
 
 #include "DIALOG.h"
 #include "stm32f4xx.h"
@@ -31,9 +31,9 @@
 */
 /*********************************************************************
 *
-*       CreateEJE_SWRB_TEST_MainDLG
+*       CreateEJE_SWRB_TEST_PCBTestDLG
 */
-extern WM_HWIN CreateEJE_SWRB_TEST_MainDLG(void);
+extern WM_HWIN CreateEJE_SWRB_TEST_PCBTestDLG(void);
 extern WM_HWIN CreateRGB_LED_TestDLG(void);
 extern WM_HWIN CreateBUZZER_TestDLG(void);
 extern WM_HWIN CreateWarningDLG(void);

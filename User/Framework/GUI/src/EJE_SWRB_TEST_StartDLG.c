@@ -52,6 +52,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 500, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 205, 200, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
 //    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 203, 200, 180, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
@@ -104,6 +105,16 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             pData = _GetImageById(ID_START_IMAGE_EJE_LOGO, &FileSize);
             IMAGE_SetBMP(hItem, pData, FileSize);
             //
+            // Initialization of 'btnTitle'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_TITLE);
+            BUTTON_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_WHITE);
+            BUTTON_SetFocussable(hItem, DISABLE);
+            BUTTON_DispSWRBTestTitleCHNStr(pMsg->hWin, ID_START_BUTTON_TITLE, 81, 13);
+            //
             // Initialization of 'btnPCB TEST'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_PCB_TEST);
@@ -131,15 +142,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_DECRYPTO);
             BUTTON_SetText(hItem, "Decrypto");
             Button_Init(hItem);
-            //
-            // Initialization of 'Title'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_TITLE);
-            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-            TEXT_SetTextColor(hItem, GUI_BLUE);
-            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            TEXT_SetText(hItem, "SweepRobot Test System");
-            WM_BringToTop(hItem);
+//            //
+//            // Initialization of 'Title'
+//            //
+//            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_TITLE);
+//            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+//            TEXT_SetTextColor(hItem, GUI_BLUE);
+//            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+//            TEXT_SetText(hItem, "SweepRobot Test System");
+//            WM_BringToTop(hItem);
             //
             // Initialization of 'Text'
             //

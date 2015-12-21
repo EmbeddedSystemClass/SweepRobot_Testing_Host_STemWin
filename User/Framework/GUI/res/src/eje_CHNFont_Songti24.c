@@ -5,10 +5,20 @@ static GUI_CONST_STORAGE GUI_COLOR _aColorsCHNText[] = {
   0x0000FF, 0x000000
 };
 
+static GUI_CONST_STORAGE GUI_COLOR _aColorsCHNTextRvrs[] = {
+  0x000000, 0x0000FF
+};
+
 static GUI_CONST_STORAGE GUI_LOGPALETTE _PalCHNText = {
   2,	/* number of entries */
   1, 	/* No transparency */
   &_aColorsCHNText[0]
+};
+
+static GUI_CONST_STORAGE GUI_LOGPALETTE _PalCHNTextRvrs = {
+  2,	/* number of entries */
+  1, 	/* No transparency */
+  &_aColorsCHNTextRvrs[0]
 };
 
 static GUI_CONST_STORAGE unsigned char acSerialNumStr[] = {
@@ -47,6 +57,15 @@ GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN = {
   &_PalCHNText          /* Pointer to palette */
 };
 
+GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHNRvrs = {
+  72,                   /* XSize */
+  24,                   /* YSize */
+  9,                    /* BytesPerLine */
+  1,                    /* BitsPerPixel */
+  acSerialNumStr,       /* Pointer to picture data (indices) */
+  &_PalCHNTextRvrs
+};
+
 static GUI_CONST_STORAGE unsigned char acTimeStr[] = {
   ________,________,________,	  ________,________,________,
   ________,________,________,	  ________,________,________,
@@ -81,4 +100,13 @@ GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN = {
   1,                /* BitsPerPixel */
   acTimeStr,     /* Pointer to picture data (indices) */
   &_PalCHNText      /* Pointer to palette */
+};
+
+GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHNRvrs = {
+  48,              /* XSize */
+  24,               /* YSize */
+  6,                /* BytesPerLine */
+  1,                /* BitsPerPixel */
+  acTimeStr,     /* Pointer to picture data (indices) */
+  &_PalCHNTextRvrs      /* Pointer to palette */
 };

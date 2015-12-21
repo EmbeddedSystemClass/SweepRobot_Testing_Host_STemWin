@@ -354,7 +354,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
                         break;
                 }
                 break;
-            case ID_MAIN_BUTTON_SET_SN:
+            case ID_MAIN_BUTTON_SET_SN: // Notifications sent by 'SETSN'
                 switch(NCode) {
                     case WM_NOTIFICATION_CLICKED:
                         break;
@@ -362,7 +362,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
                         break;
                 }
                 break;
-            case ID_MAIN_BUTTON_SET_TIME:
+            case ID_MAIN_BUTTON_SET_TIME: // Notifications sent by 'SETTIME'
                 switch(NCode) {
                     case WM_NOTIFICATION_CLICKED:
                         break;
@@ -771,9 +771,9 @@ WM_HWIN hWin_SWRB_BUZZER;
 
 /*********************************************************************
 *
-*       CreateEJE_SWRB_TEST_MainDLG
+*       CreateEJE_SWRB_TEST_PCBTestDLG
 */
-WM_HWIN CreateEJE_SWRB_TEST_MainDLG(void)
+WM_HWIN CreateEJE_SWRB_TEST_PCBTestDLG(void)
 {
     WM_HWIN hWin;
 

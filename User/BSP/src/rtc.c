@@ -43,7 +43,7 @@ static void MY_RTC_Calibration(void)
 {
     ErrorStatus rtcErrorStat;
 
-    rtcErrorStat = RTC_SmoothCalibConfig(RTC_SmoothCalibPeriod_32sec, RTC_SmoothCalibPlusPulses_Reset, 0x0144);
+    rtcErrorStat = RTC_SmoothCalibConfig(RTC_SmoothCalibPeriod_32sec, RTC_SmoothCalibPlusPulses_Reset, 0x0000);
     
     if(rtcErrorStat == ERROR){
         printf("RTC Calibration Error!\r\n");
@@ -58,7 +58,7 @@ u8 My_RTC_Init(void)
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
     PWR_BackupAccessCmd(ENABLE);
     
-    MY_RTC_Calibration();
+//    MY_RTC_Calibration();
 
     if(RTC_ReadBackupRegister(RTC_BKP_DR0)!=0x5050){
         RCC_LSEConfig(RCC_LSE_ON);

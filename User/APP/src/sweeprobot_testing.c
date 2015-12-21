@@ -7,8 +7,8 @@
 *********************************************************************************************************/
 
 #include "sweeprobot_testing.h"
-#include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "sweeprobot_testing_conf.h"
+#include "EJE_SWRB_TEST_DLG_Conf.h"
 
 #include "usart.h"
 #include "stm32f4xx_it.h"
@@ -135,9 +135,10 @@ static void emWin_TaskInit(void)
 
     hWin_SWRB_SNSETTING = CreateSNSettingDLG();
     hWin_SWRB_TIMESETTING = CreateTimeSettingDLG();
+    hWin_SWRB_TESTSEL = CreateTestSelSettingDLG();
     hWin_SWRB_LOGIN = CreateLoginDLG();
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
-    hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_MainDLG();
+    hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_PCBTestDLG();
 //    hWin_SWRB_WARNING = CreateWarningDLG();
     hWin_SWRB_POWER_STATION = CreateEJE_SWRB_TEST_PowerStationDLG();
 #ifdef _SHOW_SLAM_DLG
@@ -605,7 +606,6 @@ void SweepRobot_PCBTestLoginOKProc(void)
             Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Password Error");
             Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_RED);
         }
-
         myfree(SRAMIN, str);
     }
 }
@@ -684,6 +684,7 @@ void SweepRobot_PCBTestStopProc(void)
         SWRB_TestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
+        
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_INDICATE, GUI_LIGHTGRAY);
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, GUI_LIGHTBLUE);
 //        Button_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_START, "START");
@@ -786,6 +787,8 @@ static void SweepRobot_PCBTestGUIReset(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_RGB_LED, "RGB LED");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_CHARGE, "CHARGE");
+    
+    Progbar_Set_Value(0);
 }
 
 void SweepRobot_TestInitProc(void)
@@ -974,7 +977,8 @@ static void SWRB_TestFinishProc(void)
     
     SWRB_ListWheelSNInc(hWin_SWRB_SNSETTING);
 
-//    TEST_LED_TASK_CB_DEREG();
+    /* FIXME: enter hardfault when dereg led task cb function */
+    TEST_LED_TASK_CB_DEREG();
 
     SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_STOP);
     SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_MAIN_BUTTON_EXIT);

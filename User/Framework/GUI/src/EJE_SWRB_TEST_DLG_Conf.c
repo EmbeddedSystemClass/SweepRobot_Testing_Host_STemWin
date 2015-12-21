@@ -10,6 +10,8 @@
 
 #include "sweeprobot_testing.h"
 
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSWRBTestTitleCHN48;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSWRBTestTitleCHN32;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmStartCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPauseCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmResumeCHN;
@@ -68,6 +70,11 @@ void BUTTON_Set_Bitmap_Ex(WM_HWIN hWin, int buttonId, const GUI_BITMAP *pBitmap,
     BUTTON_SetBitmapEx(hItem, BUTTON_CI_DISABLED, pBitmap, x, y);
     BUTTON_SetBitmapEx(hItem, BUTTON_CI_PRESSED, pBitmap, x, y);
     BUTTON_SetBitmapEx(hItem, BUTTON_CI_UNPRESSED, pBitmap, x, y);
+}
+
+void BUTTON_DispSWRBTestTitleCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmSWRBTestTitleCHN32, x, y);
 }
 
 void BUTTON_DispStartCHNStr(WM_HWIN hWin, int buttonId, int x, int y)

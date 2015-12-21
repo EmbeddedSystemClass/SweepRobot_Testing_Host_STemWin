@@ -58,11 +58,13 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "Check", ID_SNSET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Reset", ID_SNSET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Cancel", ID_SNSET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "SN Set", ID_SNSET_BUTTON_SNSET, 20, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Time Set", ID_SNSET_BUTTON_TIMESET, 120, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Reserve1", ID_SNSET_BUTTON_RESERVE1, 220, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Reserve2", ID_SNSET_BUTTON_RESERVE2, 320, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Reserve3", ID_SNSET_BUTTON_RESERVE3, 420, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SN Set", ID_SNSET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Time Set", ID_SNSET_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Test Sel", ID_SNSET_BUTTON_RESERVE1, 200, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv2", ID_SNSET_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv3", ID_SNSET_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv4", ID_SNSET_BUTTON_RESERVE4, 500, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv5", ID_SNSET_BUTTON_RESERVE5, 600, 420, 100, 60, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwYear", ID_SNSET_LISTWHEEL_YEAR, 20, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwMonth", ID_SNSET_LISTWHEEL_MONTH, 130, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwDay", ID_SNSET_LISTWHEEL_DATE, 240, 60, 110, 230, 0, 0x0, 0 },
@@ -300,13 +302,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             //
             // Initialization of 'button'
             //
-            for(i=ID_SNSET_BUTTON_CONFIRM;i<=ID_SNSET_BUTTON_RESERVE3;i++){
+            for(i=ID_SNSET_BUTTON_CONFIRM;i<=ID_SNSET_BUTTON_RESERVE5;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
                 Button_Init(hItem);
                 if(i%2){
-                    Button_Set_BkColor(hWin_SWRB_SNSETTING, i, GUI_LIGHTCYAN);
+                    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGRAY);
                 }else{
-                    Button_Set_BkColor(hWin_SWRB_SNSETTING, i, GUI_LIGHTBLUE);
+
                 }
             }
             BUTTON_DispConfirmCHNStr(pMsg->hWin, ID_SNSET_BUTTON_CONFIRM, 18, 43);
@@ -420,6 +422,21 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             gSwrbTestSetState = SWRB_TEST_SET_STATE_TIME;
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWin_SWRB_TIMESETTING);
+                            break;
+                    }
+                    break;
+                  case ID_SNSET_BUTTON_RESERVE1: // Notifications sent by 'Test Sel'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TESTSEL_BUTTON_TESTSELSET);
+                            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+                            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+                            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+                            gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
+                            WM_HideWin(pMsg->hWin);
+                            WM_ShowWin(hWin_SWRB_TESTSEL);
                             break;
                     }
                     break;

@@ -14,6 +14,7 @@
 #define __EJE_SWRB_TEST_MAIN_DLG            1
 #define __EJE_SWRB_TEST_SNSETTING_DLG       1
 #define __EJE_SWRB_TEST_TIMESETTING_DLG     1
+#define __EJE_SWRB_TEST_TESTSELSETTING_DLG  1
 #define __EJE_SWRB_TEST_LOGIN_DLG           1
 #define __EJE_SWRB_TEST_NUMPAD_DLG          1
 #define __EJE_SWRB_TEST_SLAM_DLG            1
@@ -40,6 +41,10 @@
 
 #if __EJE_SWRB_TEST_TIMESETTING_DLG
     #include "EJE_SWRB_TEST_TimeSettingDLG.h"
+#endif
+
+#if __EJE_SWRB_TEST_TESTSELSETTING_DLG
+    #include "EJE_SWRB_TEST_TestSelSettingDLG.h"
 #endif
 
 #if __EJE_SWRB_TEST_LOGIN_DLG
@@ -73,6 +78,7 @@
         ID_START_BUTTON_1,
         ID_START_BUTTON_2,
         ID_START_BUTTON_3,
+        ID_START_BUTTON_4,
         ID_START_TEXT_0,
         ID_START_TEXT_1,
         ID_START_BOUND,
@@ -99,6 +105,7 @@
         ID_START_BUTTON_POWER_STATION,
         ID_START_BUTTON_SLAM,
         ID_START_BUTTON_DECRYPTO,
+        ID_START_BUTTON_TITLE,
         ID_START_BUTTON_BOUND,
     };
 #endif
@@ -366,6 +373,8 @@
         ID_SNSET_BUTTON_6,
         ID_SNSET_BUTTON_7,
         ID_SNSET_BUTTON_8,
+        ID_SNSET_BUTTON_9,
+        ID_SNSET_BUTTON_10,
         ID_SNSET_WINDOW_0,
         ID_SNSET_TEXT_0,
         ID_SNSET_BOUND,
@@ -403,6 +412,8 @@
         ID_SNSET_BUTTON_RESERVE1,
         ID_SNSET_BUTTON_RESERVE2,
         ID_SNSET_BUTTON_RESERVE3,
+        ID_SNSET_BUTTON_RESERVE4,
+        ID_SNSET_BUTTON_RESERVE5,
         ID_SNSET_BUTTON_BOUND,
     };
     
@@ -444,6 +455,8 @@
         ID_TIMESET_BUTTON_6,
         ID_TIMESET_BUTTON_7,
         ID_TIMESET_BUTTON_8,
+        ID_TIMESET_BUTTON_9,
+        ID_TIMESET_BUTTON_10,
         ID_TIMESET_WINDOW_0,
         ID_TIMESET_TEXT_0,
         ID_TIMESET_BOUND,
@@ -481,6 +494,8 @@
         ID_TIMESET_BUTTON_RESERVE1,
         ID_TIMESET_BUTTON_RESERVE2,
         ID_TIMESET_BUTTON_RESERVE3,
+        ID_TIMESET_BUTTON_RESERVE4,
+        ID_TIMESET_BUTTON_RESERVE5,
         ID_TIMESET_BUTTON_BOUND,
     };
     
@@ -628,6 +643,86 @@
         ID_SLAM_TEXT_BOUND,
     };
 #endif
+    
+#if __EJE_SWRB_TEST_TESTSELSETTING_DLG
+    
+    enum ID_TESTSEL_WIDGET{
+        ID_TESTSEL_WINDOW_0 = ID_SLAM_BOUND,
+        ID_TESTSEL_BUTTON_0,
+        ID_TESTSEL_BUTTON_1,
+        ID_TESTSEL_BUTTON_2,
+        ID_TESTSEL_BUTTON_3,
+        ID_TESTSEL_BUTTON_4,
+        ID_TESTSEL_BUTTON_5,
+        ID_TESTSEL_BUTTON_6,
+        ID_TESTSEL_BUTTON_7,
+        ID_TESTSEL_BUTTON_8,
+        ID_TESTSEL_BUTTON_9,
+        ID_TESTSEL_BUTTON_10,
+        ID_TESTSEL_BUTTON_11,
+        ID_TESTSEL_BUTTON_12,
+        ID_TESTSEL_BUTTON_13,
+        ID_TESTSEL_BUTTON_14,
+        ID_TESTSEL_BUTTON_15,
+        ID_TESTSEL_BUTTON_16,
+        ID_TESTSEL_BUTTON_17,
+        ID_TESTSEL_BUTTON_18,
+        ID_TESTSEL_BUTTON_19,
+        ID_TESTSEL_BUTTON_20,
+        ID_TESTSEL_BUTTON_21,
+        ID_TESTSEL_BUTTON_22,
+        ID_TESTSEL_BUTTON_23,
+        ID_TESTSEL_BUTTON_24,
+        ID_TESTSEL_BUTTON_25,
+        ID_TESTSEL_BUTTON_26,
+        ID_TESTSEL_BUTTON_27,
+        ID_TESTSEL_BUTTON_28,
+        ID_TESTSEL_BUTTON_29,
+        ID_TESTSEL_BUTTON_30,
+        ID_TESTSEL_BOUND,
+    };
+    
+    enum ID_TESTSEL_WINDOW{
+        ID_TESTSEL_WINDOW_MAIN = ID_TESTSEL_WINDOW_0,
+        ID_TESTSEL_WINDOW_BOUND,
+    };
+    
+    enum ID_TESTSEL_BUTTON{
+        ID_TESTSEL_BUTTON_CONFIRM = ID_TESTSEL_BUTTON_0,
+        ID_TESTSEL_BUTTON_SELALL,
+        ID_TESTSEL_BUTTON_SELNONE,
+        ID_TESTSEL_BUTTON_CANCEL,
+        ID_TESTSEL_BUTTON_SNSET,
+        ID_TESTSEL_BUTTON_TIMESET,
+        ID_TESTSEL_BUTTON_TESTSELSET,
+        ID_TESTSEL_BUTTON_RESERVE1,
+        ID_TESTSEL_BUTTON_RESERVE2,
+        ID_TESTSEL_BUTTON_RESERVE3,
+        ID_TESTSEL_BUTTON_RESERVE4,
+        ID_TESTSEL_BUTTON_WHEEL,
+        ID_TESTSEL_BUTTON_BRUSH,
+        ID_TESTSEL_BUTTON_FAN,
+        ID_TESTSEL_BUTTON_IFRD,
+        ID_TESTSEL_BUTTON_COLLISION,
+        ID_TESTSEL_BUTTON_WHEEL_FLOAT,
+        ID_TESTSEL_BUTTON_ASH_TRAY,
+        ID_TESTSEL_BUTTON_UNIWHEEL,
+        ID_TESTSEL_BUTTON_KEY,
+        ID_TESTSEL_BUTTON_IRDA,
+        ID_TESTSEL_BUTTON_BUZZER,
+        ID_TESTSEL_BUTTON_RGB_LED,
+        ID_TESTSEL_BUTTON_CHARGE,
+        ID_TESTSEL_BUTTON_TEST1,
+        ID_TESTSEL_BUTTON_TEST2,
+        ID_TESTSEL_BUTTON_TEST3,
+        ID_TESTSEL_BUTTON_TEST4,
+        ID_TESTSEL_BUTTON_TEST5,
+        ID_TESTSEL_BUTTON_TEST6,
+        ID_TESTSEL_BUTTON_TEST7,
+        ID_TESTSEL_BUTTON_BOUND,
+    };
+    
+#endif
 
 /*********************************************************************
 *
@@ -671,6 +766,10 @@
     extern WM_HWIN hWin_SWRB_SLAM;
 #endif
 
+#if __EJE_SWRB_TEST_TESTSELSETTING_DLG
+    extern WM_HWIN hWin_SWRB_TESTSEL;
+#endif
+
 /*********************************************************************
 *
 *       Public code
@@ -683,6 +782,7 @@ void Button_Set_BkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Button_SetEnable(WM_HWIN hWin, int buttonId);
 void Button_SetDisable(WM_HWIN hWin, int buttonId);
 void BUTTON_Set_Bitmap_Ex(WM_HWIN hWin, int buttonId, const GUI_BITMAP *pBitmap, int x, int y);
+void BUTTON_DispSWRBTestTitleCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispStartCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispPauseCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispResumeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);

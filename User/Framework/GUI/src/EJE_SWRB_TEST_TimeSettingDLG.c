@@ -51,11 +51,13 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "Check", ID_TIMESET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Reset", ID_TIMESET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Cancel", ID_TIMESET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "SN Set", ID_TIMESET_BUTTON_SNSET, 20, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Time Set", ID_TIMESET_BUTTON_TIMESET, 120, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Reserve1", ID_TIMESET_BUTTON_RESERVE1, 220, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Reserve2", ID_TIMESET_BUTTON_RESERVE2, 320, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Reserve3", ID_TIMESET_BUTTON_RESERVE3, 420, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SN Set", ID_TIMESET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Time Set", ID_TIMESET_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Test Sel", ID_TIMESET_BUTTON_RESERVE1, 200, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv2", ID_TIMESET_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv3", ID_TIMESET_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv4", ID_TIMESET_BUTTON_RESERVE4, 500, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv5", ID_TIMESET_BUTTON_RESERVE5, 600, 420, 100, 60, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwYear", ID_TIMESET_LISTWHEEL_YEAR, 20, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwMonth", ID_TIMESET_LISTWHEEL_MONTH, 130, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwDay", ID_TIMESET_LISTWHEEL_DAY, 240, 60, 110, 230, 0, 0x0, 0 },
@@ -268,7 +270,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             //
             // Initialization of 'botton'
             //
-            for(i=ID_TIMESET_BUTTON_CONFIRM;i<=ID_TIMESET_BUTTON_RESERVE3;i++){
+            for(i=ID_TIMESET_BUTTON_CONFIRM;i<=ID_TIMESET_BUTTON_RESERVE5;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
                 Button_Init(hItem);
                 if(i%2){
@@ -339,67 +341,44 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 case ID_TIMESET_BUTTON_CONFIRM: // Notifications sent by 'Confirm'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
                             Button_ConfirmProc(pMsg->hWin);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_BUTTON_CHECK: // Notifications sent by 'Check'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
                             Button_CheckProc(pMsg->hWin);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_BUTTON_RESET: // Notifications sent by 'Reset'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
                             Button_ResetProc(pMsg->hWin);
-
                             break;
                     }
                     break;
                 case ID_TIMESET_BUTTON_CANCEL: // Notifications sent by 'Cancel'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
                             Button_CancelProc(pMsg->hWin);
-
                             break;
                     }
                     break;
                 case ID_TIMESET_BUTTON_SNSET:
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
                             hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
                             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
@@ -407,127 +386,91 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
                             WM_HideWin(hWin_SWRB_TIMESETTING);
                             WM_ShowWin(hWin_SWRB_SNSETTING);
-
+                            break;
+                    }
+                    break;
+                case ID_TIMESET_BUTTON_RESERVE1:
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_TESTSEL_BUTTON_TESTSELSET);
+                            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+                            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+                            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+                            gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
+                            WM_HideWin(hWin_SWRB_TIMESETTING);
+                            WM_ShowWin(hWin_SWRB_TESTSEL);
                             break;
                     }
                     break;
                 case ID_TIMESET_LISTWHEEL_YEAR: // Notifications sent by 'lwYear'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
-
-
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-
                             ListWheel_SelChangeProc(pMsg->hWin, ID_TIMESET_LISTWHEEL_YEAR, ID_TIMESET_EDIT_YEAR);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_LISTWHEEL_MONTH: // Notifications sent by 'lwMonth'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
-
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-
                             ListWheel_SelChangeProc(pMsg->hWin, ID_TIMESET_LISTWHEEL_MONTH, ID_TIMESET_EDIT_MONTH);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_LISTWHEEL_DAY: // Notifications sent by 'lwDay'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
-
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-
                             ListWheel_SelChangeProc(pMsg->hWin, ID_TIMESET_LISTWHEEL_DAY, ID_TIMESET_EDIT_DAY);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_LISTWHEEL_HOUR: // Notifications sent by 'lwHour'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
-
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-
                             ListWheel_SelChangeProc(pMsg->hWin, Id, ID_TIMESET_EDIT_HOUR);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_LISTWHEEL_MIN: // Notifications sent by 'lwMin'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
-
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-
                             ListWheel_SelChangeProc(pMsg->hWin, Id, ID_TIMESET_EDIT_MIN);
-
                             break;
-
-
                     }
                     break;
                 case ID_TIMESET_LISTWHEEL_SEC: // Notifications sent by 'lwSec'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
-
-
                             break;
                         case WM_NOTIFICATION_SEL_CHANGED:
-
                             ListWheel_SelChangeProc(pMsg->hWin, Id, ID_TIMESET_EDIT_SEC);
-
                             break;
-
-
                     }
                     break;
                 }
-
-
         default:
             WM_DefaultProc(pMsg);
             break;
