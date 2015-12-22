@@ -15,5 +15,6 @@
 #include "sweeprobot_testing_rgb_led.h"
 #include "sweeprobot_testing_charge.h"
 #include "sweeprobot_testing_power_station.h"
+#include "sweeprobot_testing_manul.h"
 
 #endif

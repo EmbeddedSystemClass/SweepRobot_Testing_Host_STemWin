@@ -18,6 +18,7 @@
 #define __EJE_SWRB_TEST_LOGIN_DLG           1
 #define __EJE_SWRB_TEST_NUMPAD_DLG          1
 #define __EJE_SWRB_TEST_SLAM_DLG            1
+#define __EJE_SWRB_TEST_MANUL_DLG           1
 #define __EJE_SWRB_TEST_DECRYPTO_DLG        0
 
 #include "stm32f4xx.h"
@@ -59,6 +60,10 @@
     #include "EJE_SWRB_TEST_SLAMDLG.h"
 #endif
 
+#if __EJE_SWRB_TEST_MANUL_DLG
+    #include "EJE_SWRB_TEST_MANULDLG.h"
+#endif
+
 /*********************************************************************
 *
 *       Defines
@@ -79,6 +84,7 @@
         ID_START_BUTTON_2,
         ID_START_BUTTON_3,
         ID_START_BUTTON_4,
+        ID_START_BUTTON_5,
         ID_START_TEXT_0,
         ID_START_TEXT_1,
         ID_START_BOUND,
@@ -103,6 +109,7 @@
     enum ID_START_BUTTON{
         ID_START_BUTTON_PCB_TEST = ID_START_BUTTON_0,
         ID_START_BUTTON_POWER_STATION,
+        ID_START_BUTTON_MANUL,
         ID_START_BUTTON_SLAM,
         ID_START_BUTTON_DECRYPTO,
         ID_START_BUTTON_TITLE,
@@ -491,7 +498,7 @@
         ID_TIMESET_BUTTON_CANCEL,
         ID_TIMESET_BUTTON_SNSET,
         ID_TIMESET_BUTTON_TIMESET,
-        ID_TIMESET_BUTTON_RESERVE1,
+        ID_TIMESET_BUTTON_TESTSELSET,
         ID_TIMESET_BUTTON_RESERVE2,
         ID_TIMESET_BUTTON_RESERVE3,
         ID_TIMESET_BUTTON_RESERVE4,
@@ -721,7 +728,51 @@
         ID_TESTSEL_BUTTON_TEST7,
         ID_TESTSEL_BUTTON_BOUND,
     };
+#endif
+
+#if __EJE_SWRB_TEST_MANUL_DLG
     
+    enum ID_MANUL_WIDGET{
+        ID_MANUL_WINDOW_0,
+        ID_MANUL_BUTTON_0,
+        ID_MANUL_BUTTON_1,
+        ID_MANUL_BUTTON_2,
+        ID_MANUL_BUTTON_3,
+        ID_MANUL_BUTTON_4,
+        ID_MANUL_LISTVIEW_0,
+        ID_MANUL_TEXT_0,
+        ID_MANUL_EDIT_0,
+        ID_MANUL_BOUND,
+    };
+    
+    enum ID_MANUL_WINDOW{
+        ID_MANUL_WINDOW_MAIN = ID_MANUL_WINDOW_0,
+        ID_MANUL_WINDOW_BOUND,
+    };
+    
+    enum ID_MANUL_BUTTON{
+        ID_MANUL_BUTTON_START = ID_MANUL_BUTTON_0,
+        ID_MANUL_BUTTON_SET,
+        ID_MANUL_BUTTON_RESET,
+        ID_MANUL_BUTTON_EXIT,
+        ID_MANUL_BUTTON_INDICATE,
+        ID_MANUL_BUTTON_BOUND,
+    };
+    
+    enum ID_MANUL_LISTVIEW{
+        ID_MANUL_LISTVIEW_MAIN = ID_MANUL_LISTVIEW_0,
+        ID_MANUL_LISTVIEW_BOUND,
+    };
+    
+    enum ID_MANUL_TEXT{
+        ID_MANUL_TEXT_TITLE = ID_MANUL_TEXT_0,
+        ID_MANUL_TEXT_BOUND,
+    };
+    
+    enum ID_MANUL_EDIT{
+        ID_MANUL_EDIT_DATE = ID_MANUL_EDIT_0,
+        ID_MANUL_EDIT_BOUND,
+    };
 #endif
 
 /*********************************************************************
@@ -768,6 +819,10 @@
 
 #if __EJE_SWRB_TEST_TESTSELSETTING_DLG
     extern WM_HWIN hWin_SWRB_TESTSEL;
+#endif
+
+#if __EJE_SWRB_TEST_MANUL_DLG
+    extern WM_HWIN hWin_SWRB_MANUL;
 #endif
 
 /*********************************************************************
@@ -828,7 +883,7 @@ void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id);
 void SWRB_TestCheckboxStateSet(u8 stateNum);
 void SWRB_PCBTestCheckboxEnable(void);
 void SWRB_PCBTestCheckboxDisable(void);
-void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
+void SWRB_RTC_TIME_Disp(WM_HWIN hWin, int id, RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 void SWRB_IndicateButtonToggle(WM_HWIN hWin, int buttonId);
 void SWRB_LastCallNumpadEditSave(WM_MESSAGE *pMsg);
 WM_HWIN SWRB_LastCallNumpadEditWinGet(void);

@@ -7,14 +7,6 @@
 #include "includes.h"
 #include "timer.h"
 
-#define SWRB_WHEEL_CHAN_NUM     2
-
-enum WheelChan{
-    
-    WHEEL_CHAN_L,
-    WHEEL_CHAN_R,
-};
-
 const static int SWRB_TEST_WHEEL_SPEED_LOW_BOUND[SWRB_WHEEL_CHAN_NUM] = { 0, 0 };
 const static int SWRB_TEST_WHEEL_SPEED_HIGH_BOUND[SWRB_WHEEL_CHAN_NUM] = { 50, 50 };
 

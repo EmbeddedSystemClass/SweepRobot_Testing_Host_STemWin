@@ -15,9 +15,7 @@
 #define COLLISION_FRONT_TEST_CTRL_L_PIN       GPIO_Pin_5
 #define COLLISION_FRONT_TEST_CTRL_R_PIN       GPIO_Pin_6
 
-#define COLLISION_CHAN_NUM  4
-
-static COLLISION_TestTypeDef collision[COLLISION_CHAN_NUM];
+static COLLISION_TestTypeDef collision[SWRB_COLLISION_CHAN_NUM];
 
 static void SweepRobot_CollisionTestGPIOInit(void)
 {
@@ -106,7 +104,7 @@ static void SweepRobot_CollisionTestInit(void)
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
-    for(i=0;i<COLLISION_CHAN_NUM;i++){
+    for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         collision[i].onValue = 0;
         collision[i].offValue = 0;
         collision[i].onValidCnt = 0;
@@ -121,7 +119,7 @@ static void SweepRobot_CollisionTestProc(void)
     u8 i,j;
     char *str;
 
-    for(i=0;i<COLLISION_CHAN_NUM;i++){
+    for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         if(!collision[i].validFlag){
             if(!collision[i].onValidFlag){
                 SweepRobot_CollisionCtrlOn((enum CollisionChan)i);
@@ -277,7 +275,7 @@ void Collision_TestDataSave(void)
 {
     u8 i;
 
-    for(i=0;i<COLLISION_CHAN_NUM;i++){
+    for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_ON_VALUE_POS+i] = collision[i].onValue;
         gSwrbTestAcquiredData[SWRB_TEST_DATA_COLLISION_L_OFF_VALUE_POS+i] = collision[i].offValue;
     }

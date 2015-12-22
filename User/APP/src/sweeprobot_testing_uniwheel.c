@@ -5,9 +5,9 @@
 #include "usart.h"
 #include "includes.h"
 
-const static int SWRB_UNIWHEEL_VALID_THRESHOLD = 120;
-
 static UNIWHEEL_TestTypeDef uniwheel;
+
+static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 120;
 
 static void SweepRobot_UniWheelTestInit(void)
 {

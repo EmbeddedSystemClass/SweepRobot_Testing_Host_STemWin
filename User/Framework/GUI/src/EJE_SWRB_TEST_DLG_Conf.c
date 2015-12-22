@@ -166,7 +166,7 @@ void Progbar_Set_Value(int progbarValue)
 
 void Progbar_Set_Percent(void)
 {
-    Progbar_Set_Value( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal)*100 );
+    Progbar_Set_Value( ( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal) )*100 );
 }
 
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
@@ -408,16 +408,16 @@ void SWRB_WM_DisableWindow(WM_HWIN hWin, int id)
     WM_DisableWindow(hItem);
 }
 
-void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
+void SWRB_RTC_TIME_Disp(WM_HWIN hWin, int id, RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
 {
     char *str;
     
     str = mymalloc(SRAMIN, sizeof(char)*30);
-    sprintf(str,"%d/%d/%d %d:%d:%d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
+    sprintf(str,"20%02d/%02d/%02d %02d:%02d:%02d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
     if(gSwrbTestMode == SWRB_TEST_MODE_SET){
         Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
     }else{
-        Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_DATE, str);
+        Edit_Set_Text(hWin, id, str);
     }
     myfree(SRAMIN, str);
 }

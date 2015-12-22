@@ -16,16 +16,8 @@ enum PS_RX_POS{
     SWRB_TEST_PS_24V_STATE_POS,
 };
 
-enum CHARGE_RX_Chan{
-    CHARGE_RX_Chan_Voltage,
-    CHARGE_RX_Chan_Current,
-    CHARGE_RX_Chan_24Vstate,
-};
-
-#define SWRB_TEST_PS_TX_SIG_NUM        7
-
-static PowerStation_TestTypeDef powerStation[SWRB_TEST_PS_TX_SIG_NUM];
-static PowerStation_TestTypeDef powerStation24V;
+static POWERSTATION_TestTypeDef powerStation[SWRB_TEST_PS_TX_SIG_NUM];
+static POWERSTATION_TestTypeDef powerStation24V;
 
 static u8 gIrDATmpCode;
 

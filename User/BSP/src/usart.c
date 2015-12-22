@@ -40,14 +40,11 @@ int fputc(int ch, FILE *f)
 static void USART1_ISR(void);
 static void USART3_ISR(void);
 
-#if EN_USART1_RX
+#define USART_CNT_MASK    0x3FFF
 
 char USART_RX_BUF[USART_REC_LEN];
-u8 usartRxLen = 0;
-
 u16 USART_RX_STA=0;
 
-#define USART_CNT_MASK    0x3F
 
 void uart_init(u32 bound){
    //GPIO¶Ë¿ÚÉèÖÃ
@@ -131,30 +128,31 @@ void uart_init(u32 bound){
 
 void USART1_ISR(void)
 {
-	u8 Res;
+	u8 rxValue;
 #if SYSTEM_SUPPORT_UCOS
 	OSIntEnter();
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
-		Res =USART_ReceiveData(USART1);
+		rxValue =USART_ReceiveData(USART1);
 
 		if((USART_RX_STA&0x8000)==0){
 			if(USART_RX_STA&0x4000){
-				if(Res!=0x0a)
+				if(rxValue!='\n')
 					USART_RX_STA=0;
 				else{
 					USART_RX_STA|=0x8000;
-                    usartRxLen = USART_RX_STA&USART_CNT_MASK;
-                    USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum);
+                    if(gSwrbTestSelectFlag != SWRB_TEST_SELECT_MANUL){
+                        USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum);
+//                        USART_RX_STA = 0;
+                    }
                     usartRxFlag = 1;
-//                    USART_RX_STA = 0;
                     OSTimeDlyResume(gSwrbTestRuningTaskPrio);
 				}
 			}else{
-				if(Res==0x0d)
+				if(rxValue=='\r')
 					USART_RX_STA|=0x4000;
 				else{
-					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res;
+					USART_RX_BUF[USART_RX_STA&USART_CNT_MASK]=rxValue;
 					USART_RX_STA++;
 					if(USART_RX_STA>(USART_REC_LEN-1))
 						USART_RX_STA=0;
@@ -210,7 +208,4 @@ char* USART_NumberToString(int *src_num, char *dest_str)
   sprintf(dest_str, "%d", *src_num);
   return dest_str;
 }
-
-
-#endif
 

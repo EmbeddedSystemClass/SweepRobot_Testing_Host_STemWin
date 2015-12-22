@@ -51,7 +51,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 500, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 205, 200, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 300, 205, 200, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 295, 200, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
 //    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 203, 200, 180, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
@@ -132,8 +133,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             // Initialization of 'btnSLAM'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
-            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "SLAM");
+            Button_Init(hItem);
+            //
+            // Initialization of 'btnMANUL'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_MANUL);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "Manul");
             Button_Init(hItem);
 //            WM_HideWin(hItem);
             //
@@ -178,6 +186,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             SweepRobot_StartDlgPowerStationBtnClickPorc();
+                            break;
+                    }
+                    break;
+                case ID_START_BUTTON_MANUL: // Notifications sent by 'MANUL'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            SweepRobot_StartDlgManulBtnClickProc();
                             break;
                     }
                     break;

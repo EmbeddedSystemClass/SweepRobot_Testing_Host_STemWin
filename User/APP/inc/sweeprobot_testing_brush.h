@@ -3,6 +3,14 @@
 
 #include "stm32f4xx.h"
 
+#define SWRB_BRUSH_CHAN_NUM     3
+
+enum BrushChan{
+    BRUSH_CHAN_L,
+    BRUSH_CHAN_R,
+    BRUSH_CHAN_M,
+};
+
 typedef struct{
     int current;
     u8 validCnt;

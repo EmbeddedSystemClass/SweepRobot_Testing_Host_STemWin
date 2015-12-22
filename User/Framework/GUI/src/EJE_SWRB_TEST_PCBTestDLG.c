@@ -36,20 +36,18 @@
 **********************************************************************
 */
 
-#define ID_IMAGE_0_IMAGE_0 0x00
-
-#define IS_PCBTEST_CHECKBOX_ID(id)  ( (id == ID_PCBTEST_CHECKBOX_WHEEL)    ||\
-                                      (id == ID_PCBTEST_CHECKBOX_BRUSH)    ||\
-                                      (id == ID_PCBTEST_CHECKBOX_FAN)      ||\
-                                      (id == ID_PCBTEST_CHECKBOX_IFRD)     ||\
-                                      (id == ID_PCBTEST_CHECKBOX_COLLISION)||\
-                                      (id == ID_PCBTEST_CHECKBOX_WHEEL_FLOAT)  ||\
-                                      (id == ID_PCBTEST_CHECKBOX_ASH_TRAY)     ||\
-                                      (id == ID_PCBTEST_CHECKBOX_UNIWHEEL)     ||\
-                                      (id == ID_PCBTEST_CHECKBOX_KEY)          ||\
-                                      (id == ID_PCBTEST_CHECKBOX_IRDA)         ||\
-                                      (id == ID_PCBTEST_CHECKBOX_BUZZER)       ||\
-                                      (id == ID_PCBTEST_CHECKBOX_RGB_LED)      ||\
+#define IS_PCBTEST_CHECKBOX_ID(id)  ( (id == ID_PCBTEST_CHECKBOX_WHEEL)         ||\
+                                      (id == ID_PCBTEST_CHECKBOX_BRUSH)         ||\
+                                      (id == ID_PCBTEST_CHECKBOX_FAN)           ||\
+                                      (id == ID_PCBTEST_CHECKBOX_IFRD)          ||\
+                                      (id == ID_PCBTEST_CHECKBOX_COLLISION)     ||\
+                                      (id == ID_PCBTEST_CHECKBOX_WHEEL_FLOAT)   ||\
+                                      (id == ID_PCBTEST_CHECKBOX_ASH_TRAY)      ||\
+                                      (id == ID_PCBTEST_CHECKBOX_UNIWHEEL)      ||\
+                                      (id == ID_PCBTEST_CHECKBOX_KEY)           ||\
+                                      (id == ID_PCBTEST_CHECKBOX_IRDA)          ||\
+                                      (id == ID_PCBTEST_CHECKBOX_BUZZER)        ||\
+                                      (id == ID_PCBTEST_CHECKBOX_RGB_LED)       ||\
                                       (id == ID_PCBTEST_CHECKBOX_CHARGE)\
                                     )
 
@@ -150,6 +148,7 @@ static void Checkbox_Init(WM_HWIN hItem)
 {
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
+    CHECKBOX_SetState(hItem, 1);
 }
 
 /*********************************************************************
@@ -355,7 +354,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
                 switch(NCode){
                     case WM_NOTIFICATION_VALUE_CHANGED:
                         SWRB_TestCheckboxStateGet(pMsg->hWin, i);
-                    break;
+                        break;
                 }
             }else{
                 switch(Id) {
@@ -446,7 +445,8 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
     }
 }
 
-static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg){
+static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
+{
     WM_HWIN hItem;
     int     NCode;
     int     Id;
@@ -501,7 +501,8 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg){
     }
 }
 
-static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
+static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
+{
     WM_HWIN hItem;
     int     NCode;
     int     Id;
@@ -566,7 +567,8 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg){
     }
 }
 
-static void _cbBuzzerDialog(WM_MESSAGE * pMsg){
+static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
+{
     WM_HWIN hItem;
     int     NCode;
     int     Id;

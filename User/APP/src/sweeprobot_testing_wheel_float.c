@@ -15,17 +15,11 @@
 #define WHEEL_FLOAT_TEST_CTRL_TIM_RCC       RCC_APB1Periph_TIM2
 #define WHEEL_FLOAT_TEST_CTRL_TIM           TIM2
 
-#define WHEEL_FLOAT_CHAN_NUM    2
 
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS   500
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_TEST_POS   1000
 
-enum WheelFloagChan{
-    WHEEL_FLOAT_CHAN_L,
-    WHEEL_FLOAT_CHAN_R, 
-};
-
-static WHEEL_FLOAT_TestTypeDef wheelFloat[WHEEL_FLOAT_CHAN_NUM];
+static WHEEL_FLOAT_TestTypeDef wheelFloat[SWRB_WHEEL_FLOAT_CHAN_NUM];
 
 static void SweepRobot_WheelFloatTestGPIOInit(void)
 {
@@ -114,7 +108,7 @@ void SweepRobot_WheelFloatTestInit(void)
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
-    for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
+    for(i=0;i<SWRB_WHEEL_FLOAT_CHAN_NUM;i++){
         wheelFloat[i].value = 0;
         wheelFloat[i].validCnt = 0;
         wheelFloat[i].validFlag = 0;
@@ -126,7 +120,7 @@ static void SweepRobot_WheelFloatTestProc(void)
     u8 i,j;
     char *str;
     
-    for(i=0;i<WHEEL_FLOAT_CHAN_NUM;i++){
+    for(i=0;i<SWRB_WHEEL_FLOAT_CHAN_NUM;i++){
         
         if(!wheelFloat[i].validFlag){
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
@@ -236,6 +230,6 @@ void WHEEL_FLOAT_TestDataSave(void)
 {
     gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_L_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_L].value;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_WHEEL_FLOAT_R_VALUE_POS] = wheelFloat[WHEEL_FLOAT_CHAN_R].value;
-    SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=", wheelFloat[WHEEL_FLOAT_CHAN_L].value, 1);
-    SWRB_TestDataFileWriteData("WHEEL_FLOAT->R_Value=", wheelFloat[WHEEL_FLOAT_CHAN_R].value, 1);
+    SWRB_TestDataFileWriteData("WHEEL_FLOAT->L_Value=", wheelFloat[WHEEL_FLOAT_CHAN_L].value, ENABLE);
+    SWRB_TestDataFileWriteData("WHEEL_FLOAT->R_Value=", wheelFloat[WHEEL_FLOAT_CHAN_R].value, ENABLE);
 }

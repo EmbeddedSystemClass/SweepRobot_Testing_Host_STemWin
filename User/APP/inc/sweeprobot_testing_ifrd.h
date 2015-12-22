@@ -3,6 +3,8 @@
 
 #include "stm32f4xx.h"
 
+#define SWRB_IFRD_CHAN_NUM   8
+
 typedef struct{
     int onValue;
     int offValue;

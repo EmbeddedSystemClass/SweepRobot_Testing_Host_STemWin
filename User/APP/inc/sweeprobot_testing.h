@@ -76,7 +76,7 @@ enum SWRB_Test_State_Pos{
 
 enum SWRB_TEST_STATE{
 
-  SWRB_TEST_STATE_WHEEL = 1,
+  SWRB_TEST_STATE_WHEEL = 0,
   SWRB_TEST_STATE_BRUSH,
   SWRB_TEST_STATE_FAN,
   SWRB_TEST_STATE_IFRD,
@@ -98,6 +98,7 @@ enum SWRB_TEST_SELECT{
     SWRB_TEST_SELECT_NONE,
     SWRB_TEST_SELECT_PCB,
     SWRB_TEST_SELECT_POWER_STATION,
+    SWRB_TEST_SELECT_MANUL,
     SWRB_TEST_SELECT_SLAM,
 };
 
@@ -270,6 +271,7 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_CHARGE_TEST_TASK_PRIO,
     SWRB_TEST_TASK_PRIO_END_BOUND,//22
     SWRB_POWER_STATION_TEST_TASK_PRIO,
+    SWRB_MANUL_TEST_TASK_PRIO,
     SWRB_SLAM_MONITOR_TASK_PRIO,
     USART_TASK_PRIO,
     RTC_TASK_PRIO,
@@ -279,10 +281,10 @@ enum SWRB_TEST_TASK_PRIO{
 };
 
 #define START_STK_SIZE                      128
-#define TOUCH_STK_SIZE                      256
+#define TOUCH_STK_SIZE                      128
 #define KEY_STK_SIZE                        128
-#define RTC_STK_SIZE                        256
-#define EMWIN_STK_SIZE		            1024
+#define RTC_STK_SIZE                        128
+#define EMWIN_STK_SIZE		                512
 #define LED_STK_SIZE				        256
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
@@ -300,6 +302,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_RGB_LED_TEST_STK_SIZE          256
 #define SWRB_CHARGE_TEST_STK_SIZE           256
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
+#define SWRB_MANUL_TEST_STK_SIZE            256
 #define SWRB_SLAM_MONITOR_STK_SIZE          256
 
 #define SWRB_TEST_USART_READ_TIMES              3
@@ -320,7 +323,6 @@ extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 extern FunctionalState gSwrbTestDataSaveState;
 extern u32 gSwrbTestStateMap;
-extern u32 lastSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
 extern int gSwrbTestValidTaskCnt;
@@ -339,6 +341,7 @@ void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTy
 
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
+void SweepRobot_StartDlgManulBtnClickProc(void);
 void SweepRobot_StartDlgSLAMBtnClickProc(void);
 
 void SweepRobot_PCBTestStartProc(void);
@@ -349,6 +352,11 @@ void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg);
 void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopProc(void);
 void SweepRobot_PCBTestExitProc(void);
+
+void SweepRobot_ManulStartProc(void);
+void SweepRobot_ManulSetProc(void);
+void SweepRobot_ManulResetProc(void);
+void SweepRobot_ManulExitProc(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);

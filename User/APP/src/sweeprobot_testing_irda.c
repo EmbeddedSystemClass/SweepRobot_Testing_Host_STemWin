@@ -14,9 +14,7 @@
 #define IRDA_TEST_TX_PIN_SET(pin)       GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_SET)
 #define IRDA_TEST_TX_PIN_RESET(pin)     GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_RESET)
 
-#define SWRB_TEST_IRDA_CHAN_NUM         5
-
-static IRDA_TestTypeDef IrDA[SWRB_TEST_IRDA_CHAN_NUM];
+static IRDA_TestTypeDef IrDA[SWRB_IRDA_CHAN_NUM];
 
 static void SweepRobot_IrDATestGPIOInit(void)
 {
@@ -92,7 +90,7 @@ static void SweepRobot_IrDATestInit(void)
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
-    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         IrDA[i].code = 0;
         IrDA[i].validCnt = 0;
         IrDA[i].validFlag = 0;
@@ -105,7 +103,7 @@ static void SweepRobot_IrDATestProc(void)
     u8 i,j;
     char *str;
     
-    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         if(!IrDA[i].validFlag){
             printf("IRDA->ON=%d\r\n",i);
             OSTimeDlyHMSM(0,0,0,1);
@@ -133,8 +131,7 @@ static void SweepRobot_IrDATestProc(void)
                 }
             }
 
-            if(IrDA[i].code == 0x40 || IrDA[i].code == 0x41 || IrDA[i].code == 0x42 || IrDA[i].code == 0x43 ||\
-               IrDA[i].code == 0x44 || IrDA[i].code == 0x45 || IrDA[i].code == 0x46){
+            if(IS_IRDA_CODE(IrDA[i].code)){
                 IrDA[i].validCnt++;
             }else{
                 IrDA[i].validCnt = 0;
@@ -164,7 +161,7 @@ static void SweepRobot_IrDATestProc(void)
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
-        for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+        for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
             Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
         }
         Edit_Clear();
@@ -211,7 +208,7 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA ERROR");
-    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     }
     Edit_Clear();
@@ -255,7 +252,7 @@ void IRDA_TestDataSave(void)
 {
     u8 i;
     
-    for(i=0;i<SWRB_TEST_IRDA_CHAN_NUM;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
     }
     

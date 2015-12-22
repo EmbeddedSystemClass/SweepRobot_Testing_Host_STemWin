@@ -23,9 +23,9 @@ static void SweepRobot_FanTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
-    
     printf("FAN->SPEED=50\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+
     fan.current = 0;
     fan.validCnt = 0;
     fan.validFlag = 0;
@@ -121,11 +121,11 @@ void SweepRobot_FanTestTask(void *pdata)
                 SweepRobot_FanTestInit();
             }
 
-            if(gSwrbTestTaskRunCnt > 5){
+            if(gSwrbTestTaskRunCnt > 10){
                 SweepRobot_FanTestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 20){
+            if(gSwrbTestTaskRunCnt > 200){
                 SweepRobot_FanTestOverTimeProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

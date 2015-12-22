@@ -3,6 +3,13 @@
 
 #include "stm32f4xx.h"
 
+#define SWRB_WHEEL_FLOAT_CHAN_NUM    2
+
+enum WheelFloagChan{
+    WHEEL_FLOAT_CHAN_L,
+    WHEEL_FLOAT_CHAN_R, 
+};
+
 typedef struct{
     u8 value;
     u8 validCnt;

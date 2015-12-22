@@ -592,6 +592,16 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_DLG_Conf.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DLG_Conf.c</FilePath>
@@ -1115,6 +1125,11 @@
               <FileName>sweeprobot_testing_power_station.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_power_station.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_manul.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1726,6 +1741,16 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_DLG_Conf.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DLG_Conf.c</FilePath>
@@ -2249,6 +2274,11 @@
               <FileName>sweeprobot_testing_power_station.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_power_station.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_manul.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
             </File>
           </Files>
         </Group>

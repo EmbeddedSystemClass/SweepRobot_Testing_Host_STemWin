@@ -51,9 +51,9 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "Check", ID_TIMESET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Reset", ID_TIMESET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Cancel", ID_TIMESET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "SN Set", ID_TIMESET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Time Set", ID_TIMESET_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Test Sel", ID_TIMESET_BUTTON_RESERVE1, 200, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SNSet", ID_TIMESET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TimeSet", ID_TIMESET_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TestSel", ID_TIMESET_BUTTON_TESTSELSET, 200, 420, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Rsrv2", ID_TIMESET_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Rsrv3", ID_TIMESET_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Rsrv4", ID_TIMESET_BUTTON_RESERVE4, 500, 420, 100, 60, 0, 0x0, 0 },
@@ -124,6 +124,32 @@ static void Button_CancelProc(WM_HWIN hWin)
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+}
+
+static void Button_SNSetProc(WM_HWIN hWin)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+    BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+    gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+    WM_HideWin(hWin);
+    WM_ShowWin(hWin_SWRB_SNSETTING);
+}
+
+static void Button_TestSelSetProc(WM_HWIN hWin)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSELSET);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+    BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+    gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
+    WM_HideWin(hWin);
+    WM_ShowWin(hWin_SWRB_TESTSEL);
 }
 
 static void ListWheel_Init(WM_HWIN hItem)
@@ -379,28 +405,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-                            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
-                            gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
-                            WM_HideWin(hWin_SWRB_TIMESETTING);
-                            WM_ShowWin(hWin_SWRB_SNSETTING);
+                            
                             break;
                     }
                     break;
-                case ID_TIMESET_BUTTON_RESERVE1:
+                case ID_TIMESET_BUTTON_TESTSELSET:
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_TESTSEL_BUTTON_TESTSELSET);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-                            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
-                            gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
-                            WM_HideWin(hWin_SWRB_TIMESETTING);
-                            WM_ShowWin(hWin_SWRB_TESTSEL);
+                            Button_TestSelSetProc(pMsg->hWin);
                             break;
                     }
                     break;

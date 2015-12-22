@@ -3,14 +3,7 @@
 
 #include "stm32f4xx.h"
 
-typedef struct{
-    int onValue;
-    int offValue;
-    u8 onValidCnt;
-    u8 offValidCnt;
-    u8 onValidFlag;
-    u8 validFlag;
-}COLLISION_TestTypeDef;
+#define SWRB_COLLISION_CHAN_NUM  4
 
 enum CollisionChan{
     COLLISION_CHAN_L,
@@ -19,6 +12,15 @@ enum CollisionChan{
     COLLISION_CHAN_FR,
     COLLISION_CHAN_ALL
 };
+
+typedef struct{
+    int onValue;
+    int offValue;
+    u8 onValidCnt;
+    u8 offValidCnt;
+    u8 onValidFlag;
+    u8 validFlag;
+}COLLISION_TestTypeDef;
 
 void SweepRobot_CollisionTestTask(void *pdata);
 void Collision_TestDataSave(void);

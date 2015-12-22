@@ -3,6 +3,108 @@
 
 /*********************************************************************
 *
+*       Defines
+*
+**********************************************************************
+*/
+
+#define IS_TESTSEL_BUTTON_ID(id)   (  (id == ID_TESTSEL_BUTTON_WHEEL)       ||\
+                                      (id == ID_TESTSEL_BUTTON_BRUSH)       ||\
+                                      (id == ID_TESTSEL_BUTTON_FAN)         ||\
+                                      (id == ID_TESTSEL_BUTTON_IFRD)        ||\
+                                      (id == ID_TESTSEL_BUTTON_COLLISION)   ||\
+                                      (id == ID_TESTSEL_BUTTON_WHEEL_FLOAT) ||\
+                                      (id == ID_TESTSEL_BUTTON_ASH_TRAY)    ||\
+                                      (id == ID_TESTSEL_BUTTON_UNIWHEEL)    ||\
+                                      (id == ID_TESTSEL_BUTTON_KEY)         ||\
+                                      (id == ID_TESTSEL_BUTTON_IRDA)        ||\
+                                      (id == ID_TESTSEL_BUTTON_BUZZER)      ||\
+                                      (id == ID_TESTSEL_BUTTON_RGB_LED)     ||\
+                                      (id == ID_TESTSEL_BUTTON_CHARGE)      \
+                                    )
+//                                      (id == ID_TESTSEL_BUTTON_TEST1)       ||\
+//                                      (id == ID_TESTSEL_BUTTON_TEST2)       ||\
+//                                      (id == ID_TESTSEL_BUTTON_TEST3)       ||\
+//                                      (id == ID_TESTSEL_BUTTON_TEST4)       ||\
+//                                      (id == ID_TESTSEL_BUTTON_TEST5)       ||\
+//                                      (id == ID_TESTSEL_BUTTON_TEST6)       ||\
+//                                      (id == ID_TESTSEL_BUTTON_TEST7)       \
+//                                    )
+                                    
+/*********************************************************************
+*
+*       Static code
+*
+**********************************************************************
+*/
+
+static void Button_Init(WM_HWIN hItem)
+{
+    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+    BUTTON_SetSkinClassic(hItem);
+    BUTTON_SetFocussable(hItem, DISABLE);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+}
+
+static void Button_ResetToLastState(WM_HWIN hWin)
+{
+    
+}
+
+static void Button_ConfirmProc(WM_HWIN hWin)
+{
+    WM_HideWin(hWin);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+}
+
+static void Button_SelAllProc(void)
+{
+    int id;
+    
+    SWRB_TestCheckboxStateSet(1);
+    
+    for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_CHARGE;id++){
+        Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTBLUE);
+    }
+}
+
+static void Button_SelSingleProc(int id)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, id-ID_TESTSEL_BUTTON_WHEEL+ID_PCBTEST_CHECKBOX_WHEEL);
+    
+    if(CHECKBOX_GetState(hItem)){
+        CHECKBOX_SetState(hItem, 0);
+        Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTGRAY);
+    }else{
+        CHECKBOX_SetState(hItem, 1);
+        Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTBLUE);
+    }
+}
+
+static void Button_SelNoneProc(void)
+{
+    int id;
+    
+    SWRB_TestCheckboxStateSet(0);
+    
+    for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_CHARGE;id++){
+        Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTGRAY);
+    }
+}
+
+static void Button_CancelProc(WM_HWIN hWin)
+{
+    Button_ResetToLastState(hWin);
+    WM_HideWin(hWin);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+}
+
+/*********************************************************************
+*
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
@@ -42,34 +144,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 /*********************************************************************
 *
-*       Static code
-*
-**********************************************************************
-*/
-
-static void Button_Init(WM_HWIN hItem)
-{
-    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    BUTTON_SetSkinClassic(hItem);
-    BUTTON_SetFocussable(hItem, DISABLE);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
-}
-
-static void Button_ResetToLastState(WM_HWIN hWin)
-{
-    
-}
-
-static void Button_CancelProc(WM_HWIN hWin)
-{
-    Button_ResetToLastState(hWin);
-    WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-}
-
-/*********************************************************************
-*
 *       _cbDialog
 */
 static void _cbDialog(WM_MESSAGE * pMsg) {
@@ -84,12 +158,18 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     for(i=ID_TESTSEL_BUTTON_0;i<ID_TESTSEL_BUTTON_BOUND;i++){
         hItem = WM_GetDialogItem(pMsg->hWin, i);
         Button_Init(hItem);
-        if(i<=ID_TESTSEL_BUTTON_RESERVE4){
+        if( (ID_TESTSEL_BUTTON_WHEEL <= i) && (ID_TESTSEL_BUTTON_CHARGE >= i) ){
+            Button_Set_BkColor(hWin_SWRB_TESTSEL, i, GUI_LIGHTBLUE);
+        }else if(i<=ID_TESTSEL_BUTTON_RESERVE4){
             if(i%2){
-                BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGRAY);
+                
             }else{
-
+                BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGRAY);
             }
+        }else if(ID_TESTSEL_BUTTON_TEST1 <= i && ID_TESTSEL_BUTTON_TEST7 >= i){
+            WM_DisableWindow(hItem);
+        }else{
+            
         }
     }
     
@@ -98,255 +178,109 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_TESTSEL_BUTTON_CONFIRM: // Notifications sent by 'btnConfirm'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
+    
+    if(IS_TESTSEL_BUTTON_ID(Id)){
+        switch(NCode) {
+            case WM_NOTIFICATION_CLICKED:
+                break;
+            case WM_NOTIFICATION_RELEASED:
+                Button_SelSingleProc(Id);
+                break;
+        }
         break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_SELALL: // Notifications sent by 'btnSelAll'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_SELNONE: // Notifications sent by 'btnSelNone'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_CANCEL: // Notifications sent by 'btnCancel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        Button_CancelProc(pMsg->hWin);
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_WHEEL: // Notifications sent by 'btnWheel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_WHEEL_FLOAT: // Notifications sent by 'btnWheelFloat'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:       
+    }else{
+        switch(Id) {
+        case ID_TESTSEL_BUTTON_CONFIRM: // Notifications sent by 'btnConfirm'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_ConfirmProc(pMsg->hWin);
+            break;
+          }
           break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_BUZZER: // Notifications sent by 'btnBuzzer'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST3: // Notifications sent by 'btnTest3'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_BRUSH: // Notifications sent by 'btnBrush'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_ASH_TRAY: // Notifications sent by 'btnAshTray'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-
-      }
-      break;
-    case ID_TESTSEL_BUTTON_FAN: // Notifications sent by 'btnFan'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_IFRD: // Notifications sent by 'btnIFRD'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
+        case ID_TESTSEL_BUTTON_SELALL: // Notifications sent by 'btnSelAll'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_SelAllProc();
+            break;
+          }
           break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_COLLISION: // Notifications sent by 'btnCollision'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_UNIWHEEL: // Notifications sent by 'btnUniwheel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_KEY: // Notifications sent by 'btnKey'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_IRDA: // Notifications sent by 'btnIrDA'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_RGB_LED: // Notifications sent by 'btnRgbLed'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_CHARGE: // Notifications sent by 'btnCharge'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST1: // Notifications sent by 'btnTest1'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST2: // Notifications sent by 'btnTest2'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST4: // Notifications sent by 'btnTest4'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST5: // Notifications sent by 'btnTest5'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST6: // Notifications sent by 'btnTest6'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TEST7: // Notifications sent by 'btnTest7'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_SNSET: // Notifications sent by 'btnSnSet'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-        BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-        BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-        BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
-        gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
-        WM_HideWin(pMsg->hWin);
-        WM_ShowWin(hWin_SWRB_SNSETTING);
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TIMESET: // Notifications sent by 'btnTimeSet'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TIMESET_BUTTON_TIMESET);
-        BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-        BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-        BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
-        gSwrbTestSetState = SWRB_TEST_SET_STATE_TIME;
-        WM_HideWin(pMsg->hWin);
-        WM_ShowWin(hWin_SWRB_TIMESETTING);
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_TESTSELSET: // Notifications sent by 'btnTestSelSet'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_RESERVE1: // Notifications sent by 'btnRvs1'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_RESERVE2: // Notifications sent by 'btnRvs2'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
+        case ID_TESTSEL_BUTTON_SELNONE: // Notifications sent by 'btnSelNone'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_SelNoneProc();
+            break;
+          }
+          break;
+        case ID_TESTSEL_BUTTON_CANCEL: // Notifications sent by 'btnCancel'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_CancelProc(pMsg->hWin);
+            break;
+          }
+          break;
+        case ID_TESTSEL_BUTTON_SNSET: // Notifications sent by 'btnSnSet'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+            gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+            WM_HideWin(pMsg->hWin);
+            WM_ShowWin(hWin_SWRB_SNSETTING);
+            break;
+          }
+          break;
+        case ID_TESTSEL_BUTTON_TIMESET: // Notifications sent by 'btnTimeSet'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TIMESET_BUTTON_TIMESET);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+            gSwrbTestSetState = SWRB_TEST_SET_STATE_TIME;
+            WM_HideWin(pMsg->hWin);
+            WM_ShowWin(hWin_SWRB_TIMESETTING);
+            break;
+          }
+          break;
+        case ID_TESTSEL_BUTTON_TESTSELSET: // Notifications sent by 'btnTestSelSet'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            break;
+          }
+          break;
+        case ID_TESTSEL_BUTTON_RESERVE1: // Notifications sent by 'btnRvs1'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            break;
+          }
+          break;
+        case ID_TESTSEL_BUTTON_RESERVE2: // Notifications sent by 'btnRvs2'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            break;
+          }
+          break;
+        }
     }
     break;
   default:

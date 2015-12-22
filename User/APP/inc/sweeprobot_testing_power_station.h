@@ -3,6 +3,14 @@
 
 #include "stm32f4xx.h"
 
+#define SWRB_TEST_PS_TX_SIG_NUM  7
+
+enum CHARGE_RX_Chan{
+    CHARGE_RX_Chan_Voltage,
+    CHARGE_RX_Chan_Current,
+    CHARGE_RX_Chan_24Vstate,
+};
+
 typedef struct{
     int voltage;
     int current;
@@ -14,7 +22,7 @@ typedef struct{
     Charge_t charge;
     u8 validCnt;
     u8 validFlag;
-}PowerStation_TestTypeDef;
+}POWERSTATION_TestTypeDef;
 
 void SweepRobot_PowerStationTestTask(void *pdata);
 void PowerStation_TestDataSave(void);
