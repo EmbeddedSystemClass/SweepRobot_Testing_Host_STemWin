@@ -21,7 +21,10 @@ int main(void)
     TIM3_Int_Init(9999,168-1);
 
     if(SD_Init()){
-        goto NO_SD_FAULT;
+        gSwrbTestDataSaveState = DISABLE;
+//        goto NO_SD_FAULT;
+    }else{
+        gSwrbTestDataSaveState = ENABLE;
     }
 
     W25QXX_Init();

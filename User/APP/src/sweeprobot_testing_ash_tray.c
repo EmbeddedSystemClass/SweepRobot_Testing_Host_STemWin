@@ -91,7 +91,7 @@ static void SweepRobot_AshTrayTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 
     printf("SENSOR->IFRD_LED=0\r\n");
     SweepRobot_AshTrayTestInsCtrlTestPos();
@@ -121,7 +121,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayIns.value = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 USART_RX_STA = 0;
@@ -156,7 +156,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.offValue = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U2, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U2, usartRxNum);
                 usartRxFlag=0;
                 usartRxNum=0;
                 USART_RX_STA = 0;
@@ -179,7 +179,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.onValue = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_D2, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D2, usartRxNum);
                 usartRxFlag = 0;
                 usartRxNum = 0;
                 USART_RX_STA = 0;
@@ -227,9 +227,9 @@ static void SweepRobot_AshTrayTestProc(void)
         str = "ASH TRAY OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
-        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_ASH_TRAY, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_ASH_TRAY, "ASH TRAY OK");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_ASH_TRAY, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY, "ASH TRAY OK");
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
@@ -249,15 +249,15 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK){
         str = "ERROR->ASH TRAY INS\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK){
         str = "ERROR->ASH TRAY LVL\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
-    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_ASH_TRAY, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_ASH_TRAY, "ASH TRAY ERROR");
+    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_ASH_TRAY, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY, "ASH TRAY ERROR");
     Edit_Clear();
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -274,7 +274,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
 
     while(1){
         
-        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_ASH_TRAY)){
+        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_ASH_TRAY)){
             SWRB_NextTestTaskResumePreAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

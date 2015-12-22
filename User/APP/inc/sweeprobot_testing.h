@@ -318,6 +318,7 @@ extern enum SWRB_TEST_MODE gSwrbTestMode;
 extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;
 extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
+extern FunctionalState gSwrbTestDataSaveState;
 extern u32 gSwrbTestStateMap;
 extern u32 lastSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
@@ -354,7 +355,7 @@ void SweepRobot_PowerStationTestStopProc(void);
 void SweepRobot_PowerStationTestExitProc(void);
 
 void SweepRobot_SLAMStartProc(void);
-void SweepRobot_SLAMSetProc(void);
+void SweepRobot_SLAMResetProc(void);
 void SweepRobot_SLAMStopProc(void);
 void SweepRobot_SLAMExitProc(void);
 

@@ -55,6 +55,19 @@ static void Button_Init(WM_HWIN hItem)
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
 
+static void Button_ResetToLastState(WM_HWIN hWin)
+{
+    
+}
+
+static void Button_CancelProc(WM_HWIN hWin)
+{
+    Button_ResetToLastState(hWin);
+    WM_HideWin(hWin);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+}
+
 /*********************************************************************
 *
 *       _cbDialog
@@ -91,6 +104,31 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
+        break;
+      }
+      break;
+    case ID_TESTSEL_BUTTON_SELALL: // Notifications sent by 'btnSelAll'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        break;
+      }
+      break;
+    case ID_TESTSEL_BUTTON_SELNONE: // Notifications sent by 'btnSelNone'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        break;
+      }
+      break;
+    case ID_TESTSEL_BUTTON_CANCEL: // Notifications sent by 'btnCancel'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        Button_CancelProc(pMsg->hWin);
         break;
       }
       break;
@@ -248,30 +286,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_TESTSEL_BUTTON_TEST7: // Notifications sent by 'btnTest7'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_SELALL: // Notifications sent by 'btnSelAll'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_SELNONE: // Notifications sent by 'btnSelNone'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        break;
-      }
-      break;
-    case ID_TESTSEL_BUTTON_CANCEL: // Notifications sent by 'btnCancel'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;

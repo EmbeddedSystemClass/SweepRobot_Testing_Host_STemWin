@@ -31,7 +31,7 @@ static void SWRB_WheelTestInit(void)
     SWRB_TestDataFileWriteString(str);
 
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 
@@ -66,7 +66,7 @@ static void SWRB_WheelTestProc(void)
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;
-                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1, wheel[i].speed);
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, wheel[i].speed);
                     break;
                 }else{
                     continue;
@@ -95,10 +95,10 @@ static void SWRB_WheelTestProc(void)
         str = "WHEEL OK\r\n";
         SWRB_TestDataFileWriteString(str);
 
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
-        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, "WHEEL OK");
-        Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL OK");
+        Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
@@ -119,16 +119,16 @@ static void SWRB_WheelTestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
         str = "ERROR->LEFT WHEEL\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
         str = "ERROR->RIGHT WHEEL\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
-    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_WHEEL, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, "WHEEL ERROR");
-    Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL ERROR");
+    Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -142,7 +142,7 @@ void SweepRobot_WheelTestTask(void *pdata)
 {
     while(1){
 
-        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_WHEEL)){
+        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_WHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
@@ -158,7 +158,6 @@ void SweepRobot_WheelTestTask(void *pdata)
             if(20 < gSwrbTestTaskRunCnt){
                 SWRB_WheelTestOverTimeProc();
             }
-//            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }

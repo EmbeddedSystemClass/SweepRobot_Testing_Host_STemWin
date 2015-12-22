@@ -552,14 +552,19 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_AssemblyTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_AssemblyTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_PCBTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_PowerStationDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PowerStationDLG.c</FilePath>
-            </File>
-            <File>
-              <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
@@ -575,6 +580,11 @@
               <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_TestSelSettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TestSelSettingDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
@@ -1676,14 +1686,19 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_AssemblyTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_AssemblyTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_PCBTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_PowerStationDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PowerStationDLG.c</FilePath>
-            </File>
-            <File>
-              <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
@@ -1699,6 +1714,11 @@
               <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_TestSelSettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TestSelSettingDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>

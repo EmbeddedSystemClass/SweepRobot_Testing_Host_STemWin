@@ -20,14 +20,14 @@ static void SweepRobot_BuzzerTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
     hWin_SWRB_BUZZER = CreateBUZZER_TestDLG();
 
-    Text_Set_Color(hWin_SWRB_BUZZER, ID_MAIN_TEXT_BUZZER, GUI_BLACK);
-    Text_Set_Text(hWin_SWRB_BUZZER, ID_MAIN_TEXT_BUZZER, "IS BUZZER OK?");
+    Text_Set_Color(hWin_SWRB_BUZZER, ID_PCBTEST_TEXT_BUZZER, GUI_BLACK);
+    Text_Set_Text(hWin_SWRB_BUZZER, ID_PCBTEST_TEXT_BUZZER, "IS BUZZER OK?");
     
     buzzer.state = 0;
     buzzer.validCnt = 0;
@@ -75,9 +75,9 @@ static void SweepRobot_BuzzerTestOKProc(void)
     str = "BUZZER OK\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
-    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_BUZZER, GUI_BLUE);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER OK");
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_BLUE);
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER OK");
     Edit_Clear();
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
@@ -96,9 +96,9 @@ static void SweepRobot_BuzzerTestErrProc(void)
     str = "ERROR->BUZZER\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN, str);
-    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_BUZZER, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_BUZZER, "BUZZER ERROR");
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER ERROR");
     Edit_Clear();
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -112,7 +112,7 @@ void SweepRobot_BuzzerTestTask(void *pdata)
 {
     while(1){
       
-        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_BUZZER)){
+        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_BUZZER)){
             SWRB_NextTestTaskResumePreAct(SWRB_BUZZER_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

@@ -160,7 +160,7 @@ void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_PROGBAR_0);
+	hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_0);
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
@@ -208,7 +208,7 @@ void Edit_Clear(void)
 {
     int i;
     
-    for(i=ID_MAIN_EDIT_1;i<ID_MAIN_EDIT_SN;i++){
+    for(i=ID_PCBTEST_EDIT_1;i<ID_PCBTEST_EDIT_SN;i++){
         Edit_Set_Value(hWin_SWRB_PCBTEST , i, 0);
     }
 }
@@ -252,35 +252,36 @@ void SWRB_TestCheckboxStateSet(u8 stateNum)
     int i;
     WM_HWIN hItem;
     
-    for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
+    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
         hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         CHECKBOX_SetState(hItem, stateNum);
     }
 }
 
-void SWRB_TestCheckboxEnable(void)
+void SWRB_PCBTestCheckboxEnable(void)
 {
     int i;
     WM_HWIN hItem;
     
-    for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
+    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
         hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         WM_EnableWindow(hItem);
     }
 }
 
-void SWRB_TestCheckboxDisable(void)
+void SWRB_PCBTestCheckboxDisable(void)
 {
     int i;
     WM_HWIN hItem;
     
-    for(i=ID_MAIN_CHECKBOX_WHEEL;i<ID_MAIN_CHECKBOX_BOUND;i++){
+    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
         hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
         WM_DisableWindow(hItem);
     }
 }
 
-void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id, int taskPrio){
+void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id)
+{
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, id);
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
@@ -340,7 +341,7 @@ void Multiedit_Set_Buffer_Size(int size)
 {
     WM_HWIN hItem;
     
-    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN);
     MULTIEDIT_SetBufferSize(hItem, size);
 }
 
@@ -363,7 +364,7 @@ void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s)
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_0);
+    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_0);
     MULTIEDIT_SetTextColor(hItem, MULTIEDIT_CI_EDIT, multieditTextColor);
 }
 
@@ -416,7 +417,7 @@ void SWRB_RTC_TIME_Disp(RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
     if(gSwrbTestMode == SWRB_TEST_MODE_SET){
         Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
     }else{
-        Edit_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_DATE, str);
+        Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_DATE, str);
     }
     myfree(SRAMIN, str);
 }

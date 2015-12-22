@@ -85,7 +85,7 @@ static void SweepRobot_KeyTestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     
     SweepRobot_KeyTestCtrlTestPos();
     
@@ -107,7 +107,7 @@ static void SweepRobot_KeyTestProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 key.value = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_MAIN_EDIT_U1, usartRxNum);
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 USART_RX_STA = 0;
@@ -135,9 +135,9 @@ static void SweepRobot_KeyTestProc(void)
         str = "ERROR->KEY\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  "KEY OK\r\n");
-        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_KEY, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_KEY, "KEY OK");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "KEY OK\r\n");
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY OK");
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
@@ -156,9 +156,9 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     str = "ERROR->KEY\r\n";
     SWRB_TestDataFileWriteString(str);
     
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_MAIN_MULTIEDIT_MAIN,  str);
-    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_KEY, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_MAIN_CHECKBOX_KEY, "KEY ERROR");
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY ERROR");
     Edit_Clear();
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -175,7 +175,7 @@ void SweepRobot_KeyTestTask(void *pdata)
     
     while(1){
         
-        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_KEY)){
+        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_KEY)){
             SWRB_NextTestTaskResumePreAct(SWRB_KEY_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
