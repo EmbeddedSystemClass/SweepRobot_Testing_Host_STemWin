@@ -5,81 +5,10 @@
 #include "usart.h"
 #include "includes.h"
 
-#define ASH_TRAY_TEST_CTRL_RCC          RCC_AHB1Periph_GPIOB
-#define ASH_TRAY_TEST_CTRL_GPIO         GPIOB
-#define ASH_TRAY_TEST_CTRL_PIN          GPIO_Pin_6
-#define ASH_TRAY_TEST_CTRL_PIN_SOURCE   GPIO_PinSource6
-#define ASH_TRAY_TEST_CTRL_GPIO_AF_PPP  GPIO_AF_TIM4
-#define ASH_TRAY_TEST_CTRL_TIM          TIM4
-#define ASH_TRAY_TEST_CTRL_TIM_RCC      RCC_APB1Periph_TIM4
-
 const static int SWRB_ASH_TRAY_LVL_VALID_THRESHOLD = 120;
 
 static ASH_TRAY_TestTypeDef ashTrayIns;
 static ASH_TRAY_TestTypeDef ashTrayLvl;
-
-static void SweepRobot_AshTrayTestGPIOInit(void)
-{
-    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
-    TIM_OCInitTypeDef TIM_OCInitStructure;
-    GPIO_InitTypeDef GPIO_InitStructure;
-
-    RCC_APB1PeriphClockCmd(ASH_TRAY_TEST_CTRL_TIM_RCC, ENABLE);
-    RCC_AHB1PeriphClockCmd(ASH_TRAY_TEST_CTRL_RCC, ENABLE);
-    
-    GPIO_PinAFConfig(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN_SOURCE, ASH_TRAY_TEST_CTRL_GPIO_AF_PPP);
-
-    GPIO_InitStructure.GPIO_Pin = ASH_TRAY_TEST_CTRL_PIN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-    GPIO_Init(ASH_TRAY_TEST_CTRL_GPIO, &GPIO_InitStructure);
-    
-    TIM_DeInit(ASH_TRAY_TEST_CTRL_TIM);
-    
-    TIM_TimeBaseInitStructure.TIM_Period = 20000-1;
-    TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
-    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_TimeBaseInit(ASH_TRAY_TEST_CTRL_TIM, &TIM_TimeBaseInitStructure);
-    
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-    TIM_OC2Init(ASH_TRAY_TEST_CTRL_TIM, &TIM_OCInitStructure);
-    
-    TIM_OC1PreloadConfig(ASH_TRAY_TEST_CTRL_TIM, TIM_OCPreload_Enable);
-    
-    TIM_ARRPreloadConfig(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-    
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
-    
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-}
-
-void SweepRobot_AshTrayTestInsCtrlTestPos(void)
-{
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 1000);
-    
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-}
-
-void SweepRobot_AshTrayTestInsCtrlIdlePos(void)
-{
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
-    
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-}
-
-void SweepRobot_AshTrayTestInsCtrlOff(void)
-{
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
-    
-    OSTimeDlyHMSM(0,0,0,50);
-    
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, DISABLE);
-}
 
 static void SweepRobot_AshTrayTestInit(void)
 {
@@ -94,7 +23,7 @@ static void SweepRobot_AshTrayTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 
     printf("SENSOR->IFRD_LED=0\r\n");
-    SweepRobot_AshTrayTestInsCtrlTestPos();
+    SweepRobot_AshTrayTestInsCtrlMoveToTestPos();
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
@@ -141,7 +70,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
         }
         
         if(ashTrayIns.validFlag){
-            SweepRobot_AshTrayTestInsCtrlIdlePos();
+            SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
         }
     }
 }
@@ -220,7 +149,7 @@ static void SweepRobot_AshTrayTestProc(void)
     if(ashTrayIns.validFlag && ashTrayLvl.validFlag){
         gSwrbTestTaskRunCnt = 0;
         printf("SENSOR->IFRD_LED=0\r\n");
-        SweepRobot_AshTrayTestInsCtrlIdlePos();
+        SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
         SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
         
@@ -242,7 +171,7 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
-    SweepRobot_AshTrayTestInsCtrlIdlePos();
+    SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
 

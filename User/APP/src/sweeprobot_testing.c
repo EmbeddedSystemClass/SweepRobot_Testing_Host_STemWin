@@ -803,8 +803,8 @@ static void SweepRobot_PCBTestCtrlReset(void)
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestCtrlIdlePos();
     SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
-    SweepRobot_WheelFloatCtrlIdlePos();
-    SweepRobot_AshTrayTestInsCtrlIdlePos();
+    SweepRobot_WheelFloatCtrlMoveToIdlePos();
+    SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 }
 
 static void SweepRobot_PCBTestGUIReset(void)

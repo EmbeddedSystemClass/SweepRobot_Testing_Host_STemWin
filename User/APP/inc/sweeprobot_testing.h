@@ -27,6 +27,8 @@
 #include "sdio_SDcard.h"
 #include "crypto_tea.h"
 
+#include "swrbTestDriver.h"
+
 #include "eje_logo_char.h"
 #include "myChineseText.h"
 

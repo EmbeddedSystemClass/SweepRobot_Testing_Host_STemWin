@@ -17,9 +17,9 @@ typedef struct{
 }WHEEL_FLOAT_TestTypeDef;
 
 void SweepRobot_WheelFloatTestTask(void *pdata);
-void WHEEL_FLOAT_TestDataSave(void);
-void SweepRobot_WheelFloatCtrlTestPos(void);
-void SweepRobot_WheelFloatCtrlIdlePos(void);
-void SweepRobot_WheelFloatCtrlOff(void);
+void SweepRobot_WheelFloatTestDataSave(void);
+void SweepRobot_WheelFloatCtrlMoveToTestPos(void);
+void SweepRobot_WheelFloatCtrlMoveToIdlePos(void);
+void SweepRobot_WheelFloatCtrlShutDown(void);
 
 #endif
