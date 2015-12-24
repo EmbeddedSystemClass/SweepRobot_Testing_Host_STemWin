@@ -6,5 +6,6 @@
 void SweepRobot_ManulTestTask(void *pdata);
 void Manul_TestDataSave(void);
 void SweepRobot_ManulIndicateBtnToggle(void);
+void SweepRobot_ManulTestDataReset(void);
 
 #endif

@@ -405,7 +405,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            
+                            Button_SNSetProc(pMsg->hWin);
                             break;
                     }
                     break;

@@ -29,7 +29,7 @@
 **********************************************************************
 */
 
-#define SWRB_MANUL_LISTVIEW_ROW_NUM   13
+#define SWRB_MANUL_LISTVIEW_ROW_NUM   15
 
 
 /*********************************************************************
@@ -51,10 +51,14 @@ static const char *aListview_RowWheel[][10] = {
     {"UNIWHEEL","0"},
     {"KEY","0"},
     {"IRDA","0","0","","0","0","0"},
+    {"BUZZER","","","0"},
+    {"RGB_LED","","0","0","0"},
     {"CHARGE","0","0","0"},
+    {"INT_VREF","0"},
+    {"SNUM","0","0","0","0"},
 };
 
-static u8 aListview_RowFlag[SWRB_MANUL_LISTVIEW_ROW_NUM] = { 0 };
+//static u8 aListview_RowFlag[SWRB_MANUL_LISTVIEW_ROW_NUM] = { 0 };
 
 /*********************************************************************
 *
@@ -91,20 +95,21 @@ static void Listview_Init(WM_HWIN hItem)
     u8 i;
 
     LISTVIEW_AddColumn(hItem, 110, "Name", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 40, "Left", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 60, "FrontLeft", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 45, "Left", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 55, "FrontL", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetGridVis(hItem, 1);
     LISTVIEW_AddColumn(hItem, 60, "Middle", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetItemBkColor(hItem, 0, 0, LISTVIEW_CI_UNSEL, 0x00DFCFB3);
-    LISTVIEW_AddColumn(hItem, 60, "FrontRight", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 40, "Right", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 70, "BottomLeft", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 70, "BottonFLeft", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 70, "BottomFRight", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 55, "FrontR", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 45, "Right", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 70, "BottomL", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 70, "BottonFL", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 70, "BottomFR", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetItemBkColor(hItem, 0, 0, LISTVIEW_CI_UNSEL, 0x00FFFFFF);
-    LISTVIEW_AddColumn(hItem, 70, "BottomRight", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    LISTVIEW_AddColumn(hItem, 70, "BottomR", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetAutoScrollH(hItem, ENABLE);
     LISTVIEW_SetAutoScrollV(hItem, ENABLE);
+    LISTVIEW_SetHeaderHeight(hItem, 30);
     for(i=0;i<SWRB_MANUL_LISTVIEW_ROW_NUM;i++){
         LISTVIEW_AddRow(hItem, aListview_RowWheel[i]);
     }
@@ -112,17 +117,17 @@ static void Listview_Init(WM_HWIN hItem)
     LISTVIEW_SetFont(hItem, GUI_FONT_COMIC18B_ASCII);
 };
 
-static void Listview_SelChangedProc(WM_HWIN hWin, int id)
-{
-    int rowNum;
-    WM_HWIN hItem;
+//static void Listview_SelChangedProc(WM_HWIN hWin, int id)
+//{
+//    int rowNum;
+//    WM_HWIN hItem;
 
-    hItem = WM_GetDialogItem(hWin, id);
+//    hItem = WM_GetDialogItem(hWin, id);
 
-    rowNum = LISTVIEW_GetSel(hItem);
-    LISTVIEW_DisableRow(hItem, rowNum);
-    aListview_RowFlag[rowNum] = DISABLE;
-}
+//    rowNum = LISTVIEW_GetSel(hItem);
+//    LISTVIEW_DisableRow(hItem, rowNum);
+//    aListview_RowFlag[rowNum] = DISABLE;
+//}
 
 /*********************************************************************
 *

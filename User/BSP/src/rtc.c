@@ -51,7 +51,7 @@ static void MY_RTC_Calibration(void)
     }
 }
 
-u8 My_RTC_Init(void)
+u8 USER_RTC_Init(void)
 {
     RTC_InitTypeDef RTC_InitStructure;
     u16 retry=0X1FFF;

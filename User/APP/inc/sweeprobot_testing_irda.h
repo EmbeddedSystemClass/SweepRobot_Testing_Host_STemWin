@@ -3,7 +3,14 @@
 
 #include "stm32f4xx.h"
 
-#define SWRB_IRDA_CHAN_NUM  5
+enum SWRB_IRDA_CHAN{
+    SWRB_IRDA_CHAN_BACK,
+    SWRB_IRDA_CHAN_LEFT,
+    SWRB_IRDA_CHAN_FLEFT,
+    SWRB_IRDA_CHAN_FRIGHT,
+    SWRB_IRDA_CHAN_RIGHT,
+    SWRB_IRDA_CHAN_BOUND,    
+};
 
 #define REMOTE_CMD_CHARGE                   0xAC
 #define REMOTE_CMD_UP                       0xBE

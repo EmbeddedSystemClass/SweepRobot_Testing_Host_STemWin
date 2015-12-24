@@ -21,4 +21,10 @@ void SweepRobot_KeyTestGPIOInit(void);
 void SweepRobot_KeyTestCtrlTestPos(void);
 void SweepRobot_KeyTestCtrlIdlePos(void);
 
+void SweepRobot_IrDATestGPIOInit(void);
+void SweepRobot_IrDATestGPIOPINSet(void);
+void SweepRobot_IrDATestGPIOPINReset(void);
+void SweepRobot_IrDACodeTxProc(u8 code);
+void SweepRobot_IrDATestTxSendCmd(u8 code);
+
 #endif

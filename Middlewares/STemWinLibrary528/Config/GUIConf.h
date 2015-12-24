@@ -3,6 +3,8 @@
 
 #define GUI_NUM_LAYERS                  3
 
+#define GUI_NUM_BUFFERS                 2
+
 #define GUI_OS                          (1)
 #define GUI_SUPPORT_TOUCH               (1)
 

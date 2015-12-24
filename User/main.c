@@ -14,11 +14,10 @@ int main(void)
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	delay_init(168);
 	uart_init(115200);
-    My_RTC_Init();
+    USER_RTC_Init();
 	LED_Init();
 	KEY_Init();
     TFTLCD_Init();
-    TIM3_Int_Init(9999,168-1);
 
     if(SD_Init()){
         gSwrbTestDataSaveState = DISABLE;

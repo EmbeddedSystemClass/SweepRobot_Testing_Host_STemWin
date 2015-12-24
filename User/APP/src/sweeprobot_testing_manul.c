@@ -2,21 +2,87 @@
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "sweeprobot_testing.h"
 #include "sweeprobot_testing_conf.h"
+#include "EJE_SWRB_TEST_ManulDLG.h"
 
 #include "usart.h"
 #include "includes.h"
 
+#include <string.h>
+
+#define SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME    100
+#define SWRB_MANUL_TEST_TASK_OSTIMEDLY_TIME_MS  100
+
+static u8 gSwrbManulTestListviewDispSNCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},         //SNUM_YEAR
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},        //SNUM_MONTH
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},         //SNUM_DATE
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},        //SNUM_SNUM
+};
+
+enum SWRB_MANUL_TEST_DATA_SNUM_POS{
+    SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS,
+    SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS,
+    SWRB_MANUL_TEST_DATA_SNUM_DATE_POS,
+    SWRB_MANUL_TEST_DATA_SNUM_SNUM_POS,
+    SWRB_MANUL_TEST_DATA_SNUM_SNUM_BOUND,
+};
+
+static const char *gSwrbManulTestListviewSNQueryCmd[][1] = {
+    {"SN_READ->YEAR"},
+    {"SN_READ->MONTH"},
+    {"SN_READ->DATE"},
+    {"SN_READ->SN"},
+};
+
+static u8 gSwrbManulTestListviewDispDataCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},         //LWHEEL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},         //RWHEEL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH},         //LBRUSH
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH},         //RBRUSH
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH},         //MBRUSH
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_FAN},           //FAN
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},         //IFRD_FL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},         //IFRD_FR
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},          //IFRD_L
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},          //IFRD_R
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFL,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},        //IFRD_B_FL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFR,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},        //IFRD_B_FR
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BL,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},         //IFRD_B_SL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BR,SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},         //IFRD_B_SL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION},     //COLLISION_L
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION},    //COLLISION_FL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION},     //COLLISION_R
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR,SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION},    //COLLISION_FR
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL_FLOAT},   //WHEEL_FLOAT_L
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL_FLOAT},   //WHEEL_FLOAT_R
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_ASH_TRAY},      //ASH_TRAY_INS
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_ASH_TRAY},     //ASH_TRAY_LVL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_UNIWHEEL},      //UNIWHEEL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_KEY},           //KEY
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BL,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},         //IRDA_B
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},          //IRDA_L
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},         //IRDA_FL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},         //IRDA_FR
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},          //IRDA_R
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER},        //BUZZER
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},       //RGB_LED
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},        //CHARGE_CUR
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},       //CHARGE_VOL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},        //CHARGE_24V
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF},      //INTERNAL_REF_VOL
+};
+
 enum SWRB_MANUL_TEST_DATA_POS{
-    
+
     SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS,
     SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS,
-    
+
     SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS,
     SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS,
     SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS,
-    
+
     SWRB_MANUL_TEST_DATA_FAN_CUR_POS,
-    
+
     SWRB_MANUL_TEST_DATA_IFRD_FL_POS,
     SWRB_MANUL_TEST_DATA_IFRD_FR_POS,
     SWRB_MANUL_TEST_DATA_IFRD_L_POS,
@@ -25,73 +91,150 @@ enum SWRB_MANUL_TEST_DATA_POS{
     SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS,
     SWRB_MANUL_TEST_DATA_IFRD_B_SL_POS,
     SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS,
-    
+
     SWRB_MANUL_TEST_DATA_COLLISION_L_POS,
     SWRB_MANUL_TEST_DATA_COLLISION_FL_POS,
     SWRB_MANUL_TEST_DATA_COLLISION_R_POS,
     SWRB_MANUL_TEST_DATA_COLLISION_FR_POS,
-    
+
     SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS,
     SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_R_POS,
-    
+
     SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS,
     SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS,
-    
+
     SWRB_MANUL_TEST_DATA_UNIWHEEL_POS,
-    
+
     SWRB_MANUL_TEST_DATA_KEY_POS,
-    
+
     SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS,
     SWRB_MANUL_TEST_DATA_IRDA_L_RxCODE_POS,
     SWRB_MANUL_TEST_DATA_IRDA_FL_RxCODE_POS,
     SWRB_MANUL_TEST_DATA_IRDA_FR_RxCODE_POS,
     SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS,
-    
+
     SWRB_MANUL_TEST_DATA_BUZZER_OK_POS,
-    
+
     SWRB_MANUL_TEST_DATA_RGB_LED_OK_POS,
-    
+
     SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS,
     SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS,
     SWRB_MANUL_TEST_DATA_CHARGE_24V_POS,
-    
+
     SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS,
     
     SWRB_MANUL_TEST_DATA_BOUND,
 };
 
-typedef struct{
-    WHEEL_TestTypeDef wheel[SWRB_WHEEL_CHAN_NUM];
-    BRUSH_TestTypeDef brush[SWRB_BRUSH_CHAN_NUM];
-    FAN_TestTypeDef fan;
-    IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
-    COLLISION_TestTypeDef collision[SWRB_COLLISION_CHAN_NUM];
-    WHEEL_FLOAT_TestTypeDef wheel_float[SWRB_WHEEL_FLOAT_CHAN_NUM];
-    ASH_TRAY_TestTypeDef ash_tray;
-    UNIWHEEL_TestTypeDef uniwheel;
-    KEY_TestTypeDef key;
-    IRDA_TestTypeDef irda[SWRB_IRDA_CHAN_NUM];
-    BUZZER_TestTypeDef buzzer;
-    RGB_LED_TestTypeDef rgb_led;
-    CHARGE_TestTypeDef charge;
-    POWERSTATION_TestTypeDef powerstation;
-}MANUL_TestTypeDef;
+static char aSwrbTestData[SWRB_MANUL_TEST_DATA_BOUND][5] = { 0 };
 
-static MANUL_TestTypeDef manul;
+static void SweepRobot_ManulTestRxDataToDataArray(int rxDataLen)
+{
+    int i,j,m;
+    OS_CPU_SR cpu_sr;
+
+    OS_ENTER_CRITICAL();
+
+    i = 0;
+    j = 0;
+RX_PROC_LOOP:
+    if(i<=SWRB_MANUL_TEST_DATA_BOUND){
+        for(m=0;j<=rxDataLen;j++,m++){
+            if(USART_RX_BUF[j] != ','){
+                aSwrbTestData[i][m] = USART_RX_BUF[j];
+            }else{
+                i++;
+                j++;
+                goto RX_PROC_LOOP;
+            }
+        }
+    }
+
+    OS_EXIT_CRITICAL();
+}
+
+static void SweepRobot_ManulTestDataArrayDisp(void)
+{
+    int i;
+    char *str;
+    WM_HWIN hItem;
+
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
+    for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
+        str = mymalloc(SRAMIN, sizeof(char)*5);
+        *str = 0;
+        mymemcpy(str, aSwrbTestData[i], sizeof(aSwrbTestData[i]));
+        LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], str);
+        myfree(SRAMIN, str);
+    }
+}
+
+static void SweepRobot_ManulTestRxDataProc(void)
+{
+    SweepRobot_ManulTestRxDataToDataArray(USART_RX_STA&USART_CNT_MASK);
+}
+
+void SweepRobot_ManulTestDataReset(void)
+{
+    int i;
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
+    for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
+        LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "0");
+    }
+}
+
+static void SweepRobot_ManulTestSNDisp(void)
+{
+    char *str;
+    int i,j;
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
+    
+    for(i=SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS;i<SWRB_MANUL_TEST_DATA_SNUM_SNUM_BOUND;i++){
+        printf("%s\r\n",*gSwrbManulTestListviewSNQueryCmd[i]);
+        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+        if(usartRxFlag){
+            str = mymalloc(SRAMIN, sizeof(char)*5);
+            *str = 0;
+            mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
+            LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispSNCoord[i][0], gSwrbManulTestListviewDispSNCoord[i][1], str);
+            myfree(SRAMIN, str);
+            usartRxFlag = 0;
+            for(j=0;j<5;j++)
+                USART_RX_BUF[j] = 0;
+            USART_RX_STA = 0;
+        }
+    }
+}
 
 static void SweepRobot_ManulTestInit(void)
 {
-//    int i;
-//    char *str;
-    
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
     
+    SweepRobot_ManulTestSNDisp();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_ManulTestProc(void)
 {
-    
+    printf("MANUL->READ\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
+    if(usartRxFlag){
+        SweepRobot_ManulTestRxDataProc();
+        SweepRobot_ManulTestDataArrayDisp();
+        usartRxFlag = 0;
+        USART_RX_STA = 0;
+    }
+    mymemset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
+}
+
+static void SweepRobot_ManulTestOverTimeProc(void)
+{
+    SweepRobot_ManulStartProc();
 }
 
 void SweepRobot_ManulTestTask(void *pdata)
@@ -106,7 +249,11 @@ void SweepRobot_ManulTestTask(void *pdata)
         if(gSwrbTestTaskRunCnt > 1){
             SweepRobot_ManulTestProc();
         }
+        
+        if(gSwrbTestTaskRunCnt > 65530){
+            SweepRobot_ManulTestOverTimeProc();
+        }
 
-        OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
+        OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_TASK_OSTIMEDLY_TIME_MS);
     }
 }

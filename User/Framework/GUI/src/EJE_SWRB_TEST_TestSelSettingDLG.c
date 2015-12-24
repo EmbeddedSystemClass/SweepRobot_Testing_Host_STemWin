@@ -53,6 +53,8 @@ static void Button_ResetToLastState(WM_HWIN hWin)
 
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
+    SWRB_ValidTestTaskCntGet();
+    
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;

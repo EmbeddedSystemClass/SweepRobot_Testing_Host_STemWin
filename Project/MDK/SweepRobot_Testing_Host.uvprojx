@@ -529,6 +529,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Bsp\swrbtest</GroupName>
+          <Files>
+            <File>
+              <FileName>swrbTestDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestDriver.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Doc</GroupName>
           <Files>
             <File>
@@ -1674,6 +1684,16 @@
               <FileName>w25qxx.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\BSP\src\w25qxx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Bsp\swrbtest</GroupName>
+          <Files>
+            <File>
+              <FileName>swrbTestDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestDriver.c</FilePath>
             </File>
           </Files>
         </Group>

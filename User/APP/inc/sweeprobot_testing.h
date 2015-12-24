@@ -341,6 +341,8 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);
 void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
 
+void SWRB_ValidTestTaskCntGet(void);
+
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
 void SweepRobot_StartDlgManulBtnClickProc(void);

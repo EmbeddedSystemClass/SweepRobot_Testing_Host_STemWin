@@ -1,16 +1,19 @@
 #include "swrbTestDriver.h"
 #include "includes.h"
 #include "stm32f4xx.h"
+#include "stm32f4xx_it.h"
 
-#define COLLISION_SIDE_TEST_CTRL_RCC         RCC_AHB1Periph_GPIOD
-#define COLLISION_SIDE_TEST_CTRL_GPIO        GPIOD
-#define COLLISION_SIDE_TEST_CTRL_L_PIN       GPIO_Pin_6
-#define COLLISION_SIDE_TEST_CTRL_R_PIN       GPIO_Pin_7
+#include "delay.h"
 
-#define COLLISION_FRONT_TEST_CTRL_RCC         RCC_AHB1Periph_GPIOE
-#define COLLISION_FRONT_TEST_CTRL_GPIO        GPIOE
-#define COLLISION_FRONT_TEST_CTRL_L_PIN       GPIO_Pin_5
-#define COLLISION_FRONT_TEST_CTRL_R_PIN       GPIO_Pin_6
+#define COLLISION_SIDE_TEST_CTRL_RCC        RCC_AHB1Periph_GPIOD
+#define COLLISION_SIDE_TEST_CTRL_GPIO       GPIOD
+#define COLLISION_SIDE_TEST_CTRL_L_PIN      GPIO_Pin_6
+#define COLLISION_SIDE_TEST_CTRL_R_PIN      GPIO_Pin_7
+
+#define COLLISION_FRONT_TEST_CTRL_RCC       RCC_AHB1Periph_GPIOE
+#define COLLISION_FRONT_TEST_CTRL_GPIO      GPIOE
+#define COLLISION_FRONT_TEST_CTRL_L_PIN     GPIO_Pin_5
+#define COLLISION_FRONT_TEST_CTRL_R_PIN     GPIO_Pin_6
 
 
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_RCC      RCC_AHB1Periph_GPIOB
@@ -28,22 +31,46 @@
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME 100
 
 
-#define ASH_TRAY_TEST_CTRL_RCC          RCC_AHB1Periph_GPIOB
-#define ASH_TRAY_TEST_CTRL_GPIO         GPIOB
-#define ASH_TRAY_TEST_CTRL_PIN          GPIO_Pin_6
-#define ASH_TRAY_TEST_CTRL_PIN_SOURCE   GPIO_PinSource6
-#define ASH_TRAY_TEST_CTRL_GPIO_AF_PPP  GPIO_AF_TIM4
-#define ASH_TRAY_TEST_CTRL_TIM          TIM4
-#define ASH_TRAY_TEST_CTRL_TIM_RCC      RCC_APB1Periph_TIM4
+#define ASH_TRAY_TEST_CTRL_RCC              RCC_AHB1Periph_GPIOB
+#define ASH_TRAY_TEST_CTRL_GPIO             GPIOB
+#define ASH_TRAY_TEST_CTRL_PIN              GPIO_Pin_6
+#define ASH_TRAY_TEST_CTRL_PIN_SOURCE       GPIO_PinSource6
+#define ASH_TRAY_TEST_CTRL_GPIO_AF_PPP      GPIO_AF_TIM4
+#define ASH_TRAY_TEST_CTRL_TIM              TIM4
+#define ASH_TRAY_TEST_CTRL_TIM_RCC          RCC_APB1Periph_TIM4
 
 
-#define KEY_TEST_CTRL_RCC           RCC_AHB1Periph_GPIOB
-#define KEY_TEST_CTRL_GPIO          GPIOB
-#define KEY_TEST_CTRL_PIN           GPIO_Pin_7
-#define KEY_TEST_CTRL_PIN_SOURCE    GPIO_PinSource7
-#define KEY_TEST_CTRL_GPIO_AF_PPP   GPIO_AF_TIM4
-#define KEY_TEST_CTRL_TIM_RCC       RCC_APB1Periph_TIM4
-#define KEY_TEST_CTRL_TIM           TIM4
+#define KEY_TEST_CTRL_RCC                   RCC_AHB1Periph_GPIOB
+#define KEY_TEST_CTRL_GPIO                  GPIOB
+#define KEY_TEST_CTRL_PIN                   GPIO_Pin_7
+#define KEY_TEST_CTRL_PIN_SOURCE            GPIO_PinSource7
+#define KEY_TEST_CTRL_GPIO_AF_PPP           GPIO_AF_TIM4
+#define KEY_TEST_CTRL_TIM_RCC               RCC_APB1Periph_TIM4
+#define KEY_TEST_CTRL_TIM                   TIM4
+
+
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_RCC             RCC_AHB1Periph_GPIOC
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO            GPIOC
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_PIN             GPIO_Pin_7
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_PIN_SOURCE      GPIO_PinSource7
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO_AF_PPP     GPIO_AF_TIM3
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM_RCC         RCC_APB1Periph_TIM3
+#define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM             TIM3
+
+
+#define IRDA_TEST_TX_TIM_RCC                RCC_APB1Periph_TIM7
+#define IRDA_TEST_TX_TIM                    TIM7
+#define IRDA_TEST_TX_RCC                    RCC_AHB1Periph_GPIOA
+#define IRDA_TEST_TX_GPIO                   GPIOA
+#define IRDA_TEST_TX_L_PIN                  GPIO_Pin_4
+#define IRDA_TEST_TX_R_PIN                  GPIO_Pin_5
+#define IRDA_TEST_TX_M_PIN                  GPIO_Pin_6
+
+#define IRDA_TEST_TX_PIN_SET(pin)           GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_SET)
+#define IRDA_TEST_TX_PIN_RESET(pin)         GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_RESET)
+
+static u8 gIrDACodeTxSeqNum = 0;
+static u32 gIrDACodeTxSeqTime = 0;
 
 
 /* COLLISION TEST GPIO INIT */
@@ -324,5 +351,151 @@ void SweepRobot_KeyTestCtrlShutDown(void)
     TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, DISABLE);
 }
 
+/* IFRD FRONT TEST GPIO INIT */
+void SweepRobot_IFRDFrontTestCtrlGPIOInit(void)
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
+    TIM_OCInitTypeDef TIM_OCInitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    RCC_APB1PeriphClockCmd(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM_RCC, ENABLE);
+    RCC_AHB1PeriphClockCmd(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_RCC, ENABLE);
+    
+    GPIO_PinAFConfig(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO, IFRD_FRONT_TEST_STEP_MOTOR_CTRL_PIN_SOURCE, IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO_AF_PPP);
+
+    GPIO_InitStructure.GPIO_Pin = IFRD_FRONT_TEST_STEP_MOTOR_CTRL_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(KEY_TEST_CTRL_GPIO, &GPIO_InitStructure);
+    
+    TIM_DeInit(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM);
+    
+    TIM_TimeBaseInitStructure.TIM_Period = 20000-1;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM, &TIM_TimeBaseInitStructure);
+    
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    /* SHOULD WORK IN PULSE MODE */
+    TIM_OCInitStructure.TIM_Pulse = 2000;
+    TIM_OC2Init(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM, &TIM_OCInitStructure);
+    
+    TIM_OC2PreloadConfig(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM, TIM_OCPreload_Enable);
+    
+    TIM_ARRPreloadConfig(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM, ENABLE);
+    
+    TIM_SetCompare2(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM, 300);
+    
+    TIM_Cmd(IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM, ENABLE);
+}
+
+/* IrDA TEST GPIO Init */
+void SweepRobot_IrDATestGPIOInit(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    RCC_AHB1PeriphClockCmd(IRDA_TEST_TX_RCC, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin = IRDA_TEST_TX_L_PIN |\
+                                  IRDA_TEST_TX_R_PIN |\
+                                  IRDA_TEST_TX_M_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(IRDA_TEST_TX_GPIO, &GPIO_InitStructure);
+}
+
+void SweepRobot_IrDATestGPIOPINSet(void)
+{
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_L_PIN);
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_R_PIN);
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_M_PIN);
+}
+
+void SweepRobot_IrDATestGPIOPINReset(void)
+{
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_L_PIN);
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_R_PIN);
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
+}
+
+void SweepRobot_IrDACodeTxProc(u8 code)
+{
+    gIrDACodeTxSeqNum++;
+    
+    plat_int_reg_cb(STM32F4xx_INT_TIM7, SweepRobot_IrDACodeTxProc);
+    
+    switch(gIrDACodeTxSeqNum){
+        case 1:
+            gIrDACodeTxSeqTime = 3000;
+            SweepRobot_IrDATestGPIOPINSet();
+            break;
+        case 2:
+            gIrDACodeTxSeqTime = 1000;
+            SweepRobot_IrDATestGPIOPINReset();
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        default:break;
+    }
+    if(gIrDACodeTxSeqNum == 1){
+        
+    }else if(gIrDACodeTxSeqNum == 2){
+        
+    }else if(gIrDACodeTxSeqNum == 3){
+        gIrDACodeTxSeqTime = 1000;
+        SweepRobot_IrDATestGPIOPINReset();
+    }
+    
+    TIM_SetCounter(IRDA_TEST_TX_TIM, 0);
+    TIM_ITConfig(IRDA_TEST_TX_TIM, TIM_IT_Update, DISABLE);
+    TIM_SetAutoreload(IRDA_TEST_TX_TIM, gIrDACodeTxSeqTime);
+    TIM_ClearFlag(IRDA_TEST_TX_TIM, TIM_FLAG_Update);
+    TIM_ITConfig(IRDA_TEST_TX_TIM, TIM_IT_Update, ENABLE);
+    TIM_Cmd(IRDA_TEST_TX_TIM, ENABLE);
+}
+
+void SweepRobot_IrDATestTxSendCmd(u8 code)
+{
+    u8 i;
+    OS_CPU_SR cpu_sr;
+    OS_ENTER_CRITICAL();
+
+    SweepRobot_IrDATestGPIOPINSet();
+    delay_us(3000);
+    SweepRobot_IrDATestGPIOPINReset();
+    delay_us(1000);
+
+    for(i=0;i<8;i++){
+        if(code & 0x80){
+            SweepRobot_IrDATestGPIOPINSet();
+            delay_us(800);
+            SweepRobot_IrDATestGPIOPINReset();
+            delay_us(1600);
+        }else{
+            SweepRobot_IrDATestGPIOPINSet();
+            delay_us(1600);
+            SweepRobot_IrDATestGPIOPINReset();
+            delay_us(800);
+        }
+        code<<=1;
+    }
+
+    SweepRobot_IrDATestGPIOPINSet();
+    delay_us(100);
+    SweepRobot_IrDATestGPIOPINReset();
+
+    OS_EXIT_CRITICAL();
+}
 
 

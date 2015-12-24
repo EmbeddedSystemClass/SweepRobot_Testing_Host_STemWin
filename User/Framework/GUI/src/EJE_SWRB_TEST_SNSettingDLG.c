@@ -105,6 +105,7 @@ static void Button_ConfirmProc(WM_HWIN hWin)
     char *str;
 
     ListWheel_TestDataFilePathGet(hWin,str);
+    
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_PCBTEST);
@@ -343,6 +344,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                 ListWheel_Init(hItem);
                 ListWheel_AddNumString(hItem, 0, 9);
             }
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_LISTWHEEL_SN3);
+            LISTWHEEL_SetPos(hItem,1);
             //
             // Initialization of 'edit'
             //

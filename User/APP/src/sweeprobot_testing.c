@@ -63,9 +63,7 @@ static void SWRB_TestCtrlTask(void *pdata);
 /* TODO: Add Exception Check */
 //static void SWRB_ExceptionCheckTask(void *pdata);
 static void SweepRobot_TestInitProc(void);
-static void SWRB_ValidTestTaskCntGet(void);
 static FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode);
-static void SweepRobot_TestCkbStateSet(u8 state);
 static void SWRB_TestFinishProc(void);
 static void SWRB_PCBTestWarningDlgHide(void);
 
@@ -130,7 +128,7 @@ static void emWin_TaskInit(void)
     GUI_EnableAlpha(ENABLE);
     
     WM_SetCreateFlags(WM_CF_MEMDEV);
-    WM_MULTIBUF_Enable(1);
+    WM_MULTIBUF_Enable(ENABLE);
 
     OS_ENTER_CRITICAL();
 
@@ -155,8 +153,6 @@ static void emWin_TaskInit(void)
 //    OSTaskCreate(SWRB_ExceptionCheckTask, (void*)0,(OS_STK*)&SWRB_TEST_EXCEPTION_CHECK_TASK_STK[SWRB_TEST_EXCEPTION_CHECK_STK_SIZE-1],SWRB_TEST_EXCEPTION_CHECK_TASK_PRIO);
 
     OS_EXIT_CRITICAL();
-    
-    SWRB_ValidTestTaskCntGet();
     
     SWRB_ListWheelRTCDateUpdate(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_LISTWHEEL_DATE);
     SWRB_ListWheelRTCDateUpdate(hWin_SWRB_TIMESETTING, ID_TIMESET_LISTWHEEL_YEAR, ID_TIMESET_LISTWHEEL_MONTH, ID_TIMESET_LISTWHEEL_DAY);
@@ -556,6 +552,8 @@ void SweepRobot_PCBTestStartProc(void)
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
         SWRB_PCBTestCheckboxDisable();
+        
+        SWRB_ValidTestTaskCntGet();
 
         TEST_LED_TASK_CB_REG(SWRB_PCBTestIndicateButtonToggle);
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START, GUI_LIGHTRED);
@@ -732,8 +730,7 @@ void SweepRobot_PCBTestStopProc(void)
             
             SWRB_PCBTestWarningDlgHide();
         }
-
-        SWRB_ValidTestTaskCntGet();
+        
         SWRB_PCBTestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
@@ -855,7 +852,7 @@ void SweepRobot_TestInitProc(void)
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 }
 
-static void SWRB_ValidTestTaskCntGet(void)
+void SWRB_ValidTestTaskCntGet(void)
 {
     int i;
     WM_HWIN hItem;
@@ -980,7 +977,6 @@ static void SWRB_TestFinishProc(void)
     /* Encrypt Test Data File when set enable */
     SWRB_TestDataFileEncryptoProc(DISABLE);
 
-    SWRB_ValidTestTaskCntGet();
     SWRB_PCBTestCheckboxEnable();
 
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
@@ -1167,14 +1163,73 @@ void SweepRobot_PowerStationTestExitProc(void)
     }
 }
 
+static void SWRB_ManulTestIndicateButtonToggle()
+{
+    SWRB_IndicateButtonToggle(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE);
+}
+
 void SweepRobot_ManulStartProc(void)
 {
+    int i;
+    OS_CPU_SR cpu_sr;
+    
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
         
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
         
+        for(i=0;i<USART_REC_LEN;i++)
+            USART_RX_BUF[i] = 0;
         
+//        Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, "Stop");
+        BUTTON_DispStopCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTRED);
         
+        TEST_LED_TASK_CB_REG(SWRB_ManulTestIndicateButtonToggle);
+        
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+        
+        printf("TEST->ON\r\n");
+//        printf("LWHEEL->SPEED=25\r\n");
+//        printf("RWHEEL->SPEED=25\r\n");
+//        printf("LBRUSH->SPEED=25\r\n");
+//        printf("RBRUSH->SPEED=25\r\n");
+//        printf("MBRUSH->SPEED=5\r\n");
+//        printf("FAN->SPEED=25\r\n");
+        printf("SENSOR->IFRD_LED=1\r\n");
+        printf("IRDA->ON\r\n");
+        
+        OS_ENTER_CRITICAL();
+        OSTaskResume(SWRB_MANUL_TEST_TASK_PRIO);
+        OS_EXIT_CRITICAL();
+    }else{
+        
+        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+        
+//        Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, "Start");
+        BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
+        
+        TEST_LED_TASK_CB_DEREG();
+        
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+
+//        printf("LWHEEL->SPEED=0\r\n");
+//        printf("RWHEEL->SPEED=0\r\n");
+//        printf("LBRUSH->SPEED=0\r\n");
+//        printf("RBRUSH->SPEED=0\r\n");
+//        printf("MBRUSH->SPEED=0\r\n");
+//        printf("FAN->SPEED=0\r\n");
+        printf("SENSOR->IFRD_LED=0\r\n");
+        printf("IRDA->OFF\r\n");
+        printf("IRDA->ERASE\r\n");
+        
+        gSwrbTestTaskRunCnt = 0;
+        
+        OS_ENTER_CRITICAL();
+        OSTaskSuspend(SWRB_MANUL_TEST_TASK_PRIO);
+        OS_EXIT_CRITICAL();
     }
 }
 
@@ -1184,8 +1239,21 @@ void SweepRobot_ManulSetProc(void)
         
         gSwrbTestMode = SWRB_TEST_MODE_SET;
         
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_BLUE);
+        
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
         
         
+    }else{
+        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+        
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTGRAY);
+        
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
     }
     
     
@@ -1193,7 +1261,12 @@ void SweepRobot_ManulSetProc(void)
 
 void SweepRobot_ManulResetProc(void)
 {
-    
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+        
+        printf("IRDA->ERASE\r\n");
+        
+        SweepRobot_ManulTestDataReset();
+    }
 }
 
 void SweepRobot_ManulExitProc(void)
@@ -1235,11 +1308,3 @@ void SweepRobot_SLAMExitProc(void)
     }
 }
 #endif
-
-static void SweepRobot_TestCkbStateSet(u8 state)
-{
-    u16 i;
-
-    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++)
-        Checkbox_Set_State(hWin_SWRB_PCBTEST, i, state);
-}

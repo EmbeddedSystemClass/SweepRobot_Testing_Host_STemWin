@@ -1,71 +1,78 @@
 #include "sweeprobot_testing_irda.h"
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "sweeprobot_testing.h"
-#include "swrbTestDriver.h"
-#include "stm32f4xx_it.h"
 
 #include "usart.h"
 #include "includes.h"
 
-#define SWRB_IRDA_TEST_USART_READ_WAIT_TIME     50
+#define IRDA_TEST_TX_RCC                RCC_AHB1Periph_GPIOA
+#define IRDA_TEST_TX_GPIO               GPIOA
+#define IRDA_TEST_TX_L_PIN              GPIO_Pin_4
+#define IRDA_TEST_TX_R_PIN              GPIO_Pin_5
+#define IRDA_TEST_TX_M_PIN              GPIO_Pin_6
 
-static IRDA_TestTypeDef IrDA[SWRB_IRDA_CHAN_BOUND];
+#define IRDA_TEST_TX_PIN_SET(pin)       GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_SET)
+#define IRDA_TEST_TX_PIN_RESET(pin)     GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_RESET)
 
-static char aIrDATestRxData[SWRB_IRDA_CHAN_BOUND][5] = { 0 };
+static IRDA_TestTypeDef IrDA[SWRB_IRDA_CHAN_NUM];
 
-static void SweepRobot_IrDATestRxCodeProc(int rxDataLen)
+static void SweepRobot_IrDATestGPIOInit(void)
 {
-    int i,j,m;
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    RCC_AHB1PeriphClockCmd(IRDA_TEST_TX_RCC, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin = IRDA_TEST_TX_L_PIN |\
+                                  IRDA_TEST_TX_R_PIN |\
+                                  IRDA_TEST_TX_M_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(IRDA_TEST_TX_GPIO, &GPIO_InitStructure);
+}
+
+static void SweepRobot_IrDATestGPIOPINSet(void)
+{
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_L_PIN);
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_R_PIN);
+    IRDA_TEST_TX_PIN_SET(IRDA_TEST_TX_M_PIN);
+}
+
+static void SweepRobot_IrDATestGPIOPINReset(void)
+{
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_L_PIN);
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_R_PIN);
+    IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
+}
+
+void SweepRobot_IrDATestTxSendCmd(u8 code)
+{
+    u8 i;
     OS_CPU_SR cpu_sr;
-    
     OS_ENTER_CRITICAL();
 
-    i = 0;
-    j = 0;
-RX_PROC_LOOP:
-    if(i<=SWRB_IRDA_CHAN_BOUND){
-        for(m=0;j<=rxDataLen;j++,m++){
-            if(USART_RX_BUF[j] != ','){
-                aIrDATestRxData[i][m] = USART_RX_BUF[j];
-            }else{
-                i++;
-                j++;
-                goto RX_PROC_LOOP;
-            }
+    SweepRobot_IrDATestGPIOPINSet();
+    delay_us(3000);
+
+    for(i=0;i<8;i++){
+        if(code & 0x80){
+            SweepRobot_IrDATestGPIOPINReset();
+            delay_us(1600);
+            SweepRobot_IrDATestGPIOPINSet();
+            delay_us(800);
+        }else{
+            SweepRobot_IrDATestGPIOPINReset();
+            delay_us(800);
+            SweepRobot_IrDATestGPIOPINSet();
+            delay_us(1600);
         }
+        code<<=1;
     }
+
+    SweepRobot_IrDATestGPIOPINReset();
 
     OS_EXIT_CRITICAL();
-}
-
-static void SweepRobot_IrDATestCodeArrayToNum(void)
-{
-    int i;
-    char *str;
-
-    for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
-        if(!IrDA[i].validFlag){
-            str = mymalloc(SRAMIN, sizeof(char)*5);
-            *str = 0;
-            mymemcpy(str, aIrDATestRxData[i], sizeof(aIrDATestRxData[i]));
-            IrDA[i].code = atoi(str);
-            Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
-            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
-            myfree(SRAMIN, str);
-        }
-    }
-}
-
-static void SweepRobot_IrDACodeQuery(void)
-{
-    printf("IRDA->READ\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
-    if(usartRxFlag){
-        SweepRobot_IrDATestRxCodeProc(USART_RX_STA&USART_CNT_MASK);
-        SweepRobot_IrDATestCodeArrayToNum();
-        usartRxFlag = 0;
-        USART_RX_STA = 0;
-    }
 }
 
 static void SweepRobot_IrDATestInit(void)
@@ -81,27 +88,49 @@ static void SweepRobot_IrDATestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 
-    printf("IRDA->ON\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
-    for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         IrDA[i].code = 0;
         IrDA[i].validCnt = 0;
         IrDA[i].validFlag = 0;
         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0);
     }
-    mymemset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
 }
 
 static void SweepRobot_IrDATestProc(void)
 {
-    u8 i;
+    u8 i,j;
     char *str;
     
-    SweepRobot_IrDACodeQuery();
-    
-    for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         if(!IrDA[i].validFlag){
+            printf("IRDA->ON=%d\r\n",i);
+            OSTimeDlyHMSM(0,0,0,1);
+            
+            /* Send IrDA control code from Host */
+            SweepRobot_IrDATestTxSendCmd(42);
+            /* Send IrDA control code from DUT */
+//            printf("IRDA->ON=42\r\n");
+            
+            OSTimeDlyHMSM(0,0,0,24);
+            for(j=0;j<SWRB_TEST_USART_IRDA_READ_TIMES;j++){
+                printf("IRDA->READ\r\n");
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+                if(usartRxFlag){
+                    IrDA[i].code = usartRxNum;
+                    Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
+                    usartRxNum = 0;
+                    usartRxFlag = 0;
+                    USART_RX_STA = 0;
+                    break;
+                }else{
+                    IrDA[i].code = 0;
+                    continue;
+                }
+            }
+
             if(IS_IRDA_CODE(IrDA[i].code)){
                 IrDA[i].validCnt++;
             }else{
@@ -110,21 +139,19 @@ static void SweepRobot_IrDATestProc(void)
             if(IrDA[i].validCnt){
                 IrDA[i].validFlag = 1;
             }
+
             if(IrDA[i].validFlag){
                 gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+i));
             }else{
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_IRDA_B_POS+i));
             }
-            IrDA[i].code = 0;
-            mymemset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
         }
     }
-    
+
     if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
         gSwrbTestTaskRunCnt = 0;
         
         printf("IRDA->OFF\r\n");
-        printf("IRDA->ERASE\r\n");
         
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
@@ -134,7 +161,7 @@ static void SweepRobot_IrDATestProc(void)
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
-        for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+        for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
             Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
         }
         Edit_Clear();
@@ -151,7 +178,6 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     gSwrbTestTaskRunCnt = 0;
     
     printf("IRDA->OFF\r\n");
-    printf("IRDA->ERASE\r\n");
 
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     
@@ -182,7 +208,7 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA ERROR");
-    for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     }
     Edit_Clear();
@@ -214,7 +240,7 @@ void SweepRobot_IrDATestTask(void *pdata)
                 SweepRobot_IrDATestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 200){
+            if(gSwrbTestTaskRunCnt > 20){
                 SweepRobot_IrDATestOverTimeProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
@@ -226,13 +252,13 @@ void IRDA_TestDataSave(void)
 {
     u8 i;
     
-    for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+    for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
     }
     
-    SWRB_TestDataFileWriteData("IRDA->B_Code=", IrDA[SWRB_IRDA_CHAN_BACK].code, 1);
-    SWRB_TestDataFileWriteData("IRDA->L_Code=", IrDA[SWRB_IRDA_CHAN_LEFT].code, 1);
-    SWRB_TestDataFileWriteData("IRDA->FL_Code=", IrDA[SWRB_IRDA_CHAN_FLEFT].code, 1);
-    SWRB_TestDataFileWriteData("IRDA->FR_Code=", IrDA[SWRB_IRDA_CHAN_FRIGHT].code, 1);
-    SWRB_TestDataFileWriteData("IRDA->R_Code=", IrDA[SWRB_IRDA_CHAN_RIGHT].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->B_Code=", IrDA[0].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->L_Code=", IrDA[1].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->FL_Code=", IrDA[2].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->FR_Code=", IrDA[3].code, 1);
+    SWRB_TestDataFileWriteData("IRDA->R_Code=", IrDA[4].code, 1);
 }

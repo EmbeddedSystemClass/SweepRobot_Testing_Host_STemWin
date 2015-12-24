@@ -40,8 +40,6 @@ int fputc(int ch, FILE *f)
 static void USART1_ISR(void);
 static void USART3_ISR(void);
 
-#define USART_CNT_MASK    0x3FFF
-
 char USART_RX_BUF[USART_REC_LEN];
 u16 USART_RX_STA=0;
 
@@ -141,8 +139,8 @@ void USART1_ISR(void)
 					USART_RX_STA=0;
 				else{
 					USART_RX_STA|=0x8000;
-                    if(gSwrbTestSelectFlag != SWRB_TEST_SELECT_MANUL){
-                        USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum);
+                    if( (gSwrbTestRuningTaskPrio != SWRB_MANUL_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_IRDA_TEST_TASK_PRIO) ){
+                        USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum, USART_RX_STA&USART_CNT_MASK);
 //                        USART_RX_STA = 0;
                     }
                     usartRxFlag = 1;
@@ -171,30 +169,32 @@ void USART3_ISR(void)
 
 }
 
-s8 USART_RxArrayToString(char *src_array, char* *dest_str)
+s8 USART_RxArrayToString(char *src_array, char *dest_str)
 {
-  *dest_str = (char *)mymalloc(SRAMIN ,(sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
+  dest_str = (char *)mymalloc(SRAMIN ,(sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
   if(NULL==(*dest_str) )
     return -1;
 
-  mymemset(*dest_str, 0, (sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
-  strncpy(*dest_str, src_array, (USART_RX_STA&USART_CNT_MASK) );
+  mymemset(dest_str, 0, (sizeof(char))*((USART_RX_STA&USART_CNT_MASK)+1));
+  strncpy(dest_str, src_array, (USART_RX_STA&USART_CNT_MASK) );
 
   return 0;
 }
 
-s8 USART_RxArrayToNumber(char *src_array, int *dest_num)
+s8 USART_RxArrayToNumber(char *src_array, int *dest_num, int arrayLenth)
 {
   u8 i;
 
   *dest_num = 0;
 
-  for(i=0;i<(USART_RX_STA&USART_CNT_MASK);i++){
+  for(i=0;i<(arrayLenth);i++){
     if( ('0' <= (src_array[i])) && ('9' >= (src_array[i]) ) ){
       if(i){
         *dest_num *= 10;
       }
       *dest_num += (src_array[i] - '0');
+    }else if( 0 == src_array[i]){
+      continue;
     }else{
       return -1;
     }
