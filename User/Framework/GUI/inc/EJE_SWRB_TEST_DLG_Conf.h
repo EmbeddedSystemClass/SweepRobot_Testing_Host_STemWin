@@ -19,6 +19,7 @@
 #define __EJE_SWRB_TEST_NUMPAD_DLG          1
 #define __EJE_SWRB_TEST_SLAM_DLG            1
 #define __EJE_SWRB_TEST_MANUL_DLG           1
+#define __EJE_SWRB_TEST_STEPMOTOR_DLG       1
 #define __EJE_SWRB_TEST_DECRYPTO_DLG        0
 
 #include "stm32f4xx.h"
@@ -64,6 +65,10 @@
     #include "EJE_SWRB_TEST_MANULDLG.h"
 #endif
 
+#if __EJE_SWRB_TEST_STEPMOTOR_DLG
+    #include "EJE_SWRB_TEST_STEPMOTORTESTDLG.h"
+#endif
+
 /*********************************************************************
 *
 *       Defines
@@ -85,6 +90,7 @@
         ID_START_BUTTON_3,
         ID_START_BUTTON_4,
         ID_START_BUTTON_5,
+        ID_START_BUTTON_6,
         ID_START_TEXT_0,
         ID_START_TEXT_1,
         ID_START_BOUND,
@@ -111,6 +117,7 @@
         ID_START_BUTTON_POWER_STATION,
         ID_START_BUTTON_MANUL,
         ID_START_BUTTON_SLAM,
+        ID_START_BUTTON_STEP_MOTOR,
         ID_START_BUTTON_DECRYPTO,
         ID_START_BUTTON_TITLE,
         ID_START_BUTTON_BOUND,
@@ -775,6 +782,37 @@
     };
 #endif
 
+#if __EJE_SWRB_TEST_STEPMOTOR_DLG
+    
+    enum ID_STEPMOTOR_WIDGET{
+        ID_STEPMOTOR_WINDOW_0 = ID_MANUL_BOUND,
+        ID_STEPMOTOR_BUTTON_0,
+        ID_STEPMOTOR_BUTTON_1,
+        ID_STEPMOTOR_BUTTON_2,
+        ID_STEPMOTOR_BUTTON_3,
+        ID_STEPMOTOR_BUTTON_4,
+        ID_STEPMOTOR_BUTTON_5,
+        ID_STEPMOTOR_BUTTON_6,
+        ID_STEPMOTOR_BOUND,
+    };
+    
+    enum ID_STEPMOTOR_WINDOW{
+        ID_STEPMOTOR_WINDOW_MAIN = ID_STEPMOTOR_WINDOW_0,
+        ID_STEPMOTOR_WINDOW_BOUND,
+    };
+    
+    enum ID_STEPMOTOR_BUTTON{
+        ID_STEPMOTOR_BUTTON_RUN = ID_STEPMOTOR_BUTTON_0,
+        ID_STEPMOTOR_BUTTON_STOP,
+        ID_STEPMOTOR_BUTTON_FORWARD,
+        ID_STEPMOTOR_BUTTON_BACKWARD,
+        ID_STEPMOTOR_BUTTON_ENABLE,
+        ID_STEPMOTOR_BUTTON_DISABLE,
+        ID_STEPMOTOR_BUTTON_EXIT,
+        ID_STEPMOTOR_BUTTON_BOUND,
+    };
+#endif
+
 /*********************************************************************
 *
 *       Public data
@@ -823,6 +861,10 @@
 
 #if __EJE_SWRB_TEST_MANUL_DLG
     extern WM_HWIN hWin_SWRB_MANUL;
+#endif
+
+#if __EJE_SWRB_TEST_STEPMOTOR_DLG
+    extern WM_HWIN hWin_SWRB_STEPMOTOR;
 #endif
 
 /*********************************************************************

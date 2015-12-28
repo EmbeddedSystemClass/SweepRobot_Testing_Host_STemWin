@@ -1107,14 +1107,14 @@
               <FilePath>..\..\User\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
             </File>
             <File>
-              <FileName>sweeprobot_testing_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\APP\src\sweeprobot_testing_key.c</FilePath>
-            </File>
-            <File>
               <FileName>sweeprobot_testing_irda.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_irda.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_key.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_buzzer.c</FileName>
@@ -2266,14 +2266,14 @@
               <FilePath>..\..\User\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
             </File>
             <File>
-              <FileName>sweeprobot_testing_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\APP\src\sweeprobot_testing_key.c</FilePath>
-            </File>
-            <File>
               <FileName>sweeprobot_testing_irda.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_irda.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_key.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_buzzer.c</FileName>

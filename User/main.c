@@ -18,6 +18,7 @@ int main(void)
 	LED_Init();
 	KEY_Init();
     TFTLCD_Init();
+    SweepRobotTest_StepMotorDriverGPIOInit();
 
     if(SD_Init()){
         gSwrbTestDataSaveState = DISABLE;

@@ -19,10 +19,12 @@ static void SweepRobot_BuzzerTestInit(void)
     str = "\r\n>>>BUZZER TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
     
+#ifdef __SHOW_TEST_TITLE
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+#endif
     
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     hWin_SWRB_BUZZER = CreateBUZZER_TestDLG();
 

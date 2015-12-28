@@ -18,14 +18,16 @@ static void SweepRobot_IFRDTestInit(void)
     
     str = "\r\n>>>IFRD TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
-    
+
+#ifdef __SHOW_TEST_TITLE    
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+#endif
     
     printf("SENSOR->IFRD_LED=0\r\n");
     printf("SENSOR->B_SWITCH=0\r\n");
     
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         ifrd[i].offValue = 0;

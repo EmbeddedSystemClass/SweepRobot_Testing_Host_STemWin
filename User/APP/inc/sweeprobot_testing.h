@@ -28,6 +28,7 @@
 #include "crypto_tea.h"
 
 #include "swrbTestDriver.h"
+#include "swrbTestStepMotorDriver.h"
 
 #include "eje_logo_char.h"
 #include "myChineseText.h"
@@ -102,6 +103,7 @@ enum SWRB_TEST_SELECT{
     SWRB_TEST_SELECT_POWER_STATION,
     SWRB_TEST_SELECT_MANUL,
     SWRB_TEST_SELECT_SLAM,
+    SWRB_TEST_SELECT_STEP_MOTOR,
 };
 
 enum SWRB_TEST_MODE{
@@ -312,7 +314,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_TEST_USART_READ_WAIT_TIME          3
 #define SWRB_TEST_VALID_COMP_TIMES              3
 #define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   1
-#define SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS   50
+#define SWRB_TEST_TASK_INIT_WAIT_TIME_MS        50
 #define SWRB_TEST_DUT_SN_WRITE_WAIT_TIME        50
 
 extern u8 usartRxFlag;
@@ -347,6 +349,7 @@ void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
 void SweepRobot_StartDlgManulBtnClickProc(void);
 void SweepRobot_StartDlgSLAMBtnClickProc(void);
+void SweepRobot_StartDlgStepMotorBtnClickProc(void);
 
 void SweepRobot_PCBTestStartProc(void);
 void SweepRobot_PCBTestLoginProc(void);

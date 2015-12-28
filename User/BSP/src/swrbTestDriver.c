@@ -498,4 +498,3 @@ void SweepRobot_IrDATestTxSendCmd(u8 code)
     OS_EXIT_CRITICAL();
 }
 
-

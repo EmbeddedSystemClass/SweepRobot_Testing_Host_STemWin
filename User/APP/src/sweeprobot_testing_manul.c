@@ -158,11 +158,10 @@ static void SweepRobot_ManulTestDataArrayDisp(void)
     int i;
     char *str;
     WM_HWIN hItem;
-
     
     hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
     for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
-        str = mymalloc(SRAMIN, sizeof(char)*5);
+        str = mymalloc(SRAMIN, sizeof(char)*10);
         *str = 0;
         mymemcpy(str, aSwrbTestData[i], sizeof(aSwrbTestData[i]));
         LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], str);
@@ -216,7 +215,7 @@ static void SweepRobot_ManulTestInit(void)
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
     
     SweepRobot_ManulTestSNDisp();
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_ManulTestProc(void)

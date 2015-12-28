@@ -44,9 +44,9 @@ static void SweepRobot_PowerStationTestInit(void)
     SweepRobot_PowerStationGraphInit();
     
     printf("IRDA->OFF\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     printf("CHARGE->ON=5\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_TEST_PS_TX_SIG_NUM;i++){
         powerStation[i].code = 0;

@@ -63,14 +63,16 @@ static void SweepRobot_ChargeTestInit(void)
     
     str = "\r\n>>>CHARGE TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
-    
+
+#ifdef __SHOW_TEST_TITLE    
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-
+#endif
+    
     SweepRobot_Charge24VOn();
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     printf("CHARGE->ON=20\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     charge.current = 0;
     charge.curValidCnt = 0;
