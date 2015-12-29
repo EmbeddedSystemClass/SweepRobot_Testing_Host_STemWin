@@ -70,6 +70,7 @@
 #define IRDA_TEST_TX_PIN_RESET(pin)         GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_RESET)
 
 static u8 gIrDACodeTxSeqNum = 0;
+static u8 gIrDACodeTxCnt = 0;
 static u32 gIrDACodeTxSeqTime = 0;
 
 
@@ -425,36 +426,53 @@ void SweepRobot_IrDATestGPIOPINReset(void)
     IRDA_TEST_TX_PIN_RESET(IRDA_TEST_TX_M_PIN);
 }
 
+/* Improved IrDA Code Tx process */
 void SweepRobot_IrDACodeTxProc(u8 code)
 {
-    gIrDACodeTxSeqNum++;
-    
     plat_int_reg_cb(STM32F4xx_INT_TIM7, SweepRobot_IrDACodeTxProc);
     
     switch(gIrDACodeTxSeqNum){
-        case 1:
+        case 0:
+            gIrDACodeTxSeqNum++;
             gIrDACodeTxSeqTime = 3000;
             SweepRobot_IrDATestGPIOPINSet();
             break;
-        case 2:
+        case 1:
+            gIrDACodeTxSeqNum++;
             gIrDACodeTxSeqTime = 1000;
             SweepRobot_IrDATestGPIOPINReset();
             break;
+        case 2:
+            gIrDACodeTxCnt++;
+            gIrDACodeTxSeqNum++;
+            gIrDACodeTxSeqTime = (code & 0x80)?800:1600;
+            SweepRobot_IrDATestGPIOPINSet();
+            break;
         case 3:
+            if(gIrDACodeTxCnt != 8){
+                gIrDACodeTxSeqNum--;
+            }else{
+                gIrDACodeTxSeqNum++;
+            }
+            gIrDACodeTxSeqTime = (code & 0x80)?1600:800;
+            SweepRobot_IrDATestGPIOPINReset();
+            code <<= 1;
             break;
         case 4:
+            gIrDACodeTxSeqNum++;
+            gIrDACodeTxSeqTime = 500;
+            SweepRobot_IrDATestGPIOPINSet();
             break;
         case 5:
-            break;
+            gIrDACodeTxCnt = 0;
+            gIrDACodeTxSeqNum = 0;
+            TIM_SetCounter(IRDA_TEST_TX_TIM, 0);
+            TIM_ITConfig(IRDA_TEST_TX_TIM, TIM_IT_Update, DISABLE);
+            TIM_Cmd(IRDA_TEST_TX_TIM, DISABLE);
+            plat_int_dereg_cb(STM32F4xx_INT_TIM7);
+            SweepRobot_IrDATestGPIOPINReset();
+            return;
         default:break;
-    }
-    if(gIrDACodeTxSeqNum == 1){
-        
-    }else if(gIrDACodeTxSeqNum == 2){
-        
-    }else if(gIrDACodeTxSeqNum == 3){
-        gIrDACodeTxSeqTime = 1000;
-        SweepRobot_IrDATestGPIOPINReset();
     }
     
     TIM_SetCounter(IRDA_TEST_TX_TIM, 0);
@@ -465,6 +483,7 @@ void SweepRobot_IrDACodeTxProc(u8 code)
     TIM_Cmd(IRDA_TEST_TX_TIM, ENABLE);
 }
 
+/* Original IrDA code Tx process */
 void SweepRobot_IrDATestTxSendCmd(u8 code)
 {
     u8 i;

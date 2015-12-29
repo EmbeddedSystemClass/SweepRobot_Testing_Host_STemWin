@@ -305,7 +305,7 @@ static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DAT
 {
     aSwrbTestValue[pos] = SweepRobot_ManulTest_DataArrayToHex(&aSwrbTestData[pos]);
 
-    if(!aSwrbTestDataValidFlag[pos]){
+//    if(!aSwrbTestDataValidFlag[pos]){
         if(IS_IRDA_CODE(aSwrbTestValue[pos])){
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
                                         gSwrbManulTestListviewDispDataCoord[pos][1], validColor);
@@ -318,7 +318,7 @@ static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DAT
         if(aSwrbTestDataValidCnt[pos] > 0){
             aSwrbTestDataValidFlag[pos] = 1;
         }
-    }
+//    }
 }
 
 static void SweepRobot_ManulTest_WheelDataProc(void)

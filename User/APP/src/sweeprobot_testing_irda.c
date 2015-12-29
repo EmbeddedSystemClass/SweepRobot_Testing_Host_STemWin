@@ -58,6 +58,8 @@ static void SweepRobot_IrDATestCodeArrayToNum(void)
 
 static void SweepRobot_IrDACodeQuery(void)
 {
+    SweepRobot_IrDACodeTxProc(0x40);
+    OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
     printf("IRDA->READ\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
     if(usartRxFlag){
@@ -216,7 +218,7 @@ void SweepRobot_IrDATestTask(void *pdata)
                 SweepRobot_IrDATestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 200){
+            if(gSwrbTestTaskRunCnt > 50){
                 SweepRobot_IrDATestOverTimeProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
