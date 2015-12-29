@@ -105,7 +105,7 @@ static void Button_ConfirmProc(WM_HWIN hWin)
     char *str;
 
     ListWheel_TestDataFilePathGet(hWin,str);
-    
+
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_PCBTEST);
@@ -363,7 +363,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             WM_HideWin(pMsg->hWin);
             break;
         case WM_PAINT:
-            ListWheel_SnapLineDraw(GUI_RED);
+//            ListWheel_SnapLineDraw(GUI_RED);
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -660,75 +660,77 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 
 void SWRB_TestDataFileWriteSN(void)
 {
-    char *gSwrbTestSerialNum;
+    char *swrbTestSerialNum;
     char *cBuf;
 
     SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
 
-    gSwrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
-    mymemset(gSwrbTestSerialNum, 0, sizeof(char)*50);
+    swrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(swrbTestSerialNum, 0, sizeof(char)*50);
 
-    *gSwrbTestSerialNum = 0;
+    *swrbTestSerialNum = 0;
 
     cBuf = "\nSerialNumber:";
 
-    gSwrbTestSerialNum = strcat(gSwrbTestSerialNum, cBuf);
+    swrbTestSerialNum = strcat(swrbTestSerialNum, cBuf);
 
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, gSwrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_MONTH, gSwrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_DATE, gSwrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN1, gSwrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN2, gSwrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN3, gSwrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_MONTH, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_DATE, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN1, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN2, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN3, swrbTestSerialNum);
 
-    f_printf(file, "%s\r\n", gSwrbTestSerialNum);
+    f_printf(file, "%s\r\n", swrbTestSerialNum);
 
     f_close(file);
+    
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, swrbTestSerialNum);
 
-    myfree(SRAMIN, gSwrbTestSerialNum);
+    myfree(SRAMIN, swrbTestSerialNum);
 }
 
 void SWRB_TestDUTWriteSN(void)
 {
     char *str;
     int tempSN;
-    
+
     printf("SN_WRITE->ERASE\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
-    
+
     str = mymalloc(SRAMIN, sizeof(char)*10);
-    
+
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, str);
     printf("SN_WRITE->YEAR=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
-    
+
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_MONTH, str);
     printf("SN_WRITE->MONTH=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
-    
+
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_DATE, str);
     printf("SN_WRITE->DATE=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
-    
+
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN1, str);
     tempSN = 0;
     tempSN += 100*(*str-'0');
-    
+
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN2, str);
     tempSN += 10*(*str-'0');
-    
+
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN3, str);
     tempSN += *str-'0';
-    
+
     printf("SN_WRITE->SN=%d\r\n", tempSN);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
-    
+
     myfree(SRAMIN, str);
 }
 

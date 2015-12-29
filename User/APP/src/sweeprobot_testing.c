@@ -41,8 +41,9 @@ int gSwrbTestValidTaskCnt;
 int gSwrbTestValidTaskCntTotal;
 int gSwrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
 
-typedef void (*TestCBFunc_t)(void);
+static u8 aSwrbManulTestState[SWRB_TEST_STATE_BOUND] = { 0 };
 
+typedef void (*TestCBFunc_t)(void);
 static TestCBFunc_t gLedTaskCB = NULL;
 
 static u8 gkeyCode = 0;
@@ -536,13 +537,15 @@ void SweepRobot_PCBTestStartProc(void)
         if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "TEST RESUMED\r\n");
         }else{
+            MultiEdit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n");
+
             OS_ENTER_CRITICAL();
             SWRB_TestDataFileWriteSN();
             SWRB_TestDataFileWriteDate("Test Start Time", &rtcDate, &rtcTime);
             OS_EXIT_CRITICAL();
 
-            MultiEdit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n");
             str = mymalloc(SRAMIN, sizeof(char)*50);
+            *str = 0;
             sprintf(str, "\r\nTest Start Time:20%d/%d/%d %d:%d:%d\r\n",\
                           rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
@@ -1220,6 +1223,7 @@ void SweepRobot_ManulStartProc(void)
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
 
         TEST_LED_TASK_CB_DEREG();
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE, GUI_LIGHTGRAY);
 
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
@@ -1253,8 +1257,6 @@ void SweepRobot_ManulSetProc(void)
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
-
-
     }else{
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
@@ -1264,8 +1266,6 @@ void SweepRobot_ManulSetProc(void)
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
     }
-
-
 }
 
 void SweepRobot_ManulResetProc(void)
@@ -1288,6 +1288,93 @@ void SweepRobot_ManulExitProc(void)
         WM_HideWin(hWin_SWRB_MANUL);
         WM_ShowWin(hWin_SWRB_START);
     }
+}
+
+void SweepRobot_ManulWheelProc(void)
+{
+    OS_CPU_SR cpu_sr;
+
+    OS_ENTER_CRITICAL();
+
+    if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
+        printf("LWHEEL->SPEED=25\r\n");
+        printf("RWHEEL->SPEED=25\r\n");
+        aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
+    }else{
+        printf("LWHEEL->SPEED=0\r\n");
+        printf("RWHEEL->SPEED=0\r\n");
+        aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
+    }
+
+    OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulBrushProc(void)
+{
+    OS_CPU_SR cpu_sr;
+
+    OS_ENTER_CRITICAL();
+
+    if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
+        printf("LBRUSH->SPEED=30\r\n");
+        printf("RBRUSH->SPEED=30\r\n");
+        printf("MBRUSH->SPEED=40\r\n");
+        aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
+    }else{
+        printf("LBRUSH->SPEED=0\r\n");
+        printf("RBRUSH->SPEED=0\r\n");
+        printf("MBRUSH->SPEED=0\r\n");
+        aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
+    }
+
+    OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulFanProc(void)
+{
+    OS_CPU_SR cpu_sr;
+
+    OS_ENTER_CRITICAL();
+
+    if(aSwrbManulTestState[SWRB_TEST_STATE_FAN]){
+        printf("FAN->SPEED=25\r\n");
+        aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 0;
+    }else{
+        printf("FAN->SPEED=0\r\n");
+        aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 1;
+    }
+
+    OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulBuzzerProc(void)
+{
+    OS_CPU_SR cpu_sr;
+
+    OS_ENTER_CRITICAL();
+
+    if(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
+
+    }else{
+
+    }
+
+    OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulRGBLEDProc(void)
+{
+    OS_CPU_SR cpu_sr;
+
+    OS_ENTER_CRITICAL();
+
+    if(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
+
+    }else{
+
+    }
+
+    OS_EXIT_CRITICAL();
 }
 
 #ifdef _SHOW_SLAM_DLG

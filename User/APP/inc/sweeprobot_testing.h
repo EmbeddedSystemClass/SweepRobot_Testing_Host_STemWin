@@ -365,6 +365,12 @@ void SweepRobot_ManulSetProc(void);
 void SweepRobot_ManulResetProc(void);
 void SweepRobot_ManulExitProc(void);
 
+void SweepRobot_ManulWheelProc(void);
+void SweepRobot_ManulBrushProc(void);
+void SweepRobot_ManulFanProc(void);
+void SweepRobot_ManulBuzzerProc(void);
+void SweepRobot_ManulRGBLEDProc(void);
+
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);
 void SweepRobot_PowerStationTestExitProc(void);

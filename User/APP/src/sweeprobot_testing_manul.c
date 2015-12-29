@@ -122,11 +122,14 @@ enum SWRB_MANUL_TEST_DATA_POS{
     SWRB_MANUL_TEST_DATA_CHARGE_24V_POS,
 
     SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS,
-    
+
     SWRB_MANUL_TEST_DATA_BOUND,
 };
 
 static char aSwrbTestData[SWRB_MANUL_TEST_DATA_BOUND][5] = { 0 };
+static int  aSwrbTestValue[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
+static u8   aSwrbTestDataValidCnt[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
+static u8   aSwrbTestDataValidFlag[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
 
 static void SweepRobot_ManulTestRxDataToDataArray(int rxDataLen)
 {
@@ -158,7 +161,7 @@ static void SweepRobot_ManulTestDataArrayDisp(void)
     int i;
     char *str;
     WM_HWIN hItem;
-    
+
     hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
     for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
         str = mymalloc(SRAMIN, sizeof(char)*10);
@@ -177,11 +180,12 @@ static void SweepRobot_ManulTestRxDataProc(void)
 void SweepRobot_ManulTestDataReset(void)
 {
     int i;
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
+
     for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
-        LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "0");
+        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "0");
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], GUI_WHITE);
+        aSwrbTestDataValidCnt[i] = 0;
+        aSwrbTestDataValidFlag[i] = 0;
     }
 }
 
@@ -190,9 +194,9 @@ static void SweepRobot_ManulTestSNDisp(void)
     char *str;
     int i,j;
     WM_HWIN hItem;
-    
+
     hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
-    
+
     for(i=SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS;i<SWRB_MANUL_TEST_DATA_SNUM_SNUM_BOUND;i++){
         printf("%s\r\n",*gSwrbManulTestListviewSNQueryCmd[i]);
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -210,16 +214,216 @@ static void SweepRobot_ManulTestSNDisp(void)
     }
 }
 
+static int SweepRobot_ManulTest_DataArrayToInt(char dataArray[][5])
+{
+    u8 arrayLen;
+    u8 i;
+    int tmp=0;
+
+    arrayLen = sizeof(dataArray[0]);
+
+    for(i=0;i<arrayLen;i++){
+        if( '0' <= dataArray[0][i]  &&  '9' >= dataArray[0][i] ){
+            if(i){
+                tmp *= 10;
+            }
+            tmp +=  dataArray[0][i] - '0';
+        }
+    }
+
+    return tmp;
+}
+
+static int SweepRobot_ManulTest_DataArrayToHex(char dataArray[][5])
+{
+    u8 arrayLen;
+    u8 i;
+    int tmp=0;
+
+    arrayLen = sizeof(dataArray[0]);
+
+    for(i=0;i<arrayLen;i++){
+        if(i){
+                tmp *= 16;
+        }
+
+        if( '0' <= dataArray[0][i]  &&  '9' >= dataArray[0][i] ){
+            tmp +=  dataArray[0][i] - '0';
+        }else if( 'a' <= dataArray[0][i]  &&  'f' >= dataArray[0][i] ){
+            tmp +=  dataArray[0][i] - 'a'+10;
+        }else if( 'A' <= dataArray[0][i]  &&  'F' >= dataArray[0][i] ){
+            tmp +=  dataArray[0][i] - 'A'+10;
+        }else
+            ;
+    }
+
+    return tmp;
+}
+
+static void SweepRobot_ManulTest_SingleValueMinMaxCmpProc(int min, int max, enum SWRB_MANUL_TEST_DATA_POS pos, GUI_COLOR validColor, GUI_COLOR faultColor)
+{
+    aSwrbTestValue[pos] = SweepRobot_ManulTest_DataArrayToInt(&aSwrbTestData[pos]);
+
+    if(!aSwrbTestDataValidFlag[pos]){
+        if( (min < aSwrbTestValue[pos]) && (max > aSwrbTestValue[pos])){
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                    gSwrbManulTestListviewDispDataCoord[pos][1], validColor);
+            aSwrbTestDataValidCnt[pos]++;
+        }else{
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                    gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+        }
+
+        if(aSwrbTestDataValidCnt[pos] > 0){
+            aSwrbTestDataValidFlag[pos] = 1;
+        }
+    }
+}
+
+static void SweepRobot_ManulTest_SingleValueEqualCmpProc(int value, enum SWRB_MANUL_TEST_DATA_POS pos, GUI_COLOR validColor, GUI_COLOR faultColor)
+{
+    aSwrbTestValue[pos] = SweepRobot_ManulTest_DataArrayToInt(&aSwrbTestData[pos]);
+
+    if(!aSwrbTestDataValidFlag[pos]){
+        if(aSwrbTestValue[pos] == value){
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                    gSwrbManulTestListviewDispDataCoord[pos][1], validColor);
+            aSwrbTestDataValidCnt[pos]++;
+        }else{
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                    gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+        }
+
+        if(aSwrbTestDataValidCnt[pos] > 0){
+            aSwrbTestDataValidFlag[pos] = 1;
+        }
+    }
+}
+
+static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DATA_POS pos, GUI_COLOR validColor, GUI_COLOR faultColor)
+{
+    aSwrbTestValue[pos] = SweepRobot_ManulTest_DataArrayToHex(&aSwrbTestData[pos]);
+
+    if(!aSwrbTestDataValidFlag[pos]){
+        if(IS_IRDA_CODE(aSwrbTestValue[pos])){
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                        gSwrbManulTestListviewDispDataCoord[pos][1], validColor);
+            aSwrbTestDataValidCnt[pos]++;
+        }else{
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                        gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+        }
+
+        if(aSwrbTestDataValidCnt[pos] > 0){
+            aSwrbTestDataValidFlag[pos] = 1;
+        }
+    }
+}
+
+static void SweepRobot_ManulTest_WheelDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTest_BrushDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,50, SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,50, SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,500, SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTest_FanDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,500, SWRB_MANUL_TEST_DATA_FAN_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTest_IFRDDataProc(void)
+{
+    u8 i;
+
+    for(i=SWRB_MANUL_TEST_DATA_IFRD_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS;i++){
+        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1000, 3000, i, GUI_LIGHTBLUE, GUI_WHITE);
+    }
+}
+
+static void SweepRobot_ManulTest_CollisionDataProc(void)
+{
+    u8 i;
+
+    for(i=SWRB_MANUL_TEST_DATA_COLLISION_L_POS;i<=SWRB_MANUL_TEST_DATA_COLLISION_FR_POS;i++){
+        SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, GUI_LIGHTBLUE, GUI_WHITE);
+    }
+}
+
+static void SweepRobot_ManulTest_WheelFloatDataProc(void)
+{
+    u8 i;
+
+    for(i=SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS;i<=SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_R_POS;i++){
+        SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, GUI_LIGHTBLUE, GUI_WHITE);
+    }
+}
+
+static void SweepRobot_ManulTest_AshTrayDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(0, SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTest_UniwheelDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_UNIWHEEL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTest_KeyDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_KEY_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTest_IrDADataProc(void)
+{
+    u8 i;
+
+    for(i=SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS;i<=SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS;i++){
+        SweepRobot_ManulTest_SingleIrDAValueCmpProc(i, GUI_LIGHTBLUE, GUI_WHITE);
+    }
+}
+
+static void SweepRobot_ManulTest_ChargeDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 200, SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(2800, 3500, SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(0, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
+static void SweepRobot_ManulTestValueValidCmp(void)
+{
+    SweepRobot_ManulTest_WheelDataProc();
+    SweepRobot_ManulTest_BrushDataProc();
+    SweepRobot_ManulTest_FanDataProc();
+    SweepRobot_ManulTest_IFRDDataProc();
+    SweepRobot_ManulTest_CollisionDataProc();
+    SweepRobot_ManulTest_WheelFloatDataProc();
+    SweepRobot_ManulTest_AshTrayDataProc();
+    SweepRobot_ManulTest_UniwheelDataProc();
+    SweepRobot_ManulTest_KeyDataProc();
+    SweepRobot_ManulTest_IrDADataProc();
+    SweepRobot_ManulTest_ChargeDataProc();
+}
+
 static void SweepRobot_ManulTestInit(void)
 {
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
-    
+
     SweepRobot_ManulTestSNDisp();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_ManulTestProc(void)
 {
+    u8 i,j;
+
     printf("MANUL->READ\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
     if(usartRxFlag){
@@ -228,7 +432,15 @@ static void SweepRobot_ManulTestProc(void)
         usartRxFlag = 0;
         USART_RX_STA = 0;
     }
-    mymemset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
+
+    SweepRobot_ManulTestValueValidCmp();
+
+    for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
+        for(j=0;j<5;j++){
+            aSwrbTestData[i][j] = 0;
+        }
+    }
 }
 
 static void SweepRobot_ManulTestOverTimeProc(void)
@@ -248,7 +460,7 @@ void SweepRobot_ManulTestTask(void *pdata)
         if(gSwrbTestTaskRunCnt > 1){
             SweepRobot_ManulTestProc();
         }
-        
+
         if(gSwrbTestTaskRunCnt > 65530){
             SweepRobot_ManulTestOverTimeProc();
         }

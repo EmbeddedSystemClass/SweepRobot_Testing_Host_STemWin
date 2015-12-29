@@ -74,6 +74,11 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "textTitle", ID_MANUL_TEXT_TITLE, 25, 20, 650, 60, 0, 0x64, 0 },
   { EDIT_CreateIndirect, "editDate", ID_MANUL_EDIT_DATE, 490, 427, 185, 40, 0, 0x64, 0 },
   { BUTTON_CreateIndirect, "btnIndicate", ID_MANUL_BUTTON_INDICATE, 25, 425, 40, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnWheel", ID_MANUL_BUTTON_WHEEL, 100, 425, 60, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnBrush", ID_MANUL_BUTTON_BRUSH, 170, 425, 60, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnFan", ID_MANUL_BUTTON_FAN, 240, 425, 60, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnBuzzer", ID_MANUL_BUTTON_BUZZER, 310, 425, 60, 40, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnRGB", ID_MANUL_BUTTON_RGB_LED, 380, 425, 80, 40, 0, 0x0, 0 },
 };
 
 /*********************************************************************
@@ -193,6 +198,31 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Init(hItem);
     BUTTON_SetText(hItem, "");
 
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_WHEEL);
+    Button_Init(hItem);
+    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+    BUTTON_SetText(hItem, "WHEEL");
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_BRUSH);
+    Button_Init(hItem);
+    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+    BUTTON_SetText(hItem, "BRUSH");
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_FAN);
+    Button_Init(hItem);
+    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+    BUTTON_SetText(hItem, "FAN");
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_BUZZER);
+    Button_Init(hItem);
+    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+    BUTTON_SetText(hItem, "BUZZER");
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_RGB_LED);
+    Button_Init(hItem);
+    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+    BUTTON_SetText(hItem, "RGB LED");
+
     WM_HideWin(pMsg->hWin);
     break;
   case WM_NOTIFY_PARENT:
@@ -260,6 +290,52 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
+        break;
+      }
+      break;
+    case ID_MANUL_BUTTON_WHEEL: // Notifications sent by 'btnWheel'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_ManulWheelProc();
+        break;
+      }
+      break;
+    case ID_MANUL_BUTTON_BRUSH: // Notifications sent by 'btnBrush'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_ManulBrushProc();
+        break;
+      }
+      break;
+    case ID_MANUL_BUTTON_FAN: // Notifications sent by 'btnFan'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_ManulFanProc();
+        break;
+      }
+      break;
+
+    case ID_MANUL_BUTTON_BUZZER: // Notifications sent by 'btnBuzzer'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_ManulBuzzerProc();
+        break;
+      }
+      break;
+    case ID_MANUL_BUTTON_RGB_LED: // Notifications sent by 'btnRgbLed'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_ManulRGBLEDProc();
         break;
       }
       break;

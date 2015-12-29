@@ -740,12 +740,17 @@
 #if __EJE_SWRB_TEST_MANUL_DLG
     
     enum ID_MANUL_WIDGET{
-        ID_MANUL_WINDOW_0,
+        ID_MANUL_WINDOW_0 = ID_TESTSEL_BOUND,
         ID_MANUL_BUTTON_0,
         ID_MANUL_BUTTON_1,
         ID_MANUL_BUTTON_2,
         ID_MANUL_BUTTON_3,
         ID_MANUL_BUTTON_4,
+        ID_MANUL_BUTTON_5,
+        ID_MANUL_BUTTON_6,
+        ID_MANUL_BUTTON_7,
+        ID_MANUL_BUTTON_8,
+        ID_MANUL_BUTTON_9,
         ID_MANUL_LISTVIEW_0,
         ID_MANUL_TEXT_0,
         ID_MANUL_EDIT_0,
@@ -763,6 +768,11 @@
         ID_MANUL_BUTTON_RESET,
         ID_MANUL_BUTTON_EXIT,
         ID_MANUL_BUTTON_INDICATE,
+        ID_MANUL_BUTTON_WHEEL,
+        ID_MANUL_BUTTON_BRUSH,
+        ID_MANUL_BUTTON_FAN,
+        ID_MANUL_BUTTON_BUZZER,
+        ID_MANUL_BUTTON_RGB_LED,
         ID_MANUL_BUTTON_BOUND,
     };
     
@@ -913,6 +923,9 @@ void Checkbox_Set_Text_Color(int checkboxId, GUI_COLOR checkboxcolor);
 void Checkbox_Set_TextAlign(int checkboxId, int align);
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor);
 void Checkbox_Set_Box_Back_Color(WM_HWIN hWin, int checkboxId, GUI_COLOR boxBkColor, int Index);
+void Listview_Set_Item_Text(WM_HWIN hWin, int id, uint16_t column, uint16_t row, char *str);
+void Listview_Set_Text_Color(WM_HWIN hWin, int id, GUI_COLOR color);
+void Listview_Set_Item_BkColor(WM_HWIN hWin, int id, int column, int row, GUI_COLOR color);
 void ListWheel_AddNumString(WM_HWIN hItem, int startStringNum, int endStringNum);
 void Multiedit_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s);

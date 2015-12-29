@@ -323,6 +323,30 @@ void Checkbox_Set_Box_Back_Color(WM_HWIN hWin, int checkboxId, GUI_COLOR boxBkCo
     CHECKBOX_SetBoxBkColor(hItem, boxBkColor, Index);
 }
 
+void Listview_Set_Item_Text(WM_HWIN hWin, int id, uint16_t column, uint16_t row, char *str)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, id);
+    LISTVIEW_SetItemText(hItem, column, row, str);
+}
+
+void Listview_Set_Text_Color(WM_HWIN hWin, int id, GUI_COLOR color)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, id);
+    LISTVIEW_SetTextColor(hItem, LISTVIEW_CI_UNSEL, color);
+}
+
+void Listview_Set_Item_BkColor(WM_HWIN hWin, int id, int column, int row, GUI_COLOR color)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, id);
+    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_UNSEL, color);
+    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_SEL, color);
+    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_SELFOCUS, color);
+    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_DISABLED, color);
+}
+
 void ListWheel_AddNumString(WM_HWIN hItem, int startStringNum, int endStringNum)
 {
     int i;

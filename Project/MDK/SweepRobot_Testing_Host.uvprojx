@@ -536,6 +536,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\BSP\src\swrbTestDriver.c</FilePath>
             </File>
+            <File>
+              <FileName>swrbTestStepMotorDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestStepMotorDriver.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -605,6 +610,11 @@
               <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StepMotorTestDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
@@ -1695,6 +1705,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\BSP\src\swrbTestDriver.c</FilePath>
             </File>
+            <File>
+              <FileName>swrbTestStepMotorDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestStepMotorDriver.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1764,6 +1779,11 @@
               <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StepMotorTestDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
