@@ -63,7 +63,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 static void Button_RunProc(void)
 {
-    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_RUN);
+//    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_RUN);
+    SweepRobotTest_StepMotorMoveSteps(1, 10);
 }
 
 static void Button_StopProc(void)
@@ -107,8 +108,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   WM_HWIN hItem;
   int     NCode;
   int     Id;
-  // USER START (Optionally insert additional variables)
-  // USER END
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:

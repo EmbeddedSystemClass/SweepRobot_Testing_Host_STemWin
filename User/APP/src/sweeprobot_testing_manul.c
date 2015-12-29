@@ -228,6 +228,8 @@ static int SweepRobot_ManulTest_DataArrayToInt(char dataArray[][5])
                 tmp *= 10;
             }
             tmp +=  dataArray[0][i] - '0';
+        }else{
+            break;
         }
     }
 
@@ -243,18 +245,17 @@ static int SweepRobot_ManulTest_DataArrayToHex(char dataArray[][5])
     arrayLen = sizeof(dataArray[0]);
 
     for(i=0;i<arrayLen;i++){
-        if(i){
-                tmp *= 16;
-        }
-
         if( '0' <= dataArray[0][i]  &&  '9' >= dataArray[0][i] ){
+            i?(tmp<<=4):tmp;
             tmp +=  dataArray[0][i] - '0';
         }else if( 'a' <= dataArray[0][i]  &&  'f' >= dataArray[0][i] ){
+            i?(tmp<<=4):tmp;
             tmp +=  dataArray[0][i] - 'a'+10;
         }else if( 'A' <= dataArray[0][i]  &&  'F' >= dataArray[0][i] ){
+            i?(tmp<<=4):tmp;
             tmp +=  dataArray[0][i] - 'A'+10;
         }else
-            ;
+            break;
     }
 
     return tmp;
@@ -394,7 +395,7 @@ static void SweepRobot_ManulTest_ChargeDataProc(void)
 {
     SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 200, SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
     SweepRobot_ManulTest_SingleValueMinMaxCmpProc(2800, 3500, SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueEqualCmpProc(0, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, GUI_LIGHTBLUE, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTestValueValidCmp(void)
@@ -436,6 +437,7 @@ static void SweepRobot_ManulTestProc(void)
 
     SweepRobot_ManulTestValueValidCmp();
 
+    /* Clear Data Array */
     for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
         for(j=0;j<5;j++){
             aSwrbTestData[i][j] = 0;

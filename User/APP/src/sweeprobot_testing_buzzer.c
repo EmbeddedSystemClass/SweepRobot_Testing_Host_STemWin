@@ -77,7 +77,7 @@ static void SweepRobot_BuzzerTestOKProc(void)
     str = "BUZZER OK\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+//    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_BLUE);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER OK");
     Edit_Clear();

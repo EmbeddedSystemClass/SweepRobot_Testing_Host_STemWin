@@ -342,9 +342,6 @@ void Listview_Set_Item_BkColor(WM_HWIN hWin, int id, int column, int row, GUI_CO
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, id);
     LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_UNSEL, color);
-    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_SEL, color);
-    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_SELFOCUS, color);
-    LISTVIEW_SetItemBkColor(hItem, column, row, LISTVIEW_CI_DISABLED, color);
 }
 
 void ListWheel_AddNumString(WM_HWIN hItem, int startStringNum, int endStringNum)

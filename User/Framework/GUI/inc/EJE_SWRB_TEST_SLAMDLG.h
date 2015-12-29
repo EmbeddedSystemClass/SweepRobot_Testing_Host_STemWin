@@ -5,6 +5,5 @@
 #include "DIALOG.h"
 
 WM_HWIN CreateEJE_SWRB_TEST_SLAMDLG(void);
-void SWRB_ROTATE_Robot(float angle);
 
 #endif

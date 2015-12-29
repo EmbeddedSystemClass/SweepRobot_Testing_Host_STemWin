@@ -52,13 +52,13 @@ static void SweepRobot_RGBLEDTestProc(void)
     
     rgb_led.validCnt = 1;
     printf("RGB_LED->ON=1\r\n");
-    SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_RED, "IS RED LED OK?", "RED LED OK\r\n", "ERROR->RED LED\r\n");
+    SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_RED, "IS RED LED OK?", ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
     rgb_led.validCnt = 2;
     printf("RGB_LED->ON=2\r\n");
-    SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_GREEN, "IS GREEN LED OK?", "GREEN LED OK\r\n", "ERROR->GREEN LED\r\n");
+    SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_GREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
     rgb_led.validCnt = 3;
     printf("RGB_LED->ON=4\r\n");
-    SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_BLUE, "IS BLUE LED OK?", "BLUE LED OK\r\n", "ERROR->BLUE LED\r\n");
+    SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_BLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
     
     if(rgb_led.r_state && rgb_led.g_state && rgb_led.b_state){
         gSwrbTestTaskRunCnt = 0;
@@ -70,7 +70,7 @@ static void SweepRobot_RGBLEDTestProc(void)
         str = "RGB LED OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_RGB_LED, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED OK");
         Edit_Clear();

@@ -7,7 +7,7 @@
 #define STEP_MOTOR_SPEED_MID_PERIOD     2000
 #define STEP_MOTOR_SPEED_HIGH_PERIOD    1000
 
-#define STEP_MOTOR_PWM_PULSE_WIDTH      100
+#define STEP_MOTOR_PWM_PULSE_WIDTH      50      //50*10us = 500us
 
 enum STEP_MOTOR_MODE{
     STEP_MOTOR_MODE_UNKNOWN,
@@ -15,6 +15,7 @@ enum STEP_MOTOR_MODE{
     STEP_MOTOR_MODE_ON,
     STEP_MOTOR_MODE_HARD_STOP,
     STEP_MOTOR_MODE_SOFT_STOP,
+    STEP_MOTOR_MODE_RUN_STEP,
     STEP_MOTOR_MODE_RUN,
     STEP_MOTOR_MODE_HOME,
     STEP_MOTOR_MODE_BOUND,
@@ -39,6 +40,8 @@ enum STEP_MOTOR_POS{
 };
 
 void SweepRobotTest_StepMotorDriverGPIOInit(void);
+
+void SweepRobotTest_StepMotorMoveSteps(int period_ms, u16 steps);
 
 void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode);
 enum STEP_MOTOR_MODE SweepRobotTest_StepMotorModeGet(void);

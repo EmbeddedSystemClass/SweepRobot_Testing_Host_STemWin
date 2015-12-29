@@ -1199,6 +1199,7 @@ void SweepRobot_ManulStartProc(void)
         TEST_LED_TASK_CB_REG(SWRB_ManulTestIndicateButtonToggle);
 
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
         printf("TEST->ON\r\n");
@@ -1226,6 +1227,7 @@ void SweepRobot_ManulStartProc(void)
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE, GUI_LIGHTGRAY);
 
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
 //        printf("LWHEEL->SPEED=0\r\n");
@@ -1380,7 +1382,7 @@ void SweepRobot_ManulRGBLEDProc(void)
 #ifdef _SHOW_SLAM_DLG
 void SweepRobot_SLAMStartProc(void)
 {
-//    WM_InvalidateWindow(hWin_SWRB_SLAM);
+    
 }
 
 void SweepRobot_SLAMResetProc(void)
@@ -1395,12 +1397,6 @@ void SweepRobot_SLAMStopProc(void)
 
 void SweepRobot_SLAMExitProc(void)
 {
-    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-
-        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
-
-        WM_HideWin(hWin_SWRB_SLAM);
-        WM_ShowWin(hWin_SWRB_START);
-    }
+    
 }
 #endif

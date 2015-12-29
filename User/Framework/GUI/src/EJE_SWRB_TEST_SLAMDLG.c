@@ -166,7 +166,7 @@ static void SLAM_ButtonStartClickedProc(void)
     SWRB_SLAM_ROBOT_PAINT_CB_REG(SLAM_RobotFollowWallProc);
 }
 
-static void SALM_ButtonResetClickedProc(void)
+static void SLAM_ButtonResetClickedProc(void)
 {
     slamXPos = SWRB_SLAM_START_X_POS;
     slamYPos = SWRB_SLAM_START_Y_POS;
@@ -177,6 +177,17 @@ static void SALM_ButtonResetClickedProc(void)
 static void SLAM_ButtonStopClickedProc(void)
 {
     SWRB_SLAM_ROBOT_PAINT_CB_DEREG();
+}
+
+static void SLAM_ButtonExitClickedProc(void)
+{
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+
+        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+
+        WM_HideWin(hWin_SWRB_SLAM);
+        WM_ShowWin(hWin_SWRB_START);
+    }
 }
 
 static void SWRB_SLAM_MAP_Init(void)
@@ -490,7 +501,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
 //        SweepRobot_SLAMResetProc();
-        SALM_ButtonResetClickedProc();
+        SLAM_ButtonResetClickedProc();
         break;
       }
       break;
@@ -509,7 +520,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_SLAMExitProc();
+//        SweepRobot_SLAMExitProc();
+        SLAM_ButtonExitClickedProc();
         break;
       }
       break;
@@ -552,13 +564,5 @@ WM_HWIN CreateEJE_SWRB_TEST_SLAMDLG(void)
     hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
     return hWin;
 }
-
-void SWRB_ROTATE_Robot(float angle)
-{
-    GUI_RotatePolygon(pPolygonRobot, pPolygonRobot, 3, angle);
-}
-
-// USER START (Optionally insert additional public code)
-// USER END
 
 /*************************** End of file ****************************/
