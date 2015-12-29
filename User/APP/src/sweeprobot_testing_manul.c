@@ -341,7 +341,7 @@ static void SweepRobot_ManulTest_FanDataProc(void)
 
 static void SweepRobot_ManulTest_IFRDDataProc(void)
 {
-    u8 i;
+    enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_IFRD_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS;i++){
         SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1000, 3000, i, GUI_LIGHTBLUE, GUI_WHITE);
@@ -350,7 +350,7 @@ static void SweepRobot_ManulTest_IFRDDataProc(void)
 
 static void SweepRobot_ManulTest_CollisionDataProc(void)
 {
-    u8 i;
+    enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_COLLISION_L_POS;i<=SWRB_MANUL_TEST_DATA_COLLISION_FR_POS;i++){
         SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, GUI_LIGHTBLUE, GUI_WHITE);
@@ -359,7 +359,7 @@ static void SweepRobot_ManulTest_CollisionDataProc(void)
 
 static void SweepRobot_ManulTest_WheelFloatDataProc(void)
 {
-    u8 i;
+    enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS;i<=SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_R_POS;i++){
         SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, GUI_LIGHTBLUE, GUI_WHITE);
@@ -384,7 +384,7 @@ static void SweepRobot_ManulTest_KeyDataProc(void)
 
 static void SweepRobot_ManulTest_IrDADataProc(void)
 {
-    u8 i;
+    enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS;i<=SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS;i++){
         SweepRobot_ManulTest_SingleIrDAValueCmpProc(i, GUI_LIGHTBLUE, GUI_WHITE);

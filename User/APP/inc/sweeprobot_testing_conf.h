@@ -17,4 +17,6 @@
 #include "sweeprobot_testing_power_station.h"
 #include "sweeprobot_testing_manul.h"
 
+#include "sweeprobot_testing_stepmotor_task.h"
+
 #endif

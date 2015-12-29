@@ -64,7 +64,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 static void Button_RunProc(void)
 {
 //    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_RUN);
-    SweepRobotTest_StepMotorMoveSteps(1, 10);
+//    SweepRobotTest_StepMotorMoveSteps(1, 10);
+    OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
 }
 
 static void Button_StopProc(void)

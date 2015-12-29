@@ -6,36 +6,6 @@
 
 #include "delay.h"
 
-#define STEP_MOTOR_DRIVER_GPIO_RCC          RCC_AHB1Periph_GPIOA
-#define STEP_MOTOR_DRIVER_GPIO              GPIOA
-#define STEP_MOTOR_DRIVER_PWM_OUT_PIN       GPIO_Pin_6
-#define STEP_MOTOR_DRIVER_DIR_PIN           GPIO_Pin_5
-#define STEP_MOTOR_DRIVER_EN_OUT_PIN        GPIO_Pin_4
-#define STEP_MOTOR_DRIVER_PWM_OUT_PIN_SOURCE    GPIO_PinSource6
-#define STEP_MOTOR_DRIVER_GPIO_AF_PPP       GPIO_AF_TIM3
-#define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_RCC  RCC_APB1Periph_TIM3
-#define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM      TIM3
-#define STEP_MOTOR_DRVIER_GPIO_PWM_OUT_TIM_IRQn  TIM3_IRQn
-#define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT   STM32F4xx_INT_TIM3
-
-#define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_RCC   RCC_APB1Periph_TIM5
-#define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM   TIM5
-#define STEP_MOTOR_DRVIER_GPIO_PWM_OUT_MASTER_TIM_IRQn  TIM5_IRQn
-#define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_INT   STM32F4xx_INT_TIM5
-
-/* ONE PULSE MODE METHOD */
-#define STEP_MOTOR_MODE_SET_RUN()           TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM, ENABLE);
-#define STEP_MOTOR_MODE_SET_HARD_STOP()     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM, DISABLE);
-#define STEP_MOTOR_MODE_SET_SOFT_STOP()     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM, DISABLE);
-
-#define STEP_MOTOR_DIR_SET_FORWARD()  GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_DIR_PIN, (BitAction)STEP_MOTOR_DIR_FORWARD)
-#define STEP_MOTOR_DIR_SET_BACKWARD() GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_DIR_PIN, (BitAction)STEP_MOTOR_DIR_BACKWARD)
-
-#define STEP_MOTOR_EN_OUT_ENABLE()  GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_EN_OUT_PIN, Bit_SET)
-#define STEP_MOTOR_EN_OUT_DISABLE()  GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_EN_OUT_PIN, Bit_RESET)
-
-#define STEP_MOTOR_DISTANCE_STEP_NUM    1000
-
 typedef struct{
     enum STEP_MOTOR_MODE mode;
     enum STEP_MOTOR_DIR dir;
@@ -46,10 +16,11 @@ typedef struct{
 }StepMotorDriver_TypeDef;
 StepMotorDriver_TypeDef stepMotor;
 
-static uint16_t gStepMotorEXPStep = 0;
+/* ISR METHOD */
+//static uint16_t gStepMotorEXPStep = 0;
 
 static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_ISR(void);
-static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void);
+//static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void);
 static void SweepRobotTest_StepMotorSoftStop(void);
 
 /* STEP MOTOR DRIVER GPIO AND TIMER INIT */
@@ -152,19 +123,19 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
 
 static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_ISR(void)
 {
-
     stepMotor.mode = STEP_MOTOR_MODE_HARD_STOP;
     STEP_MOTOR_EN_OUT_ENABLE();
 }
 
-static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
-{
-    stepMotor.step++;
-    if(stepMotor.step == gStepMotorEXPStep){
-        TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, DISABLE);
-        SweepRobotTest_StepMotorSoftStop();
-    }
-}
+  /* ISR METHOD */
+//static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
+//{
+//    stepMotor.step++;
+//    if(stepMotor.step == gStepMotorEXPStep){
+//        TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, DISABLE);
+//        SweepRobotTest_StepMotorSoftStop();
+//    }
+//}
 
 static void SweepRobotTest_StepMotorRun(void)
 {
@@ -198,13 +169,13 @@ static void SweepRobotTest_StepMotorOff(void)
 }
 
 /* ISR METHOD */
-void SweepRobotTest_StepMotorMoveSteps2(u16 steps)
-{
-    gStepMotorEXPStep = steps;
+//void SweepRobotTest_StepMotorMoveSteps2(u16 steps)
+//{
+//    gStepMotorEXPStep = steps;
 
-    TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, ENABLE);
-    SweepRobotTest_StepMotorRun();
-}
+//    TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, ENABLE);
+//    SweepRobotTest_StepMotorRun();
+//}
 
 /* ONE PULSE MODE METHOD*/
 void SweepRobotTest_StepMotorMoveSteps(int period_ms, u16 steps)

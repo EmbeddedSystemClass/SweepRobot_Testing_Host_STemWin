@@ -276,6 +276,7 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_TEST_TASK_PRIO_END_BOUND,//22
     SWRB_POWER_STATION_TEST_TASK_PRIO,
     SWRB_MANUL_TEST_TASK_PRIO,
+    SWRB_STEPMOTOR_TASK_PRIO,
     SWRB_SLAM_MONITOR_TASK_PRIO,
     USART_TASK_PRIO,
     RTC_TASK_PRIO,
@@ -289,24 +290,25 @@ enum SWRB_TEST_TASK_PRIO{
 #define KEY_STK_SIZE                        128
 #define RTC_STK_SIZE                        128
 #define EMWIN_STK_SIZE		                512
-#define LED_STK_SIZE				        256
+#define LED_STK_SIZE				        128
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
 #define SWRB_BRUSH_TEST_STK_SIZE            256
-#define SWRB_FAN_TEST_STK_SIZE              256
+#define SWRB_FAN_TEST_STK_SIZE              128
 #define SWRB_IFRD_TEST_STK_SIZE             256
 #define SWRB_COLLISION_TEST_STK_SIZE        256
 #define SWRB_WHEEL_FLOAT_TEST_STK_SIZE      256
 #define SWRB_ASH_TRAY_TEST_STK_SIZE         256
-#define SWRB_UNIWHEEL_TEST_STK_SIZE         256
-#define SWRB_KEY_TEST_STK_SIZE              256
+#define SWRB_UNIWHEEL_TEST_STK_SIZE         128
+#define SWRB_KEY_TEST_STK_SIZE              128
 #define SWRB_IRDA_TEST_STK_SIZE             256
-#define SWRB_BUZZER_TEST_STK_SIZE           256
-#define SWRB_RGB_LED_TEST_STK_SIZE          256
+#define SWRB_BUZZER_TEST_STK_SIZE           128
+#define SWRB_RGB_LED_TEST_STK_SIZE          128
 #define SWRB_CHARGE_TEST_STK_SIZE           256
 #define SWRB_POWER_STATION_TEST_STK_SIZE    256
 #define SWRB_MANUL_TEST_STK_SIZE            256
+#define SWRB_STEPMOTOR_TASK_STK_SIZE        128
 #define SWRB_SLAM_MONITOR_STK_SIZE          256
 
 #define SWRB_TEST_USART_READ_TIMES              3

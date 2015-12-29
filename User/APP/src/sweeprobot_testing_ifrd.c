@@ -141,10 +141,15 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     }
 }
 
+static void SweepRobot_IFRDTestOverTimeErrProc(char *str)
+{
+    str = "ERROR->IFRD_F_L\r\n";
+    SWRB_TestDataFileWriteString(str);
+    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+}
+
 static void SweepRobot_IFRDTestOverTimeProc(void)
 {
-    char *str;
-    
     gSwrbTestTaskRunCnt = 0;
     printf("SENSOR->IFRD_LED=0\r\n");
     printf("SENSOR->B_SWITCH=0\r\n");
@@ -152,44 +157,28 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FL_MASK){
-        str = "ERROR->IFRD_F_L\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_F_L\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FR_MASK){
-        str = "ERROR->IFRD_F_R\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_F_R\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_L_MASK){
-        str = "ERROR->IFRD_S_L\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_S_L\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_R_MASK){
-        str = "ERROR->IFRD_S_R\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_S_R\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK){
-        str = "ERROR->IFRD_B_FL\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_FL\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK){
-        str = "ERROR->IFRD_B_FR\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_FR\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK){
-        str = "ERROR->IFRD_B_SL\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_SL\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK){
-        str = "ERROR->IFRD_B_SR\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_SR\r\n");
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD ERROR");

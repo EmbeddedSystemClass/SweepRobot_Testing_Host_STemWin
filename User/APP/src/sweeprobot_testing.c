@@ -94,6 +94,7 @@ OS_STK SWRB_RGB_LED_TEST_TASK_STK[SWRB_RGB_LED_TEST_STK_SIZE];
 OS_STK SWRB_CHARGE_TEST_TASK_STK[SWRB_CHARGE_TEST_STK_SIZE];
 OS_STK SWRB_POWER_STATION_TASK_STK[SWRB_POWER_STATION_TEST_STK_SIZE];//23
 OS_STK SWRB_MANUL_TASK_STK[SWRB_MANUL_TEST_STK_SIZE];
+OS_STK SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE];
 
 void OS_Task_Create(void)
 {
@@ -472,6 +473,9 @@ void SWRB_TestCtrlTask(void *pdata)
 
     OSTaskCreate(SweepRobot_ManulTestTask,(void*)0,(OS_STK*)&SWRB_MANUL_TASK_STK[SWRB_MANUL_TEST_STK_SIZE-1],SWRB_MANUL_TEST_TASK_PRIO);
     OSTaskSuspend(SWRB_MANUL_TEST_TASK_PRIO);
+    
+    OSTaskCreate(SweepRobot_StepMotorTask,(void*)0,(OS_STK*)&SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE-1],SWRB_STEPMOTOR_TASK_PRIO);
+    OSTaskSuspend(SWRB_STEPMOTOR_TASK_PRIO);
 
     OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
     OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
@@ -1299,13 +1303,16 @@ void SweepRobot_ManulWheelProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
+        printf("WHEEL->DIR=1\r\n");
         printf("LWHEEL->SPEED=25\r\n");
         printf("RWHEEL->SPEED=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTBLUE);
     }else{
         printf("LWHEEL->SPEED=0\r\n");
         printf("RWHEEL->SPEED=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTGRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1322,11 +1329,13 @@ void SweepRobot_ManulBrushProc(void)
         printf("RBRUSH->SPEED=30\r\n");
         printf("MBRUSH->SPEED=40\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTBLUE);
     }else{
         printf("LBRUSH->SPEED=0\r\n");
         printf("RBRUSH->SPEED=0\r\n");
         printf("MBRUSH->SPEED=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTGRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1341,9 +1350,11 @@ void SweepRobot_ManulFanProc(void)
     if(aSwrbManulTestState[SWRB_TEST_STATE_FAN]){
         printf("FAN->SPEED=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 0;
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTBLUE);
     }else{
         printf("FAN->SPEED=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 1;
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTGRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1356,9 +1367,11 @@ void SweepRobot_ManulBuzzerProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
-
+        
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTBLUE);
     }else{
-
+        
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTGRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1371,9 +1384,11 @@ void SweepRobot_ManulRGBLEDProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
-
+        
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTBLUE);
     }else{
-
+        
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTGRAY);
     }
 
     OS_EXIT_CRITICAL();
