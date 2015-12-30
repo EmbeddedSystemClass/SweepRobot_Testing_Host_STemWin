@@ -42,7 +42,7 @@ static void SweepRobot_WheelFloatTestProc(void)
         
         if(!wheelFloat[i].validFlag){
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                printf("WHEEL_FLOAT->READ=%d\r\n",i);
+                printf("WF->RD=%d\r\n",i);
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     wheelFloat[i].value = usartRxNum;
@@ -75,7 +75,7 @@ static void SweepRobot_WheelFloatTestProc(void)
         
         str = "WHEEL FLOAT OK\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL_FLOAT, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");

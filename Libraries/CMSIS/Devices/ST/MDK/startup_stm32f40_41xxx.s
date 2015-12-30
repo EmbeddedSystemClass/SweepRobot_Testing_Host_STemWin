@@ -38,7 +38,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000A00  ;如果使用STemWin的话此值应该设置大一点,0X00000800
+Stack_Size      EQU     0x00000A00  ;0X00000800
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -49,7 +49,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000550		;0X00000200
+Heap_Size       EQU     0x00000200		;0X00000200
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base

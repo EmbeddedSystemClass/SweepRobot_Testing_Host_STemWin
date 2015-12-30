@@ -35,10 +35,10 @@ static void SWRB_WheelTestInit(void)
         wheel[i].validFlag = 0;
     }
 
-    printf("WHEEL->DIR=1\r\n");
+    printf("WHL->DIR=1\r\n");
 
-    printf("LWHEEL->SPEED=40\r\n");
-    printf("RWHEEL->SPEED=40\r\n");
+    printf("LW->SPD=40\r\n");
+    printf("RW->SPD=40\r\n");
     /*
     printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_L);
     printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_R);
@@ -53,7 +53,7 @@ static void SWRB_WheelTestProc(void)
     for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){
         if(!wheel[i].validFlag){
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                printf("WHEEL->READ=%d\r\n",i);
+                printf("WHL->RD=%d\r\n",i);
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     wheel[i].speed = (u8)usartRxNum;
@@ -76,7 +76,7 @@ static void SWRB_WheelTestProc(void)
 
             if(wheel[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 wheel[i].validFlag = 1;
-                printf("WHEEL->OFF=%d\r\n",i);
+                printf("WHL->OFF=%d\r\n",i);
             }
         }
     }
@@ -89,7 +89,7 @@ static void SWRB_WheelTestProc(void)
         str = "WHEEL OK\r\n";
         SWRB_TestDataFileWriteString(str);
 
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL OK");
         Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
@@ -105,8 +105,8 @@ static void SWRB_WheelTestOverTimeProc(void)
 
     gSwrbTestTaskRunCnt = 0;
 
-    printf("WHEEL->OFF=0\r\n");
-    printf("WHEEL->OFF=1\r\n");
+    printf("WHL->OFF=0\r\n");
+    printf("WHL->OFF=1\r\n");
 
     SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 

@@ -60,7 +60,7 @@ static void SweepRobot_IrDACodeQuery(void)
 {
     SweepRobot_IrDACodeTxProc(0x40);
     OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
-    printf("IRDA->READ\r\n");
+    printf("IRDA->RD\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
     if(usartRxFlag){
         SweepRobot_IrDATestRxCodeProc(USART_RX_STA&USART_CNT_MASK);
@@ -128,14 +128,14 @@ static void SweepRobot_IrDATestProc(void)
         gSwrbTestTaskRunCnt = 0;
         
         printf("IRDA->OFF\r\n");
-        printf("IRDA->ERASE\r\n");
+        printf("IRDA->ERS\r\n");
         
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
         str = "IRDA OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
         for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
@@ -155,7 +155,7 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     gSwrbTestTaskRunCnt = 0;
     
     printf("IRDA->OFF\r\n");
-    printf("IRDA->ERASE\r\n");
+    printf("IRDA->ERS\r\n");
 
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     

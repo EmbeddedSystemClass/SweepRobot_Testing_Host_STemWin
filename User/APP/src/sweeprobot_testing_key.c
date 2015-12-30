@@ -37,7 +37,7 @@ static void SweepRobot_KeyTestProc(void)
     
     if(!key.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("KEY->READ\r\n");
+            printf("KEY->RD\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 key.value = usartRxNum;
@@ -66,10 +66,10 @@ static void SweepRobot_KeyTestProc(void)
 
         SWRB_TestDataSaveToFile(KEY_TestDataSave);
         
-        str = "ERROR->KEY\r\n";
+        str = "KEY OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "KEY OK\r\n");
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "KEY OK\r\n");
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY OK");
         Edit_Clear();

@@ -24,7 +24,7 @@ static void SweepRobot_AshTrayTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
-    printf("SENSOR->IFRD_LED=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
     SweepRobot_AshTrayTestInsCtrlMoveToTestPos();
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
@@ -48,7 +48,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
     
     if(!ashTrayIns.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("ASH_TRAY->READ=0\r\n");
+            printf("AT->RD=0\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayIns.value = usartRxNum;
@@ -83,7 +83,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
     
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("SENSOR->READ=15\r\n");
+            printf("SNSR->RD=15\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.offValue = usartRxNum;
@@ -96,7 +96,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
                 continue;
             }
         }
-        printf("SENSOR->IFRD_LED=1\r\n");
+        printf("SNSR->IFRD=1\r\n");
     }
 }
 
@@ -106,7 +106,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
     
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("SENSOR->READ=15\r\n");
+            printf("SNSR->RD=15\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.onValue = usartRxNum;
@@ -119,7 +119,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
                 continue;
             }
         }
-        printf("SENSOR->IFRD_LED=0\r\n");
+        printf("SNSR->IFRD=0\r\n");
 
         if(ashTrayLvl.offValue - ashTrayLvl.onValue > SWRB_ASH_TRAY_LVL_VALID_THRESHOLD){
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
@@ -150,7 +150,7 @@ static void SweepRobot_AshTrayTestProc(void)
 
     if(ashTrayIns.validFlag && ashTrayLvl.validFlag){
         gSwrbTestTaskRunCnt = 0;
-        printf("SENSOR->IFRD_LED=0\r\n");
+        printf("SNSR->IFRD=0\r\n");
         SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
         SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
@@ -158,7 +158,7 @@ static void SweepRobot_AshTrayTestProc(void)
         str = "ASH TRAY OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_ASH_TRAY, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY, "ASH TRAY OK");
         Edit_Clear();
@@ -172,7 +172,7 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    printf("SENSOR->IFRD_LED=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);

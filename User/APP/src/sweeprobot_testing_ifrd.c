@@ -24,8 +24,8 @@ static void SweepRobot_IFRDTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
-    printf("SENSOR->IFRD_LED=0\r\n");
-    printf("SENSOR->B_SWITCH=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
+    printf("SNSR->BSWC=0\r\n");
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
@@ -44,14 +44,14 @@ static void SweepRobot_IFRDTestTxOffProc(void)
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!ifrd[i].validFlag){
             if(i==6){
-                printf("SENSOR->B_SWITCH=1\r\n");
+                printf("SNSR->BSWC=1\r\n");
                 OSTimeDlyHMSM(0,0,0,1);
             }
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                 if(i<6){
-                    printf("SENSOR->READ=%d\r\n", i+1);
+                    printf("SNSR->RD=%d\r\n", i+1);
                 }else{
-                    printf("SENSOR->READ=%d\r\n", i-1);
+                    printf("SNSR->RD=%d\r\n", i-1);
                 }
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
@@ -67,8 +67,8 @@ static void SweepRobot_IFRDTestTxOffProc(void)
             }
         }
     }
-    printf("SENSOR->B_SWITCH=0\r\n");
-    printf("SENSOR->IFRD_LED=1\r\n");
+    printf("SNSR->BSWC=0\r\n");
+    printf("SNSR->IFRD=1\r\n");
 }
 
 static void SweepRobot_IFRDTestTxOnProc(void)
@@ -79,14 +79,14 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!ifrd[i].validFlag){
             if(i==6){
-                printf("SENSOR->B_SWITCH=1\r\n");
+                printf("SNSR->BSWC=1\r\n");
                 OSTimeDlyHMSM(0,0,0,1);
             }
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                 if(i<6){
-                    printf("SENSOR->READ=%d\r\n", i+1);
+                    printf("SNSR->RD=%d\r\n", i+1);
                 }else{
-                    printf("SENSOR->READ=%d\r\n", i-1);
+                    printf("SNSR->RD=%d\r\n", i-1);
                 }
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
@@ -117,21 +117,21 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             }
         }
     }
-    printf("SENSOR->B_SWITCH=0\r\n");
-    printf("SENSOR->IFRD_LED=0\r\n");
+    printf("SNSR->BSWC=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
 
     if( ifrd[0].validFlag && ifrd[1].validFlag && ifrd[2].validFlag && ifrd[3].validFlag && \
         ifrd[4].validFlag && ifrd[5].validFlag && ifrd[6].validFlag && ifrd[7].validFlag
         ){
         gSwrbTestTaskRunCnt = 0;
-        printf("SENSOR->IFRD_LED=0\r\n");
-        printf("SENSOR->B_SWITCH=0\r\n");
+        printf("SNSR->IFRD=0\r\n");
+        printf("SNSR->BSWC=0\r\n");
         
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
         
         str = "IFRD OK\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IFRD, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD OK");
         Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
@@ -143,7 +143,6 @@ static void SweepRobot_IFRDTestTxOnProc(void)
 
 static void SweepRobot_IFRDTestOverTimeErrProc(char *str)
 {
-    str = "ERROR->IFRD_F_L\r\n";
     SWRB_TestDataFileWriteString(str);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 }
@@ -151,8 +150,8 @@ static void SweepRobot_IFRDTestOverTimeErrProc(char *str)
 static void SweepRobot_IFRDTestOverTimeProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
-    printf("SENSOR->IFRD_LED=0\r\n");
-    printf("SENSOR->B_SWITCH=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
+    printf("SNSR->BSWC=0\r\n");
 
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 

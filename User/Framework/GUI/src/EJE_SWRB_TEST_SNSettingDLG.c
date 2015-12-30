@@ -695,24 +695,24 @@ void SWRB_TestDUTWriteSN(void)
     char *str;
     int tempSN;
 
-    printf("SN_WRITE->ERASE\r\n");
+    printf("SNW->ERS\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     str = mymalloc(SRAMIN, sizeof(char)*10);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, str);
-    printf("SN_WRITE->YEAR=%s\r\n", str);
+    printf("SNW->YEAR=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_MONTH, str);
-    printf("SN_WRITE->MONTH=%s\r\n", str);
+    printf("SNW->MNTH=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_DATE, str);
-    printf("SN_WRITE->DATE=%s\r\n", str);
+    printf("SNW->DATE=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
@@ -728,7 +728,7 @@ void SWRB_TestDUTWriteSN(void)
     ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN3, str);
     tempSN += *str-'0';
 
-    printf("SN_WRITE->SN=%d\r\n", tempSN);
+    printf("SNW->SN=%d\r\n", tempSN);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     myfree(SRAMIN, str);

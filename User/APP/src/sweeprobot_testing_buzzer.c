@@ -46,13 +46,13 @@ static void SweepRobot_BuzzerTestProc(void)
         
         switch(buzzer.validCnt){
             case 1:
-                printf("BUZZER->ON=1\r\n");
+                printf("BZR->ON=1\r\n");
                 break;
             case 2:
-                printf("BUZZER->ON=2\r\n");
+                printf("BZR->ON=2\r\n");
                 break;
             case 3:
-                printf("BUZZER->ON=3\r\n");
+                printf("BZR->ON=3\r\n");
                 break;
         }
     }else{

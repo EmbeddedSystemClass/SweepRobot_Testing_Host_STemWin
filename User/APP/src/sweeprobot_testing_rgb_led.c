@@ -51,18 +51,18 @@ static void SweepRobot_RGBLEDTestProc(void)
     char *str;
     
     rgb_led.validCnt = 1;
-    printf("RGB_LED->ON=1\r\n");
+    printf("RGB->ON=1\r\n");
     SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_RED, "IS RED LED OK?", ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
     rgb_led.validCnt = 2;
-    printf("RGB_LED->ON=2\r\n");
+    printf("RGB->ON=2\r\n");
     SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_GREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
     rgb_led.validCnt = 3;
-    printf("RGB_LED->ON=4\r\n");
+    printf("RGB->ON=4\r\n");
     SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_BLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
     
     if(rgb_led.r_state && rgb_led.g_state && rgb_led.b_state){
         gSwrbTestTaskRunCnt = 0;
-        printf("RGB_LED->ON=2\r\n");
+        printf("RGB->ON=2\r\n");
         GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
         
         SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
@@ -86,7 +86,7 @@ static void SweepRobot_RGBLEDTestErrProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    printf("RGB_LED->ON=2\r\n");
+    printf("RGB->ON=2\r\n");
     GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
     
     SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);

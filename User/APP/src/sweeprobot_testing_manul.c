@@ -28,10 +28,10 @@ enum SWRB_MANUL_TEST_DATA_SNUM_POS{
 };
 
 static const char *gSwrbManulTestListviewSNQueryCmd[][1] = {
-    {"SN_READ->YEAR"},
-    {"SN_READ->MONTH"},
-    {"SN_READ->DATE"},
-    {"SN_READ->SN"},
+    {"SNR->YEAR"},
+    {"SNR->MNTH"},
+    {"SNR->DATE"},
+    {"SNR->SN"},
 };
 
 static u8 gSwrbManulTestListviewDispDataCoord[][2] = {
@@ -425,7 +425,7 @@ static void SweepRobot_ManulTestProc(void)
 {
     u8 i,j;
 
-    printf("MANUL->READ\r\n");
+    printf("MNL->RD\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
     if(usartRxFlag){
         SweepRobot_ManulTestRxDataProc();

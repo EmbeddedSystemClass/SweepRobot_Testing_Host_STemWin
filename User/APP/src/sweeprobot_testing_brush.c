@@ -34,9 +34,9 @@ static void SWRB_BrushTestTaskInit(void)
         brush[i].validFlag = 0;
     }
     
-    printf("LBRUSH->SPEED=100\r\n");
-    printf("RBRUSH->SPEED=100\r\n");
-    printf("MBRUSH->SPEED=40\r\n");
+    printf("LB->SPD=100\r\n");
+    printf("RB->SPD=100\r\n");
+    printf("MB->SPD=40\r\n");
     /* TODO: if using default brush startup speed,uncomment this */
     /*
     printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_L);
@@ -53,7 +53,7 @@ static void SWRB_BrushTestProc(void)
     for(i=0;i<SWRB_BRUSH_CHAN_NUM;i++){
         if(!brush[i].validFlag){
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                printf("BRUSH->READ=%d\r\n",i);
+                printf("BRS->RD=%d\r\n",i);
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     brush[i].current = usartRxNum;
@@ -75,7 +75,7 @@ static void SWRB_BrushTestProc(void)
             
             if( brush[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 brush[i].validFlag = 1;
-                printf("BRUSH->OFF=%d\r\n",i);
+                printf("BRS->OFF=%d\r\n",i);
             }
         }
     }
@@ -87,7 +87,7 @@ static void SWRB_BrushTestProc(void)
         
         str = "BRUSH OK\r\n";
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "BRUSH OK\r\n");
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "BRUSH OK\r\n");
         
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BRUSH, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH OK");
@@ -103,9 +103,9 @@ void SWRB_BrushTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_L);
-    printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_R);
-    printf("BRUSH->OFF=%d\r\n",BRUSH_CHAN_M);
+    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_L);
+    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_R);
+    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_M);
     
     SWRB_TestDataSaveToFile(Brush_TestDataSave);
     

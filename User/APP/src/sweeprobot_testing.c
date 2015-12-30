@@ -570,7 +570,7 @@ void SweepRobot_PCBTestStartProc(void)
         SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
         SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
         SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_STOP);
-        printf("TEST->ON\r\n");
+        printf("T->ON\r\n");
 
         OS_ENTER_CRITICAL();
         OSTaskResume(gSwrbTestRuningTaskPrio);
@@ -592,15 +592,15 @@ void SweepRobot_PCBTestStartProc(void)
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
 
-        printf("LWHEEL->SPEED=0\r\n");
-        printf("RWHEEL->SPEED=0\r\n");
-        printf("LBRUSH->SPEED=0\r\n");
-        printf("RBRUSH->SPEED=0\r\n");
-        printf("MBRUSH->SPEED=0\r\n");
-        printf("FAN->SPEED=0\r\n");
-        printf("SENSOR->IFRD_LED=0\r\n");
-        printf("SENSOR->B_SWITCH=0\r\n");
-        printf("CHARGE->OFF\r\n");
+        printf("LW->SPD=0\r\n");
+        printf("RW->SPD=0\r\n");
+        printf("LB->SPD=0\r\n");
+        printf("RB->SPD=0\r\n");
+        printf("MB->SPD=0\r\n");
+        printf("FAN->SPD=0\r\n");
+        printf("SNSR->IFRD=0\r\n");
+        printf("SNSR->BSWC=0\r\n");
+        printf("CRG->OFF\r\n");
         printf("IRDA->OFF\r\n");
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "PRESS RESUME TO RESUME TEST\r\n");
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "TEST PAUSED\r\n");
@@ -788,7 +788,7 @@ void SweepRobot_PCBTestExitProc(void)
         OS_EXIT_CRITICAL();
 
         SweepRobotTest_PCBTestInitProc();
-        printf("TEST->OFF\r\n");
+        printf("T->OFF\r\n");
 
         TEST_LED_TASK_CB_DEREG();
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE, GUI_LIGHTGRAY);
@@ -816,17 +816,17 @@ static void SweepRobot_PCBTestGUIReset(void)
 {
     int i;
 
-    printf("TEST->ON\r\n");
-    printf("CHARGE->OFF\r\n");
+    printf("T->ON\r\n");
+    printf("CRG->OFF\r\n");
     printf("IRDA->OFF\r\n");
-    printf("LWHEEL->SPEED=0\r\n");
-    printf("RWHEEL->SPEED=0\r\n");
-    printf("LBRUSH->SPEED=0\r\n");
-    printf("RBRUSH->SPEED=0\r\n");
-    printf("MBRUSH->SPEED=0\r\n");
-    printf("FAN->SPEED=0\r\n");
-    printf("SENSOR->IFRD_LED=0\r\n");
-    printf("SENSOR->B_SWITCH=0\r\n");
+    printf("LW->SPD=0\r\n");
+    printf("RW->SPD=0\r\n");
+    printf("LB->SPD=0\r\n");
+    printf("RB->SPD=0\r\n");
+    printf("MB->SPD=0\r\n");
+    printf("FAN->SPD=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
+    printf("SNSR->BSWC=0\r\n");
 
     for(i=ID_PCBTEST_EDIT_U1;i<=ID_PCBTEST_EDIT_D8;i++){
         Edit_Set_Value(hWin_SWRB_PCBTEST, i, 0);
@@ -1086,8 +1086,8 @@ void SweepRobot_PowerStationTestStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
-        printf("TEST->ON\r\n");
-        printf("POWER_STATION->ON\r\n");
+        printf("T->ON\r\n");
+        printf("PS->ON\r\n");
 
         TEST_LED_TASK_CB_REG(SweepRobot_PSTestIndicateBtnToggle);
 
@@ -1108,7 +1108,7 @@ void SweepRobot_PowerStationTestStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-        printf("POWER_STATION->OFF\r\n");
+        printf("PS->OFF\r\n");
 
         TEST_LED_TASK_CB_DEREG();
 
@@ -1137,8 +1137,8 @@ void SweepRobot_PowerStationTestStopProc(void)
 
         gSwrbTestTaskRunCnt = 0;
 
-        printf("POWER_STATION->OFF\r\n");
-        printf("TEST->OFF\r\n");
+        printf("PS->OFF\r\n");
+        printf("T->OFF\r\n");
 
         Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_INDICATE, GUI_LIGHTGRAY);
         Button_Set_BkColor(hWin_SWRB_POWER_STATION, ID_PS_BUTTON_START, GUI_LIGHTBLUE);
@@ -1173,7 +1173,7 @@ void SweepRobot_PowerStationTestExitProc(void)
 
         gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 
-        printf("TEST->OFF\r\n");
+        printf("T->OFF\r\n");
         WM_HideWin(hWin_SWRB_POWER_STATION);
         WM_ShowWin(hWin_SWRB_START);
     }
@@ -1206,14 +1206,14 @@ void SweepRobot_ManulStartProc(void)
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
-        printf("TEST->ON\r\n");
-//        printf("LWHEEL->SPEED=25\r\n");
-//        printf("RWHEEL->SPEED=25\r\n");
-//        printf("LBRUSH->SPEED=25\r\n");
-//        printf("RBRUSH->SPEED=25\r\n");
-//        printf("MBRUSH->SPEED=5\r\n");
-//        printf("FAN->SPEED=25\r\n");
-        printf("SENSOR->IFRD_LED=1\r\n");
+        printf("T->ON\r\n");
+//        printf("LW->SPD=25\r\n");
+//        printf("RW->SPD=25\r\n");
+//        printf("LB->SPD=25\r\n");
+//        printf("RB->SPD=25\r\n");
+//        printf("MB->SPD=5\r\n");
+//        printf("FAN->SPD=25\r\n");
+        printf("SNSR->IFRD=1\r\n");
         printf("IRDA->ON\r\n");
 
         OS_ENTER_CRITICAL();
@@ -1234,15 +1234,15 @@ void SweepRobot_ManulStartProc(void)
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
-//        printf("LWHEEL->SPEED=0\r\n");
-//        printf("RWHEEL->SPEED=0\r\n");
-//        printf("LBRUSH->SPEED=0\r\n");
-//        printf("RBRUSH->SPEED=0\r\n");
-//        printf("MBRUSH->SPEED=0\r\n");
-//        printf("FAN->SPEED=0\r\n");
-        printf("SENSOR->IFRD_LED=0\r\n");
+//        printf("LW->SPD=0\r\n");
+//        printf("RW->SPD=0\r\n");
+//        printf("LB->SPD=0\r\n");
+//        printf("RB->SPD=0\r\n");
+//        printf("MB->SPD=0\r\n");
+//        printf("FAN->SPD=0\r\n");
+        printf("SNSR->IFRD=0\r\n");
         printf("IRDA->OFF\r\n");
-        printf("IRDA->ERASE\r\n");
+        printf("IRDA->ERS\r\n");
 
         gSwrbTestTaskRunCnt = 0;
 
@@ -1278,7 +1278,7 @@ void SweepRobot_ManulResetProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
-        printf("IRDA->ERASE\r\n");
+        printf("IRDA->ERS\r\n");
 
         SweepRobot_ManulTestDataReset();
     }
@@ -1290,7 +1290,7 @@ void SweepRobot_ManulExitProc(void)
 
         gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 
-        printf("TEST->OFF\r\n");
+        printf("T->OFF\r\n");
         WM_HideWin(hWin_SWRB_MANUL);
         WM_ShowWin(hWin_SWRB_START);
     }
@@ -1303,14 +1303,14 @@ void SweepRobot_ManulWheelProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
-        printf("WHEEL->DIR=1\r\n");
-        printf("LWHEEL->SPEED=25\r\n");
-        printf("RWHEEL->SPEED=25\r\n");
+        printf("WHL->DIR=1\r\n");
+        printf("LW->SPD=25\r\n");
+        printf("RW->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTBLUE);
     }else{
-        printf("LWHEEL->SPEED=0\r\n");
-        printf("RWHEEL->SPEED=0\r\n");
+        printf("LW->SPD=0\r\n");
+        printf("RW->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTGRAY);
     }
@@ -1325,15 +1325,15 @@ void SweepRobot_ManulBrushProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
-        printf("LBRUSH->SPEED=30\r\n");
-        printf("RBRUSH->SPEED=30\r\n");
-        printf("MBRUSH->SPEED=40\r\n");
+        printf("LB->SPD=30\r\n");
+        printf("RB->SPD=30\r\n");
+        printf("MB->SPD=40\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTBLUE);
     }else{
-        printf("LBRUSH->SPEED=0\r\n");
-        printf("RBRUSH->SPEED=0\r\n");
-        printf("MBRUSH->SPEED=0\r\n");
+        printf("LB->SPD=0\r\n");
+        printf("RB->SPD=0\r\n");
+        printf("MB->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTGRAY);
     }
@@ -1348,11 +1348,11 @@ void SweepRobot_ManulFanProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_FAN]){
-        printf("FAN->SPEED=25\r\n");
+        printf("FAN->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTBLUE);
     }else{
-        printf("FAN->SPEED=0\r\n");
+        printf("FAN->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTGRAY);
     }
@@ -1368,9 +1368,11 @@ void SweepRobot_ManulBuzzerProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
         
+        aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTBLUE);
     }else{
         
+        aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTGRAY);
     }
 
@@ -1385,9 +1387,11 @@ void SweepRobot_ManulRGBLEDProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
         
+        aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTBLUE);
     }else{
         
+        aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTGRAY);
     }
 

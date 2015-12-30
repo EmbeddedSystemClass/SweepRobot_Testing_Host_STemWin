@@ -45,7 +45,7 @@ static void SweepRobot_PowerStationTestInit(void)
     
     printf("IRDA->OFF\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    printf("CHARGE->ON=5\r\n");
+    printf("CRG->ON=5\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_TEST_PS_TX_SIG_NUM;i++){
@@ -93,7 +93,7 @@ static void SweepRobot_PowerStationTest24VStateGet(void)
     
     if(!powerStation24V.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("CHARGE->READ=%d\r\n",CHARGE_RX_Chan_24Vstate);
+            printf("CRG->RD=%d\r\n",CHARGE_RX_Chan_24Vstate);
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 powerStation24V.state = usartRxNum;
@@ -124,7 +124,7 @@ static void SweepRobot_PowerStationTestChargeVolGet(void)
     
     if(powerStation24V.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("CHARGE->READ=%d\r\n", CHARGE_RX_Chan_Voltage);
+            printf("CRG->RD=%d\r\n", CHARGE_RX_Chan_Voltage);
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag && (usartRxNum > 1000) ){
                 powerStation24V.charge.voltage = usartRxNum;
@@ -148,7 +148,7 @@ static void SweepRobot_PowerStationTestChargeCurGet(void)
     
     if(powerStation24V.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("CHARGE->READ=%d\r\n", CHARGE_RX_Chan_Current);
+            printf("CRG->RD=%d\r\n", CHARGE_RX_Chan_Current);
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag && (usartRxNum < 1000) ){
                 powerStation24V.charge.current = usartRxNum;
@@ -204,7 +204,7 @@ static void SweepRobot_PowerStationTestProc(void)
     for(i=0;i<SWRB_TEST_PS_TX_SIG_NUM;i++){
         
         for(j=0;j<SWRB_TEST_USART_IRDA_READ_TIMES;j++){
-            printf("POWER_STATION->READ\r\n");
+            printf("PS->RD\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 gIrDATmpCode = usartRxNum;

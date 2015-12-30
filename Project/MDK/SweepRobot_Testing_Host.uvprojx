@@ -1151,6 +1151,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
             </File>
+            <File>
+              <FileName>sweeprobot_testing_stepmotor_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_stepmotor_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2319,6 +2324,11 @@
               <FileName>sweeprobot_testing_manul.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_stepmotor_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_stepmotor_task.c</FilePath>
             </File>
           </Files>
         </Group>

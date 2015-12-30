@@ -25,7 +25,7 @@ static void SweepRobot_FanTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
-    printf("FAN->SPEED=50\r\n");
+    printf("FAN->SPD=50\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 
     fan.current = 0;
@@ -39,7 +39,7 @@ static void SweepRobot_FanTestProc(void)
     char *str;
     
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-        printf("FAN->READ\r\n");
+        printf("FAN->RD\r\n");
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
             fan.current = usartRxNum;
@@ -62,7 +62,7 @@ static void SweepRobot_FanTestProc(void)
 
     if(fan.validCnt > SWRB_TEST_VALID_COMP_TIMES){
         fan.validFlag = 1;
-        printf("FAN->SPEED=0\r\n");
+        printf("FAN->SPD=0\r\n");
     }
 
     if(fan.validFlag){
@@ -73,7 +73,7 @@ static void SweepRobot_FanTestProc(void)
         str = "FAN OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_FAN, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN OK");
         Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
@@ -88,7 +88,7 @@ static void SweepRobot_FanTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    printf("FAN->SPEED=0\r\n");
+    printf("FAN->SPD=0\r\n");
 
     SWRB_TestDataSaveToFile(Fan_TestDataSave);
     
@@ -116,8 +116,6 @@ void SweepRobot_FanTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_FAN_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
-            
-            Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_FanTestInit();

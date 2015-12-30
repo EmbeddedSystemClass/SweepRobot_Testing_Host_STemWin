@@ -127,15 +127,11 @@ static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_ISR(void)
     STEP_MOTOR_EN_OUT_ENABLE();
 }
 
-  /* ISR METHOD */
-//static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
-//{
-//    stepMotor.step++;
-//    if(stepMotor.step == gStepMotorEXPStep){
-//        TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, DISABLE);
-//        SweepRobotTest_StepMotorSoftStop();
-//    }
-//}
+static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
+{
+    stepMotor.step++;
+    
+}
 
 static void SweepRobotTest_StepMotorRun(void)
 {

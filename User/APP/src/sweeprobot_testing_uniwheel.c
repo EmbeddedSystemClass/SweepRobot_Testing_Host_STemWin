@@ -25,7 +25,7 @@ static void SweepRobot_UniWheelTestInit(void)
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
-    printf("SENSOR->IFRD_LED=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
     uniwheel.onValue = 0;
     uniwheel.offValue = 0;
     uniwheel.validCnt = 0;
@@ -38,7 +38,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
     
     if(!uniwheel.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("SENSOR->READ=8\r\n");
+            printf("SNSR->RD=8\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 uniwheel.offValue = usartRxNum;
@@ -51,7 +51,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
                 continue;
             }
         }
-        printf("SENSOR->IFRD_LED=1\r\n");
+        printf("SNSR->IFRD=1\r\n");
     }
 }
 
@@ -62,7 +62,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
     
     if(!uniwheel.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("SENSOR->READ=8\r\n");
+            printf("SNSR->RD=8\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 uniwheel.onValue = usartRxNum;
@@ -75,7 +75,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
                 continue;
             }
         }
-        printf("SENSOR->IFRD_LED=0\r\n");
+        printf("SNSR->IFRD=0\r\n");
   
         if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_VALID_THRESHOLD){
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
@@ -90,14 +90,14 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
         
         if(uniwheel.validFlag){
             gSwrbTestTaskRunCnt = 0;
-            printf("SENSOR->IFRD_LED=0\r\n");
+            printf("SNSR->IFRD=0\r\n");
 
             SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
             
             str = "UNIWHEEL OK\r\n";
             SWRB_TestDataFileWriteString(str);
             
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
             Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_UNIWHEEL, GUI_BLUE);
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_UNIWHEEL, "UNIWHEEL OK");
             Edit_Clear();
@@ -112,7 +112,7 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    printf("SENSOR->IFRD_LED=0\r\n");
+    printf("SNSR->IFRD=0\r\n");
     
     SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
     
