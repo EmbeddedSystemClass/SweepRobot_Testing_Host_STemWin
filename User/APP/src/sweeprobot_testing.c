@@ -17,8 +17,6 @@
 
 #define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  60
 
-static char* gLoginPassWord = "123";
-
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
@@ -31,6 +29,7 @@ static char *gEncryptStr;
 
 enum SWRB_TEST_SELECT gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
 enum SWRB_TEST_RUN_STATE gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
 enum SWRB_TEST_SET_STATE gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
@@ -142,12 +141,10 @@ static void emWin_TaskInit(void)
     hWin_SWRB_MANUL = CreateManulTestDLG();
     hWin_SWRB_STEPMOTOR = CreatewinStepMotor();
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_PCBTestDLG();
-//    hWin_SWRB_WARNING = CreateWarningDLG();
     hWin_SWRB_POWER_STATION = CreateEJE_SWRB_TEST_PowerStationDLG();
-#ifdef _SHOW_SLAM_DLG
     hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
-#endif
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
+//    hWin_SWRB_WARNING = CreateWarningDLG();
 
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Rtc_Task,(void*)0,(OS_STK*)&RTC_TASK_STK[RTC_STK_SIZE-1],RTC_TASK_PRIO);
@@ -172,9 +169,7 @@ void emWin_Maintask(void *pdata)
             SWRB_SET_EditTextUpdate();
         }
 
-#ifdef _SHOW_SLAM_DLG
         WM_InvalidateWindow(hWin_SWRB_SLAM);
-#endif
 
         GUI_Exec();
         OSTimeDlyHMSM(0,0,0,10);
@@ -393,7 +388,6 @@ static void SWRB_TEST_BUTTON_CTRL_Set(void)
         case SWRB_TEST_SELECT_NONE:
             break;
         case SWRB_TEST_SELECT_PCB:
-            SweepRobot_PCBTestLoginOKProc();
             break;
         case SWRB_TEST_SELECT_POWER_STATION:
             ;
@@ -473,7 +467,7 @@ void SWRB_TestCtrlTask(void *pdata)
 
     OSTaskCreate(SweepRobot_ManulTestTask,(void*)0,(OS_STK*)&SWRB_MANUL_TASK_STK[SWRB_MANUL_TEST_STK_SIZE-1],SWRB_MANUL_TEST_TASK_PRIO);
     OSTaskSuspend(SWRB_MANUL_TEST_TASK_PRIO);
-    
+
     OSTaskCreate(SweepRobot_StepMotorTask,(void*)0,(OS_STK*)&SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE-1],SWRB_STEPMOTOR_TASK_PRIO);
     OSTaskSuspend(SWRB_STEPMOTOR_TASK_PRIO);
 
@@ -623,68 +617,6 @@ void SweepRobot_PCBTestLoginProc(void)
         WM_ShowWin(hWin_SWRB_LOGIN);
         WM_BringToTop(hWin_SWRB_LOGIN);
     }
-}
-
-void SweepRobot_PCBTestLoginOKProc(void)
-{
-    WM_HWIN hItem;
-    char *str;
-
-    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
-
-        hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
-
-        str = mymalloc(SRAMIN, sizeof(char)*11);
-        *str = 0;
-        Edit_Get_Text(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD, str);
-
-        if(!(strcmp(str,gLoginPassWord))){
-
-            gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
-
-            Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Please Input Password");
-            Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_BLACK);
-
-            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
-
-            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START);
-            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
-            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
-            SWRB_PCBTestCheckboxEnable();
-
-            SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
-
-            WM_HideWin(hWin_SWRB_LOGIN);
-            WM_HideWin(hWin_SWRB_PCBTEST);
-            WM_ShowWin(hWin_SWRB_SNSETTING);
-        }else{
-            Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Password Error");
-            Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_RED);
-        }
-        myfree(SRAMIN, str);
-    }
-}
-
-void SweepRobot_PCBTestLoginCancelProc(void)
-{
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-
-    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
-    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
-    SWRB_PCBTestCheckboxEnable();
-
-    WM_HideWin(hWin_SWRB_LOGIN);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
-}
-
-void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg)
-{
-    SWRB_LastCallNumpadEditSave(pMsg);
-    WM_ShowWin(hWin_SWRB_NUMPAD);
-    WM_BringToTop(hWin_SWRB_NUMPAD);
 }
 
 void SweepRobot_PCBTestNumPadOKProc(void)
@@ -1044,7 +976,6 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
     WM_ShowWin(hWin_SWRB_MANUL);
 }
 
-#ifdef _SHOW_SLAM_DLG
 void SweepRobot_StartDlgSLAMBtnClickProc(void)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_SLAM;
@@ -1054,7 +985,6 @@ void SweepRobot_StartDlgSLAMBtnClickProc(void)
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_SLAM);
 }
-#endif
 
 void SweepRobot_StartDlgStepMotorBtnClickProc(void)
 {
@@ -1207,12 +1137,6 @@ void SweepRobot_ManulStartProc(void)
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
         printf("T->ON\r\n");
-//        printf("LW->SPD=25\r\n");
-//        printf("RW->SPD=25\r\n");
-//        printf("LB->SPD=25\r\n");
-//        printf("RB->SPD=25\r\n");
-//        printf("MB->SPD=5\r\n");
-//        printf("FAN->SPD=25\r\n");
         printf("SNSR->IFRD=1\r\n");
         printf("IRDA->ON\r\n");
 
@@ -1223,7 +1147,6 @@ void SweepRobot_ManulStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-//        Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, "Start");
         BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
 
@@ -1234,12 +1157,6 @@ void SweepRobot_ManulStartProc(void)
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
-//        printf("LW->SPD=0\r\n");
-//        printf("RW->SPD=0\r\n");
-//        printf("LB->SPD=0\r\n");
-//        printf("RB->SPD=0\r\n");
-//        printf("MB->SPD=0\r\n");
-//        printf("FAN->SPD=0\r\n");
         printf("SNSR->IFRD=0\r\n");
         printf("IRDA->OFF\r\n");
         printf("IRDA->ERS\r\n");
@@ -1254,23 +1171,17 @@ void SweepRobot_ManulStartProc(void)
 
 void SweepRobot_ManulSetProc(void)
 {
-    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
+    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
 
-        gSwrbTestMode = SWRB_TEST_MODE_SET;
+        gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
 
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_BLUE);
-
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTBLUE);
+        BUTTON_DispAutoModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }else{
-        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+        gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
 
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTGRAY);
-
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
+        BUTTON_DispManulModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }
 }
 
@@ -1278,9 +1189,9 @@ void SweepRobot_ManulResetProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
-        printf("IRDA->ERS\r\n");
-
         SweepRobot_ManulTestDataReset();
+        SweepRobot_ManulTestGuiReset();
+        SweepRobot_ManulTest_BtnCntArrayReset();
     }
 }
 
@@ -1312,7 +1223,7 @@ void SweepRobot_ManulWheelProc(void)
         printf("LW->SPD=0\r\n");
         printf("RW->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_GRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1335,7 +1246,7 @@ void SweepRobot_ManulBrushProc(void)
         printf("RB->SPD=0\r\n");
         printf("MB->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_GRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1354,7 +1265,7 @@ void SweepRobot_ManulFanProc(void)
     }else{
         printf("FAN->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 1;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTGRAY);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_GRAY);
     }
 
     OS_EXIT_CRITICAL();
@@ -1366,14 +1277,27 @@ void SweepRobot_ManulBuzzerProc(void)
 
     OS_ENTER_CRITICAL();
 
-    if(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
-        
-        aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 0;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTBLUE);
-    }else{
-        
-        aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 1;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTGRAY);
+    switch(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
+        case 0:
+            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_GRAY);
+            break;
+        case 1:
+            printf("BZR->ON=1\r\n");
+            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTRED);
+            break;
+        case 2:
+            printf("BZR->ON=2\r\n");
+            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTGREEN);
+            break;
+        case 3:
+            printf("BZR->ON=3\r\n");
+            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 0;
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTBLUE);
+            break;
+        default:break;
     }
 
     OS_EXIT_CRITICAL();
@@ -1385,37 +1309,42 @@ void SweepRobot_ManulRGBLEDProc(void)
 
     OS_ENTER_CRITICAL();
 
-    if(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
-        
-        aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED] = 0;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTBLUE);
-    }else{
-        
-        aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED] = 1;
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTGRAY);
+    switch(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
+        case 0:
+            printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_GRAY);
+            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
+            break;
+        case 1:
+            printf("RGB->ON=%d\r\n", RGB_LED_RED);
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTRED);
+            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
+            break;
+        case 2:
+            printf("RGB->ON=%d\r\n", RGB_LED_GREEN);
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTGREEN);
+            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
+            break;
+        case 3:
+            printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTBLUE);
+            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
+            break;
+        case 4:
+            printf("RGB->ON=%d\r\n", RGB_LED_RGB);
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_WHITE);
+            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED] = 0;
+            break;
+        default:break;
     }
 
     OS_EXIT_CRITICAL();
 }
 
-#ifdef _SHOW_SLAM_DLG
-void SweepRobot_SLAMStartProc(void)
+void SweepRobot_ManulTest_BtnCntArrayReset(void)
 {
-    
+    u8 i;
+
+    for(i=SWRB_TEST_STATE_WHEEL;i<SWRB_TEST_STATE_BOUND;i++)
+        aSwrbManulTestState[i] = 0;
 }
-
-void SweepRobot_SLAMResetProc(void)
-{
-
-}
-
-void SweepRobot_SLAMStopProc(void)
-{
-
-}
-
-void SweepRobot_SLAMExitProc(void)
-{
-    
-}
-#endif

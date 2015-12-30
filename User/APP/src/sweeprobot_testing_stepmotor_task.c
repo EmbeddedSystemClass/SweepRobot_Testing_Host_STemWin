@@ -6,19 +6,18 @@
 
 #include "includes.h"
 
-static u16 gSwrbStepMotorRunCnt = 0;
-
-#define SWRB_STEPMOTOR_TASK_OSTIMEDLY_TIME_SEC  2 
+#define SWRB_STEPMOTOR_TASK_OSTIMEDLY_TIME_SEC  2
 
 static void SweepRobot_StepMotorTaskISR(void)
 {
     STEP_MOTOR_EN_OUT_ENABLE();
+    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_STOP);
     OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
 }
 
 static void SweepRobot_StepMotorTaskInit(void)
 {
-    gSwrbTestRuningTaskPrio = SWRB_STEPMOTOR_TASK_PRIO;
+//    gSwrbTestRuningTaskPrio = SWRB_STEPMOTOR_TASK_PRIO;
     
     plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_INT, SweepRobot_StepMotorTaskISR);
 }

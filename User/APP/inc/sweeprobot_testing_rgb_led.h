@@ -3,6 +3,13 @@
 
 #include "stm32f4xx.h"
 
+enum RGB_LED_CHAN{
+    RGB_LED_RED = 1,
+    RGB_LED_GREEN = 2,
+    RGB_LED_BLUE = 4,
+    RGB_LED_RGB = 7,
+};
+
 typedef struct{
     int r_state;
     int g_state;

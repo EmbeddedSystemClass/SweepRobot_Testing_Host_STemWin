@@ -20,7 +20,7 @@ StepMotorDriver_TypeDef stepMotor;
 //static uint16_t gStepMotorEXPStep = 0;
 
 static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_ISR(void);
-//static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void);
+static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void);
 static void SweepRobotTest_StepMotorSoftStop(void);
 
 /* STEP MOTOR DRIVER GPIO AND TIMER INIT */
@@ -82,8 +82,6 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
 
     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM, DISABLE);
 
-//    TIM_SelectMasterSlaveMode(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM, TIM_MasterSlaveMode_Enable);
-
     /* SLAVE TIMER INIT */
     TIM_DeInit(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM);
 
@@ -106,15 +104,15 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     TIM_SelectMasterSlaveMode(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_MasterSlaveMode_Enable);
 
     /* ISR METHOD */
-//    TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, DISABLE);
+    TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, DISABLE);
 
-//    NVIC_InitStructure.NVIC_IRQChannel=STEP_MOTOR_DRVIER_GPIO_PWM_OUT_TIM_IRQn;
-//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x01;
-//	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03;
-//	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
-//	NVIC_Init(&NVIC_InitStructure);
+    NVIC_InitStructure.NVIC_IRQChannel=STEP_MOTOR_DRVIER_GPIO_PWM_OUT_TIM_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x01;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03;
+	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 
-//    plat_int_reg_cb(STM32F4xx_INT_TIM3, STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR);
+    plat_int_reg_cb(STM32F4xx_INT_TIM3, STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR);
 
     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, ENABLE);
 
@@ -130,7 +128,6 @@ static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_ISR(void)
 static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
 {
     stepMotor.step++;
-    
 }
 
 static void SweepRobotTest_StepMotorRun(void)
@@ -192,7 +189,7 @@ void SweepRobotTest_StepMotorMoveSteps(int period_ms, u16 steps)
     STEP_MOTOR_MODE_SET_RUN();
 }
 
-void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode)
+void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode)
 {
     if(mode == STEP_MOTOR_MODE_RUN){
         STEP_MOTOR_EN_OUT_DISABLE();
@@ -213,6 +210,11 @@ void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode)
         stepMotor.mode = STEP_MOTOR_MODE_UNKNOWN;
         STEP_MOTOR_EN_OUT_ENABLE();
     }
+}
+
+void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode)
+{
+    stepMotor.mode = mode;
 }
 
 enum STEP_MOTOR_MODE SweepRobotTest_StepMotorModeGet(void)
@@ -275,6 +277,15 @@ void SweepRobotTest_StepMotorSpeedSet(enum STEP_MOTOR_SPEED speed)
 enum STEP_MOTOR_SPEED SweepRobotTest_StepMotorSpeedGet(void)
 {
     return stepMotor.speed;
+}
+
+int SweepRobotTest_StepMotorStepsGet(void)
+{
+    int stepCnt;
+    
+    stepCnt = stepMotor.step;
+    
+    return stepCnt;
 }
 
 void SweepRobotTest_StepMotorGotoPos(u8 pos)

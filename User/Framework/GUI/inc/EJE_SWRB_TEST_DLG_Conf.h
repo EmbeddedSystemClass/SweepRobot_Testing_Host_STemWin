@@ -531,6 +531,17 @@
         ID_LOGIN_FRAMEWIN_0 = ID_TIMESET_BOUND,
         ID_LOGIN_BUTTON_0,
         ID_LOGIN_BUTTON_1,
+        ID_LOGIN_BUTTON_2,
+        ID_LOGIN_BUTTON_3,
+        ID_LOGIN_BUTTON_4,
+        ID_LOGIN_BUTTON_5,
+        ID_LOGIN_BUTTON_6,
+        ID_LOGIN_BUTTON_7,
+        ID_LOGIN_BUTTON_8,
+        ID_LOGIN_BUTTON_9,
+        ID_LOGIN_BUTTON_10,
+        ID_LOGIN_BUTTON_11,
+        ID_LOGIN_BUTTON_12,
         ID_LOGIN_EDIT_0,
         ID_LOGIN_TEXT_0,
         ID_LOGIN_BOUND,
@@ -544,6 +555,17 @@
     enum ID_LOGIN_BUTTON{
         ID_LOGIN_BUTTON_OK = ID_LOGIN_BUTTON_0,
         ID_LOGIN_BUTTON_CANCEL,
+        ID_LOGIN_BUTTON_DELETE,
+        ID_LOGIN_BUTTON_NUM0,
+        ID_LOGIN_BUTTON_NUM1,
+        ID_LOGIN_BUTTON_NUM2,
+        ID_LOGIN_BUTTON_NUM3,
+        ID_LOGIN_BUTTON_NUM4,
+        ID_LOGIN_BUTTON_NUM5,
+        ID_LOGIN_BUTTON_NUM6,
+        ID_LOGIN_BUTTON_NUM7,
+        ID_LOGIN_BUTTON_NUM8,
+        ID_LOGIN_BUTTON_NUM9,
         ID_LOGIN_BUTTON_BOUND,
     };
     
@@ -906,11 +928,15 @@ void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispErrorCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispReTestCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispDeleteCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue);
 void Edit_Get_Text(WM_HWIN hWin, int editId, char *str);
+int Edit_Get_UserData(WM_HWIN hWin, int editId, char *str, int numBytes);
 void Edit_Set_HexMode(WM_HWIN hWin, int editId, long value, long min, long max);
 void Edit_Set_DecMode(WM_HWIN hWin, int editId, long value, long min, long max, int shift, unsigned char flags);
 void Edit_Clear(void);

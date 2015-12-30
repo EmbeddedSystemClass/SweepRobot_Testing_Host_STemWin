@@ -12,6 +12,8 @@
 #define SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME    100
 #define SWRB_MANUL_TEST_TASK_OSTIMEDLY_TIME_MS  100
 
+#define SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES    3
+
 static u8 gSwrbManulTestListviewDispSNCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},         //SNUM_YEAR
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},        //SNUM_MONTH
@@ -189,6 +191,15 @@ void SweepRobot_ManulTestDataReset(void)
     }
 }
 
+void SweepRobot_ManulTestGuiReset(void)
+{
+    int i;
+
+    for(i=ID_MANUL_BUTTON_WHEEL;i<=ID_MANUL_BUTTON_RGB_LED;i++){
+        Button_Set_BkColor(hWin_SWRB_MANUL, i, GUI_LIGHTGRAY);
+    }
+}
+
 static void SweepRobot_ManulTestSNDisp(void)
 {
     char *str;
@@ -273,9 +284,10 @@ static void SweepRobot_ManulTest_SingleValueMinMaxCmpProc(int min, int max, enum
         }else{
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
                                     gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+            aSwrbTestDataValidCnt[pos] = 0;
         }
 
-        if(aSwrbTestDataValidCnt[pos] > 0){
+        if(aSwrbTestDataValidCnt[pos] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
             aSwrbTestDataValidFlag[pos] = 1;
         }
     }
@@ -293,9 +305,10 @@ static void SweepRobot_ManulTest_SingleValueEqualCmpProc(int value, enum SWRB_MA
         }else{
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
                                     gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+            aSwrbTestDataValidCnt[pos] = 0;
         }
 
-        if(aSwrbTestDataValidCnt[pos] > 0){
+        if(aSwrbTestDataValidCnt[pos] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
             aSwrbTestDataValidFlag[pos] = 1;
         }
     }
@@ -313,9 +326,10 @@ static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DAT
         }else{
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
                                         gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+            aSwrbTestDataValidCnt[pos] = 0;
         }
 
-        if(aSwrbTestDataValidCnt[pos] > 0){
+        if(aSwrbTestDataValidCnt[pos] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
             aSwrbTestDataValidFlag[pos] = 1;
         }
 //    }

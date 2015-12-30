@@ -107,7 +107,6 @@ enum SWRB_TEST_SELECT{
 };
 
 enum SWRB_TEST_MODE{
-    
     SWRB_TEST_MODE_IDLE,
     SWRB_TEST_MODE_SET,
     SWRB_TEST_MODE_PAUSE,
@@ -126,6 +125,11 @@ enum SWRB_TEST_SET_STATE{
     SWRB_TEST_SET_STATE_TIME,
     SWRB_TEST_SET_STATE_TESTSEL,
     SWRB_TEST_SET_STATE_BOUND,
+};
+
+enum SWRB_TEST_MANUL_SUB_MODE{
+    SWRB_TEST_MANUL_SUB_MODE_MANUL,
+    SWRB_TEST_MANUL_SUB_MODE_AUTO,
 };
 
 #define SWRB_TEST_FAULT_WHEEL_MASK            0x00000003
@@ -355,9 +359,6 @@ void SweepRobot_StartDlgStepMotorBtnClickProc(void);
 
 void SweepRobot_PCBTestStartProc(void);
 void SweepRobot_PCBTestLoginProc(void);
-void SweepRobot_PCBTestLoginOKProc(void);
-void SweepRobot_PCBTestLoginCancelProc(void);
-void SweepRobot_PCBTestLoginEditProc(WM_MESSAGE *pMsg);
 void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopProc(void);
 void SweepRobot_PCBTestExitProc(void);
@@ -372,14 +373,10 @@ void SweepRobot_ManulBrushProc(void);
 void SweepRobot_ManulFanProc(void);
 void SweepRobot_ManulBuzzerProc(void);
 void SweepRobot_ManulRGBLEDProc(void);
+void SweepRobot_ManulTest_BtnCntArrayReset(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);
 void SweepRobot_PowerStationTestExitProc(void);
-
-void SweepRobot_SLAMStartProc(void);
-void SweepRobot_SLAMResetProc(void);
-void SweepRobot_SLAMStopProc(void);
-void SweepRobot_SLAMExitProc(void);
 
 #endif

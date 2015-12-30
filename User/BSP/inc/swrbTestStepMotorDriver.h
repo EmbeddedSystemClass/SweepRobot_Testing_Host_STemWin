@@ -43,6 +43,7 @@ enum STEP_MOTOR_MODE{
     STEP_MOTOR_MODE_UNKNOWN,
     STEP_MOTOR_MODE_OFF,
     STEP_MOTOR_MODE_ON,
+    STEP_MOTOR_MODE_STOP,
     STEP_MOTOR_MODE_HARD_STOP,
     STEP_MOTOR_MODE_SOFT_STOP,
     STEP_MOTOR_MODE_RUN_STEP,
@@ -73,6 +74,7 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void);
 
 void SweepRobotTest_StepMotorMoveSteps(int period_ms, u16 steps);
 
+void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode);
 void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode);
 enum STEP_MOTOR_MODE SweepRobotTest_StepMotorModeGet(void);
 void SweepRobotTest_StepMotorDirSet(enum STEP_MOTOR_DIR dir);

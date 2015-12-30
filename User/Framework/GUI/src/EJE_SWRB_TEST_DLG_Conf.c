@@ -28,6 +28,9 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmOKCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmErrorCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmReTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSkipCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmDeleteCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmAutoModeCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmManulModeCHN;
 
 static WM_HWIN hLastShowWin = 0;
 static int gLastShowId = 0;
@@ -157,6 +160,21 @@ void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmSkipCHN, x, y);
 }
 
+void BUTTON_DispDeleteCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmDeleteCHN, x, y);
+}
+
+void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmAutoModeCHN, x, y);
+}
+
+void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmManulModeCHN, x, y);
+}
+
 void Progbar_Set_Value(int progbarValue)
 {
 	WM_HWIN hItem;
@@ -188,6 +206,24 @@ void Edit_Get_Text(WM_HWIN hWin, int editId, char *str)
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, editId);
     EDIT_GetText(hItem, str, EDIT_GetNumChars(hItem)+1);
+}
+
+void Edit_Set_UserData(WM_HWIN hWin, int editId, char *str, int numBytes)
+{
+    WM_HWIN hItem;
+    hItem  = WM_GetDialogItem(hWin, editId);
+    EDIT_SetUserData(hItem, str, numBytes);
+}
+
+int Edit_Get_UserData(WM_HWIN hWin, int editId, char *str, int numBytes)
+{
+    int rtnValue;
+    WM_HWIN hItem;
+
+    hItem = WM_GetDialogItem(hWin, editId);
+    rtnValue = EDIT_GetUserData(hItem, str, numBytes);
+    
+    return rtnValue;
 }
  
 void Edit_Set_HexMode(WM_HWIN hWin, int editId, long value, long min, long max)

@@ -45,13 +45,13 @@
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "winStepMotorTest", ID_STEPMOTOR_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnRun", ID_STEPMOTOR_BUTTON_RUN, 500, 50, 200, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnStop", ID_STEPMOTOR_BUTTON_STOP, 500, 250, 200, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnForward", ID_STEPMOTOR_BUTTON_FORWARD, 100, 50, 200, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnBackward", ID_STEPMOTOR_BUTTON_BACKWARD, 100, 250, 200, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnEnable", ID_STEPMOTOR_BUTTON_ENABLE, 340, 100, 120, 100, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnDisable", ID_STEPMOTOR_BUTTON_DISABLE, 340, 250, 120, 100, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnExit", ID_STEPMOTOR_BUTTON_EXIT, 650, 420, 150, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnRun", ID_STEPMOTOR_BUTTON_RUN, 650, 0, 150, 160, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnStop", ID_STEPMOTOR_BUTTON_STOP, 650, 160, 150, 160, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnForward", ID_STEPMOTOR_BUTTON_FORWARD, 50, 70, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnBackward", ID_STEPMOTOR_BUTTON_BACKWARD, 50, 230, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnEnable", ID_STEPMOTOR_BUTTON_ENABLE, 390, 70, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnDisable", ID_STEPMOTOR_BUTTON_DISABLE, 388, 230, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnExit", ID_STEPMOTOR_BUTTON_EXIT, 650, 320, 150, 160, 0, 0x0, 0 },
 };
 
 /*********************************************************************

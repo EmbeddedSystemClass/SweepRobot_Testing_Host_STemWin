@@ -18,9 +18,6 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
-
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 
 #include "EJE_SWRB_TEST_LoginDLG.h"
@@ -34,8 +31,16 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional defines)
-// USER END
+#define IS_LOGIN_BUTTON_ID_NUM(ID)        ( ( ID == ID_LOGIN_BUTTON_NUM0 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM1 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM2 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM3 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM4 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM5 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM6 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM7 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM8 ) ||\
+                                            ( ID == ID_LOGIN_BUTTON_NUM9 ) )
 
 /*********************************************************************
 *
@@ -44,21 +49,32 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional static data)
-// USER END
+static char* gLoginPassWord = "123";
+
+static char strPasswd[10] = { 0 };
+static u8 strPasswdLen = 0;
 
 /*********************************************************************
 *
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { FRAMEWIN_CreateIndirect, "fwinLogin", ID_LOGIN_FRAMEWIN_MAIN, 0, 0, 440, 210, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "btnLoginOK", ID_LOGIN_BUTTON_OK, 260, 40, 120, 40, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnLoginCancel", ID_LOGIN_BUTTON_CANCEL, 260, 110, 120, 40, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "Edit", ID_LOGIN_EDIT_PASSWORD, 50, 90, 150, 40, 0, 0x64, 0 },
-  { TEXT_CreateIndirect, "Text", ID_LOGIN_TEXT_PASSWORD, 30, 40, 200, 40, 0, 0x64, 0 },
-  // USER START (Optionally insert additional widgets)
-  // USER END
+  { FRAMEWIN_CreateIndirect, "fwinLogin", ID_LOGIN_FRAMEWIN_MAIN, 0, 0, 600, 300, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "Edit", ID_LOGIN_EDIT_PASSWORD, 20, 20, 380, 60, 0, 0x64, 0 },
+//  { TEXT_CreateIndirect, "Text", ID_LOGIN_TEXT_PASSWORD, 30, 40, 200, 40, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "btnLoginOK", ID_LOGIN_BUTTON_OK, 440, 20, 120, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnDelete", ID_LOGIN_BUTTON_DELETE, 440, 110, 120, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnLoginCancel", ID_LOGIN_BUTTON_CANCEL, 440, 200, 120, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn1", ID_LOGIN_BUTTON_NUM1, 20, 110, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn2", ID_LOGIN_BUTTON_NUM2, 100, 110, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn3", ID_LOGIN_BUTTON_NUM3, 180, 110, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn4", ID_LOGIN_BUTTON_NUM4, 260, 110, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn5", ID_LOGIN_BUTTON_NUM5, 340, 110, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn6", ID_LOGIN_BUTTON_NUM6, 20, 200, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn7", ID_LOGIN_BUTTON_NUM7, 100, 200, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn8", ID_LOGIN_BUTTON_NUM8, 180, 200, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn9", ID_LOGIN_BUTTON_NUM9, 260, 200, 60, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btn0", ID_LOGIN_BUTTON_NUM0, 340, 200, 60, 60, 0, 0x0, 0 },
 };
 
 /*********************************************************************
@@ -68,6 +84,70 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 **********************************************************************
 */
 
+static void Button_Init(WM_HWIN hItem)
+{
+    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+}
+
+static void Button_OKProc(void)
+{
+    WM_HWIN hItem;
+
+    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
+
+        hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
+
+        if(!(strcmp(strPasswd,gLoginPassWord))){
+
+            gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+            
+            FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
+
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
+            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
+            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+
+            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START);
+            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
+            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
+            SWRB_PCBTestCheckboxEnable();
+
+            SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_PCBTEST);
+            WM_ShowWin(hWin_SWRB_SNSETTING);
+        }else{
+            FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
+        }
+    }
+}
+
+static void Button_CancelProc(void)
+{
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
+    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
+    SWRB_PCBTestCheckboxEnable();
+
+    WM_HideWin(hWin_SWRB_LOGIN);
+    WM_ShowWin(hWin_SWRB_PCBTEST);
+}
+
+static void Button_DeleteProc(void)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
+    EDIT_AddKey(hItem, '\b');
+    if(strPasswdLen){
+        strPasswdLen--;
+        strPasswd[strPasswdLen] = 0;
+    }
+}
+
 /*********************************************************************
 *
 *       _cbDialog
@@ -76,8 +156,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   WM_HWIN hItem;
   int     NCode;
   int     Id;
-  // USER START (Optionally insert additional variables)
-  // USER END
+  int     i;
+  char    *str;
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
@@ -85,74 +165,115 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     // Initialization of 'fwinLogin'
     //
     hItem = pMsg->hWin;
+    FRAMEWIN_SetFont(hItem, GUI_FONT_16_ASCII);
     FRAMEWIN_SetText(hItem, "Login");
     //
     // Initialization of 'btnLoginOK'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_BUTTON_OK);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "OK");
+//    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//    BUTTON_SetText(hItem, "OK");
+    BUTTON_DispConfirmCHNStr(pMsg->hWin, ID_LOGIN_BUTTON_OK, 28, 13);
     //
     // Initialization of 'btnLoginCancel'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_BUTTON_CANCEL);
-    BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
-    BUTTON_SetText(hItem, "Cancel");
+//    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//    BUTTON_SetText(hItem, "CANCEL");
+    BUTTON_DispCancelCHNStr(pMsg->hWin, ID_LOGIN_BUTTON_CANCEL, 28 ,13);
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_BUTTON_DELETE);
+//    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//    BUTTON_SetText(hItem, "DEL");
+    BUTTON_DispDeleteCHNStr(pMsg->hWin, ID_LOGIN_BUTTON_DELETE, 28 ,13);
+  
+    str = mymalloc(SRAMIN, sizeof(char)*5);
+    for(i=ID_LOGIN_BUTTON_NUM0;i<=ID_LOGIN_BUTTON_NUM9;i++){
+        hItem = WM_GetDialogItem(pMsg->hWin, i);
+        Button_Init(hItem);
+        *str = 0;
+        sprintf(str, "%d", i-ID_LOGIN_BUTTON_NUM0);
+        BUTTON_SetText(hItem, str);
+    }
+    myfree(SRAMIN, str);
     //
     // Initialization of 'Edit'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_EDIT_PASSWORD);
-    EDIT_SetText(hItem, "******");
-    EDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+    EDIT_SetText(hItem, "");
+    EDIT_SetFont(hItem, GUI_FONT_32_ASCII);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     EDIT_SetBkColor(hItem, EDIT_CI_ENABELD, GUI_WHITE);
     EDIT_SetMaxLen(hItem, 10);
-    //
-    // Initialization of 'Text'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_TEXT_PASSWORD);
-    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
-    TEXT_SetText(hItem, "Please input Password");
+//    //
+//    // Initialization of 'Text'
+//    //
+//    hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_TEXT_PASSWORD);
+//    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+//    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+//    TEXT_SetText(hItem, "Please input Password");
     /* Hide Window when create */
     WM_HideWin(pMsg->hWin);
-    // USER START (Optionally insert additional code for further widget initialization)
-    // USER END
     break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_LOGIN_BUTTON_OK: // Notifications sent by 'btnLoginOK'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
+  
+    if(IS_LOGIN_BUTTON_ID_NUM(Id)){
+        switch(NCode) {
+            case WM_NOTIFICATION_CLICKED:
+                break;
+            case WM_NOTIFICATION_RELEASED:
+                hItem = WM_GetDialogItem(pMsg->hWin, ID_LOGIN_EDIT_PASSWORD);
+//                EDIT_AddKey(hItem, '0' + (Id-ID_LOGIN_BUTTON_NUM0) );
+                EDIT_AddKey(hItem, '*');
+                if(strPasswdLen<10){
+                    strPasswd[strPasswdLen] = '0'+(Id-ID_LOGIN_BUTTON_NUM0);
+                    strPasswdLen++;
+                }
+                break;
+        }
         break;
-      case WM_NOTIFICATION_RELEASED:
-        SweepRobot_PCBTestLoginOKProc();
-        break;
-      }
-      break;
-    case ID_LOGIN_BUTTON_CANCEL: // Notifications sent by 'btnLoginCancel'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        SweepRobot_PCBTestLoginCancelProc();
-        break;
-      }
-      break;
-    case ID_LOGIN_EDIT_PASSWORD: // Notifications sent by 'Edit'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        SweepRobot_PCBTestLoginEditProc(pMsg);
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        
-        break;
-      }
-      break;
+    }else{
+        switch(Id) {
+        case ID_LOGIN_BUTTON_OK: // Notifications sent by 'btnLoginOK'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_OKProc();
+            break;
+          }
+          break;
+        case ID_LOGIN_BUTTON_CANCEL: // Notifications sent by 'btnLoginCancel'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_CancelProc();
+            break;
+          }
+          break;
+        case ID_LOGIN_BUTTON_DELETE: // Notifications sent by 'btnLoginDelete'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            Button_DeleteProc();
+            break;
+          }
+          break;
+        case ID_LOGIN_EDIT_PASSWORD: // Notifications sent by 'Edit'
+          switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            break;
+          case WM_NOTIFICATION_VALUE_CHANGED:
+            break;
+          }
+          break;
+        }
     }
     break;
   default:
@@ -181,13 +302,10 @@ WM_HWIN hWin_SWRB_LOGIN;
 *       CreateLoginDLG
 */
 WM_HWIN CreateLoginDLG(void) {
-  WM_HWIN hWin;
+    WM_HWIN hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 180, 135);
-  return hWin;
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 100, 90);
+    return hWin;
 }
-
-// USER START (Optionally insert additional public code)
-// USER END
 
 /*************************** End of file ****************************/

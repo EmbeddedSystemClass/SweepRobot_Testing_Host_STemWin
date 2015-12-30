@@ -490,7 +490,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-//        SweepRobot_SLAMStartProc();
         SLAM_ButtonStartClickedProc();
         break;
       }
@@ -500,7 +499,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-//        SweepRobot_SLAMResetProc();
         SLAM_ButtonResetClickedProc();
         break;
       }
@@ -510,7 +508,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-//        SweepRobot_SLAMStopProc();
         SLAM_ButtonStopClickedProc();
         break;
       }
@@ -520,7 +517,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-//        SweepRobot_SLAMExitProc();
         SLAM_ButtonExitClickedProc();
         break;
       }

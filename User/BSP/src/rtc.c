@@ -39,17 +39,19 @@ ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)
     return RTC_SetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
 }
 
+#ifdef __ENABLE_RTC_CALIB
 static void MY_RTC_Calibration(void)
 {
     ErrorStatus rtcErrorStat;
 
     rtcErrorStat = RTC_SmoothCalibConfig(RTC_SmoothCalibPeriod_32sec, RTC_SmoothCalibPlusPulses_Reset, 0x0000);
-    
+
     if(rtcErrorStat == ERROR){
         printf("RTC Calibration Error!\r\n");
         while(1);
     }
 }
+#endif
 
 u8 USER_RTC_Init(void)
 {
@@ -57,8 +59,10 @@ u8 USER_RTC_Init(void)
     u16 retry=0X1FFF;
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
     PWR_BackupAccessCmd(ENABLE);
-    
-//    MY_RTC_Calibration();
+
+#ifdef __ENABLE_RTC_CALIB
+    MY_RTC_Calibration();
+#endif
 
     if(RTC_ReadBackupRegister(RTC_BKP_DR0)!=0x5050){
         RCC_LSEConfig(RCC_LSE_ON);

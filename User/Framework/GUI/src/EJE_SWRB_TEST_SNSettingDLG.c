@@ -131,19 +131,19 @@ static void Button_CancelProc(WM_HWIN hWin)
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
 
-static void ListWheel_SnapLineDraw(GUI_COLOR color)
-{
-    uint8_t prevPenSize;
-    GUI_COLOR prevColor;
+//static void ListWheel_SnapLineDraw(GUI_COLOR color)
+//{
+//    uint8_t prevPenSize;
+//    GUI_COLOR prevColor;
 
-    prevPenSize = GUI_GetPenSize();
-    GUI_SetPenSize(10);
-    prevColor = GUI_GetColor();
-    GUI_SetColor(color);
-    GUI_DrawLine(20, 160, 570, 190);
-    GUI_SetPenSize(prevPenSize);
-    GUI_SetColor(prevColor);
-}
+//    prevPenSize = GUI_GetPenSize();
+//    GUI_SetPenSize(10);
+//    prevColor = GUI_GetColor();
+//    GUI_SetColor(color);
+//    GUI_DrawLine(20, 160, 570, 190);
+//    GUI_SetPenSize(prevPenSize);
+//    GUI_SetColor(prevColor);
+//}
 
 static void ListWheel_Init(WM_HWIN hItem)
 {

@@ -51,13 +51,13 @@ static void SweepRobot_RGBLEDTestProc(void)
     char *str;
     
     rgb_led.validCnt = 1;
-    printf("RGB->ON=1\r\n");
+    printf("RGB->ON=%d\r\n", RGB_LED_RED);
     SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_RED, "IS RED LED OK?", ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
     rgb_led.validCnt = 2;
-    printf("RGB->ON=2\r\n");
+    printf("RGB->ON=%d\r\n", RGB_LED_GREEN);
     SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_GREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
     rgb_led.validCnt = 3;
-    printf("RGB->ON=4\r\n");
+    printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
     SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_BLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
     
     if(rgb_led.r_state && rgb_led.g_state && rgb_led.b_state){

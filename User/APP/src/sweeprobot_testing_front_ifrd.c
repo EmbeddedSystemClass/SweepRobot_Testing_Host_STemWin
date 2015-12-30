@@ -1,15 +1,15 @@
-#include "sweeprobot_testing_ifrd.h"
+#include "sweeprobot_testing_front_ifrd.h"
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "sweeprobot_testing.h"
 
 #include "usart.h"
 #include "includes.h"
 
-static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
+static FRONT_IFRD_TestTypeDef frontIFRD[SWRB_FRONT_IFRD_CHAN_NUM];
 
-static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 800, 800, 250, 250, 150, 150, 150, 150 };
+static const u16 SWRB_FRONT_IFRD_VALID_THRESHOLD[SWRB_FRONT_IFRD_CHAN_NUM] = { 800, 800, 250, 250, 150, 150, 150, 150 };
 
-static void SweepRobot_IFRDTestInit(void)
+static void SweepRobot_FrontIFRDTestInit(void)
 {
     u8 i;
     char *str;
@@ -30,10 +30,10 @@ static void SweepRobot_IFRDTestInit(void)
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        ifrd[i].offValue = 0;
-        ifrd[i].onValue = 0;
-        ifrd[i].validCnt = 0;
-        ifrd[i].validFlag = 0;
+        frontIFRD[i].offValue = 0;
+        frontIFRD[i].onValue = 0;
+        frontIFRD[i].validCnt = 0;
+        frontIFRD[i].validFlag = 0;
     }
 }
 
@@ -42,7 +42,7 @@ static void SweepRobot_IFRDTestTxOffProc(void)
     u8 i,j;
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        if(!ifrd[i].validFlag){
+        if(!frontIFRD[i].validFlag){
             if(i==6){
                 printf("SNSR->BSWC=1\r\n");
                 OSTimeDlyHMSM(0,0,0,1);
@@ -55,7 +55,7 @@ static void SweepRobot_IFRDTestTxOffProc(void)
                 }
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
-                    ifrd[i].offValue = usartRxNum;
+                    frontIFRD[i].offValue = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
@@ -77,7 +77,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     char *str;
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        if(!ifrd[i].validFlag){
+        if(!frontIFRD[i].validFlag){
             if(i==6){
                 printf("SNSR->BSWC=1\r\n");
                 OSTimeDlyHMSM(0,0,0,1);
@@ -90,7 +90,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 }
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
-                    ifrd[i].onValue = usartRxNum;
+                    frontIFRD[i].onValue = usartRxNum;
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
                     usartRxNum = 0;
                     usartRxFlag = 0;
@@ -101,16 +101,16 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 }
             }
             
-            if(ifrd[i].onValue){
-                if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_VALID_THRESHOLD[i] ){
+            if(frontIFRD[i].onValue){
+                if( (frontIFRD[i].offValue - frontIFRD[i].onValue) > SWRB_FRONT_IFRD_VALID_THRESHOLD[i] ){
                     gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_FL_POS+i));
-                    ifrd[i].validCnt++;
+                    frontIFRD[i].validCnt++;
                 }else{
                     gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
                 }
                 
-                if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
-                    ifrd[i].validFlag = 1;
+                if(frontIFRD[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
+                    frontIFRD[i].validFlag = 1;
                 }
             }else{
                 gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
@@ -120,8 +120,8 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     printf("SNSR->BSWC=0\r\n");
     printf("SNSR->IFRD=0\r\n");
 
-    if( ifrd[0].validFlag && ifrd[1].validFlag && ifrd[2].validFlag && ifrd[3].validFlag && \
-        ifrd[4].validFlag && ifrd[5].validFlag && ifrd[6].validFlag && ifrd[7].validFlag
+    if( frontIFRD[0].validFlag && frontIFRD[1].validFlag && frontIFRD[2].validFlag && frontIFRD[3].validFlag && \
+        frontIFRD[4].validFlag && frontIFRD[5].validFlag && frontIFRD[6].validFlag && frontIFRD[7].validFlag
         ){
         gSwrbTestTaskRunCnt = 0;
         printf("SNSR->IFRD=0\r\n");
@@ -202,7 +202,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
-                SweepRobot_IFRDTestInit();
+                SweepRobot_FrontIFRDTestInit();
             }
 
             if(gSwrbTestTaskRunCnt%2){
@@ -224,24 +224,24 @@ void IFRD_TestDataSave(void)
     u8 i;
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
-        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = frontIFRD[i].onValue;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = frontIFRD[i].offValue;
     }
     
-    SWRB_TestDataFileWriteData("IFRD->FL_onValue=", ifrd[0].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->FL_offValue=", ifrd[0].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->FR_onValue=", ifrd[1].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->FR_offValue=", ifrd[1].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->SL_onValue=", ifrd[2].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->SL_offValue=", ifrd[2].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->SR_onValue=", ifrd[3].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->SR_offValue=", ifrd[3].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_FL_onValue=", ifrd[4].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_FL_offValue=", ifrd[4].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_FR_onValue=", ifrd[5].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_FR_offValue=", ifrd[5].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_SL_onValue=", ifrd[6].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", ifrd[6].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[7].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[7].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FL_onValue=", frontIFRD[0].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FL_offValue=", frontIFRD[0].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FR_onValue=", frontIFRD[1].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->FR_offValue=", frontIFRD[1].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SL_onValue=", frontIFRD[2].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SL_offValue=", frontIFRD[2].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SR_onValue=", frontIFRD[3].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->SR_offValue=", frontIFRD[3].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FL_onValue=", frontIFRD[4].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FL_offValue=", frontIFRD[4].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FR_onValue=", frontIFRD[5].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FR_offValue=", frontIFRD[5].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SL_onValue=", frontIFRD[6].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", frontIFRD[6].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", frontIFRD[7].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", frontIFRD[7].offValue, 1);
 }

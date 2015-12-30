@@ -7,7 +7,9 @@
 #include "usart.h"
 #include "includes.h"
 
-#define SWRB_IRDA_TEST_USART_READ_WAIT_TIME     50
+#define SWRB_IRDA_TEST_USART_READ_WAIT_TIME     10
+
+#define SWRB_IRDA_TEST_TASK_DLY_TIME    100
 
 static IRDA_TestTypeDef IrDA[SWRB_IRDA_CHAN_BOUND];
 
@@ -49,8 +51,9 @@ static void SweepRobot_IrDATestCodeArrayToNum(void)
             *str = 0;
             mymemcpy(str, aIrDATestRxData[i], sizeof(aIrDATestRxData[i]));
             IrDA[i].code = atoi(str);
-            Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
-            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
+            Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, str);
+//            Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
+//            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
             myfree(SRAMIN, str);
         }
     }
@@ -58,8 +61,8 @@ static void SweepRobot_IrDATestCodeArrayToNum(void)
 
 static void SweepRobot_IrDACodeQuery(void)
 {
-    SweepRobot_IrDACodeTxProc(0x40);
-    OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
+//    SweepRobot_IrDACodeTxProc(0x40);
+//    OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
     printf("IRDA->RD\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_USART_READ_WAIT_TIME);
     if(usartRxFlag){
@@ -94,12 +97,12 @@ static void SweepRobot_IrDATestInit(void)
         IrDA[i].validFlag = 0;
         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0);
     }
-    mymemset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
 }
 
 static void SweepRobot_IrDATestProc(void)
 {
-    u8 i;
+    u8 i,j;
     char *str;
     
     SweepRobot_IrDACodeQuery();
@@ -120,15 +123,19 @@ static void SweepRobot_IrDATestProc(void)
                 gSwrbTestStateMap |= (1<<(SWRB_TEST_IRDA_B_POS+i));
             }
             IrDA[i].code = 0;
-            mymemset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
+            for(j=0;j<5;j++)
+                aIrDATestRxData[i][j] = 0;
         }
     }
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
     
     if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
         gSwrbTestTaskRunCnt = 0;
         
-        printf("IRDA->OFF\r\n");
+//        printf("IRDA->OFF\r\n");
+//        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         printf("IRDA->ERS\r\n");
+        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
@@ -138,9 +145,9 @@ static void SweepRobot_IrDATestProc(void)
 //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
-        for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
-            Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
-        }
+//        for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+//            Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+//        }
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
@@ -153,9 +160,11 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     char *str;
     
     gSwrbTestTaskRunCnt = 0;
-    
-    printf("IRDA->OFF\r\n");
+
+//    printf("IRDA->OFF\r\n");
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
     printf("IRDA->ERS\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
 
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     
@@ -214,14 +223,14 @@ void SweepRobot_IrDATestTask(void *pdata)
                 SweepRobot_IrDATestInit();
             }
 
-            if(gSwrbTestTaskRunCnt > 1){
+            if(gSwrbTestTaskRunCnt > 2){
                 SweepRobot_IrDATestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 50){
+            if(gSwrbTestTaskRunCnt > 5){
                 SweepRobot_IrDATestOverTimeProc();
             }
-            OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
+            OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_TASK_DLY_TIME);
         }
     }
 }

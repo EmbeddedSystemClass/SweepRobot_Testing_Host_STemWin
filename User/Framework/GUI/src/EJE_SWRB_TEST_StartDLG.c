@@ -211,9 +211,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-#ifdef _SHOW_SLAM_DLG
                             SweepRobot_StartDlgSLAMBtnClickProc();
-#endif
                             break;
                     }
                     break;
