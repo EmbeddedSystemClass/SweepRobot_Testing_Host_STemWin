@@ -136,7 +136,7 @@ void SweepRobot_WheelTestTask(void *pdata)
 {
     while(1){
 
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_WHEEL)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

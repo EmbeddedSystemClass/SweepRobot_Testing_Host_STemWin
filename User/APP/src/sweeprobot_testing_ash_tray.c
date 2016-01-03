@@ -205,7 +205,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
 
     while(1){
         
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_ASH_TRAY)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY)){
             SWRB_NextTestTaskResumePreAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

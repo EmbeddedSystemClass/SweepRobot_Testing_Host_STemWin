@@ -30,7 +30,17 @@
 //                                      (id == ID_TESTSEL_BUTTON_TEST6)       ||\
 //                                      (id == ID_TESTSEL_BUTTON_TEST7)       \
 //                                    )
-                                    
+
+#define SWRB_TEST_TASK_NUM          (SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1))
+/*********************************************************************
+*
+*       Static data
+*
+**********************************************************************
+*/
+
+static u8 gSwrbTest_TaskSelState[SWRB_TEST_TASK_NUM] = { 0 };
+
 /*********************************************************************
 *
 *       Static code
@@ -46,15 +56,10 @@ static void Button_Init(WM_HWIN hItem)
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
 
-static void Button_ResetToLastState(WM_HWIN hWin)
-{
-    
-}
-
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
     SWRB_ValidTestTaskCntGet();
-    
+
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
@@ -63,9 +68,9 @@ static void Button_ConfirmProc(WM_HWIN hWin)
 static void Button_SelAllProc(void)
 {
     int id;
-    
+
     SWRB_TestCheckboxStateSet(1);
-    
+
     for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_CHARGE;id++){
         Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTBLUE);
     }
@@ -74,9 +79,9 @@ static void Button_SelAllProc(void)
 static void Button_SelSingleProc(int id)
 {
     WM_HWIN hItem;
-    
+
     hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, id-ID_TESTSEL_BUTTON_WHEEL+ID_PCBTEST_CHECKBOX_WHEEL);
-    
+
     if(CHECKBOX_GetState(hItem)){
         CHECKBOX_SetState(hItem, 0);
         Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTGRAY);
@@ -89,21 +94,37 @@ static void Button_SelSingleProc(int id)
 static void Button_SelNoneProc(void)
 {
     int id;
-    
+
     SWRB_TestCheckboxStateSet(0);
-    
+
     for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_CHARGE;id++){
         Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTGRAY);
     }
 }
 
+static void Button_CancelResetCheckBoxStateProc(void)
+{
+    u8 i;
+
+    for(i=0;i<=SWRB_TEST_TASK_NUM;i++){
+        Checkbox_Set_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL,gSwrbTest_TaskSelState[i]);
+        if(gSwrbTest_TaskSelState[i] == 1){
+            Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_WHEEL+i, GUI_LIGHTBLUE);
+        }else{
+            Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_WHEEL+i, GUI_LIGHTGRAY);
+        }
+    }
+}
+
 static void Button_CancelProc(WM_HWIN hWin)
 {
-    Button_ResetToLastState(hWin);
+    Button_CancelResetCheckBoxStateProc();
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
+
+
 
 /*********************************************************************
 *
@@ -156,31 +177,31 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
-      
+
     for(i=ID_TESTSEL_BUTTON_0;i<ID_TESTSEL_BUTTON_BOUND;i++){
         hItem = WM_GetDialogItem(pMsg->hWin, i);
         Button_Init(hItem);
         if( (ID_TESTSEL_BUTTON_WHEEL <= i) && (ID_TESTSEL_BUTTON_CHARGE >= i) ){
-            Button_Set_BkColor(hWin_SWRB_TESTSEL, i, GUI_LIGHTBLUE);
+            Button_Set_BkColor(pMsg->hWin, i, GUI_LIGHTBLUE);
         }else if(i<=ID_TESTSEL_BUTTON_RESERVE4){
             if(i%2){
-                
+
             }else{
                 BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGRAY);
             }
         }else if(ID_TESTSEL_BUTTON_TEST1 <= i && ID_TESTSEL_BUTTON_TEST7 >= i){
             WM_DisableWindow(hItem);
         }else{
-            
+
         }
     }
-    
+
     WM_HideWin(pMsg->hWin);
     break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    
+
     if(IS_TESTSEL_BUTTON_ID(Id)){
         switch(NCode) {
             case WM_NOTIFICATION_CLICKED:
@@ -311,11 +332,21 @@ WM_HWIN hWin_SWRB_TESTSEL;
 *       CreateTestSelSettingDLG
 */
 
-WM_HWIN CreateTestSelSettingDLG(void) {
+WM_HWIN CreateTestSelSettingDLG(void)
+{
   WM_HWIN hWin;
 
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
   return hWin;
+}
+
+void SWRB_TestSelLastCheckBoxStateSave(void)
+{
+    u8 i;
+
+    for(i=0;i<=SWRB_TEST_TASK_NUM;i++){
+        gSwrbTest_TaskSelState[i] = Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i);
+    }
 }
 
 /*************************** End of file ****************************/

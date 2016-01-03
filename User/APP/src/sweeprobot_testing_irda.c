@@ -214,7 +214,7 @@ void SweepRobot_IrDATestTask(void *pdata)
 
     while(1){
         
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_IRDA)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA)){
             SWRB_NextTestTaskResumePreAct(SWRB_IRDA_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

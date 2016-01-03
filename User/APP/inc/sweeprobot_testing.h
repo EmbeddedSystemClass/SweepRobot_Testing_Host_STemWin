@@ -263,7 +263,7 @@ enum SWRB_TEST_TASK_PRIO{
     EMWIN_TASK_PRIO,
     SWRB_TEST_CTRL_TASK_PRIO,
     SWRB_TEST_EXCEPTION_CHECK_TASK_PRIO,
-    SWRB_TEST_TASK_PRIO_START_BOUND,
+    SWRB_TEST_TASK_PRIO_START_BOUND,//8
     SWRB_WHEEL_TEST_TASK_PRIO,//9
     SWRB_BRUSH_TEST_TASK_PRIO,
     SWRB_FAN_TEST_TASK_PRIO,
@@ -374,6 +374,7 @@ void SweepRobot_ManulExitProc(void);
 void SweepRobot_ManulWheelProc(void);
 void SweepRobot_ManulBrushProc(void);
 void SweepRobot_ManulFanProc(void);
+void SweepRobot_ManulIFRDProc(void);
 void SweepRobot_ManulBuzzerProc(void);
 void SweepRobot_ManulRGBLEDProc(void);
 void SweepRobot_ManulTest_BtnStateArrayReset(void);

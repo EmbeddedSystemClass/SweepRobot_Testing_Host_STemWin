@@ -134,6 +134,10 @@ static int  aSwrbTestValue[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
 static u8   aSwrbTestDataValidCnt[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
 static u8   aSwrbTestDataValidFlag[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
 
+static int voltPercent = 0;
+static int lastVoltPercent = 0;
+static int VoltCnt = 0;
+
 static void SweepRobot_ManulTestRxDataToDataArray(int rxDataLen)
 {
     int i,j,m;
@@ -159,13 +163,32 @@ RX_PROC_LOOP:
     OS_EXIT_CRITICAL();
 }
 
+static void SweepRobot_ManulTestDataArrayDisp(void)
+{
+    int i;
+    char *str;
+
+    WM_HWIN hItem;
+
+    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
+    for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
+        str = mymalloc(SRAMIN, sizeof(char)*10);
+        *str = 0;
+        mymemcpy(str, aSwrbTestData[i], sizeof(aSwrbTestData[i]));
+        LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], str);
+        myfree(SRAMIN, str);
+    }
+}
+
+static void SweepRobot_ManulTestRxDataProc(void)
+{
+    SweepRobot_ManulTestRxDataToDataArray(USART_RX_STA&USART_CNT_MASK);
+}
+
 static void SweepRobot_ManulTestBatteryVoltDisp(void)
 {
     float volt = 0;
-    int voltPercent = 0;
-    static int lastVoltPercent = 0;
-    static int VoltCnt = 0;
-    
+
     if(atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])){
         volt = atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])/atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS])*1.2f*6;
         Edit_Set_FloatValue(hWin_SWRB_MANUL, ID_MANUL_EDIT_VOLT, volt);
@@ -177,7 +200,7 @@ static void SweepRobot_ManulTestBatteryVoltDisp(void)
             }else{
                 VoltCnt = 6;
             }
-            if(VoltCnt > 16){
+            if(VoltCnt > 10){
                 VoltCnt = 6;
                 Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_VOLT, (int)voltPercent);
                 lastVoltPercent = voltPercent;
@@ -187,29 +210,6 @@ static void SweepRobot_ManulTestBatteryVoltDisp(void)
             Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_VOLT, (int)voltPercent);
         }
     }
-}
-
-static void SweepRobot_ManulTestDataArrayDisp(void)
-{
-    int i;
-    char *str;
-    
-    WM_HWIN hItem;
-
-    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
-    for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
-        str = mymalloc(SRAMIN, sizeof(char)*10);
-        *str = 0;
-        mymemcpy(str, aSwrbTestData[i], sizeof(aSwrbTestData[i]));
-        LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], str);
-        myfree(SRAMIN, str);
-    }
-    
-}
-
-static void SweepRobot_ManulTestRxDataProc(void)
-{
-    SweepRobot_ManulTestRxDataToDataArray(USART_RX_STA&USART_CNT_MASK);
 }
 
 void SweepRobot_ManulTestDataReset(void)
@@ -222,6 +222,10 @@ void SweepRobot_ManulTestDataReset(void)
         aSwrbTestDataValidCnt[i] = 0;
         aSwrbTestDataValidFlag[i] = 0;
     }
+
+    voltPercent = 0;
+    lastVoltPercent = 0;
+    VoltCnt = 0;
 }
 
 void SweepRobot_ManulTestGuiReset(void)
@@ -248,6 +252,17 @@ static void SweepRobot_ManulTestSNDisp(void)
             str = mymalloc(SRAMIN, sizeof(char)*5);
             *str = 0;
             mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
+            switch(i){
+                case SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS:
+                    sprintf(str, "%02d", atoi(str));
+                    break;
+                case SWRB_MANUL_TEST_DATA_SNUM_DATE_POS:
+                    sprintf(str, "%02d", atoi(str));
+                    break;
+                case SWRB_MANUL_TEST_DATA_SNUM_SNUM_POS:
+                    sprintf(str, "%03d", atoi(str));
+                    break;
+            }
             LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispSNCoord[i][0], gSwrbManulTestListviewDispSNCoord[i][1], str);
             myfree(SRAMIN, str);
             usartRxFlag = 0;

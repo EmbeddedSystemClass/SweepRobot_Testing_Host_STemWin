@@ -200,6 +200,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_START);
     Button_Init(hItem);
     BUTTON_DispStartCHNStr(pMsg->hWin, ID_MANUL_BUTTON_START, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
     //
     // Initialization of 'btnSet'
     //
@@ -214,12 +215,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_RESET);
     Button_Init(hItem);
     BUTTON_DispResetCHNStr(pMsg->hWin, ID_MANUL_BUTTON_RESET, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_RESET, GUI_LIGHTRED);
+    WM_DisableWindow(hItem);
     //
     // Initialization of 'btnExit'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_EXIT);
     Button_Init(hItem);
     BUTTON_DispExitCHNStr(pMsg->hWin, ID_MANUL_BUTTON_EXIT, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_EXIT, GUI_LIGHTGREEN);
     //
     // Initialization of 'btnIndicate'
     //
@@ -357,7 +361,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       }
       break;
-
+    case ID_MANUL_BUTTON_IFRD:
+        switch(NCode) {
+          case WM_NOTIFICATION_CLICKED:
+            break;
+          case WM_NOTIFICATION_RELEASED:
+            SweepRobot_ManulIFRDProc();
+            break;
+        }
+        break; 
     case ID_MANUL_BUTTON_BUZZER: // Notifications sent by 'btnBuzzer'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:

@@ -237,7 +237,7 @@ void SweepRobot_ChargeTestTask(void *pdata)
 
     while(1){
         
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_CHARGE)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE)){
             SWRB_NextTestTaskResumePreAct(SWRB_CHARGE_TEST_TASK_PRIO);
         }else{
         

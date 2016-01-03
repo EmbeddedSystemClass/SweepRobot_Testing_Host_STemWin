@@ -109,7 +109,7 @@ void SweepRobot_KeyTestTask(void *pdata)
     
     while(1){
         
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_KEY)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY)){
             SWRB_NextTestTaskResumePreAct(SWRB_KEY_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

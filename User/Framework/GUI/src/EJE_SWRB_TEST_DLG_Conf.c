@@ -12,6 +12,7 @@
 
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSWRBTestTitleCHN48;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSWRBTestTitleCHN32;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmRobotTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmStartCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPauseCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmResumeCHN;
@@ -79,6 +80,12 @@ void BUTTON_DispSWRBTestTitleCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 {
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmSWRBTestTitleCHN32, x, y);
 }
+
+void BUTTON_DispRobotTestTitleCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmRobotTestCHN, x, y);
+}
+
 
 void BUTTON_DispStartCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 {
@@ -276,10 +283,10 @@ void Checkbox_Set_Text(WM_HWIN hWin, int checkboxId, char *string)
     CHECKBOX_SetText(hItem, string);
 }
 
-int Checkbox_Get_State(int checkboxId)
+int Checkbox_Get_State(WM_HWIN hWin, int checkboxId)
 {
     WM_HWIN hItem;
-    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, checkboxId);
+    hItem = WM_GetDialogItem(hWin, checkboxId);
     return(CHECKBOX_GetState(hItem));
 }
 
@@ -303,13 +310,14 @@ void SWRB_TestCheckboxStateSet(u8 stateNum)
 
 void SWRB_PCBTestCheckboxEnable(void)
 {
-    int i;
-    WM_HWIN hItem;
-    
-    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
-        WM_EnableWindow(hItem);
-    }
+    /* XXX: uncomment this to enable checkbox */
+//    int i;
+//    WM_HWIN hItem;
+//    
+//    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
+//        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
+//        WM_EnableWindow(hItem);
+//    }
 }
 
 void SWRB_PCBTestCheckboxDisable(void)

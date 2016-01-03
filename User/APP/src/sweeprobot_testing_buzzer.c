@@ -114,7 +114,7 @@ void SweepRobot_BuzzerTestTask(void *pdata)
 {
     while(1){
       
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_BUZZER)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER)){
             SWRB_NextTestTaskResumePreAct(SWRB_BUZZER_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

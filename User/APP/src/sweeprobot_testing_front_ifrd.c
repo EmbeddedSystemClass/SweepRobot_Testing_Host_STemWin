@@ -194,7 +194,7 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
 void SweepRobot_FrontIFRDTestTask(void *pdata)
 {
     while(1){
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_IFRD)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
             SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

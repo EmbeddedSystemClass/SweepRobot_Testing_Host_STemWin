@@ -139,7 +139,7 @@ void SWRB_BrushTestOverTimeProc(void)
 void SweepRobot_BrushTestTask(void *pdata)
 {
     while(1){
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_BRUSH)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH)){
             SWRB_NextTestTaskResumePreAct(SWRB_BRUSH_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

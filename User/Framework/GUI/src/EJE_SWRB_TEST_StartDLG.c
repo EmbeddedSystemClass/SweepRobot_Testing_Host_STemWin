@@ -148,10 +148,8 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             // Initialization of 'btnMANUL'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_MANUL);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-            BUTTON_SetText(hItem, "Manul");
+            BUTTON_DispRobotTestTitleCHNStr(pMsg->hWin, ID_START_BUTTON_MANUL, 36, 74);
             Button_Init(hItem);
-//            WM_HideWin(hItem);
             //
             // Initialization of 'DECRYPTO'
             //

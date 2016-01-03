@@ -1188,10 +1188,12 @@ void SweepRobot_ManulSetProc(void)
 void SweepRobot_ManulResetProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-
+    
         SweepRobot_ManulTestDataReset();
         SweepRobot_ManulTestGuiReset();
         SweepRobot_ManulTest_BtnStateArrayReset();
+        
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
     }
 }
 
@@ -1269,6 +1271,11 @@ void SweepRobot_ManulFanProc(void)
     }
 
     OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulIFRDProc(void)
+{
+    
 }
 
 void SweepRobot_ManulBuzzerProc(void)

@@ -114,6 +114,7 @@ static void Button_OKProc(void)
             SWRB_PCBTestCheckboxEnable();
 
             SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+            SWRB_TestSelLastCheckBoxStateSave();
 
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_PCBTEST);

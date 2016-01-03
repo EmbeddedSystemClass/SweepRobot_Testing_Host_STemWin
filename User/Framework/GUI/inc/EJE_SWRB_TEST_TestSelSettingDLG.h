@@ -5,5 +5,7 @@
 
 extern WM_HWIN CreateTestSelSettingDLG(void);
 
+WM_HWIN CreateTestSelSettingDLG(void);
+void SWRB_TestSelLastCheckBoxStateSave(void);
 
 #endif

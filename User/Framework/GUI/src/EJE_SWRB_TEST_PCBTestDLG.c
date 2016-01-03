@@ -149,6 +149,7 @@ static void Checkbox_Init(WM_HWIN hItem)
     CHECKBOX_SetFont(hItem, GUI_FONT_20B_ASCII);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
     CHECKBOX_SetState(hItem, 1);
+    WM_DisableWindow(hItem);
 }
 
 /*********************************************************************

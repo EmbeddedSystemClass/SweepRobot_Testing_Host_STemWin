@@ -134,7 +134,7 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
 void SweepRobot_UniWheel_Test_Task(void *pdata)
 {
     while(1){
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_UNIWHEEL)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_UNIWHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

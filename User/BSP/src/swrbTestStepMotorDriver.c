@@ -122,6 +122,7 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
 static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_ISR(void)
 {
     stepMotor.mode = STEP_MOTOR_MODE_HARD_STOP;
+    stepMotor.step = 0;
     STEP_MOTOR_EN_OUT_ENABLE();
 }
 

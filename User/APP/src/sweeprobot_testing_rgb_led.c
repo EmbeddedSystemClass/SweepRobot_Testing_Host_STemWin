@@ -119,7 +119,7 @@ void SweepRobot_RGBLEDTestTask(void *pdata)
 {
     while(1){
       
-        if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_RGB_LED)){
+        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED)){
             SWRB_NextTestTaskResumePreAct(SWRB_RGB_LED_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
