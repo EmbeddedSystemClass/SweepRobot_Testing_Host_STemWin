@@ -548,7 +548,7 @@ void SweepRobot_PCBTestStartProc(void)
                           rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date, rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
             myfree(SRAMIN, str);
-            Progbar_Set_Value(0);
+            Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, 0);
         }
 
         gSwrbTestMode = SWRB_TEST_MODE_RUN;
@@ -778,7 +778,7 @@ static void SweepRobot_PCBTestGUIReset(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE");
 
-    Progbar_Set_Value(0);
+    Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, 0);
 }
 
 void SweepRobotTest_PCBTestInitProc(void)
@@ -1175,7 +1175,7 @@ void SweepRobot_ManulSetProc(void)
 
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
 
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTBLUE);
+        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTCYAN);
         BUTTON_DispAutoModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }else{
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
@@ -1191,7 +1191,7 @@ void SweepRobot_ManulResetProc(void)
 
         SweepRobot_ManulTestDataReset();
         SweepRobot_ManulTestGuiReset();
-        SweepRobot_ManulTest_BtnCntArrayReset();
+        SweepRobot_ManulTest_BtnStateArrayReset();
     }
 }
 
@@ -1341,7 +1341,7 @@ void SweepRobot_ManulRGBLEDProc(void)
     OS_EXIT_CRITICAL();
 }
 
-void SweepRobot_ManulTest_BtnCntArrayReset(void)
+void SweepRobot_ManulTest_BtnStateArrayReset(void)
 {
     u8 i;
 

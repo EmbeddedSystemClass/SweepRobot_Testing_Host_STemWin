@@ -6,9 +6,10 @@
 
 #include "includes.h"
 
-#define SWRB_STEPMOTOR_TASK_OSTIMEDLY_TIME_SEC  2
+static u16 gSwrbStepMotorTaskInitDlyTimeMSec = 10;
+static u16 gSwrbStepMotorTaskDlyTimeSec = 1;
 
-static void SweepRobot_StepMotorTaskISR(void)
+static void SweepRobot_StepMotorOnePulseTimerISR(void)
 {
     STEP_MOTOR_EN_OUT_ENABLE();
     SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_STOP);
@@ -18,8 +19,8 @@ static void SweepRobot_StepMotorTaskISR(void)
 static void SweepRobot_StepMotorTaskInit(void)
 {
 //    gSwrbTestRuningTaskPrio = SWRB_STEPMOTOR_TASK_PRIO;
-    
-    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_INT, SweepRobot_StepMotorTaskISR);
+
+    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_INT, SweepRobot_StepMotorOnePulseTimerISR);
 }
 
 static void SweepRobot_StepMotorTaskMoveProc(void)
@@ -43,15 +44,19 @@ void SweepRobot_StepMotorTask(void *pdata)
         if(gSwrbTestTaskRunCnt == 1){
             SweepRobot_StepMotorTaskInit();
         }
-        
+
         if(gSwrbTestTaskRunCnt > 1){
             SweepRobot_StepMotorTaskMoveProc();
         }
-        
+
         if(gSwrbTestTaskRunCnt > 3){
             SweepRobot_StepMotorTaskMoveFinishProc();
         }
         
-        OSTimeDlyHMSM(0,0,SWRB_STEPMOTOR_TASK_OSTIMEDLY_TIME_SEC,0);
+        if(gSwrbTestTaskRunCnt == 1){
+            OSTimeDlyHMSM(0,0,0,gSwrbStepMotorTaskInitDlyTimeMSec);
+        }else{
+            OSTimeDlyHMSM(0,0,gSwrbStepMotorTaskDlyTimeSec,0);
+        }
     }
 }

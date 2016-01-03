@@ -175,16 +175,16 @@ void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmManulModeCHN, x, y);
 }
 
-void Progbar_Set_Value(int progbarValue)
+void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue)
 {
 	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_0);
+	hItem = WM_GetDialogItem(hWin, id);
 	PROGBAR_SetValue(hItem, progbarValue);
 }
 
 void Progbar_Set_Percent(void)
 {
-    Progbar_Set_Value( ( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal) )*100 );
+    Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, ( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal) )*100 );
 }
 
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
@@ -192,6 +192,13 @@ void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, editId);
     EDIT_SetValue(hItem, editValue);
+}
+
+void Edit_Set_FloatValue(WM_HWIN hWin, int editId, float editValue)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, editId);
+    EDIT_SetFloatValue(hItem, editValue);
 }
 
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str)

@@ -773,9 +773,13 @@
         ID_MANUL_BUTTON_7,
         ID_MANUL_BUTTON_8,
         ID_MANUL_BUTTON_9,
+        ID_MANUL_BUTTON_10,
         ID_MANUL_LISTVIEW_0,
         ID_MANUL_TEXT_0,
+        ID_MANUL_TEXT_1,
         ID_MANUL_EDIT_0,
+        ID_MANUL_EDIT_1,
+        ID_MANUL_PROGBAR_0,
         ID_MANUL_BOUND,
     };
     
@@ -793,6 +797,7 @@
         ID_MANUL_BUTTON_WHEEL,
         ID_MANUL_BUTTON_BRUSH,
         ID_MANUL_BUTTON_FAN,
+        ID_MANUL_BUTTON_IFRD,
         ID_MANUL_BUTTON_BUZZER,
         ID_MANUL_BUTTON_RGB_LED,
         ID_MANUL_BUTTON_BOUND,
@@ -805,12 +810,19 @@
     
     enum ID_MANUL_TEXT{
         ID_MANUL_TEXT_TITLE = ID_MANUL_TEXT_0,
+        ID_MANUL_TEXT_VOLT,
         ID_MANUL_TEXT_BOUND,
     };
     
     enum ID_MANUL_EDIT{
         ID_MANUL_EDIT_DATE = ID_MANUL_EDIT_0,
+        ID_MANUL_EDIT_VOLT,
         ID_MANUL_EDIT_BOUND,
+    };
+    
+    enum ID_MANUL_PROGBAR{
+        ID_MANUL_PROGBAR_VOLT = ID_MANUL_PROGBAR_0,
+        ID_MANUL_PROGBAR_BOUND,
     };
 #endif
 
@@ -931,10 +943,11 @@ void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispDeleteCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
-void Progbar_Set_Value(int progbarValue);
+void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue);
+void Edit_Set_FloatValue(WM_HWIN hWin, int editId, float editValue);
 void Edit_Get_Text(WM_HWIN hWin, int editId, char *str);
 int Edit_Get_UserData(WM_HWIN hWin, int editId, char *str, int numBytes);
 void Edit_Set_HexMode(WM_HWIN hWin, int editId, long value, long min, long max);

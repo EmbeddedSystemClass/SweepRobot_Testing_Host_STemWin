@@ -323,6 +323,9 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_TEST_TASK_INIT_WAIT_TIME_MS        50
 #define SWRB_TEST_DUT_SN_WRITE_WAIT_TIME        50
 
+#define SWRB_BATTERY_HIGH_BOUND     16.3
+#define SWRB_BATTERY_LOW_BOUND      13.3
+
 extern u8 usartRxFlag;
 extern int usartRxNum;
 
@@ -373,7 +376,7 @@ void SweepRobot_ManulBrushProc(void);
 void SweepRobot_ManulFanProc(void);
 void SweepRobot_ManulBuzzerProc(void);
 void SweepRobot_ManulRGBLEDProc(void);
-void SweepRobot_ManulTest_BtnCntArrayReset(void);
+void SweepRobot_ManulTest_BtnStateArrayReset(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);

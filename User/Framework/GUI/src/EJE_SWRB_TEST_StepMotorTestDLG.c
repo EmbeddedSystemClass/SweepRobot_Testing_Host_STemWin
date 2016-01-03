@@ -130,13 +130,17 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetText(hItem, "STOP");
     BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
   
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_EXIT);
+    BUTTON_SetText(hItem, "EXIT");
+    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+  
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_FORWARD);
     BUTTON_SetText(hItem, "FORWARD");
-    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_BACKWARD);
     BUTTON_SetText(hItem, "BACKWARD");
-    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_ENABLE);
     BUTTON_SetText(hItem, "ENABLE");
@@ -146,10 +150,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetText(hItem, "DISABLE");
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_EXIT);
-    BUTTON_SetText(hItem, "EXIT");
-    BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-  
     WM_HideWin(pMsg->hWin);
     break;
   case WM_NOTIFY_PARENT:

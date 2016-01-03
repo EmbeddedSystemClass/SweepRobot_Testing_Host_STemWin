@@ -72,7 +72,7 @@ enum STEP_MOTOR_POS{
 
 void SweepRobotTest_StepMotorDriverGPIOInit(void);
 
-void SweepRobotTest_StepMotorMoveSteps(int period_ms, u16 steps);
+void SweepRobotTest_StepMotorMoveSteps(int period_100us, u16 steps);
 
 void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode);
 void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode);

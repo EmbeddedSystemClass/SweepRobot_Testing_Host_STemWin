@@ -7,7 +7,7 @@
 
 static FRONT_IFRD_TestTypeDef frontIFRD[SWRB_FRONT_IFRD_CHAN_NUM];
 
-static const u16 SWRB_FRONT_IFRD_VALID_THRESHOLD[SWRB_FRONT_IFRD_CHAN_NUM] = { 800, 800, 250, 250, 150, 150, 150, 150 };
+static const u16 SWRB_FRONT_IFRD_VALID_THRESHOLD[SWRB_FRONT_IFRD_CHAN_NUM] = { 800, 800, 800, 800, 800, 800, 800, 800 };
 
 static void SweepRobot_FrontIFRDTestInit(void)
 {
@@ -15,20 +15,20 @@ static void SweepRobot_FrontIFRDTestInit(void)
     char *str;
 
     gSwrbTestRuningTaskPrio = SWRB_IFRD_TEST_TASK_PRIO;
-    
+
     str = "\r\n>>>IFRD TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef __SHOW_TEST_TITLE    
+#ifdef __SHOW_TEST_TITLE
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     printf("SNSR->IFRD=0\r\n");
     printf("SNSR->BSWC=0\r\n");
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    
+
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         frontIFRD[i].offValue = 0;
         frontIFRD[i].onValue = 0;
@@ -40,7 +40,7 @@ static void SweepRobot_FrontIFRDTestInit(void)
 static void SweepRobot_IFRDTestTxOffProc(void)
 {
     u8 i,j;
-    
+
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!frontIFRD[i].validFlag){
             if(i==6){
@@ -75,7 +75,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
 {
     u8 i,j;
     char *str;
-    
+
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!frontIFRD[i].validFlag){
             if(i==6){
@@ -100,7 +100,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                     continue;
                 }
             }
-            
+
             if(frontIFRD[i].onValue){
                 if( (frontIFRD[i].offValue - frontIFRD[i].onValue) > SWRB_FRONT_IFRD_VALID_THRESHOLD[i] ){
                     gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_FL_POS+i));
@@ -108,7 +108,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 }else{
                     gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
                 }
-                
+
                 if(frontIFRD[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                     frontIFRD[i].validFlag = 1;
                 }
@@ -126,9 +126,9 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         gSwrbTestTaskRunCnt = 0;
         printf("SNSR->IFRD=0\r\n");
         printf("SNSR->BSWC=0\r\n");
-        
+
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
-        
+
         str = "IFRD OK\r\n";
         SWRB_TestDataFileWriteString(str);
 //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
@@ -191,14 +191,14 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
 #endif
 }
 
-void SweepRobot_IFRDTestTask(void *pdata)
+void SweepRobot_FrontIFRDTestTask(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_IFRD)){
             SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
-            
+
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -210,7 +210,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
             }else{
                 SweepRobot_IFRDTestTxOnProc();
             }
-            
+
             if(gSwrbTestTaskRunCnt > 20){
                 SweepRobot_IFRDTestOverTimeProc();
             }
@@ -219,15 +219,15 @@ void SweepRobot_IFRDTestTask(void *pdata)
     }
 }
 
-void IFRD_TestDataSave(void)
+void FrontIFRD_TestDataSave(void)
 {
     u8 i;
-    
+
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = frontIFRD[i].onValue;
         gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = frontIFRD[i].offValue;
     }
-    
+
     SWRB_TestDataFileWriteData("IFRD->FL_onValue=", frontIFRD[0].onValue, 1);
     SWRB_TestDataFileWriteData("IFRD->FL_offValue=", frontIFRD[0].offValue, 1);
     SWRB_TestDataFileWriteData("IFRD->FR_onValue=", frontIFRD[1].onValue, 1);

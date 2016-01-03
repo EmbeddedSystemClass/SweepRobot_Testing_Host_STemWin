@@ -68,17 +68,21 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "winSWRBManulTest", ID_MANUL_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
   { LISTVIEW_CreateIndirect, "lstviewSWRBTest", ID_MANUL_LISTVIEW_MAIN, 20, 10, 655, 375, 0, 0x0, 0 },
 //  { TEXT_CreateIndirect, "textTitle", ID_MANUL_TEXT_TITLE, 20, 10, 655, 60, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "editDate", ID_MANUL_EDIT_DATE, 490, 427, 185, 40, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "editDate", ID_MANUL_EDIT_DATE, 490, 435, 185, 30, 0, 0x64, 0 },
   { BUTTON_CreateIndirect, "btnStart", ID_MANUL_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnSet", ID_MANUL_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnReset", ID_MANUL_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_MANUL_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnIndicate", ID_MANUL_BUTTON_INDICATE, 20, 425, 40, 40, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnWheel", ID_MANUL_BUTTON_WHEEL, 100, 400, 60, 65, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnBrush", ID_MANUL_BUTTON_BRUSH, 170, 400, 60, 65, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnFan", ID_MANUL_BUTTON_FAN, 240, 400, 60, 65, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnBuzzer", ID_MANUL_BUTTON_BUZZER, 310, 400, 60, 65, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnRGB", ID_MANUL_BUTTON_RGB_LED, 380, 400, 80, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnIndicate", ID_MANUL_BUTTON_INDICATE, 490, 400, 30, 30, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnWheel", ID_MANUL_BUTTON_WHEEL, 20, 400, 60, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnBrush", ID_MANUL_BUTTON_BRUSH, 90, 400, 60, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnFan", ID_MANUL_BUTTON_FAN, 160, 400, 60, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnIFRD", ID_MANUL_BUTTON_IFRD, 230, 400, 60, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnBuzzer", ID_MANUL_BUTTON_BUZZER, 300, 400, 60, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnRGB", ID_MANUL_BUTTON_RGB_LED, 370, 400, 80, 65, 0, 0x0, 0 },
+  { EDIT_CreateIndirect, "editVolt", ID_MANUL_EDIT_VOLT, 535, 400, 55, 30, 0, 0x64, 0 },
+  { PROGBAR_CreateIndirect, "prgbVolt", ID_MANUL_PROGBAR_VOLT, 615, 400, 55, 30, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "textVolt", ID_MANUL_TEXT_VOLT, 590, 400, 25, 30, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -121,6 +125,12 @@ static void Listview_Init(WM_HWIN hItem)
     LISTVIEW_SetRowHeight(hItem, 20);
     LISTVIEW_SetFont(hItem, GUI_FONT_COMIC18B_ASCII);
 };
+
+static void SWRB_MANUL_PAINT_Proc(void)
+{
+    GUI_SetColor(GUI_GRAY);
+    GUI_DrawRect(669, 410, 675, 420);
+}
 
 //static void Listview_SelChangedProc(WM_HWIN hWin, int id)
 //{
@@ -168,6 +178,23 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_BLUE);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
     //
+    // Initialization of 'editVolt'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_EDIT_VOLT);
+    EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+    EDIT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
+    EDIT_SetMaxLen(hItem, 5);
+    EDIT_SetFloatMode(hItem, 0.0, 0, 20, 2, GUI_EDIT_NORMAL|GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    EDIT_SetFloatValue(hItem, 0);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+    //
+    // Initialization of 'textVolt'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_TEXT_VOLT);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+    TEXT_SetText(hItem, "V");
+    TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
+    //
     // Initialization of 'btnStart'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_START);
@@ -178,7 +205,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_SET);
     Button_Init(hItem);
-    BUTTON_DispSetCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+    BUTTON_DispManulModeCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
+//    BUTTON_DispSetCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
     //
     // Initialization of 'btnReset'
     //
@@ -212,6 +241,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Init(hItem);
     BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
     BUTTON_SetText(hItem, "FAN");
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_IFRD);
+    Button_Init(hItem);
+    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+    BUTTON_SetText(hItem, "IFRD");
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_BUZZER);
     Button_Init(hItem);
@@ -224,6 +258,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     BUTTON_SetText(hItem, "RGB LED");
 
     WM_HideWin(pMsg->hWin);
+    break;
+  case WM_PAINT:
+    SWRB_MANUL_PAINT_Proc();
     break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);

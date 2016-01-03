@@ -171,13 +171,13 @@ static void SweepRobotTest_StepMotorOff(void)
 //}
 
 /* ONE PULSE MODE METHOD*/
-void SweepRobotTest_StepMotorMoveSteps(int period_ms, u16 steps)
+void SweepRobotTest_StepMotorMoveSteps(int period_100us, u16 steps)
 {
     uint32_t masterTimerPeriod = 0;
     uint32_t slaveTimerPeriod = 0;
 
-    masterTimerPeriod = (period_ms*steps)*10;       //((period_ms*1000)*steps)/100
-    slaveTimerPeriod = period_ms*100;               //(period_ms*1000/10
+    masterTimerPeriod = (period_100us*steps);           //((period_100us*100)*steps)/100
+    slaveTimerPeriod = period_100us*10;                 //(period_100us*100/10
 
     TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM, masterTimerPeriod);
     TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, slaveTimerPeriod);

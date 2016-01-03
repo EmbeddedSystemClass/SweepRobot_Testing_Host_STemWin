@@ -8,6 +8,7 @@
 #include "includes.h"
 
 #include <string.h>
+#include <stdio.h>
 
 #define SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME    100
 #define SWRB_MANUL_TEST_TASK_OSTIMEDLY_TIME_MS  100
@@ -158,10 +159,41 @@ RX_PROC_LOOP:
     OS_EXIT_CRITICAL();
 }
 
+static void SweepRobot_ManulTestBatteryVoltDisp(void)
+{
+    float volt = 0;
+    int voltPercent = 0;
+    static int lastVoltPercent = 0;
+    static int VoltCnt = 0;
+    
+    if(atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])){
+        volt = atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])/atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS])*1.2f*6;
+        Edit_Set_FloatValue(hWin_SWRB_MANUL, ID_MANUL_EDIT_VOLT, volt);
+
+        voltPercent = ((volt - SWRB_BATTERY_LOW_BOUND) / (SWRB_BATTERY_HIGH_BOUND - SWRB_BATTERY_LOW_BOUND))*100;
+        if(VoltCnt > 5){
+            if(voltPercent != lastVoltPercent){
+                VoltCnt++;
+            }else{
+                VoltCnt = 6;
+            }
+            if(VoltCnt > 16){
+                VoltCnt = 6;
+                Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_VOLT, (int)voltPercent);
+                lastVoltPercent = voltPercent;
+            }
+        }else{
+            VoltCnt++;
+            Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_VOLT, (int)voltPercent);
+        }
+    }
+}
+
 static void SweepRobot_ManulTestDataArrayDisp(void)
 {
     int i;
     char *str;
+    
     WM_HWIN hItem;
 
     hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
@@ -172,6 +204,7 @@ static void SweepRobot_ManulTestDataArrayDisp(void)
         LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], str);
         myfree(SRAMIN, str);
     }
+    
 }
 
 static void SweepRobot_ManulTestRxDataProc(void)
@@ -412,6 +445,11 @@ static void SweepRobot_ManulTest_ChargeDataProc(void)
     SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, GUI_LIGHTBLUE, GUI_WHITE);
 }
 
+static void SweepRobot_ManulTest_InternalVRefDataProc(void)
+{
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1400, 1600, SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+}
+
 static void SweepRobot_ManulTestValueValidCmp(void)
 {
     SweepRobot_ManulTest_WheelDataProc();
@@ -425,6 +463,7 @@ static void SweepRobot_ManulTestValueValidCmp(void)
     SweepRobot_ManulTest_KeyDataProc();
     SweepRobot_ManulTest_IrDADataProc();
     SweepRobot_ManulTest_ChargeDataProc();
+    SweepRobot_ManulTest_InternalVRefDataProc();
 }
 
 static void SweepRobot_ManulTestInit(void)
@@ -443,6 +482,7 @@ static void SweepRobot_ManulTestProc(void)
     OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
     if(usartRxFlag){
         SweepRobot_ManulTestRxDataProc();
+        SweepRobot_ManulTestBatteryVoltDisp();
         SweepRobot_ManulTestDataArrayDisp();
         usartRxFlag = 0;
         USART_RX_STA = 0;

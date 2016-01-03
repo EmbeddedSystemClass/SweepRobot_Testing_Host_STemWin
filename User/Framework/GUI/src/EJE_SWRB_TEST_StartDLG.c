@@ -50,8 +50,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
     { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 500, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 301, 205, 198, 89, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 500, 205, 200, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 301, 205, 198, 89, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 301, 294, 198, 89, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 301, 383, 198, 89, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
@@ -128,7 +128,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
             BUTTON_SetText(hItem, " ");
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 20, 74);
+            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 19, 28);
             Button_Init(hItem);
             //
             // Initialization of 'btnSLAM'
