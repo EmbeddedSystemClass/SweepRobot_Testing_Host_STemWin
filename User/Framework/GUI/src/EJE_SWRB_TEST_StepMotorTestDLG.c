@@ -38,6 +38,8 @@
 **********************************************************************
 */
 
+static int stepmotorSpeed = 5;
+static int stepmotorSteps = 1600;
 
 /*********************************************************************
 *
@@ -47,11 +49,17 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "winStepMotorTest", ID_STEPMOTOR_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnRun", ID_STEPMOTOR_BUTTON_RUN, 650, 0, 150, 160, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnStop", ID_STEPMOTOR_BUTTON_STOP, 650, 160, 150, 160, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnForward", ID_STEPMOTOR_BUTTON_FORWARD, 50, 70, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnBackward", ID_STEPMOTOR_BUTTON_BACKWARD, 50, 230, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnEnable", ID_STEPMOTOR_BUTTON_ENABLE, 390, 70, 150, 150, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnDisable", ID_STEPMOTOR_BUTTON_DISABLE, 388, 230, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnForward", ID_STEPMOTOR_BUTTON_FORWARD, 60, 70, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnBackward", ID_STEPMOTOR_BUTTON_BACKWARD, 60, 230, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnEnable", ID_STEPMOTOR_BUTTON_ENABLE, 220, 70, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnDisable", ID_STEPMOTOR_BUTTON_DISABLE, 220, 230, 150, 150, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_STEPMOTOR_BUTTON_EXIT, 650, 320, 150, 160, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "textSpeed", ID_STEPMOTOR_TEXT_SPEED, 420, 30, 80, 40, 0, 0x64, 0 },
+  { SLIDER_CreateIndirect, "sliderSpeed", ID_STEPMOTOR_SLIDER_SPEED, 430, 140, 60, 240, 8, 0x0, 0 },
+  { EDIT_CreateIndirect, "editSpeed", ID_STEPMOTOR_EDIT_SPEED, 420, 70, 80, 40, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "textSteps", ID_STEPMOTOR_TEXT_STEPS, 530, 30, 80, 40, 0, 0x64, 0 },
+  { SLIDER_CreateIndirect, "sliderSteps", ID_STEPMOTOR_SLIDER_STEPS, 540, 140, 60, 240, 8, 0x0, 0 },
+  { EDIT_CreateIndirect, "editSteps", ID_STEPMOTOR_EDIT_STEPS, 530, 70, 80, 40, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -64,13 +72,13 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 static void Button_RunProc(void)
 {
 //    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_RUN);
-//    SweepRobotTest_StepMotorMoveSteps(1, 10);
-    OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
+    SweepRobotTest_StepMotorMoveSteps(stepmotorSpeed, stepmotorSteps);
+//    OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
 }
 
 static void Button_StopProc(void)
 {
-    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_HARD_STOP);
+    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_STOP);
 }
 
 static void Button_ForwardProc(void)
@@ -96,6 +104,8 @@ static void Button_DisableProc(void)
 static void Button_ExitProc(void)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    
+    SweepRobotTest_StepMotorEnStateSet(ENABLE);
     
     WM_HideWin(hWin_SWRB_STEPMOTOR);
     WM_ShowWin(hWin_SWRB_START);
@@ -149,6 +159,36 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_DISABLE);
     BUTTON_SetText(hItem, "DISABLE");
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_EDIT_SPEED);
+    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+    EDIT_SetDecMode(hItem, 0, 0, 100, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    EDIT_SetValue(hItem, 0);
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_EDIT_STEPS);
+    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+    EDIT_SetDecMode(hItem, 0, 0, 16000, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    EDIT_SetValue(hItem, 0);
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_SPEED);
+    SLIDER_SetRange(hItem, 1, 10);
+    SLIDER_SetNumTicks(hItem, 10);
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_STEPS);
+    SLIDER_SetRange(hItem, 160, 16000);
+    SLIDER_SetNumTicks(hItem, 16);
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_TEXT_SPEED);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+    TEXT_SetText(hItem, "Speed");
+    
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_TEXT_STEPS);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+    TEXT_SetText(hItem, "Steps");
     
     WM_HideWin(pMsg->hWin);
     break;
@@ -192,7 +232,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                     break;
             }
             break;
-            
         case ID_STEPMOTOR_BUTTON_ENABLE: // Notifications sent by 'btnEnable'
             switch(NCode) {
                 case WM_NOTIFICATION_CLICKED:
@@ -217,6 +256,32 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                     break;
                 case WM_NOTIFICATION_RELEASED:
                     Button_ExitProc();
+                    break;
+            }
+            break;
+        case ID_STEPMOTOR_SLIDER_SPEED: // Notifications sent by 'sliderSpeed'
+            switch(NCode) {
+                case WM_NOTIFICATION_CLICKED:
+                    break;
+                case WM_NOTIFICATION_RELEASED:
+                    break;
+                case WM_NOTIFICATION_VALUE_CHANGED:
+                    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_SPEED);
+                    stepmotorSpeed = SLIDER_GetValue(hItem);
+                    Edit_Set_Value(pMsg->hWin, ID_STEPMOTOR_EDIT_SPEED, stepmotorSpeed);
+                    break;
+            }
+            break;
+        case ID_STEPMOTOR_SLIDER_STEPS: // Notifications sent by 'sliderSteps'
+            switch(NCode) {
+                case WM_NOTIFICATION_CLICKED:
+                    break;
+                case WM_NOTIFICATION_RELEASED:
+                    break;
+                case WM_NOTIFICATION_VALUE_CHANGED:
+                    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_STEPS);
+                    stepmotorSteps = SLIDER_GetValue(hItem);
+                    Edit_Set_Value(pMsg->hWin, ID_STEPMOTOR_EDIT_STEPS, stepmotorSteps);
                     break;
             }
             break;
