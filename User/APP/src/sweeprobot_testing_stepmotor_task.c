@@ -22,7 +22,6 @@ static void SweepRobot_StepMotorTaskMoveProc(void)
 
 static void SweepRobot_StepMotorTaskMoveFinishProc(void)
 {
-    plat_int_dereg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_INT);
     gSwrbTestTaskRunCnt = 0;
     OSTaskSuspend(OS_PRIO_SELF);
 }

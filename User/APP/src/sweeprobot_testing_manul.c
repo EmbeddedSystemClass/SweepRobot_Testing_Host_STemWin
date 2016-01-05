@@ -348,8 +348,10 @@ static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DAT
                                         gSwrbManulTestListviewDispDataCoord[pos][1], validColor);
             aSwrbTestDataValidCnt[pos]++;
         }else{
-            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
-                                        gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+            if(!aSwrbTestDataValidFlag[pos]){
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[pos][0],\
+                                            gSwrbManulTestListviewDispDataCoord[pos][1], faultColor);
+            }
             aSwrbTestDataValidCnt[pos] = 0;
         }
 
