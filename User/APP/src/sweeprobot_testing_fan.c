@@ -5,7 +5,6 @@
 #include "usart.h"
 #include "includes.h"
 
-//const static int SWRB_TEST_FAN_OC_THRESHOLD = 1000;
 const static int SWRB_TEST_FAN_CUR_LOW_BOUND = 20;
 const static int SWRB_TEST_FAN_CUR_HIGH_BOUND = 500;
 
@@ -43,8 +42,19 @@ static void SweepRobot_FanTestProc(void)
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
             fan.current = usartRxNum;
-            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
-            /* TODO: add fan over current protection here */
+            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
+            }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                str = mymalloc(SRAMIN, sizeof(char)*10);
+                *str = 0;
+                sprintf(str, "%d", usartRxNum);
+                Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][0],\
+                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][1],\
+                                        str);
+                myfree(SRAMIN, str);
+            }
+            
             usartRxNum = 0;
             usartRxFlag = 0;
             USART_RX_STA = 0;
@@ -63,6 +73,13 @@ static void SweepRobot_FanTestProc(void)
     if(fan.validCnt > SWRB_TEST_VALID_COMP_TIMES){
         fan.validFlag = 1;
         printf("FAN->SPD=0\r\n");
+        
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                       gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][0],\
+                                                       gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][1],\
+                                                       GUI_LIGHTBLUE);
+        }
     }
 
     if(fan.validFlag){
@@ -70,27 +87,24 @@ static void SweepRobot_FanTestProc(void)
         
         SWRB_TestDataSaveToFile(Fan_TestDataSave);
         
-        str = "FAN OK\r\n";
-        SWRB_TestDataFileWriteString(str);
-        
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_FAN, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN OK");
-        Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Edit_Clear();
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            str = "FAN OK\r\n";
+            SWRB_TestDataFileWriteString(str);
+            
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_FAN, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN OK");
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+            Edit_Clear();
+        }
 
         SWRB_NextTestTaskResumePostAct(SWRB_FAN_TEST_TASK_PRIO);
     }
 }
 
-static void SweepRobot_FanTestOverTimeProc(void)
+static void SweepRobot_FanPCBTestOverTimeProc(void)
 {
     char *str;
-    
-    gSwrbTestTaskRunCnt = 0;
-    printf("FAN->SPD=0\r\n");
-
-    SWRB_TestDataSaveToFile(Fan_TestDataSave);
     
     str = "ERROR->FAN\r\n";
     SWRB_TestDataFileWriteString(str);
@@ -100,6 +114,28 @@ static void SweepRobot_FanTestOverTimeProc(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN ERROR");
     Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
     Edit_Clear();
+}
+
+static void SweepRobot_FanManulTestOverTimeProc(void)
+{
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][0],\
+                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][1],\
+                                           GUI_LIGHTRED);
+}
+
+static void SweepRobot_FanTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    printf("FAN->SPD=0\r\n");
+
+    SWRB_TestDataSaveToFile(Fan_TestDataSave);
+    
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SweepRobot_FanPCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SweepRobot_FanManulTestOverTimeProc();
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();

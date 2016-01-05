@@ -51,9 +51,16 @@ static void SweepRobot_IrDATestCodeArrayToNum(void)
             *str = 0;
             mymemcpy(str, aIrDATestRxData[i], sizeof(aIrDATestRxData[i]));
             IrDA[i].code = atoi(str);
-            Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, str);
+            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, str);
 //            Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
 //            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
+            }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][1],\
+                                            str);
+            }
             myfree(SRAMIN, str);
         }
     }
@@ -116,6 +123,13 @@ static void SweepRobot_IrDATestProc(void)
             }
             if(IrDA[i].validCnt){
                 IrDA[i].validFlag = 1;
+                
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][1],\
+                                                           GUI_LIGHTBLUE);
+                }
             }
             if(IrDA[i].validFlag){
                 gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IRDA_B_POS+i));
@@ -139,34 +153,27 @@ static void SweepRobot_IrDATestProc(void)
         
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
-        str = "IRDA OK\r\n";
-        SWRB_TestDataFileWriteString(str);
-        
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
-//        for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
-//            Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
-//        }
-        Edit_Clear();
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            str = "IRDA OK\r\n";
+            SWRB_TestDataFileWriteString(str);
+            
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
+    //        for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
+    //            Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+    //        }
+            Edit_Clear();
+        }
 
         SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
     }
 }
 
-static void SweepRobot_IrDATestOverTimeProc(void)
+static void SweepRobot_IrDAPCBTestOverTimeProc(void)
 {
     u8 i;
     char *str;
-    
-    gSwrbTestTaskRunCnt = 0;
-
-//    printf("IRDA->OFF\r\n");
-//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
-    printf("IRDA->ERS\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
-
-    SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
         str = "ERROR->IRDA_B\r\n";
@@ -199,6 +206,58 @@ static void SweepRobot_IrDATestOverTimeProc(void)
         Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     }
     Edit_Clear();
+}
+
+static void SweepRobot_IrDAManulTestOverTimeProc(void)
+{
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_L_RxCODE_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_L_RxCODE_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FL_RxCODE_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FL_RxCODE_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FR_RxCODE_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FR_RxCODE_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+}
+
+static void SweepRobot_IrDATestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+
+//    printf("IRDA->OFF\r\n");
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+    printf("IRDA->ERS\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+
+    SWRB_TestDataSaveToFile(IRDA_TestDataSave);
+    
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SweepRobot_IrDAPCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SweepRobot_IrDAManulTestOverTimeProc();
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();

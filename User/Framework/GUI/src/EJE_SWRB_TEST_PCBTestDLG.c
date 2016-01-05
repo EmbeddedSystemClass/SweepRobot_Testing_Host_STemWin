@@ -675,15 +675,20 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 {
     WM_HWIN hWin;
 
-    hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB)
+        hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
+    else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL)
+        hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_MANUL, 180, 135);
     return hWin;
 }
 
 WM_HWIN CreateBUZZER_TestDLG(void)
 {
     WM_HWIN hWin;
-
-    hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB)
+        hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
+    else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL)
+        hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_MANUL, 180, 135);
     return hWin;
 }
 

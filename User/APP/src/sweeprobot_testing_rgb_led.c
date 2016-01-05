@@ -7,6 +7,7 @@
 
 static RGB_LED_TestTypeDef rgb_led;
 
+static void SweepRobot_RGBLEDTestOKProc(void);
 static void SweepRobot_RGBLEDTestErrProc(void);
 
 static void SweepRobot_RGBLEDTestInit(void)
@@ -27,6 +28,8 @@ static void SweepRobot_RGBLEDTestInit(void)
     
     hWin_SWRB_RGB_LED = CreateRGB_LED_TestDLG();
     
+    WM_BringToTop(hWin_SWRB_RGB_LED);
+    
     rgb_led.r_state = 0;
     rgb_led.g_state = 0;
     rgb_led.b_state = 0;
@@ -39,49 +42,57 @@ static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char
     Text_Set_Color(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, color);
     Text_Set_Text(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, strText);
     OSTaskSuspend(gSwrbTestRuningTaskPrio);
-    if(*ledState){
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit1);
-    }else{
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit2);
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(*ledState){
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit1);
+            SWRB_TestDataFileWriteString(strMultiEdit1);
+        }else{
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit2);
+            SWRB_TestDataFileWriteString(strMultiEdit2);
+        }
+    }
+}
+
+static void SweepRobot_RGBLEDManulTestSingleProc(int *ledState, enum SWRB_MANUL_TEST_DATA_RGB_LED_POS pos, GUI_COLOR okColor, GUI_COLOR errColor)
+{
+    if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        if(*ledState){
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                               gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
+                                                               gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
+                                                               okColor);
+        }else{
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                               gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
+                                                               gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
+                                                               errColor);
+        }
     }
 }
 
 static void SweepRobot_RGBLEDTestProc(void)
 {
-    char *str;
-    
     rgb_led.validCnt = 1;
     printf("RGB->ON=%d\r\n", RGB_LED_RED);
-    SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_RED, "IS RED LED OK?", ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
+    SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_DARKRED, "IS RED LED OK?", ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
+    SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.r_state, SWRB_MANUL_TEST_DATA_RGB_LED_RED_POS, GUI_LIGHTBLUE, GUI_LIGHTRED);
     rgb_led.validCnt = 2;
     printf("RGB->ON=%d\r\n", RGB_LED_GREEN);
-    SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_GREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
+    SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_DARKGREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
+    SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.g_state, SWRB_MANUL_TEST_DATA_RGB_LED_GREEN_POS, GUI_LIGHTBLUE, GUI_LIGHTRED);
     rgb_led.validCnt = 3;
     printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
-    SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_BLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
+    SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_DARKBLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
+    SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.b_state, SWRB_MANUL_TEST_DATA_RGB_LED_BLUE_POS, GUI_LIGHTBLUE, GUI_LIGHTRED);
     
     if(rgb_led.r_state && rgb_led.g_state && rgb_led.b_state){
-        gSwrbTestTaskRunCnt = 0;
-        printf("RGB->ON=2\r\n");
-        GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
-        
-        SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
-        
-        str = "RGB LED OK\r\n";
-        SWRB_TestDataFileWriteString(str);
-        
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_RGB_LED, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED OK");
-        Edit_Clear();
-        
-        SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
+        SweepRobot_RGBLEDTestOKProc();
     }else{
         SweepRobot_RGBLEDTestErrProc();
     }
 }
 
-static void SweepRobot_RGBLEDTestErrProc(void)
+static void SweepRobot_RGBLEDTestOKProc(void)
 {
     char *str;
     
@@ -90,23 +101,37 @@ static void SweepRobot_RGBLEDTestErrProc(void)
     GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
     
     SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
-
-    if(!rgb_led.r_state){
-        str = "ERROR->RED LED\r\n";
+    
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        str = "RGB LED OK\r\n";
         SWRB_TestDataFileWriteString(str);
-    }
-    if(!rgb_led.g_state){
-        str = "ERROR->GREEN LED\r\n";
-        SWRB_TestDataFileWriteString(str);
-    }
-    if(!rgb_led.b_state){
-        str = "ERROR->BLUE LED\r\n";
-        SWRB_TestDataFileWriteString(str);
+        
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_RGB_LED, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED OK");
+        Edit_Clear();
     }
     
-    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_RGB_LED, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED ERROR");
-    Edit_Clear();
+#ifdef _TASK_WAIT_WHEN_ERROR
+    SWRB_TestTaskErrorAct();
+#else
+    SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
+#endif
+}
+
+static void SweepRobot_RGBLEDTestErrProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    printf("RGB->ON=2\r\n");
+    GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
+    
+    SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
+
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_RGB_LED, GUI_RED);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED ERROR");
+        Edit_Clear();
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();

@@ -322,13 +322,13 @@ void SWRB_PCBTestCheckboxEnable(void)
 
 void SWRB_PCBTestCheckboxDisable(void)
 {
-    int i;
-    WM_HWIN hItem;
-    
-    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
-        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
-        WM_DisableWindow(hItem);
-    }
+//    int i;
+//    WM_HWIN hItem;
+//    
+//    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
+//        hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
+//        WM_DisableWindow(hItem);
+//    }
 }
 
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id)

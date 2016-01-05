@@ -40,8 +40,8 @@ static void SWRB_WheelTestInit(void)
     printf("LW->SPD=40\r\n");
     printf("RW->SPD=40\r\n");
     /*
-    printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_L);
-    printf("WHEEL->ON=%d\r\n",WHEEL_CHAN_R);
+    printf("WHL->ON=%d\r\n",WHEEL_CHAN_L);
+    printf("WHL->ON=%d\r\n",WHEEL_CHAN_R);
     */
 }
 
@@ -57,10 +57,21 @@ static void SWRB_WheelTestProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     wheel[i].speed = (u8)usartRxNum;
+                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, wheel[i].speed);
+                    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                        str = mymalloc(SRAMIN, sizeof(char)*10);
+                        *str = 0;
+                        sprintf(str, "%d", usartRxNum);
+                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
+                                                str);
+                        myfree(SRAMIN, str);
+                    }
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;
-                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, wheel[i].speed);
                     break;
                 }else{
                     continue;
@@ -77,55 +88,91 @@ static void SWRB_WheelTestProc(void)
             if(wheel[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 wheel[i].validFlag = 1;
                 printf("WHL->OFF=%d\r\n",i);
+                
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
+                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
+                                                               GUI_LIGHTBLUE);
+                }
             }
         }
     }
 
     if(wheel[WHEEL_CHAN_L].validFlag && wheel[WHEEL_CHAN_R].validFlag ){
         gSwrbTestTaskRunCnt = 0;
-
+        
         SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
-        str = "WHEEL OK\r\n";
-        SWRB_TestDataFileWriteString(str);
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            str = "WHEEL OK\r\n";
+            SWRB_TestDataFileWriteString(str);
 
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL OK");
-        Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Edit_Clear();
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL OK");
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+            Edit_Clear();
+        }
 
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);
     }
 }
 
+static void SWRB_WheelPCBTestOverTimeProc(void)
+{
+   char *str;
+    
+   SWRB_TestDataSaveToFile(Wheel_TestDataSave);
+
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
+            str = "ERROR->LEFT WHEEL\r\n";
+            SWRB_TestDataFileWriteString(str);
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
+            str = "ERROR->RIGHT WHEEL\r\n";
+            SWRB_TestDataFileWriteString(str);
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+    }
+    
+    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL ERROR");
+    Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+    Edit_Clear(); 
+}
+
+static void SWRB_WheelManulTestOverTimeProc(void)
+{
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS][0],\
+                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS][1],\
+                                                   GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS][0],\
+                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS][1],\
+                                                   GUI_LIGHTRED);
+    }    
+}
+
 static void SWRB_WheelTestOverTimeProc(void)
 {
-    char *str;
-
     gSwrbTestTaskRunCnt = 0;
 
     printf("WHL->OFF=0\r\n");
     printf("WHL->OFF=1\r\n");
 
-    SWRB_TestDataSaveToFile(Wheel_TestDataSave);
-
-    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
-        str = "ERROR->LEFT WHEEL\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SWRB_WheelPCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SWRB_WheelManulTestOverTimeProc();
     }
-    if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
-        str = "ERROR->RIGHT WHEEL\r\n";
-        SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-    }
-    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL ERROR");
-    Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Edit_Clear();
 
 #ifdef _TASK_WAIT_WHEN_ERROR
+    /* TODO: should fix bug */
     SWRB_TestTaskErrorAct();
 #else
     SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_TEST_TASK_PRIO);

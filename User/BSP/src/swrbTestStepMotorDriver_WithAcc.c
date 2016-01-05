@@ -9,7 +9,7 @@
 #include "delay.h"
 
 #define STEP_MOTOR_MIN_SPEED        1
-#define STEP_MOTOR_MAX_SPEED        10
+#define STEP_MOTOR_MAX_SPEED        50
 #define STEP_MOTOR_ACCELERATION     0.005
 #define STEP_MOTOR_DECELERATION     0.01
 

@@ -129,7 +129,7 @@ static void Listview_Init(WM_HWIN hItem)
 static void SWRB_MANUL_PAINT_Proc(void)
 {
     GUI_SetColor(GUI_GRAY);
-    GUI_DrawRect(669, 410, 675, 420);
+//    GUI_DrawRect(669, 410, 675, 420);
 }
 
 //static void Listview_SelChangedProc(WM_HWIN hWin, int id)
@@ -361,7 +361,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       }
       break;
-    case ID_MANUL_BUTTON_IFRD:
+    case ID_MANUL_BUTTON_IFRD: // Notifications sent by 'btnIFRD'
         switch(NCode) {
           case WM_NOTIFICATION_CLICKED:
             break;

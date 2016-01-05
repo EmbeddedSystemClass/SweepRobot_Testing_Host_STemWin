@@ -41,7 +41,18 @@ static void SweepRobot_KeyTestProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 key.value = usartRxNum;
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
+                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    str = mymalloc(SRAMIN, sizeof(char)*10);
+                    *str = 0;
+                    sprintf(str, "%d", usartRxNum);
+                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][0],\
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][1],\
+                                            str);
+                    myfree(SRAMIN, str);
+                }
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 USART_RX_STA = 0;
@@ -57,6 +68,13 @@ static void SweepRobot_KeyTestProc(void)
         
         if(key.validFlag){
             SweepRobot_KeyTestCtrlIdlePos();
+            
+            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][1],\
+                                                           GUI_LIGHTBLUE);
+            }
         }
     }
     
@@ -66,27 +84,24 @@ static void SweepRobot_KeyTestProc(void)
 
         SWRB_TestDataSaveToFile(KEY_TestDataSave);
         
-        str = "KEY OK\r\n";
-        SWRB_TestDataFileWriteString(str);
-        
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "KEY OK\r\n");
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY OK");
-        Edit_Clear();
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            str = "KEY OK\r\n";
+            SWRB_TestDataFileWriteString(str);
+            
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "KEY OK\r\n");
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY OK");
+            Edit_Clear();
+        }
 
         SWRB_NextTestTaskResumePostAct(SWRB_KEY_TEST_TASK_PRIO);
     }
 }
 
-static void SweepRobot_KeyTestOverTimeProc(void)
+static void SweepRobot_KeyPCBTestOverTimeProc(void)
 {
     char *str;
     
-    gSwrbTestTaskRunCnt = 0;
-    SweepRobot_KeyTestCtrlIdlePos();
-
-    SWRB_TestDataSaveToFile(KEY_TestDataSave);
-
     str = "ERROR->KEY\r\n";
     SWRB_TestDataFileWriteString(str);
     
@@ -94,6 +109,28 @@ static void SweepRobot_KeyTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY ERROR");
     Edit_Clear();
+}
+
+static void SweepRobot_KeyManulTestOverTimeProc(void)
+{
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][1],\
+                                                           GUI_LIGHTRED);
+}
+
+static void SweepRobot_KeyTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    SweepRobot_KeyTestCtrlIdlePos();
+
+    SWRB_TestDataSaveToFile(KEY_TestDataSave);
+
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SweepRobot_KeyPCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SweepRobot_KeyManulTestOverTimeProc();
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();
@@ -104,7 +141,6 @@ static void SweepRobot_KeyTestOverTimeProc(void)
 
 void SweepRobot_KeyTestTask(void *pdata)
 {
-    
     SweepRobot_KeyTestGPIOInit();
     
     while(1){

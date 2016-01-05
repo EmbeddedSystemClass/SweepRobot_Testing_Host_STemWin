@@ -48,8 +48,19 @@ static void SweepRobot_CollisionTestProc(void)
                     printf("CLSN->RD=%d\r\n",i);
                     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                     if(usartRxFlag){
-                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
                         collision[i].onValue = usartRxNum;
+                        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
+                        }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                            str = mymalloc(SRAMIN, sizeof(char)*10);
+                            *str = 0;
+                            sprintf(str, "%d", usartRxNum);
+                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
+                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
+                                                    str);
+                            myfree(SRAMIN, str);
+                        }
                         usartRxNum = 0;
                         usartRxFlag = 0;
                         USART_RX_STA = 0;
@@ -76,8 +87,19 @@ static void SweepRobot_CollisionTestProc(void)
                     printf("CLSN->RD=%d\r\n",i);
                     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                     if(usartRxFlag){
-                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
                         collision[i].offValue = usartRxNum;
+                        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
+                        }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                            str = mymalloc(SRAMIN, sizeof(char)*10);
+                            *str = 0;
+                            sprintf(str, "%d", usartRxNum);
+                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
+                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
+                                                    str);
+                            myfree(SRAMIN, str);
+                        }
                         usartRxNum = 0;
                         usartRxFlag = 0;
                         USART_RX_STA = 0;
@@ -97,6 +119,13 @@ static void SweepRobot_CollisionTestProc(void)
 
                 if(collision[i].offValidCnt > 1){
                     collision[i].validFlag = 1;
+                    
+                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
+                                                                   GUI_LIGHTBLUE);
+                    }
                 }
             }
         }
@@ -109,28 +138,24 @@ static void SweepRobot_CollisionTestProc(void)
 
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
 
-        str = "COLLISION OK\r\n";
-        SWRB_TestDataFileWriteString(str);
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            str = "COLLISION OK\r\n";
+            SWRB_TestDataFileWriteString(str);
 
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_COLLISION, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_COLLISION, "COLLISION OK");
-        Edit_Clear();
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_COLLISION, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_COLLISION, "COLLISION OK");
+            Edit_Clear();
+        }
 
         SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
     }
 }
 
-static void SweepRobot_CollisionTestOverTimeProc(void)
+static void SweepRobot_CollisionPCBTestOverTimeProc(void)
 {
     char *str;
-
-    gSwrbTestTaskRunCnt = 0;
-
-    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
-
-    SWRB_TestDataSaveToFile(Collision_TestDataSave);
-
+    
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
         str = "ERROR->COLLISION_L\r\n";
         SWRB_TestDataFileWriteString(str);
@@ -155,6 +180,50 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_COLLISION, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_COLLISION, "COLLISION ERROR");
     Edit_Clear();
+}
+
+static void SweepRobot_CollisionManulTestOverTimeProc(void)
+{
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FL_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FL_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FL_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_R_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_R_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_R_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FR_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FR_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FR_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+}
+
+static void SweepRobot_CollisionTestOverTimeProc(void)
+{
+
+    gSwrbTestTaskRunCnt = 0;
+
+    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
+    
+    SWRB_TestDataSaveToFile(Collision_TestDataSave);
+    
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SweepRobot_CollisionPCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SweepRobot_CollisionManulTestOverTimeProc();
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();

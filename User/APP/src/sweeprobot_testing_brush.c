@@ -5,7 +5,6 @@
 #include "usart.h"
 #include "includes.h"
 
-//const static u16 swrbTestBrushOCThreshold[SWRB_BRUSH_CHAN_NUM] = { 300, 300, 1000 };
 const static u16 swrbTestBrushCurLowBound[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
 const static u16 swrbTestBrushCurHighBound[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
 
@@ -57,7 +56,18 @@ static void SWRB_BrushTestProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     brush[i].current = usartRxNum;
-                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
+                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
+                    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                        str = mymalloc(SRAMIN, sizeof(char)*10);
+                        *str = 0;
+                        sprintf(str, "%d", usartRxNum);
+                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
+                                                str);
+                        myfree(SRAMIN, str);
+                    }
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;
@@ -76,38 +86,40 @@ static void SWRB_BrushTestProc(void)
             if( brush[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 brush[i].validFlag = 1;
                 printf("BRS->OFF=%d\r\n",i);
+                
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
+                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
+                                                               GUI_LIGHTBLUE);
+                }
             }
         }
     }
 
     if(brush[BRUSH_CHAN_L].validFlag && brush[BRUSH_CHAN_R].validFlag && brush[BRUSH_CHAN_M].validFlag){
         gSwrbTestTaskRunCnt = 0;
-
+        
         SWRB_TestDataSaveToFile(Brush_TestDataSave);
-        
-        str = "BRUSH OK\r\n";
-        SWRB_TestDataFileWriteString(str);
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "BRUSH OK\r\n");
-        
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BRUSH, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH OK");
-        Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-        Edit_Clear();
 
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            str = "BRUSH OK\r\n";
+            SWRB_TestDataFileWriteString(str);
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "BRUSH OK\r\n");
+            
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BRUSH, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH OK");
+            Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
+            Edit_Clear();
+        }
+        
         SWRB_NextTestTaskResumePostAct(SWRB_BRUSH_TEST_TASK_PRIO);
     }
 }
 
-void SWRB_BrushTestOverTimeProc(void)
+static void SWRB_BrushPCBTestOverTimeProc(void)
 {
     char *str;
-    
-    gSwrbTestTaskRunCnt = 0;
-    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_L);
-    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_R);
-    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_M);
-    
-    SWRB_TestDataSaveToFile(Brush_TestDataSave);
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
         str = "ERROR->LBRUSH\r\n";
@@ -127,7 +139,45 @@ void SWRB_BrushTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BRUSH, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH ERROR");
     Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Edit_Clear();
+    Edit_Clear();   
+}
+
+static void SWRB_BrushManulTestOverTimeProc(void)
+{
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+    if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS][0],\
+                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS][1],\
+                                               GUI_LIGHTRED);
+    }
+}
+
+void SWRB_BrushTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_L);
+    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_R);
+    printf("BRS->OFF=%d\r\n",BRUSH_CHAN_M);
+    
+    SWRB_TestDataSaveToFile(Brush_TestDataSave);
+    
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SWRB_BrushPCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SWRB_BrushManulTestOverTimeProc();
+    }
     
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();

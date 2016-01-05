@@ -240,7 +240,9 @@ enum SWRB_TEST_DATA_POS{
     
     SWRB_TEST_DATA_BUZZER_OK_POS,
     
-    SWRB_TEST_DATA_RGB_LED_OK_POS,
+    SWRB_TEST_DATA_RGB_LED_RED_POS,
+    SWRB_TEST_DATA_RGB_LED_GREEN_POS,
+    SWRB_TEST_DATA_RGB_LED_BLUE_POS,
     
     SWRB_TEST_DATA_CHARGE_CUR_POS,
     SWRB_TEST_DATA_CHARGE_VOL_POS,
@@ -377,7 +379,7 @@ void SweepRobot_ManulFanProc(void);
 void SweepRobot_ManulIFRDProc(void);
 void SweepRobot_ManulBuzzerProc(void);
 void SweepRobot_ManulRGBLEDProc(void);
-void SweepRobot_ManulTest_BtnStateArrayReset(void);
+void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);

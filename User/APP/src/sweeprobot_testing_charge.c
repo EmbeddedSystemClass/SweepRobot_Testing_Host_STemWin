@@ -58,22 +58,22 @@ void SweepRobot_Charge24VOff(void)
 static void SweepRobot_ChargeTestInit(void)
 {
     char *str;
-    
+
     gSwrbTestRuningTaskPrio = SWRB_CHARGE_TEST_TASK_PRIO;
-    
+
     str = "\r\n>>>CHARGE TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef __SHOW_TEST_TITLE    
+#ifdef __SHOW_TEST_TITLE
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SweepRobot_Charge24VOn();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     printf("CRG->ON=20\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    
+
     charge.current = 0;
     charge.curValidCnt = 0;
     charge.curValidFlag = 0;
@@ -89,14 +89,25 @@ static void SweepRobot_ChargeTestProc(void)
 {
     u8 i;
     char *str;
-    
+
     if(!charge.curValidFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("CRG->RD=1\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
                 charge.current = usartRxNum;
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
+                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    str = mymalloc(SRAMIN, sizeof(char)*10);
+                    *str = 0;
+                    sprintf(str, "%d", usartRxNum);
+                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
+                                            str);
+                    myfree(SRAMIN, str);
+                }
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 USART_RX_STA = 0;
@@ -115,6 +126,13 @@ static void SweepRobot_ChargeTestProc(void)
 
         if(charge.curValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.curValidFlag = 1;
+            
+            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
+                                                           GUI_LIGHTBLUE);
+            }
         }
     }
 
@@ -123,8 +141,19 @@ static void SweepRobot_ChargeTestProc(void)
             printf("CRG->RD=0\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U2, usartRxNum);
                 charge.voltage = usartRxNum;
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U2, usartRxNum);
+                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    str = mymalloc(SRAMIN, sizeof(char)*10);
+                    *str = 0;
+                    sprintf(str, "%d", usartRxNum);
+                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
+                                            str);
+                    myfree(SRAMIN, str);
+                }
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 USART_RX_STA = 0;
@@ -143,16 +172,34 @@ static void SweepRobot_ChargeTestProc(void)
 
         if(charge.volValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.volValidFlag = 1;
+            
+            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
+                                                           GUI_LIGHTBLUE);
+            }
         }
     }
-    
+
     if(!charge.charge24vValidFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("CRG->RD=2\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
-                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U3, usartRxNum);
                 charge.charge24vState = usartRxNum;
+                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U3, usartRxNum);
+                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    str = mymalloc(SRAMIN, sizeof(char)*10);
+                    *str = 0;
+                    sprintf(str, "%d", usartRxNum);
+                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
+                                            str);
+                    myfree(SRAMIN, str);
+                }
                 usartRxNum = 0;
                 usartRxFlag = 0;
                 USART_RX_STA = 0;
@@ -171,6 +218,13 @@ static void SweepRobot_ChargeTestProc(void)
 
         if(charge.charge24vValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.charge24vValidFlag = 1;
+            
+            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
+                                                           GUI_LIGHTBLUE);
+            }
         }
     }
 
@@ -178,30 +232,26 @@ static void SweepRobot_ChargeTestProc(void)
         gSwrbTestTaskRunCnt = 0;
         printf("CRG->OFF\r\n");
         SweepRobot_Charge24VOff();
-        
+
         SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
-        
-        str = "CHARGE OK\r\n";
-        SWRB_TestDataFileWriteString(str);
-        
-//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_CHARGE, GUI_BLUE);
-        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE OK");
-        Edit_Clear();
+
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            str = "CHARGE OK\r\n";
+            SWRB_TestDataFileWriteString(str);
+
+    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_CHARGE, GUI_BLUE);
+            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE OK");
+            Edit_Clear();
+        }
 
         SWRB_NextTestTaskResumePostAct(SWRB_CHARGE_TEST_TASK_PRIO);
     }
 }
 
-static void SweepRobot_ChargeTestOverTimeProc(void)
+static void SweepRobot_ChargePCBTestOverTimeProc(void)
 {
     char *str;
-    
-    gSwrbTestTaskRunCnt = 0;
-    printf("CRG->OFF\r\n");
-    SweepRobot_Charge24VOff();
-
-    SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
     
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
         str = "ERROR->CHARGE CUR\r\n";
@@ -221,6 +271,43 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_CHARGE, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE ERROR");
     Edit_Clear();
+}
+
+static void SweepRobot_ChargeManulTestOverTimeProc(void)
+{
+    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+    if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_24V_MASK){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
+}
+
+static void SweepRobot_ChargeTestOverTimeProc(void)
+{
+    gSwrbTestTaskRunCnt = 0;
+    printf("CRG->OFF\r\n");
+    SweepRobot_Charge24VOff();
+
+    SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
+
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        SweepRobot_ChargePCBTestOverTimeProc();
+    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        SweepRobot_ChargeManulTestOverTimeProc();
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();
@@ -232,15 +319,15 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
 void SweepRobot_ChargeTestTask(void *pdata)
 {
     u16 overTimeWaitTime;
-    
+
     SweepRobot_ChargeTestGPIOInit();
 
     while(1){
-        
+
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE)){
             SWRB_NextTestTaskResumePreAct(SWRB_CHARGE_TEST_TASK_PRIO);
         }else{
-        
+
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -250,17 +337,17 @@ void SweepRobot_ChargeTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 1){
                 SweepRobot_ChargeTestProc();
             }
-            
+
             if(charge.charge24vState){
                 overTimeWaitTime = 600;
             }else{
                 overTimeWaitTime = 100;
             }
-            
+
             if(gSwrbTestTaskRunCnt > overTimeWaitTime){
                 SweepRobot_ChargeTestOverTimeProc();
             }
-            
+
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }
@@ -271,7 +358,7 @@ void CHARGE_TestDataSave(void)
     gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_CUR_POS] = charge.current;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_VOL_POS] = charge.voltage;
     gSwrbTestAcquiredData[SWRB_TEST_DATA_CHARGE_24V_POS] = charge.charge24vState;
-    
+
     SWRB_TestDataFileWriteData("CHARGE->Vol=", charge.voltage, 1);
     SWRB_TestDataFileWriteData("CHARGE->Cur=", charge.current, 1);
     SWRB_TestDataFileWriteData("CHARGE->24V=", charge.charge24vState, 1);

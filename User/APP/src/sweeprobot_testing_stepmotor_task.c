@@ -9,18 +9,9 @@
 static u16 gSwrbStepMotorTaskInitDlyTimeMSec = 10;
 static u16 gSwrbStepMotorTaskDlyTimeSec = 1;
 
-static void SweepRobot_StepMotorOnePulseTimerISR(void)
-{
-    STEP_MOTOR_EN_OUT_ENABLE();
-    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_STOP);
-    OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
-}
-
 static void SweepRobot_StepMotorTaskInit(void)
 {
-//    gSwrbTestRuningTaskPrio = SWRB_STEPMOTOR_TASK_PRIO;
-
-    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_MASTER_TIM_INT, SweepRobot_StepMotorOnePulseTimerISR);
+    
 }
 
 static void SweepRobot_StepMotorTaskMoveProc(void)

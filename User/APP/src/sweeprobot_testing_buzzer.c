@@ -27,6 +27,8 @@ static void SweepRobot_BuzzerTestInit(void)
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     hWin_SWRB_BUZZER = CreateBUZZER_TestDLG();
+    
+    WM_BringToTop(hWin_SWRB_BUZZER);
 
     Text_Set_Color(hWin_SWRB_BUZZER, ID_PCBTEST_TEXT_BUZZER, GUI_BLACK);
     Text_Set_Text(hWin_SWRB_BUZZER, ID_PCBTEST_TEXT_BUZZER, "IS BUZZER OK?");
@@ -74,13 +76,20 @@ static void SweepRobot_BuzzerTestOKProc(void)
     
     GUI_EndDialog(hWin_SWRB_BUZZER, 0);
     
-    str = "BUZZER OK\r\n";
-    SWRB_TestDataFileWriteString(str);
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        str = "BUZZER OK\r\n";
+        SWRB_TestDataFileWriteString(str);
 
-//    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_BLUE);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER OK");
-    Edit_Clear();
+    //    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER OK");
+        Edit_Clear();
+    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][1],\
+                                                           GUI_LIGHTBLUE);
+    }
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
 }
@@ -95,13 +104,20 @@ static void SweepRobot_BuzzerTestErrProc(void)
     
     SWRB_TestDataSaveToFile(BUZZER_TestDataSave);
 
-    str = "ERROR->BUZZER\r\n";
-    SWRB_TestDataFileWriteString(str);
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        str = "ERROR->BUZZER\r\n";
+        SWRB_TestDataFileWriteString(str);
 
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-    Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_RED);
-    Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER ERROR");
-    Edit_Clear();
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_RED);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER ERROR");
+        Edit_Clear();
+    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][0],\
+                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][1],\
+                                                           GUI_LIGHTRED);
+    }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();

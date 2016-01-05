@@ -173,11 +173,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     EDIT_SetValue(hItem, 0);
     
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_SPEED);
-    SLIDER_SetRange(hItem, 1, 10);
+    SLIDER_SetRange(hItem, 1, 50);
     SLIDER_SetNumTicks(hItem, 10);
     
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_STEPS);
-    SLIDER_SetRange(hItem, 160, 16000);
+    SLIDER_SetRange(hItem, 100, 16000);
     SLIDER_SetNumTicks(hItem, 16);
     
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_TEXT_SPEED);
