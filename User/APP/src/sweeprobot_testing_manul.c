@@ -15,6 +15,22 @@
 
 #define SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES    3
 
+u8 gSwrbManulTestListviewDispNameCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_FAN},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL_FLOAT},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_ASH_TRAY},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_UNIWHEEL},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_KEY},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},
+};
+
 u8 gSwrbManulTestListviewDispDataCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},         //LWHEEL
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},         //RWHEEL
@@ -137,7 +153,7 @@ static void SweepRobot_ManulTestRxDataProc(void)
     SweepRobot_ManulTestRxDataToDataArray(USART_RX_STA&USART_CNT_MASK);
 }
 
-static void SweepRobot_ManulTestBatteryVoltDisp(void)
+void SweepRobot_ManulTestBatteryVoltDisp(void)
 {
     float volt = 0;
 
@@ -176,8 +192,8 @@ void SweepRobot_ManulTestDataReset(void)
     }
     
     for(i=0;i<SWRB_MANUL_TEST_DATA_RGB_LED_BOUND;i++){
-        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "0");
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], GUI_WHITE);
+        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], "0");
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], GUI_WHITE);
     }
 
     voltPercent = 0;
@@ -444,6 +460,19 @@ static void SweepRobot_ManulTestInit(void)
 
     SweepRobot_ManulTestSNDisp();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
+}
+
+void SweepRobot_ManulTestDataQuery(void)
+{
+    printf("MNL->RD\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
+    if(usartRxFlag){
+        SweepRobot_ManulTestRxDataProc();
+        SweepRobot_ManulTestBatteryVoltDisp();
+        usartRxFlag = 0;
+        USART_RX_STA = 0;
+    }
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
 }
 
 static void SweepRobot_ManulTestProc(void)

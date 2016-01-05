@@ -68,10 +68,11 @@ static void Button_ConfirmProc(WM_HWIN hWin)
 static void Button_SelAllProc(void)
 {
     int id;
+    int i;
 
     SWRB_TestCheckboxStateSet(1);
 
-    for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_CHARGE;id++){
+    for(id=ID_TESTSEL_BUTTON_WHEEL,i=0;id<=ID_TESTSEL_BUTTON_CHARGE;id++,i++){
         Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTBLUE);
     }
 }
@@ -123,8 +124,6 @@ static void Button_CancelProc(WM_HWIN hWin)
     WM_ShowWin(hWin_SWRB_PCBTEST);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
-
-
 
 /*********************************************************************
 *
@@ -344,7 +343,7 @@ void SWRB_TestSelLastCheckBoxStateSave(void)
 {
     u8 i;
 
-    for(i=0;i<=SWRB_TEST_TASK_NUM;i++){
+    for(i=0;i<SWRB_TEST_TASK_NUM;i++){
         gSwrbTest_TaskSelState[i] = Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i);
     }
 }

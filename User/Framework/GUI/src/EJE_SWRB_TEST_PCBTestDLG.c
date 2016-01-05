@@ -529,6 +529,9 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
             TEXT_SetTextColor(hItem, GUI_RED);
             
             break;
+        case WM_PAINT:
+            GUI_MULTIBUF_Begin();
+            break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
             NCode = pMsg->Data.v;

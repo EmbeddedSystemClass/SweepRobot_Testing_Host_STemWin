@@ -1190,8 +1190,10 @@ void SweepRobot_ManulStartProc(void)
             printf("T->ON\r\n");
             
             SWRB_ValidTestTaskCntGet();
-            
+
             SweepRobot_ManulTestSNDisp();
+            SweepRobot_ManulTestDataQuery();
+            SweepRobot_ManulTestBatteryVoltDisp();
             
             SweepRobot_ManulTestDataReset();
             SweepRobot_ManulTestGuiReset();
@@ -1230,17 +1232,52 @@ void SweepRobot_ManulStartProc(void)
     }
 }
 
+static void SweepRobot_ManulTestValidTaskStateDisp(void)
+{
+    int i;
+    
+    for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
+        if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i)){
+            Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                         gSwrbManulTestListviewDispNameCoord[i][0],\
+                                                         gSwrbManulTestListviewDispNameCoord[i][1],\
+                                                         GUI_BLUE);
+        }else{
+            Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                         gSwrbManulTestListviewDispNameCoord[i][0],\
+                                                         gSwrbManulTestListviewDispNameCoord[i][1],\
+                                                         GUI_LIGHTGRAY);
+        }
+    }
+}
+
+static void SweepRobot_ManulTestTaskStateReset(void)
+{
+    int i;
+    
+    for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispNameCoord[i][0],\
+                                                     gSwrbManulTestListviewDispNameCoord[i][1],\
+                                                     GUI_BLUE);
+    }
+}
+
 void SweepRobot_ManulSetProc(void)
 {
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
 
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
+        
+        SweepRobot_ManulTestValidTaskStateDisp();
 
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTCYAN);
         BUTTON_DispAutoModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }else{
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
 
+        SweepRobot_ManulTestTaskStateReset();
+        
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
         BUTTON_DispManulModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }
@@ -1421,6 +1458,7 @@ void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void)
 {
     u8 i;
 
-    for(i=SWRB_TEST_STATE_WHEEL;i<SWRB_TEST_STATE_BOUND;i++)
+    for(i=SWRB_TEST_STATE_WHEEL;i<SWRB_TEST_STATE_BOUND;i++){
         aSwrbManulTestState[i] = 0;
+    }
 }

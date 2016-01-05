@@ -47,12 +47,12 @@ static void SweepRobot_ChargeTestGPIOInit(void)
 
 void SweepRobot_Charge24VOn(void)
 {
-    GPIO_SetBits(CHARGE_TEST_CTRL_GPIO, CHARGE_TEST_CTRL_PIN);
+    GPIO_ResetBits(CHARGE_TEST_CTRL_GPIO, CHARGE_TEST_CTRL_PIN);
 }
 
 void SweepRobot_Charge24VOff(void)
 {
-    GPIO_ResetBits(CHARGE_TEST_CTRL_GPIO, CHARGE_TEST_CTRL_PIN);
+    GPIO_SetBits(CHARGE_TEST_CTRL_GPIO, CHARGE_TEST_CTRL_PIN);
 }
 
 static void SweepRobot_ChargeTestInit(void)

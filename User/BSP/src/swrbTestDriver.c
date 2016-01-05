@@ -37,7 +37,6 @@
 #define ASH_TRAY_TEST_CTRL_TIM              TIM4
 #define ASH_TRAY_TEST_CTRL_TIM_RCC          RCC_APB1Periph_TIM4
 
-
 #define KEY_TEST_CTRL_RCC                   RCC_AHB1Periph_GPIOB
 #define KEY_TEST_CTRL_GPIO                  GPIOB
 #define KEY_TEST_CTRL_PIN                   GPIO_Pin_7
@@ -46,7 +45,6 @@
 #define KEY_TEST_CTRL_TIM_RCC               RCC_APB1Periph_TIM4
 #define KEY_TEST_CTRL_TIM                   TIM4
 
-
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_RCC             RCC_AHB1Periph_GPIOC
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO            GPIOC
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_PIN             GPIO_Pin_7
@@ -54,7 +52,6 @@
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO_AF_PPP     GPIO_AF_TIM3
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM_RCC         RCC_APB1Periph_TIM3
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM             TIM3
-
 
 #define IRDA_TEST_TX_TIM_RCC                RCC_APB1Periph_TIM7
 #define IRDA_TEST_TX_TIM                    TIM7

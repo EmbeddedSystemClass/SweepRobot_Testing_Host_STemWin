@@ -3,6 +3,7 @@
 
 #include "stm32f4xx.h"
 
+extern u8 gSwrbManulTestListviewDispNameCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2];
 
@@ -12,5 +13,7 @@ void SweepRobot_ManulIndicateBtnToggle(void);
 void SweepRobot_ManulTestDataReset(void);
 void SweepRobot_ManulTestGuiReset(void);
 void SweepRobot_ManulTestSNDisp(void);
+void SweepRobot_ManulTestBatteryVoltDisp(void);
+void SweepRobot_ManulTestDataQuery(void);
 
 #endif
