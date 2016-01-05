@@ -44,6 +44,14 @@ void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
     BUTTON_SetText(hItem, str);
 }
 
+void Button_Set_TextColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
+{
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, buttonId);
+    BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, color);
+    BUTTON_SetTextColor(hItem, BUTTON_CI_PRESSED, color);
+}
+
 void Button_Set_BkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color)
 {
     WM_HWIN hItem;
@@ -493,11 +501,7 @@ void SWRB_RTC_TIME_Disp(WM_HWIN hWin, int id, RTC_DateTypeDef *date, RTC_TimeTyp
     
     str = mymalloc(SRAMIN, sizeof(char)*30);
     sprintf(str,"20%02d/%02d/%02d %02d:%02d:%02d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
-    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
-        Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
-    }else{
-        Edit_Set_Text(hWin, id, str);
-    }
+    Edit_Set_Text(hWin, id, str);
     myfree(SRAMIN, str);
 }
 

@@ -91,6 +91,8 @@
         ID_START_BUTTON_4,
         ID_START_BUTTON_5,
         ID_START_BUTTON_6,
+        ID_START_BUTTON_7,
+        ID_START_EDIT_0,
         ID_START_TEXT_0,
         ID_START_TEXT_1,
         ID_START_BOUND,
@@ -99,6 +101,11 @@
     enum ID_START_WINDOW{
         ID_START_WINDOW_MAIN = ID_START_WINDOW_0,
         ID_START_WINDOW_BOUND,
+    };
+    
+    enum ID_START_EDIT{
+        ID_START_EDIT_DATE = ID_START_EDIT_0,
+        ID_START_EDIT_BOUND,
     };
 
     enum ID_START_TEXT{
@@ -116,6 +123,7 @@
         ID_START_BUTTON_PCB_TEST = ID_START_BUTTON_0,
         ID_START_BUTTON_POWER_STATION,
         ID_START_BUTTON_MANUL,
+        ID_START_BUTTON_SET,
         ID_START_BUTTON_SLAM,
         ID_START_BUTTON_STEP_MOTOR,
         ID_START_BUTTON_DECRYPTO,
@@ -423,7 +431,7 @@
         ID_SNSET_BUTTON_CANCEL,
         ID_SNSET_BUTTON_SNSET,
         ID_SNSET_BUTTON_TIMESET,
-        ID_SNSET_BUTTON_RESERVE1,
+        ID_SNSET_BUTTON_TESTSELECT,
         ID_SNSET_BUTTON_RESERVE2,
         ID_SNSET_BUTTON_RESERVE3,
         ID_SNSET_BUTTON_RESERVE4,
@@ -943,6 +951,7 @@
 */
 
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str);
+void Button_Set_TextColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Button_Set_BkColor(WM_HWIN hWin, int buttonId, GUI_COLOR color);
 void Button_SetEnable(WM_HWIN hWin, int buttonId);
 void Button_SetDisable(WM_HWIN hWin, int buttonId);

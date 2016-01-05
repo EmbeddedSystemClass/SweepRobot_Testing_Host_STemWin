@@ -104,7 +104,7 @@ static void SweepRobot_IrDATestInit(void)
         IrDA[i].validFlag = 0;
         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0);
     }
-    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
 }
 
 static void SweepRobot_IrDATestProc(void)
@@ -141,7 +141,7 @@ static void SweepRobot_IrDATestProc(void)
                 aIrDATestRxData[i][j] = 0;
         }
     }
-    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
     
     if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
         gSwrbTestTaskRunCnt = 0;

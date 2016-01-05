@@ -373,7 +373,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            SweepRobot_PCBTestLoginProc();
+//                            SweepRobot_PCBTestLoginProc();
                             break;
                     }
                     break;

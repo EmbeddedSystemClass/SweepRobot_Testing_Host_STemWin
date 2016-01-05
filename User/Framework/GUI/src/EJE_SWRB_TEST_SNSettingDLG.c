@@ -59,12 +59,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "Reset", ID_SNSET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Cancel", ID_SNSET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SNSet", ID_SNSET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "TimeSet", ID_SNSET_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "TestSel", ID_SNSET_BUTTON_RESERVE1, 200, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv2", ID_SNSET_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv3", ID_SNSET_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv4", ID_SNSET_BUTTON_RESERVE4, 500, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv5", ID_SNSET_BUTTON_RESERVE5, 600, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TestSel", ID_SNSET_BUTTON_TESTSELECT, 100, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv2", ID_SNSET_BUTTON_RESERVE2, 200, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv3", ID_SNSET_BUTTON_RESERVE3, 300, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv4", ID_SNSET_BUTTON_RESERVE4, 400, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv5", ID_SNSET_BUTTON_RESERVE5, 500, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TimeSet", ID_SNSET_BUTTON_TIMESET, 600, 420, 100, 60, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwYear", ID_SNSET_LISTWHEEL_YEAR, 20, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwMonth", ID_SNSET_LISTWHEEL_MONTH, 130, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwDay", ID_SNSET_LISTWHEEL_DATE, 240, 60, 110, 230, 0, 0x0, 0 },
@@ -103,12 +103,15 @@ static void Button_Init(WM_HWIN hItem)
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
     char *str;
+    
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     ListWheel_TestDataFilePathGet(hWin,str);
 
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
+    WM_ShowWin(hWin_SWRB_START);
+    WM_BringToTop(hWin_SWRB_START);
 }
 
 static void Button_CheckProc(WM_HWIN hWin)
@@ -125,10 +128,12 @@ static void Button_ResetProc(WM_HWIN hWin)
 
 static void Button_CancelProc(WM_HWIN hWin)
 {
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    
     ListWheel_ResetToLastPos(hWin);
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    WM_ShowWin(hWin_SWRB_START);
 }
 
 //static void ListWheel_SnapLineDraw(GUI_COLOR color)
@@ -428,7 +433,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                     }
                     break;
-                  case ID_SNSET_BUTTON_RESERVE1: // Notifications sent by 'Test Sel'
+                  case ID_SNSET_BUTTON_TESTSELECT: // Notifications sent by 'Test Sel'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             break;

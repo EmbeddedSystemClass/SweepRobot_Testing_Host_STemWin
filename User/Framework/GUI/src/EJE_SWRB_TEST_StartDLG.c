@@ -33,6 +33,7 @@
 
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPCBTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPSTestCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSetCHN;
 
 /*********************************************************************
 *
@@ -48,12 +49,14 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmPSTestCHN;
 static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
+    { EDIT_CreateIndirect, "Date", ID_START_EDIT_DATE, 0,430,200,50,0, 0x64, 0 },
     { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 500, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 301, 205, 198, 89, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 301, 294, 198, 89, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 301, 383, 198, 89, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 300, 205, 200, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SET", ID_START_BUTTON_SET, 300, 295, 200, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 385, 100, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
 //    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 203, 200, 180, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
@@ -81,7 +84,6 @@ static const void * _GetImageById(U32 Id, U32 * pSize)
 
 static void Button_Init(WM_HWIN hItem)
 {
-    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
     BUTTON_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
 }
@@ -100,15 +102,18 @@ static void _cbDialog(WM_MESSAGE * pMsg)
 
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
-            //
-            // Initialization of 'Image'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_IMAGE_LOGO);
             pData = _GetImageById(ID_START_IMAGE_EJE_LOGO, &FileSize);
             IMAGE_SetBMP(hItem, pData, FileSize);
-            //
-            // Initialization of 'btnTitle'
-            //
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_EDIT_DATE);
+            EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+            EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            EDIT_SetTextColor(hItem, EDIT_CI_ENABELD, GUI_BLUE);
+            EDIT_SetFocussable(hItem, DISABLE);
+            
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_TITLE);
             BUTTON_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
@@ -116,62 +121,53 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_WHITE);
             BUTTON_SetFocussable(hItem, DISABLE);
             BUTTON_DispSWRBTestTitleCHNStr(pMsg->hWin, ID_START_BUTTON_TITLE, 81, 13);
-            //
-            // Initialization of 'btnPCB TEST'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_PCB_TEST);
             BUTTON_SetText(hItem, " ");
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_PCB_TEST, &_bmPCBTestCHN, 36, 74);
             Button_Init(hItem);
-            //
-            // Initialization of 'btnPOWER STATION'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
             BUTTON_SetText(hItem, " ");
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 19, 28);
             Button_Init(hItem);
-            //
-            // Initialization of 'btnSLAM'
-            //
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SET);
+            BUTTON_SetText(hItem, "");
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_SET, &_bmSetCHN, 68, 28);
+            Button_Init(hItem);
+            
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
             BUTTON_SetText(hItem, "SLAM");
             Button_Init(hItem);
-            //
-            // Initialization of 'btnSTEPMOTOR'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_STEP_MOTOR);
-            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetFont(hItem, GUI_FONT_10_ASCII);
             BUTTON_SetText(hItem, "STEP MOTOR");
             Button_Init(hItem);
-            //
-            // Initialization of 'btnMANUL'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_MANUL);
             BUTTON_DispRobotTestTitleCHNStr(pMsg->hWin, ID_START_BUTTON_MANUL, 36, 74);
             Button_Init(hItem);
-            //
-            // Initialization of 'DECRYPTO'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_DECRYPTO);
             BUTTON_SetText(hItem, "Decrypto");
             Button_Init(hItem);
-//            //
-//            // Initialization of 'Title'
-//            //
+
 //            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_TITLE);
 //            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
 //            TEXT_SetTextColor(hItem, GUI_BLUE);
 //            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
 //            TEXT_SetText(hItem, "SweepRobot Test System");
 //            WM_BringToTop(hItem);
-            //
-            // Initialization of 'Text'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_VERSION);
             TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetText(hItem, "SWRB Fixture Ver:1.0");
+            TEXT_SetTextColor(hItem, GUI_BLUE);
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -201,6 +197,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             SweepRobot_StartDlgManulBtnClickProc();
+                            break;
+                    }
+                    break;
+                case ID_START_BUTTON_SET: // Notifications sent by 'SET'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            SweepRobot_StartDlgSetBtnClickProc();
                             break;
                     }
                     break;

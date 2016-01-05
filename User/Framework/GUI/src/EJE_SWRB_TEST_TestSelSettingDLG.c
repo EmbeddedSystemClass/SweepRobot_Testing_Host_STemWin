@@ -58,11 +58,13 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    
     SWRB_ValidTestTaskCntGet();
 
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    WM_ShowWin(hWin_SWRB_START);
 }
 
 static void Button_SelAllProc(void)
@@ -119,10 +121,12 @@ static void Button_CancelResetCheckBoxStateProc(void)
 
 static void Button_CancelProc(WM_HWIN hWin)
 {
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    
     Button_CancelResetCheckBoxStateProc();
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    WM_ShowWin(hWin_SWRB_START);
 }
 
 /*********************************************************************
@@ -156,12 +160,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "SelNone", ID_TESTSEL_BUTTON_SELNONE, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Cancel", ID_TESTSEL_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "SnSet", ID_TESTSEL_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TimeSet", ID_TESTSEL_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TestSel", ID_TESTSEL_BUTTON_TESTSELSET, 200, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Rsrv2", ID_TESTSEL_BUTTON_RESERVE1, 300, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Rsrv3", ID_TESTSEL_BUTTON_RESERVE2, 400, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Rsrv4", ID_TESTSEL_BUTTON_RESERVE3, 500, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Rsrv5", ID_TESTSEL_BUTTON_RESERVE4, 600, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "TestSel", ID_TESTSEL_BUTTON_TESTSELSET, 100, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Rsrv2", ID_TESTSEL_BUTTON_RESERVE1, 200, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Rsrv3", ID_TESTSEL_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Rsrv4", ID_TESTSEL_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Rsrv5", ID_TESTSEL_BUTTON_RESERVE4, 500, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "TimeSet", ID_TESTSEL_BUTTON_TIMESET, 600, 420, 100, 60, 0, 0x0, 0 },
 };
 
 /*********************************************************************

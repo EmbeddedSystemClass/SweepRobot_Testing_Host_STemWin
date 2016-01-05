@@ -52,12 +52,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "Reset", ID_TIMESET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Cancel", ID_TIMESET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SNSet", ID_TIMESET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "TimeSet", ID_TIMESET_BUTTON_TIMESET, 100, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "TestSel", ID_TIMESET_BUTTON_TESTSELSET, 200, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv2", ID_TIMESET_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv3", ID_TIMESET_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv4", ID_TIMESET_BUTTON_RESERVE4, 500, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "Rsrv5", ID_TIMESET_BUTTON_RESERVE5, 600, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TestSel", ID_TIMESET_BUTTON_TESTSELSET, 100, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv2", ID_TIMESET_BUTTON_RESERVE2, 200, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv3", ID_TIMESET_BUTTON_RESERVE3, 300, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv4", ID_TIMESET_BUTTON_RESERVE4, 400, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Rsrv5", ID_TIMESET_BUTTON_RESERVE5, 500, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TimeSet", ID_TIMESET_BUTTON_TIMESET, 600, 420, 100, 60, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwYear", ID_TIMESET_LISTWHEEL_YEAR, 20, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwMonth", ID_TIMESET_LISTWHEEL_MONTH, 130, 60, 110, 230, 0, 0x0, 0 },
     { LISTWHEEL_CreateIndirect, "lwDay", ID_TIMESET_LISTWHEEL_DAY, 240, 60, 110, 230, 0, 0x0, 0 },
@@ -96,6 +96,9 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    
     TimeStr_Comb(hWin, ID_TIMESET_EDIT_SETVALUE);
     PWR_BackupAccessCmd(ENABLE);
     while(!(RTC_SetDate(RTC_Format_BIN, &rtcDate)));
@@ -103,9 +106,8 @@ static void Button_ConfirmProc(WM_HWIN hWin)
     while(!RTC_WaitForSynchro());
     PWR_BackupAccessCmd(DISABLE);
 
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
+    WM_ShowWin(hWin_SWRB_START);
 }
 
 static void Button_CheckProc(WM_HWIN hWin)
@@ -122,18 +124,15 @@ static void Button_CancelProc(WM_HWIN hWin)
 {
     ListWheel_ResetToLastPos(hWin);
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
+    WM_ShowWin(hWin_SWRB_START);
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
 
 static void Button_SNSetProc(WM_HWIN hWin)
 {
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-    BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+    Button_Set_BkColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_BLACK);
+    Button_Set_TextColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_WHITE);
+
     gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_SNSETTING);
@@ -141,12 +140,9 @@ static void Button_SNSetProc(WM_HWIN hWin)
 
 static void Button_TestSelSetProc(WM_HWIN hWin)
 {
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSELSET);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-    BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-    BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+    Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSELSET, GUI_BLACK);
+    Button_Set_TextColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSELSET, GUI_WHITE);
+
     gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_TESTSEL);

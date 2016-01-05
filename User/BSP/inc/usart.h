@@ -4,12 +4,12 @@
 #include "stm32f4xx_conf.h"
 #include "sys.h" 
 
-#define USART_REC_LEN  		    200
+#define USART_RX_LEN  		    200
 #define EN_USART1_RX 			1
 
 #define USART_CNT_MASK    0x3FFF
 	  	
-extern char USART_RX_BUF[USART_REC_LEN];
+extern char USART_RX_BUF[USART_RX_LEN];
 extern u16 USART_RX_STA;
 
 void uart_init(u32 bound);

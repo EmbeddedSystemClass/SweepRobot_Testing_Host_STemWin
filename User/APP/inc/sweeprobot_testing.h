@@ -102,6 +102,7 @@ enum SWRB_TEST_SELECT{
     SWRB_TEST_SELECT_PCB,
     SWRB_TEST_SELECT_POWER_STATION,
     SWRB_TEST_SELECT_MANUL,
+    SWRB_TEST_SELECT_SET,
     SWRB_TEST_SELECT_SLAM,
     SWRB_TEST_SELECT_STEP_MOTOR,
 };
@@ -359,6 +360,7 @@ void SWRB_ValidTestTaskCntGet(void);
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
 void SweepRobot_StartDlgManulBtnClickProc(void);
+void SweepRobot_StartDlgSetBtnClickProc(void);
 void SweepRobot_StartDlgSLAMBtnClickProc(void);
 void SweepRobot_StartDlgStepMotorBtnClickProc(void);
 

@@ -67,6 +67,8 @@ static FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode);
 static void SWRB_TestFinishProc(void);
 static void SWRB_PCBTestWarningDlgHide(void);
 static void SweepRobot_ManulTestCtrlReset(void);
+static void SweepRobot_ManulTestValidTaskStateDisp(void);
+static void SweepRobot_ManulTestTaskStateReset(void);
 
 #define TEST_LED_TASK_CB_REG(f)             do{gLedTaskCB=f;}while(0)
 #define TEST_LED_TASK_CB_DEREG()            do{gLedTaskCB=NULL;}while(0)
@@ -165,7 +167,7 @@ void emWin_Maintask(void *pdata)
 
     while(1)
     {
-        if(gSwrbTestMode == SWRB_TEST_MODE_SET){
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
             SWRB_SET_ListwheelSnapPosUpdate();
             SWRB_SET_EditTextUpdate();
         }
@@ -231,6 +233,10 @@ void Rtc_Task(void *pdata)
             SWRB_RTC_TIME_Disp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_DATE, &rtcDate, &rtcTime);
         else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL)
             SWRB_RTC_TIME_Disp(hWin_SWRB_MANUL, ID_MANUL_EDIT_DATE, &rtcDate, &rtcTime);
+        else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_NONE)
+            SWRB_RTC_TIME_Disp(hWin_SWRB_START, ID_START_EDIT_DATE, &rtcDate, &rtcTime);
+        else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET)
+            SWRB_RTC_TIME_Disp(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, &rtcDate, &rtcTime);
         else
             ;
 
@@ -604,20 +610,7 @@ void SweepRobot_PCBTestStartProc(void)
 
 void SweepRobot_PCBTestLoginProc(void)
 {
-    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
-
-        gSwrbTestMode = SWRB_TEST_MODE_SET;
-
-        Text_Set_Text(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, "Please Input Password");
-        Text_Set_Color(hWin_SWRB_LOGIN, ID_LOGIN_TEXT_PASSWORD, GUI_BLACK);
-
-        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
-        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
-        SWRB_PCBTestCheckboxDisable();
-
-        WM_ShowWin(hWin_SWRB_LOGIN);
-        WM_BringToTop(hWin_SWRB_LOGIN);
-    }
+    
 }
 
 void SweepRobot_PCBTestNumPadOKProc(void)
@@ -979,7 +972,7 @@ void SweepRobot_StartDlgPCBBtnClickProc(void)
 
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 
-    SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START);
+//    SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START);
     SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_STOP);
 
     WM_HideWin(hWin_SWRB_START);
@@ -1000,9 +993,23 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_MANUL;
 
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
+    
+    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
+        SweepRobot_ManulTestValidTaskStateDisp();
+    }else{
+        SweepRobot_ManulTestTaskStateReset();
+    }
 
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_MANUL);
+}
+
+void SweepRobot_StartDlgSetBtnClickProc(void)
+{
+    gSwrbTestSelectFlag = SWRB_TEST_SELECT_SET;
+
+    WM_HideWin(hWin_SWRB_START);
+    WM_ShowWin(hWin_SWRB_LOGIN);
 }
 
 void SweepRobot_StartDlgSLAMBtnClickProc(void)
@@ -1165,7 +1172,7 @@ void SweepRobot_ManulStartProc(void)
         SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
         OS_EXIT_CRITICAL();
 
-        for(i=0;i<USART_REC_LEN;i++)
+        for(i=0;i<USART_RX_LEN;i++)
             USART_RX_BUF[i] = 0;
 
 //        Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, "Stop");
@@ -1188,12 +1195,13 @@ void SweepRobot_ManulStartProc(void)
             OS_EXIT_CRITICAL();
         }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
             printf("T->ON\r\n");
+            GUI_Delay(1);
             
             SWRB_ValidTestTaskCntGet();
 
-            SweepRobot_ManulTestSNDisp();
-            SweepRobot_ManulTestDataQuery();
-            SweepRobot_ManulTestBatteryVoltDisp();
+//            SweepRobot_ManulTestSNDisp();
+//            SweepRobot_ManulTestDataQuery();
+//            SweepRobot_ManulTestBatteryVoltDisp();
             
             SweepRobot_ManulTestDataReset();
             SweepRobot_ManulTestGuiReset();
@@ -1259,7 +1267,7 @@ static void SweepRobot_ManulTestTaskStateReset(void)
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispNameCoord[i][0],\
                                                      gSwrbManulTestListviewDispNameCoord[i][1],\
-                                                     GUI_BLUE);
+                                                     GUI_BLACK);
     }
 }
 

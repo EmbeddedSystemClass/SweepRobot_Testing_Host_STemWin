@@ -91,33 +91,21 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_OKProc(void)
 {
-    WM_HWIN hItem;
-
-    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
-
-        hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
-
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
         if(!(strcmp(strPasswd,gLoginPassWord))){
 
             gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
             
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 
-            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
-
-            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START);
-            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
-            SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
-            SWRB_PCBTestCheckboxEnable();
+            Button_Set_BkColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_BLACK);
+            Button_Set_TextColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_WHITE);
 
             SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
             SWRB_TestSelLastCheckBoxStateSave();
 
             WM_HideWin(hWin_SWRB_LOGIN);
-            WM_HideWin(hWin_SWRB_PCBTEST);
+            WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_SNSETTING);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
@@ -129,12 +117,8 @@ static void Button_CancelProc(void)
 {
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
-    SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
-    SWRB_PCBTestCheckboxEnable();
-
     WM_HideWin(hWin_SWRB_LOGIN);
-    WM_ShowWin(hWin_SWRB_PCBTEST);
+    WM_ShowWin(hWin_SWRB_START);
 }
 
 static void Button_DeleteProc(void)

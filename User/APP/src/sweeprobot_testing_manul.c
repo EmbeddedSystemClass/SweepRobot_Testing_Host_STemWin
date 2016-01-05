@@ -86,8 +86,8 @@ enum SWRB_MANUL_TEST_DATA_SNUM_POS{
     SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS,
     SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS,
     SWRB_MANUL_TEST_DATA_SNUM_DATE_POS,
-    SWRB_MANUL_TEST_DATA_SNUM_SNUM_POS,
-    SWRB_MANUL_TEST_DATA_SNUM_SNUM_BOUND,
+    SWRB_MANUL_TEST_DATA_SNUM_NUM_POS,
+    SWRB_MANUL_TEST_DATA_SNUM_BOUND,
 };
 
 static const char *gSwrbManulTestListviewSNQueryCmd[][1] = {
@@ -218,21 +218,24 @@ void SweepRobot_ManulTestSNDisp(void)
 
     hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
 
-    for(i=SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS;i<SWRB_MANUL_TEST_DATA_SNUM_SNUM_BOUND;i++){
+    for(i=SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS;i<SWRB_MANUL_TEST_DATA_SNUM_BOUND;i++){
         printf("%s\r\n",*gSwrbManulTestListviewSNQueryCmd[i]);
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
-            str = mymalloc(SRAMIN, sizeof(char)*5);
+            str = mymalloc(SRAMIN, sizeof(char)*10);
             *str = 0;
             mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
             switch(i){
+                case SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS:
+                    sprintf(str, "%04d", atoi(str));
+                    break;
                 case SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS:
                     sprintf(str, "%02d", atoi(str));
                     break;
                 case SWRB_MANUL_TEST_DATA_SNUM_DATE_POS:
                     sprintf(str, "%02d", atoi(str));
                     break;
-                case SWRB_MANUL_TEST_DATA_SNUM_SNUM_POS:
+                case SWRB_MANUL_TEST_DATA_SNUM_NUM_POS:
                     sprintf(str, "%03d", atoi(str));
                     break;
             }
@@ -472,7 +475,7 @@ void SweepRobot_ManulTestDataQuery(void)
         usartRxFlag = 0;
         USART_RX_STA = 0;
     }
-    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
 }
 
 static void SweepRobot_ManulTestProc(void)
@@ -488,7 +491,7 @@ static void SweepRobot_ManulTestProc(void)
         usartRxFlag = 0;
         USART_RX_STA = 0;
     }
-    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_REC_LEN);
+    mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
 
     SweepRobot_ManulTestValueValidCmp();
 
