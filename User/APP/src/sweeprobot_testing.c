@@ -580,6 +580,7 @@ void SweepRobot_PCBTestStartProc(void)
         printf("T->ON\r\n");
 
         OS_ENTER_CRITICAL();
+        gSwrbTestRuningTaskPrio = SWRB_TEST_TASK_PRIO_START_BOUND+1;
         OSTaskResume(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
     }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
@@ -693,6 +694,7 @@ void SweepRobot_PCBTestStopProc(void)
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
+        gSwrbTestRuningTaskPrio = NULL;
         OS_EXIT_CRITICAL();
 
         for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
@@ -717,6 +719,7 @@ void SweepRobot_PCBTestExitProc(void)
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
+        gSwrbTestRuningTaskPrio = NULL;
         OS_EXIT_CRITICAL();
 
         SweepRobotTest_PCBTestInitProc();
@@ -735,19 +738,18 @@ void SweepRobot_PCBTestExitProc(void)
     }
 }
 
-static void SweepRobot_PCBTestCtrlReset(void)
+static void SweepRobot_TestHostCtrlStateReset(void)
 {
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestCtrlIdlePos();
     SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToIdlePos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
+    SweepRobotTest_StepMotorSetIdle();
 }
 
-static void SweepRobot_PCBTestGUIReset(void)
+static void SweepRobot_TestDUTStateReset(void)
 {
-    int i;
-
     printf("T->ON\r\n");
     printf("CRG->OFF\r\n");
     printf("IRDA->OFF\r\n");
@@ -759,6 +761,11 @@ static void SweepRobot_PCBTestGUIReset(void)
     printf("FAN->SPD=0\r\n");
     printf("SNSR->IFRD=0\r\n");
     printf("SNSR->BSWC=0\r\n");
+}
+
+static void SweepRobot_PCBTestGUIReset(void)
+{
+    int i;
 
     for(i=ID_PCBTEST_EDIT_U1;i<=ID_PCBTEST_EDIT_D8;i++){
         Edit_Set_Value(hWin_SWRB_PCBTEST, i, 0);
@@ -795,13 +802,13 @@ static void SweepRobot_PCBTestGUIReset(void)
 
 void SweepRobotTest_PCBTestInitProc(void)
 {
-    SweepRobot_PCBTestCtrlReset();
-
+    SweepRobot_TestHostCtrlStateReset();
+    SweepRobot_TestDUTStateReset();
     SweepRobot_PCBTestGUIReset();
 
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
-    gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
+    gSwrbTestRuningTaskPrio = NULL;
 }
 
 void SWRB_ValidTestTaskCntGet(void)
@@ -905,7 +912,8 @@ static void SWRB_PCBTestFinishProc(void)
 {
     char *str;
 
-    SweepRobot_PCBTestCtrlReset();
+    SweepRobot_TestHostCtrlStateReset();
+    SweepRobot_TestDUTStateReset();
 
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
@@ -969,7 +977,7 @@ static void SWRB_TestFinishProc(void)
 
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
-    gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
+    gSwrbTestRuningTaskPrio = NULL;
 }
 
 void SweepRobot_StartDlgPCBBtnClickProc(void)
@@ -1135,6 +1143,7 @@ void SweepRobot_PowerStationTestStopProc(void)
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
+        gSwrbTestRuningTaskPrio = NULL;
         OS_EXIT_CRITICAL();
     }
 }
@@ -1165,84 +1174,112 @@ static void SWRB_ManulTestIndicateButtonToggle()
     SWRB_IndicateButtonToggle(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE);
 }
 
-void SweepRobot_ManulStartProc(void)
+static void SweepRobot_ManulStartBtnStartProc(void)
 {
     int i;
     OS_CPU_SR cpu_sr;
 
-    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
+    gSwrbTestMode = SWRB_TEST_MODE_RUN;
 
-        gSwrbTestMode = SWRB_TEST_MODE_RUN;
+    OS_ENTER_CRITICAL();
+    SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
+    OS_EXIT_CRITICAL();
 
-        OS_ENTER_CRITICAL();
-        SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
-        OS_EXIT_CRITICAL();
+    for(i=0;i<USART_RX_LEN;i++)
+        USART_RX_BUF[i] = 0;
 
-        for(i=0;i<USART_RX_LEN;i++)
-            USART_RX_BUF[i] = 0;
+    /* TODO: Add Manul test info record function here */
 
 //        Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, "Stop");
-        BUTTON_DispStopCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTRED);
+    BUTTON_DispStopCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
+    Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTRED);
 
-        TEST_LED_TASK_CB_REG(SWRB_ManulTestIndicateButtonToggle);
+    TEST_LED_TASK_CB_REG(SWRB_ManulTestIndicateButtonToggle);
 
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+    SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+    SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+    SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
-        if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
-            printf("T->ON\r\n");
-            printf("SNSR->IFRD=1\r\n");
-            printf("IRDA->ON\r\n");
-
-            OS_ENTER_CRITICAL();
-            OSTaskResume(SWRB_MANUL_TEST_TASK_PRIO);
-            OS_EXIT_CRITICAL();
-        }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
-            printf("T->ON\r\n");
-            GUI_Delay(1);
-
-            SWRB_ValidTestTaskCntGet();
-
-//            SweepRobot_ManulTestSNDisp();
-//            SweepRobot_ManulTestDataQuery();
-//            SweepRobot_ManulTestBatteryVoltDisp();
-
-            SweepRobot_ManulTestDataReset();
-            SweepRobot_ManulTestGuiReset();
-
-            for(i=ID_MANUL_BUTTON_WHEEL;i<ID_MANUL_BUTTON_BOUND;i++){
-                SWRB_WM_DisableWindow(hWin_SWRB_MANUL, i);
-            }
-
-            OS_ENTER_CRITICAL();
-            OSTaskResume(SWRB_TEST_TASK_PRIO_START_BOUND+1);
-            OS_EXIT_CRITICAL();
-        }
-    }else{
-
-        gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-
-        BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
-
-        TEST_LED_TASK_CB_DEREG();
-        Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE, GUI_LIGHTGRAY);
-
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
-
-        printf("SNSR->IFRD=0\r\n");
-        printf("IRDA->OFF\r\n");
-        printf("IRDA->ERS\r\n");
-
-        gSwrbTestTaskRunCnt = 0;
+    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
+        printf("T->ON\r\n");
+        printf("SNSR->IFRD=1\r\n");
+        printf("IRDA->ON\r\n");
+        
+        SweepRobot_ManulTestSNDisp();
 
         OS_ENTER_CRITICAL();
-        OSTaskSuspend(SWRB_MANUL_TEST_TASK_PRIO);
+        OSTaskResume(SWRB_MANUL_TEST_TASK_PRIO);
         OS_EXIT_CRITICAL();
+    }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
+        printf("T->ON\r\n");
+        GUI_Delay(1);
+
+        SWRB_ValidTestTaskCntGet();
+
+        /* TODO: Need to Fix HardFault Stop bug */
+//        OS_ENTER_CRITICAL();
+        SweepRobot_ManulTestSNDisp();
+        SweepRobot_ManulTestDataQuery();
+        SweepRobot_ManulTestBatteryVoltDisp();
+//        OS_EXIT_CRITICAL();
+
+        SweepRobot_ManulTestDataReset();
+        SweepRobot_ManulTestGuiReset();
+
+        for(i=ID_MANUL_BUTTON_WHEEL;i<ID_MANUL_BUTTON_BOUND;i++){
+            SWRB_WM_DisableWindow(hWin_SWRB_MANUL, i);
+        }
+
+        OS_ENTER_CRITICAL();
+        OSTaskResume(SWRB_TEST_TASK_PRIO_START_BOUND+1);
+        OS_EXIT_CRITICAL();
+    }
+}
+
+static void SweepRobot_ManulStartBtnStopProc(void)
+{
+    OS_CPU_SR cpu_sr;
+
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    gSwrbTestTaskRunCnt = 0;
+
+    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
+        printf("SNSR->IFRD=0\r\n");
+        GUI_Delay(1);
+        printf("IRDA->OFF\r\n");
+        GUI_Delay(1);
+        printf("IRDA->ERS\r\n");
+    }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
+        SweepRobot_TestHostCtrlStateReset();
+        SweepRobot_TestDUTStateReset();
+    }
+
+    BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
+    Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
+
+    TEST_LED_TASK_CB_DEREG();
+    Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE, GUI_LIGHTGRAY);
+
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+
+    OS_ENTER_CRITICAL();
+    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
+        OSTaskSuspend(SWRB_MANUL_TEST_TASK_PRIO);
+    }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
+        OSTaskSuspend(gSwrbTestRuningTaskPrio);
+    }
+    gSwrbTestRuningTaskPrio = NULL;
+    OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulStartBtnProc(void)
+{
+    if(gSwrbTestMode == SWRB_TEST_MODE_IDLE || gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
+        SweepRobot_ManulStartBtnStartProc();
+    }else{
+        SweepRobot_ManulStartBtnStopProc();
     }
 }
 
@@ -1267,15 +1304,23 @@ static void SweepRobot_ManulTestValidTaskStateDisp(void)
 
     if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[i][0],\
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[i][1],\
+                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
+                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
                                                  GUI_BLUE);
     }else{
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[i][0],\
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[i][1],\
+                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
+                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
                                                  GUI_LIGHTGRAY);
     }
+
+    for(i=0;i<2;i++){
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispNameSystemCoord[i][0],\
+                                                     gSwrbManulTestListviewDispNameSystemCoord[i][1],\
+                                                     GUI_LIGHTGRAY);
+    }
+
 }
 
 static void SweepRobot_ManulTestTaskStateReset(void)
@@ -1288,9 +1333,21 @@ static void SweepRobot_ManulTestTaskStateReset(void)
                                                      gSwrbManulTestListviewDispNameCoord[i][1],\
                                                      GUI_BLACK);
     }
+
+    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
+                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
+                                                 GUI_BLACK);
+
+    for(i=0;i<2;i++){
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispNameSystemCoord[i][0],\
+                                                     gSwrbManulTestListviewDispNameSystemCoord[i][1],\
+                                                     GUI_BLACK);
+    }
 }
 
-void SweepRobot_ManulSetProc(void)
+void SweepRobot_ManulSetBtnProc(void)
 {
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
 
@@ -1310,7 +1367,7 @@ void SweepRobot_ManulSetProc(void)
     }
 }
 
-void SweepRobot_ManulResetProc(void)
+void SweepRobot_ManulResetBtnProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
@@ -1322,7 +1379,7 @@ void SweepRobot_ManulResetProc(void)
     }
 }
 
-void SweepRobot_ManulExitProc(void)
+void SweepRobot_ManulExitBtnProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
@@ -1334,7 +1391,7 @@ void SweepRobot_ManulExitProc(void)
     }
 }
 
-void SweepRobot_ManulWheelProc(void)
+void SweepRobot_ManulWheelBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -1342,12 +1399,15 @@ void SweepRobot_ManulWheelProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
         printf("WHL->DIR=1\r\n");
+        GUI_Delay(1);
         printf("LW->SPD=25\r\n");
+        GUI_Delay(1);
         printf("RW->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTBLUE);
     }else{
         printf("LW->SPD=0\r\n");
+        GUI_Delay(1);
         printf("RW->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_GRAY);
@@ -1356,7 +1416,7 @@ void SweepRobot_ManulWheelProc(void)
     OS_EXIT_CRITICAL();
 }
 
-void SweepRobot_ManulBrushProc(void)
+void SweepRobot_ManulBrushBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -1364,13 +1424,17 @@ void SweepRobot_ManulBrushProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
         printf("LB->SPD=30\r\n");
+        GUI_Delay(1);
         printf("RB->SPD=30\r\n");
+        GUI_Delay(1);
         printf("MB->SPD=40\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTBLUE);
     }else{
         printf("LB->SPD=0\r\n");
+        GUI_Delay(1);
         printf("RB->SPD=0\r\n");
+        GUI_Delay(1);
         printf("MB->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_GRAY);
@@ -1379,7 +1443,7 @@ void SweepRobot_ManulBrushProc(void)
     OS_EXIT_CRITICAL();
 }
 
-void SweepRobot_ManulFanProc(void)
+void SweepRobot_ManulFanBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -1398,7 +1462,7 @@ void SweepRobot_ManulFanProc(void)
     OS_EXIT_CRITICAL();
 }
 
-void SweepRobot_ManulIFRDProc(void)
+void SweepRobot_ManulIFRDBtnProc(void)
 {
     if(aSwrbManulTestState[SWRB_TEST_STATE_IFRD]){
         printf("SNSR->IFRD=1\r\n");
@@ -1411,7 +1475,7 @@ void SweepRobot_ManulIFRDProc(void)
     }
 }
 
-void SweepRobot_ManulBuzzerProc(void)
+void SweepRobot_ManulBuzzerBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -1443,7 +1507,7 @@ void SweepRobot_ManulBuzzerProc(void)
     OS_EXIT_CRITICAL();
 }
 
-void SweepRobot_ManulRGBLEDProc(void)
+void SweepRobot_ManulRGBLEDBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
 

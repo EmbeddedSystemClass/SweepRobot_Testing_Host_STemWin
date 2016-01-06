@@ -205,7 +205,7 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
 
     STEP_MOTOR_ISR_CB_DEREG();
 
-    SWRB_TestDataSaveToFile(IFRD_TestDataSave);
+    SWRB_TestDataSaveToFile(FrontIFRD_TestDataSave);
     
     SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
 

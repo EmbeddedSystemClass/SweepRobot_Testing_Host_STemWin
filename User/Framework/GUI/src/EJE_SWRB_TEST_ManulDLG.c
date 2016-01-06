@@ -290,7 +290,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulStartProc();
+        SweepRobot_ManulStartBtnProc();
         break;
       }
       break;
@@ -299,7 +299,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulSetProc();
+        SweepRobot_ManulSetBtnProc();
         break;
       }
       break;
@@ -308,7 +308,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulResetProc();
+        SweepRobot_ManulResetBtnProc();
         break;
       }
       break;
@@ -317,7 +317,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulExitProc();
+        SweepRobot_ManulExitBtnProc();
         break;
       }
       break;
@@ -354,7 +354,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulWheelProc();
+        SweepRobot_ManulWheelBtnProc();
         break;
       }
       break;
@@ -363,7 +363,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulBrushProc();
+        SweepRobot_ManulBrushBtnProc();
         break;
       }
       break;
@@ -372,7 +372,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulFanProc();
+        SweepRobot_ManulFanBtnProc();
         break;
       }
       break;
@@ -381,7 +381,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
           case WM_NOTIFICATION_CLICKED:
             break;
           case WM_NOTIFICATION_RELEASED:
-            SweepRobot_ManulIFRDProc();
+            SweepRobot_ManulIFRDBtnProc();
             break;
         }
         break; 
@@ -390,7 +390,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulBuzzerProc();
+        SweepRobot_ManulBuzzerBtnProc();
         break;
       }
       break;
@@ -399,7 +399,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulRGBLEDProc();
+        SweepRobot_ManulRGBLEDBtnProc();
         break;
       }
       break;

@@ -337,6 +337,7 @@ extern int usartRxNum;
 
 extern enum SWRB_TEST_SELECT gSwrbTestSelectFlag;
 extern enum SWRB_TEST_MODE gSwrbTestMode;
+extern enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode;
 extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;
 extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
@@ -373,17 +374,17 @@ void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopProc(void);
 void SweepRobot_PCBTestExitProc(void);
 
-void SweepRobot_ManulStartProc(void);
-void SweepRobot_ManulSetProc(void);
-void SweepRobot_ManulResetProc(void);
-void SweepRobot_ManulExitProc(void);
+void SweepRobot_ManulStartBtnProc(void);
+void SweepRobot_ManulSetBtnProc(void);
+void SweepRobot_ManulResetBtnProc(void);
+void SweepRobot_ManulExitBtnProc(void);
 
-void SweepRobot_ManulWheelProc(void);
-void SweepRobot_ManulBrushProc(void);
-void SweepRobot_ManulFanProc(void);
-void SweepRobot_ManulIFRDProc(void);
-void SweepRobot_ManulBuzzerProc(void);
-void SweepRobot_ManulRGBLEDProc(void);
+void SweepRobot_ManulWheelBtnProc(void);
+void SweepRobot_ManulBrushBtnProc(void);
+void SweepRobot_ManulFanBtnProc(void);
+void SweepRobot_ManulIFRDBtnProc(void);
+void SweepRobot_ManulBuzzerBtnProc(void);
+void SweepRobot_ManulRGBLEDBtnProc(void);
 void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void);
 
 void SweepRobot_PowerStationTestStartProc(void);

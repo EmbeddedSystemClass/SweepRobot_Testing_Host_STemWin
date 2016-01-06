@@ -143,7 +143,9 @@ void USART1_ISR(void)
 //                        USART_RX_STA = 0;
                     }
                     usartRxFlag = 1;
-                    OSTimeDlyResume(gSwrbTestRuningTaskPrio);
+                    if(gSwrbTestRuningTaskPrio != NULL){
+                        OSTimeDlyResume(gSwrbTestRuningTaskPrio);
+                    }
 				}
 			}else{
 				if(rxValue=='\r')

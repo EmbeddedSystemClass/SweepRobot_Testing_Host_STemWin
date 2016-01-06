@@ -88,7 +88,7 @@ static void SWRB_WheelTestProc(void)
             if(wheel[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 wheel[i].validFlag = 1;
                 printf("WHL->OFF=%d\r\n",i);
-                
+
                 if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
@@ -101,7 +101,7 @@ static void SWRB_WheelTestProc(void)
 
     if(wheel[WHEEL_CHAN_L].validFlag && wheel[WHEEL_CHAN_R].validFlag ){
         gSwrbTestTaskRunCnt = 0;
-        
+
         SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
         if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
@@ -121,9 +121,9 @@ static void SWRB_WheelTestProc(void)
 
 static void SWRB_WheelPCBTestOverTimeProc(void)
 {
-   char *str;
-    
-   SWRB_TestDataSaveToFile(Wheel_TestDataSave);
+    char *str;
+
+    SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
             str = "ERROR->LEFT WHEEL\r\n";
@@ -135,11 +135,11 @@ static void SWRB_WheelPCBTestOverTimeProc(void)
             SWRB_TestDataFileWriteString(str);
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
-    
+
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL ERROR");
     Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
-    Edit_Clear(); 
+    Edit_Clear();
 }
 
 static void SWRB_WheelManulTestOverTimeProc(void)
@@ -155,7 +155,7 @@ static void SWRB_WheelManulTestOverTimeProc(void)
                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS][0],\
                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS][1],\
                                                    GUI_LIGHTRED);
-    }    
+    }
 }
 
 static void SWRB_WheelTestOverTimeProc(void)

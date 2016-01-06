@@ -15,6 +15,13 @@
 
 #define SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES    3
 
+static const char *gSwrbManulTestListviewSNQueryCmd[] = {
+    "SNR->YEAR",
+    "SNR->MNTH",
+    "SNR->DATE",
+    "SNR->SN",
+};
+
 u8 gSwrbManulTestListviewDispNameCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH},
@@ -29,6 +36,15 @@ u8 gSwrbManulTestListviewDispNameCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER},
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},
+};
+
+u8 gSwrbManulTestListviewDispNameFrontIFRDCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},
+};
+
+u8 gSwrbManulTestListviewDispNameSystemCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},
 };
 
 u8 gSwrbManulTestListviewDispDataCoord[][2] = {
@@ -75,10 +91,6 @@ u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},       //RGB_LED_BLUE
 };
 
-u8 gSwrbManulTestListviewDispNameFrontIFRDCoord[][2] = {
-    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},
-};
-
 u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_L1
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_L2
@@ -90,26 +102,11 @@ u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFR,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R1
 };
     
-static u8 gSwrbManulTestListviewDispSNCoord[][2] = {
+u8 gSwrbManulTestListviewDispSNCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},         //SNUM_YEAR
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},        //SNUM_MONTH
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},         //SNUM_DATE
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},        //SNUM_SNUM
-};
-
-enum SWRB_MANUL_TEST_DATA_SNUM_POS{
-    SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS,
-    SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS,
-    SWRB_MANUL_TEST_DATA_SNUM_DATE_POS,
-    SWRB_MANUL_TEST_DATA_SNUM_NUM_POS,
-    SWRB_MANUL_TEST_DATA_SNUM_BOUND,
-};
-
-static const char *gSwrbManulTestListviewSNQueryCmd[][1] = {
-    {"SNR->YEAR"},
-    {"SNR->MNTH"},
-    {"SNR->DATE"},
-    {"SNR->SN"},
 };
 
 static char aSwrbTestData[SWRB_MANUL_TEST_DATA_BOUND][5] = { 0 };
@@ -236,12 +233,10 @@ void SweepRobot_ManulTestSNDisp(void)
     int i,j;
     WM_HWIN hItem;
 
-    hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
-    
     str = mymalloc(SRAMIN, sizeof(char)*10);
     for(i=SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS;i<SWRB_MANUL_TEST_DATA_SNUM_BOUND;i++){
-        printf("%s\r\n",*gSwrbManulTestListviewSNQueryCmd[i]);
-        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+        printf("%s\r\n",gSwrbManulTestListviewSNQueryCmd[i]);
+        GUI_Delay(SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
             *str = 0;
             mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
@@ -258,6 +253,7 @@ void SweepRobot_ManulTestSNDisp(void)
                     sprintf(str, "%03d", atoi(str));
                     break;
             }
+            hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
             LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispSNCoord[i][0], gSwrbManulTestListviewDispSNCoord[i][1], str);
             
             usartRxFlag = 0;
@@ -483,14 +479,13 @@ static void SweepRobot_ManulTestInit(void)
 {
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
 
-    SweepRobot_ManulTestSNDisp();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 void SweepRobot_ManulTestDataQuery(void)
 {
     printf("MNL->RD\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
+    GUI_Delay(SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
     if(usartRxFlag){
         SweepRobot_ManulTestRxDataProc();
         SweepRobot_ManulTestBatteryVoltDisp();
@@ -527,7 +522,7 @@ static void SweepRobot_ManulTestProc(void)
 
 static void SweepRobot_ManulTestOverTimeProc(void)
 {
-    SweepRobot_ManulStartProc();
+    SweepRobot_ManulStartBtnProc();
 }
 
 void SweepRobot_ManulTestTask(void *pdata)

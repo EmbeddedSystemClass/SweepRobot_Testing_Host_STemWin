@@ -353,5 +353,10 @@ void SweepRobotTest_StepMotorGoHome(void)
     SweepRobotTest_StepMotorModeSetRun(STEP_MOTOR_MODE_RUN);
 }
 
-
+void SweepRobotTest_StepMotorSetIdle(void)
+{
+    STEP_MOTOR_EN_OUT_ENABLE();
+    SweepRobotTest_StepMotorStop();
+    stepMotor.ctrl.runStepCnt = 0;
+}
 
