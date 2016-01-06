@@ -6,6 +6,7 @@
 extern u8 gSwrbManulTestListviewDispNameCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2];
+extern u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2];
 
 void SweepRobot_ManulTestTask(void *pdata);
 void Manul_TestDataSave(void);

@@ -20,11 +20,11 @@
                                       (id == ID_TESTSEL_BUTTON_IRDA)        ||\
                                       (id == ID_TESTSEL_BUTTON_BUZZER)      ||\
                                       (id == ID_TESTSEL_BUTTON_RGB_LED)     ||\
-                                      (id == ID_TESTSEL_BUTTON_CHARGE)      \
+                                      (id == ID_TESTSEL_BUTTON_CHARGE)      ||\
+                                      (id == ID_TESTSEL_BUTTON_FRONT_IFRD)  \
                                     )
 //                                      (id == ID_TESTSEL_BUTTON_TEST1)       ||\
 //                                      (id == ID_TESTSEL_BUTTON_TEST2)       ||\
-//                                      (id == ID_TESTSEL_BUTTON_TEST3)       ||\
 //                                      (id == ID_TESTSEL_BUTTON_TEST4)       ||\
 //                                      (id == ID_TESTSEL_BUTTON_TEST5)       ||\
 //                                      (id == ID_TESTSEL_BUTTON_TEST6)       ||\
@@ -150,7 +150,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "CHARGE", ID_TESTSEL_BUTTON_CHARGE, 280, 210, 140, 105, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST1", ID_TESTSEL_BUTTON_TEST1, 420, 210, 140, 105, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST2", ID_TESTSEL_BUTTON_TEST2, 560, 210, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST3", ID_TESTSEL_BUTTON_TEST3, 0, 315, 140, 105, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "FRONT IFRD", ID_TESTSEL_BUTTON_FRONT_IFRD, 0, 315, 140, 105, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST4", ID_TESTSEL_BUTTON_TEST4, 140, 315, 140, 105, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST5", ID_TESTSEL_BUTTON_TEST5, 280, 315, 140, 105, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST6", ID_TESTSEL_BUTTON_TEST6, 420, 315, 140, 105, 0, 0x0, 0 },

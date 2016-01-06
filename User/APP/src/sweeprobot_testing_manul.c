@@ -62,7 +62,7 @@ u8 gSwrbManulTestListviewDispDataCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},         //IRDA_FR
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA},          //IRDA_R
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER},        //BUZZER
-    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BL,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},       //RGB_LED_RGB
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BL,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},      //RGB_LED_RGB
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},        //CHARGE_CUR
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},       //CHARGE_VOL
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},        //CHARGE_24V
@@ -73,6 +73,17 @@ u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},       //RGB_LED_RED
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},      //RGB_LED_GREEN
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},       //RGB_LED_BLUE
+};
+
+u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_L1
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_L2
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_L3
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_L4
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R4
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BL,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R3
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFL,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R2
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFR,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R1
 };
     
 static u8 gSwrbManulTestListviewDispSNCoord[][2] = {
@@ -195,6 +206,11 @@ void SweepRobot_ManulTestDataReset(void)
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], "0");
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], GUI_WHITE);
     }
+    
+    for(i=0;i<SWRB_MANUL_TEST_DATA_FRONT_IFRD_BOUND;i++){
+        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataFrontIFRDCoord[i][0], gSwrbManulTestListviewDispDataFrontIFRDCoord[i][1], "0");
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataFrontIFRDCoord[i][0], gSwrbManulTestListviewDispDataFrontIFRDCoord[i][1], GUI_WHITE);
+    }
 
     voltPercent = 0;
     lastVoltPercent = 0;
@@ -217,17 +233,16 @@ void SweepRobot_ManulTestSNDisp(void)
     WM_HWIN hItem;
 
     hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
-
+    
+    str = mymalloc(SRAMIN, sizeof(char)*10);
     for(i=SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS;i<SWRB_MANUL_TEST_DATA_SNUM_BOUND;i++){
         printf("%s\r\n",*gSwrbManulTestListviewSNQueryCmd[i]);
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
-            str = mymalloc(SRAMIN, sizeof(char)*10);
             *str = 0;
             mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
             switch(i){
                 case SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS:
-                    sprintf(str, "%04d", atoi(str));
                     break;
                 case SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS:
                     sprintf(str, "%02d", atoi(str));
@@ -240,13 +255,14 @@ void SweepRobot_ManulTestSNDisp(void)
                     break;
             }
             LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispSNCoord[i][0], gSwrbManulTestListviewDispSNCoord[i][1], str);
-            myfree(SRAMIN, str);
+            
             usartRxFlag = 0;
             for(j=0;j<5;j++)
                 USART_RX_BUF[j] = 0;
             USART_RX_STA = 0;
         }
     }
+    myfree(SRAMIN, str);
 }
 
 static int SweepRobot_ManulTest_DataArrayToInt(char dataArray[][5])

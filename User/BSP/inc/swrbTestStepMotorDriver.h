@@ -8,7 +8,14 @@
 #define STEP_MOTOR_DRIVER_PWM_OUT_PIN       GPIO_Pin_6
 #define STEP_MOTOR_DRIVER_DIR_PIN           GPIO_Pin_5
 #define STEP_MOTOR_DRIVER_EN_OUT_PIN        GPIO_Pin_4
-#define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_3
+
+/* TODO: Define this macro to use actual position detect key */
+#ifdef _USE_ACTUAL_POS_DETECT_KEY
+    #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_3
+#else
+    #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_0
+#endif
+
 #define STEP_MOTOR_DRIVER_PWM_OUT_PIN_SOURCE    GPIO_PinSource6
 #define STEP_MOTOR_DRIVER_GPIO_AF_PPP       GPIO_AF_TIM3
 #define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_RCC  RCC_APB1Periph_TIM3
@@ -16,8 +23,8 @@
 #define STEP_MOTOR_DRVIER_GPIO_PWM_OUT_TIM_IRQn  TIM3_IRQn
 #define STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT   STM32F4xx_INT_TIM3
 
-#define STEP_MOTOR_MODE_SET_RUN()           TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, ENABLE);
-#define STEP_MOTOR_MODE_SET_STOP()          TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, DISABLE);
+#define STEP_MOTOR_TIM_SET_RUN()           TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, ENABLE);
+#define STEP_MOTOR_TIM_SET_STOP()          TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, DISABLE);
 
 #define STEP_MOTOR_DIR_SET_FORWARD()  GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_DIR_PIN, (BitAction)STEP_MOTOR_DIR_FORWARD)
 #define STEP_MOTOR_DIR_SET_BACKWARD() GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_DIR_PIN, (BitAction)STEP_MOTOR_DIR_BACKWARD)
@@ -27,9 +34,17 @@
 
 #define STEP_MOTOR_POS_DETECT_SIGN  GPIO_ReadInputDataBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_POS_DETECT_PIN)
 
+typedef void (*stepMotorDriverISRCB_t)(void);
+
+extern stepMotorDriverISRCB_t stepMotorDriverISRCB;
+
+#define STEP_MOTOR_ISR_CB_REG(f)            do{stepMotorDriverISRCB=f;}while(0)
+#define STEP_MOTOR_ISR_CB_DEREG()           do{stepMotorDriverISRCB=NULL;}while(0)
+
 enum STEP_MOTOR_MODE{
     STEP_MOTOR_MODE_UNKNOWN,
     STEP_MOTOR_MODE_STOP,
+    STEP_MOTOR_MODE_RUN_POS,
     STEP_MOTOR_MODE_RUN_STEP,
     STEP_MOTOR_MODE_RUN,
     STEP_MOTOR_MODE_HOMING,
@@ -49,9 +64,7 @@ enum STEP_MOTOR_POS{
 };
 
 void SweepRobotTest_StepMotorDriverGPIOInit(void);
-
 void SweepRobotTest_StepMotorMoveSteps(float speed, u16 steps);
-
 void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode);
 void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode);
 enum STEP_MOTOR_MODE SweepRobotTest_StepMotorModeGet(void);
@@ -63,5 +76,7 @@ int SweepRobotTest_StepMotorStepsGet(void);
 void SweepRobotTest_StepMotorEnStateSet(FunctionalState enState);
 FunctionalState SweepRobotTest_StepMotorEnStateGet(void);
 void SweepRobotTest_StepMotorDriverReset(void);
+enum STEP_MOTOR_POS SweepRobotTest_StepMotorPosGet(void);
+void SweepRobotTest_StepMotorGoHome(void);
 
 #endif

@@ -8,26 +8,30 @@
 
 #include "delay.h"
 
-#define STEP_MOTOR_PWM_INIT_PULSE_WIDTH      50
+#define STEP_MOTOR_PWM_INIT_ARR     100
+#define STEP_MOTOR_PWM_INIT_PULSE_WIDTH      STEP_MOTOR_PWM_INIT_ARR/2
 
 #define STEP_MOTOR_MIN_SPEED        1
 #define STEP_MOTOR_MAX_SPEED        50
 #define STEP_MOTOR_ACCELERATION     0.005
-#define STEP_MOTOR_DECELERATION     0.01
+#define STEP_MOTOR_DECELERATION     0.005
 
 #define STEP_MOTOR_STEPS_PER_REV    1600
 
 #define STEP_MOTOR_MAX_STEPS        65530
 
+stepMotorDriverISRCB_t stepMotorDriverISRCB = NULL;
+
 typedef struct{
-    float maxspeed;
-    float minspeed;
+    float maxSpeed;
+    float minSpeed;
     float acceleration;
     float deceleration;
-    float runspeed;
-    float expspeed;
-    uint32_t expsteps;
-    uint32_t stepcnt;
+    float runSpeed;
+    float expSpeed;
+    uint32_t expSteps;
+    uint32_t runStepCnt;
+    uint32_t posStepCnt;
 }StepMotorDriverCtrl_TypeDef;
 
 typedef struct{
@@ -39,18 +43,18 @@ typedef struct{
 }StepMotorDriver_TypeDef;
 StepMotorDriver_TypeDef stepMotor;
 
-static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void);
+static void StepMotorDriver_PWMTimISR(void);
 static void SweepRobotTest_StepMotorStop(void);
 
 void SweepRobotTest_StepMotorDriverConf(void)
 {
-    stepMotor.ctrl.minspeed = STEP_MOTOR_MIN_SPEED;
-    stepMotor.ctrl.maxspeed = STEP_MOTOR_MAX_SPEED;
+    stepMotor.ctrl.minSpeed = STEP_MOTOR_MIN_SPEED;
+    stepMotor.ctrl.maxSpeed = STEP_MOTOR_MAX_SPEED;
     stepMotor.ctrl.acceleration = STEP_MOTOR_ACCELERATION;
     stepMotor.ctrl.deceleration = STEP_MOTOR_DECELERATION;
-    stepMotor.ctrl.runspeed = 0;
-    stepMotor.ctrl.expspeed = 0;
-    stepMotor.ctrl.expsteps = 0;
+    stepMotor.ctrl.runSpeed = 0;
+    stepMotor.ctrl.expSpeed = 0;
+    stepMotor.ctrl.expSteps = 0;
 }
 
 void SweepRobotTest_StepMotorDriverReset(void)
@@ -89,13 +93,13 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     
     GPIO_InitStructure.GPIO_Pin = STEP_MOTOR_DRIVER_POS_DETECT_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
     GPIO_Init(STEP_MOTOR_DRIVER_GPIO, &GPIO_InitStructure);
 
     /* SLAVE TIMER INIT */
     TIM_DeInit(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM);
 
-    TIM_TimeBaseInitStructure.TIM_Period = 100-1;
+    TIM_TimeBaseInitStructure.TIM_Period = STEP_MOTOR_PWM_INIT_ARR-1;
     TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
     TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -118,56 +122,71 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT, STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR);
+    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT, StepMotorDriver_PWMTimISR);
 
     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, DISABLE);
 
     SweepRobotTest_StepMotorDriverReset();
 }
 
-static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
+void StepMotorDriver_PWMTimISR(void)
 {
     float stepMotorTimerPeriod = 0;
 
-    stepMotor.ctrl.stepcnt++;
-
-    if(stepMotor.mode == STEP_MOTOR_MODE_RUN_STEP){
-        if(stepMotor.ctrl.stepcnt >= stepMotor.ctrl.expsteps){
-            stepMotor.ctrl.stepcnt = 0;
-            STEP_MOTOR_MODE_SET_STOP();
-            STEP_MOTOR_EN_OUT_ENABLE();
-        }else{
-            if( (stepMotor.ctrl.stepcnt < (stepMotor.ctrl.expspeed - stepMotor.ctrl.minspeed)/stepMotor.ctrl.acceleration) && (stepMotor.ctrl.stepcnt < stepMotor.ctrl.expsteps/2) ){
-                if(stepMotor.ctrl.runspeed < stepMotor.ctrl.expspeed){
-                    stepMotor.ctrl.runspeed += stepMotor.ctrl.acceleration;
-
-                    stepMotorTimerPeriod = 625/stepMotor.ctrl.runspeed;
-                    TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)stepMotorTimerPeriod);
-                    TIM_SetCompare1(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)(stepMotorTimerPeriod/2));
-                }
-            }else if(stepMotor.ctrl.stepcnt > (stepMotor.ctrl.expsteps - (stepMotor.ctrl.runspeed - stepMotor.ctrl.minspeed)/stepMotor.ctrl.deceleration)){
-                if(stepMotor.ctrl.runspeed > stepMotor.ctrl.minspeed){
-                    stepMotor.ctrl.runspeed -= stepMotor.ctrl.deceleration;
-
-                    stepMotorTimerPeriod = 625/stepMotor.ctrl.runspeed;
-                    TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)stepMotorTimerPeriod);
-                    TIM_SetCompare1(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)(stepMotorTimerPeriod/2));
-                }
+    stepMotor.ctrl.runStepCnt++;
+    
+    if( STEP_MOTOR_POS_DETECT_SIGN && (stepMotor.dir == STEP_MOTOR_DIR_BACKWARD) ){
+        stepMotor.ctrl.runStepCnt = 0;
+        stepMotor.mode = STEP_MOTOR_MODE_STOP;
+        stepMotor.pos = STEP_MOTOR_POS_HOME;
+        STEP_MOTOR_TIM_SET_STOP();
+        STEP_MOTOR_EN_OUT_ENABLE();
+    }else{
+        if(stepMotor.mode == STEP_MOTOR_MODE_RUN_POS){
+            
+        }else if(stepMotor.mode == STEP_MOTOR_MODE_RUN_STEP){
+            if(stepMotor.ctrl.runStepCnt >= stepMotor.ctrl.expSteps || stepMotor.ctrl.runStepCnt >= STEP_MOTOR_MAX_STEPS){
+                stepMotor.ctrl.runStepCnt = 0;
+                stepMotor.mode = STEP_MOTOR_MODE_STOP;
+                STEP_MOTOR_TIM_SET_STOP();
+                STEP_MOTOR_EN_OUT_ENABLE();
             }
+        }else if( stepMotor.mode == STEP_MOTOR_MODE_RUN ){
+            if(stepMotor.ctrl.runStepCnt > STEP_MOTOR_MAX_STEPS){
+                stepMotor.ctrl.runStepCnt = 0;
+                stepMotor.mode = STEP_MOTOR_MODE_STOP;
+                STEP_MOTOR_TIM_SET_STOP();
+                STEP_MOTOR_EN_OUT_ENABLE();
+            }
+        }else if( stepMotor.mode == STEP_MOTOR_MODE_HOMING ){
+            
+        }else{
+            
         }
-    }else if( (stepMotor.mode == STEP_MOTOR_MODE_RUN) && (stepMotor.dir == STEP_MOTOR_DIR_FORWARD) ){
-        if(STEP_MOTOR_POS_DETECT_SIGN){
-            stepMotor.ctrl.stepcnt = 0;
-            stepMotor.mode = STEP_MOTOR_MODE_STOP;
-            STEP_MOTOR_MODE_SET_STOP();
-            STEP_MOTOR_EN_OUT_ENABLE();
-        }
-    }else if( (stepMotor.mode == STEP_MOTOR_MODE_RUN) && (stepMotor.dir == STEP_MOTOR_DIR_FORWARD) ){
-        if(stepMotor.ctrl.stepcnt > STEP_MOTOR_MAX_STEPS){
-            stepMotor.ctrl.stepcnt = 0;
-            stepMotor.mode = STEP_MOTOR_MODE_STOP;
-            STEP_MOTOR_MODE_SET_STOP();
-            STEP_MOTOR_EN_OUT_ENABLE();
+    }
+    
+    if(NULL != stepMotorDriverISRCB){
+        stepMotorDriverISRCB();
+    }
+    
+    /* Acceleration and Deceleration procees when step motor is running */
+    if(stepMotor.mode != STEP_MOTOR_MODE_STOP){
+        if( (stepMotor.ctrl.runStepCnt < (stepMotor.ctrl.expSpeed - stepMotor.ctrl.minSpeed)/stepMotor.ctrl.acceleration) && (stepMotor.ctrl.runStepCnt < stepMotor.ctrl.expSteps/2) ){
+            if(stepMotor.ctrl.runSpeed < stepMotor.ctrl.expSpeed){
+                stepMotor.ctrl.runSpeed += stepMotor.ctrl.acceleration;
+
+                stepMotorTimerPeriod = 625/stepMotor.ctrl.runSpeed;
+                TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)stepMotorTimerPeriod);
+                TIM_SetCompare1(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)(stepMotorTimerPeriod/2));
+            }
+        }else if(stepMotor.ctrl.runStepCnt > (stepMotor.ctrl.expSteps - (stepMotor.ctrl.runSpeed - stepMotor.ctrl.minSpeed)/stepMotor.ctrl.deceleration)){
+            if(stepMotor.ctrl.runSpeed > stepMotor.ctrl.minSpeed){
+                stepMotor.ctrl.runSpeed -= stepMotor.ctrl.deceleration;
+
+                stepMotorTimerPeriod = 625/stepMotor.ctrl.runSpeed;
+                TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)stepMotorTimerPeriod);
+                TIM_SetCompare1(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)(stepMotorTimerPeriod/2));
+            }
         }
     }
 }
@@ -175,13 +194,15 @@ static void STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_ISR(void)
 static void SweepRobotTest_StepMotorRun(void)
 {
     stepMotor.mode = STEP_MOTOR_MODE_RUN;
-    STEP_MOTOR_MODE_SET_RUN();
+    stepMotor.ctrl.expSteps = STEP_MOTOR_MAX_STEPS;
+    STEP_MOTOR_TIM_SET_RUN();
 }
 
 static void SweepRobotTest_StepMotorStop(void)
 {
     stepMotor.mode = STEP_MOTOR_MODE_STOP;
-    STEP_MOTOR_MODE_SET_STOP();
+    stepMotor.ctrl.expSteps = 0;
+    STEP_MOTOR_TIM_SET_STOP();
 }
 
 /*
@@ -193,26 +214,26 @@ void SweepRobotTest_StepMotorMoveSteps(float speed, u16 steps)
     float stepMotorTimerPeriod = 0;
 
     /* with Acc and Dec */
-    if(speed > stepMotor.ctrl.maxspeed){
-        stepMotor.ctrl.expspeed = stepMotor.ctrl.maxspeed;
-    }else if(speed < stepMotor.ctrl.minspeed) {
-        stepMotor.ctrl.expspeed = stepMotor.ctrl.minspeed;
+    if(speed > stepMotor.ctrl.maxSpeed){
+        stepMotor.ctrl.expSpeed = stepMotor.ctrl.maxSpeed;
+    }else if(speed < stepMotor.ctrl.minSpeed) {
+        stepMotor.ctrl.expSpeed = stepMotor.ctrl.minSpeed;
     }else{
-        stepMotor.ctrl.expspeed = speed;
+        stepMotor.ctrl.expSpeed = speed;
     }
-    stepMotor.ctrl.expsteps = steps;
+    stepMotor.ctrl.expSteps = steps;
 
-    stepMotor.ctrl.runspeed = stepMotor.ctrl.minspeed;
+    stepMotor.ctrl.runSpeed = stepMotor.ctrl.minSpeed;
 
-    stepMotorTimerPeriod = 1000000/(stepMotor.ctrl.runspeed*STEP_MOTOR_STEPS_PER_REV);
+    stepMotorTimerPeriod = 1000000/(stepMotor.ctrl.runSpeed*STEP_MOTOR_STEPS_PER_REV);
     TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)stepMotorTimerPeriod);
 
     stepMotor.mode = STEP_MOTOR_MODE_RUN_STEP;
 
     STEP_MOTOR_EN_OUT_DISABLE();
 
-    stepMotor.ctrl.stepcnt = 0;
-    STEP_MOTOR_MODE_SET_RUN();
+    stepMotor.ctrl.runStepCnt = 0;
+    STEP_MOTOR_TIM_SET_RUN();
 }
 
 void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode)
@@ -222,7 +243,7 @@ void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode)
         SweepRobotTest_StepMotorRun();
     }else if(mode == STEP_MOTOR_MODE_STOP){
         SweepRobotTest_StepMotorStop();
-        stepMotor.ctrl.stepcnt = 0;
+        stepMotor.ctrl.runStepCnt = 0;
         STEP_MOTOR_EN_OUT_ENABLE();
     }else{
         stepMotor.mode = STEP_MOTOR_MODE_UNKNOWN;
@@ -289,19 +310,19 @@ void SweepRobotTest_StepMotorSpeedSet(float speed)
 {
     float stepMotorTimerPeriod;
 
-    stepMotor.ctrl.runspeed = speed;
+    stepMotor.ctrl.runSpeed = speed;
     stepMotorTimerPeriod = 1000000/(speed*STEP_MOTOR_STEPS_PER_REV);
     TIM_SetAutoreload(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, (uint32_t)stepMotorTimerPeriod);
 }
 
 float SweepRobotTest_StepMotorSpeedGet(void)
 {
-    return stepMotor.ctrl.runspeed;
+    return stepMotor.ctrl.runSpeed;
 }
 
 int SweepRobotTest_StepMotorStepsGet(void)
 {
-    return stepMotor.ctrl.stepcnt;
+    return stepMotor.ctrl.runStepCnt;
 }
 
 void SweepRobotTest_StepMotorPosSet(enum STEP_MOTOR_POS pos)
@@ -328,7 +349,7 @@ void SweepRobotTest_StepMotorGoHome(void)
 {
     stepMotor.mode = STEP_MOTOR_MODE_HOMING;
     
-    SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_FORWARD);
+    SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
     SweepRobotTest_StepMotorModeSetRun(STEP_MOTOR_MODE_RUN);
 }
 

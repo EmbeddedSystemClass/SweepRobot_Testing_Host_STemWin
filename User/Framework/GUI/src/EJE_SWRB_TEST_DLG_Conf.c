@@ -393,7 +393,7 @@ void Listview_Set_Item_TextColor(WM_HWIN hWin, int id, uint16_t colunm, uint16_t
 {
     WM_HWIN hItem;
     hItem = WM_GetDialogItem(hWin, id);
-    LISTVIEW_SetItemTextColor(hItem, colunm,row, LISTVIEW_CI_UNSEL, color);
+    LISTVIEW_SetItemTextColor(hItem, colunm, row, LISTVIEW_CI_UNSEL, color);
 }
 
 void Listview_Set_Text_Color(WM_HWIN hWin, int id, GUI_COLOR color)

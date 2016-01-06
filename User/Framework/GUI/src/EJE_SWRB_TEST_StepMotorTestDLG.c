@@ -74,6 +74,7 @@ static void Button_RunProc(void)
 //    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_RUN);
     SweepRobotTest_StepMotorMoveSteps(stepmotorSpeed, stepmotorSteps);
 //    OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
+    
 }
 
 static void Button_StopProc(void)

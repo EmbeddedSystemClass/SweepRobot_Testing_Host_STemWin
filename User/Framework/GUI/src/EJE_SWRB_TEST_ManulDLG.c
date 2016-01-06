@@ -29,8 +29,18 @@
 **********************************************************************
 */
 
-#define SWRB_MANUL_LISTVIEW_ROW_NUM   15
+#define SWRB_MANUL_LISTVIEW_ROW_NUM   16
 
+extern GUI_CONST_STORAGE GUI_BITMAP _bmTestNameCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmLeftCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmFrontLeftCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmMiddleCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmFrontRightCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmRightCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomLeftCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomFrontLeftCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomFrontRightCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomRightCHN;
 
 /*********************************************************************
 *
@@ -39,7 +49,7 @@
 **********************************************************************
 */
 
-static const char *aListview_RowWheel[][10] = {
+static const char *aListview_RowInitText[][10] = {
 /* name,left,frontLeft,middle,frontRight,right,bottomLeft,bottomFLeft,bottomFRight,bottomRight */
     {"WHEEL","0","","","","0"},
     {"BRUSH","0","","0","","0"},
@@ -54,6 +64,7 @@ static const char *aListview_RowWheel[][10] = {
     {"BUZZER","0"},
     {"RGB_LED","0","0","0"},
     {"CHARGE","0","0","0"},
+    {"FRT IFRD","0","0","0","0","0","0","0","0"},
     {"INT_VREF","0"},
     {"SNUM","0","0","0","0"},
 };
@@ -102,28 +113,44 @@ static void Button_Init(WM_HWIN hItem)
 static void Listview_Init(WM_HWIN hItem)
 {
     u8 i;
-
-    LISTVIEW_AddColumn(hItem, 110, "Name", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 45, "Left", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 55, "FrontL", GUI_TA_HCENTER | GUI_TA_VCENTER);
+    HEADER_Handle hHeader;
+    
+    LISTVIEW_SetRowHeight(hItem, 20);
+    LISTVIEW_SetFont(hItem, GUI_FONT_COMIC18B_ASCII);
     LISTVIEW_SetGridVis(hItem, 1);
-    LISTVIEW_AddColumn(hItem, 60, "Middle", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetItemBkColor(hItem, 0, 0, LISTVIEW_CI_UNSEL, 0x00DFCFB3);
-    LISTVIEW_AddColumn(hItem, 55, "FrontR", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 45, "Right", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 70, "BottomL", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 70, "BottonFL", GUI_TA_HCENTER | GUI_TA_VCENTER);
-    LISTVIEW_AddColumn(hItem, 70, "BottomFR", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetItemBkColor(hItem, 0, 0, LISTVIEW_CI_UNSEL, 0x00FFFFFF);
-    LISTVIEW_AddColumn(hItem, 70, "BottomR", GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTVIEW_SetAutoScrollH(hItem, ENABLE);
     LISTVIEW_SetAutoScrollV(hItem, ENABLE);
     LISTVIEW_SetHeaderHeight(hItem, 30);
+    
+    LISTVIEW_AddColumn(hItem, 110, "", GUI_TA_HCENTER | GUI_TA_VCENTER);    //Name
+    LISTVIEW_AddColumn(hItem, 45, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //Left
+    LISTVIEW_AddColumn(hItem, 55, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //FrontLeft
+    LISTVIEW_AddColumn(hItem, 60, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //Middle
+    LISTVIEW_AddColumn(hItem, 55, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //FrontRight
+    LISTVIEW_AddColumn(hItem, 45, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //Right
+    LISTVIEW_AddColumn(hItem, 70, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //BottomLeft
+    LISTVIEW_AddColumn(hItem, 70, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //BottomFrontLeft
+    LISTVIEW_AddColumn(hItem, 70, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //BottomFrontRight
+    LISTVIEW_AddColumn(hItem, 70, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //BottomRight
     for(i=0;i<SWRB_MANUL_LISTVIEW_ROW_NUM;i++){
-        LISTVIEW_AddRow(hItem, aListview_RowWheel[i]);
+        LISTVIEW_AddRow(hItem, aListview_RowInitText[i]);
     }
-    LISTVIEW_SetRowHeight(hItem, 20);
-    LISTVIEW_SetFont(hItem, GUI_FONT_COMIC18B_ASCII);
+    
+    hHeader = LISTVIEW_GetHeader(hItem);
+    HEADER_SetFont(hHeader, GUI_FONT_COMIC18B_ASCII);
+//    HEADER_SetSkinClassic(hHeader);
+    HEADER_SetBitmapEx(hHeader, 0, &_bmTestNameCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 1, &_bmLeftCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 2, &_bmFrontLeftCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 3, &_bmMiddleCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 4, &_bmFrontRightCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 5, &_bmRightCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 6, &_bmBottomLeftCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 7, &_bmBottomFrontLeftCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 8, &_bmBottomFrontRightCHN, 0, 0);
+    HEADER_SetBitmapEx(hHeader, 9, &_bmBottomRightCHN, 0, 0);
 };
 
 static void SWRB_MANUL_PAINT_Proc(void)

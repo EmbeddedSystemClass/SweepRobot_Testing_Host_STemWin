@@ -17,7 +17,7 @@ void SweepRobot_WheelFloatTestInit(void)
     str = "\r\n>>>WHEEL FLOAT TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef __SHOW_TEST_TITLE    
+#ifdef _SHOW_TEST_TITLE    
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
@@ -90,7 +90,7 @@ static void SweepRobot_WheelFloatTestProc(void)
 
         SWRB_TestDataSaveToFile(SweepRobot_WheelFloatTestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
             str = "WHEEL FLOAT OK\r\n";
             SWRB_TestDataFileWriteString(str);
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);

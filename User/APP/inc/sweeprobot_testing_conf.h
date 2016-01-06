@@ -14,9 +14,11 @@
 #include "sweeprobot_testing_buzzer.h"
 #include "sweeprobot_testing_rgb_led.h"
 #include "sweeprobot_testing_charge.h"
+
 #include "sweeprobot_testing_power_station.h"
 #include "sweeprobot_testing_manul.h"
 
 #include "sweeprobot_testing_stepmotor_task.h"
+#include "sweeprobot_testing_front_ifrd.h"
 
 #endif

@@ -9,6 +9,8 @@ static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
 
 static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 800, 800, 250, 250, 150, 150, 150, 150 };
 
+static void SweepRobot_FrontIFRDTestStartProc(void);
+
 static void SweepRobot_IFRDTestInit(void)
 {
     u8 i;
@@ -19,7 +21,7 @@ static void SweepRobot_IFRDTestInit(void)
     str = "\r\n>>>IFRD TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef __SHOW_TEST_TITLE    
+#ifdef _SHOW_TEST_TITLE    
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
@@ -124,6 +126,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 }
             }
             
+            /* TODO: Add max ifrd minus value display in Manul Test Auto Mode */
             if(ifrd[i].onValue){
                 if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_VALID_THRESHOLD[i] ){
                     gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_FL_POS+i));
@@ -159,7 +162,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
             str = "IFRD OK\r\n";
             SWRB_TestDataFileWriteString(str);
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
@@ -167,8 +170,10 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD OK");
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
             Edit_Clear();
+        }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            SweepRobot_FrontIFRDTestStartProc();
         }
-
+        
         SWRB_NextTestTaskResumePostAct(SWRB_IFRD_TEST_TASK_PRIO);
     }
 }
@@ -237,6 +242,8 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
         SweepRobot_IFRDPCBTestOverTimeProc();
     }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
         SweepRobot_IFRDManulTestOverTimeProc();
+        
+        SweepRobot_FrontIFRDTestStartProc();
     }
     
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -253,8 +260,6 @@ void SweepRobot_IFRDTestTask(void *pdata)
             SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;
-            
-            Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_GREEN, CHECKBOX_CI_ENABLED);
 
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_IFRDTestInit();
@@ -299,4 +304,10 @@ void IFRD_TestDataSave(void)
     SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", ifrd[6].offValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[7].onValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[7].offValue, 1);
+}
+
+static void SweepRobot_FrontIFRDTestStartProc(void)
+{
+    OSTaskResume(SWRB_FRONT_IFRD_TEST_TASK_PRIO);
+    OSTaskSuspend(OS_PRIO_SELF);
 }

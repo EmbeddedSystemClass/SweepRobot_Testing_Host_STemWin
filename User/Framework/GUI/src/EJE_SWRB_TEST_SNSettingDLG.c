@@ -231,18 +231,48 @@ static void SerialNum_Comb(WM_HWIN hWin, int id, char *dest_SNumStr)
     myfree(SRAMIN, lwBuf);
 }
 
+static char* ListWheel_TextGet(WM_HWIN hWin, int id)
+{
+    WM_HWIN hItem;
+    int     lwItemIndex;
+    char    *str;
+    
+    return str;
+}
+
+/* TODO: Add file path display function */
+void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id)
+{
+    
+}
+
+/* TODO: Improve path generation method */
 static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
 {
     WM_HWIN hItem;
     FRESULT flErr;
     char    *lwBuf;
     char *swrbTestDataFilePath;
+    OS_CPU_SR cpu_sr;
 
     flErr = flErr;
+    
+    OS_ENTER_CRITICAL();
 
     swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
     *swrbTestDataFilePath = 0;
 
+#ifdef  _USE_IMPROVED_PATH_GEN
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        sprintf(swrbTestDataFilePath, "0:/PCBTest");
+        flErr = f_mkdir(swrbTestDataFilePath);
+    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        sprintf(swrbTestDataFilePath, "0:/RobotTest");
+        flErr = f_mkdir(swrbTestDataFilePath);
+    }
+    
+    
+#else
     lwBuf = "0:/";
     swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
 
@@ -251,7 +281,7 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
     SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_DATE, swrbTestDataFilePath);
 
     flErr = f_mkdir(swrbTestDataFilePath);
-
+    
     *swrbTestDataFilePath = 0;
 
     lwBuf = "0:/";
@@ -278,8 +308,11 @@ static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
     EDIT_SetText(hItem, swrbTestDataFilePath);
 
     sprintf(dest_str, "%s", swrbTestDataFilePath);
+#endif
 
     myfree(SRAMIN, swrbTestDataFilePath);
+
+    OS_EXIT_CRITICAL();
 }
 
 /*********************************************************************
