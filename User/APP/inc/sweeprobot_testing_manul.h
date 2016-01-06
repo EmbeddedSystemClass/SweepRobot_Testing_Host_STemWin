@@ -4,6 +4,7 @@
 #include "stm32f4xx.h"
 
 extern u8 gSwrbManulTestListviewDispNameCoord[][2];
+extern u8 gSwrbManulTestListviewDispNameFrontIFRDCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2];

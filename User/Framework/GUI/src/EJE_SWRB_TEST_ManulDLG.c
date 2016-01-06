@@ -55,6 +55,7 @@ static const char *aListview_RowInitText[][10] = {
     {"BRUSH","0","","0","","0"},
     {"FAN","","","0","",""},
     {"IFRD","0","0","","0","0","0","0","0","0"},
+    {"FRT IFRD","0","0","0","0","0","0","0","0"},
     {"COLLISION","0","0","","0","0"},
     {"WHL_FLOAT","0","","","","0"},
     {"ASH_TRAY","0","0"},
@@ -64,7 +65,6 @@ static const char *aListview_RowInitText[][10] = {
     {"BUZZER","0"},
     {"RGB_LED","0","0","0"},
     {"CHARGE","0","0","0"},
-    {"FRT IFRD","0","0","0","0","0","0","0","0"},
     {"INT_VREF","0"},
     {"SNUM","0","0","0","0"},
 };
@@ -158,18 +158,6 @@ static void SWRB_MANUL_PAINT_Proc(void)
     GUI_SetColor(GUI_GRAY);
 //    GUI_DrawRect(669, 410, 675, 420);
 }
-
-//static void Listview_SelChangedProc(WM_HWIN hWin, int id)
-//{
-//    int rowNum;
-//    WM_HWIN hItem;
-
-//    hItem = WM_GetDialogItem(hWin, id);
-
-//    rowNum = LISTVIEW_GetSel(hItem);
-//    LISTVIEW_DisableRow(hItem, rowNum);
-//    aListview_RowFlag[rowNum] = DISABLE;
-//}
 
 /*********************************************************************
 *

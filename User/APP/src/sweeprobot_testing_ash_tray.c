@@ -5,7 +5,11 @@
 #include "usart.h"
 #include "includes.h"
 
-const static int SWRB_ASH_TRAY_LVL_VALID_THRESHOLD = 120;
+#ifdef _USE_MINUS_COMPARE
+    const static int SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD = 100;   //minus value
+#else
+    const static int SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD = 2000;
+#endif
 
 static ASH_TRAY_TestTypeDef ashTrayIns;
 static ASH_TRAY_TestTypeDef ashTrayLvl;
@@ -96,6 +100,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
     }
 }
 
+#ifdef _USE_MINUS_COMPARE
 static void SweepRobot_AshTrayLvlTestTxOffProc(void)
 {
     u8 i;
@@ -103,7 +108,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
     
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("SNSR->RD=15\r\n");
+            printf("SNSR->RD=14\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.offValue = usartRxNum;
@@ -130,6 +135,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
         printf("SNSR->IFRD=1\r\n");
     }
 }
+#endif
 
 static void SweepRobot_AshTrayLvlTestTxOnProc(void)
 {
@@ -138,7 +144,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
     
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
-            printf("SNSR->RD=15\r\n");
+            printf("SNSR->RD=14\r\n");
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.onValue = usartRxNum;
@@ -164,12 +170,21 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
         }
         printf("SNSR->IFRD=0\r\n");
 
-        if(ashTrayLvl.offValue - ashTrayLvl.onValue > SWRB_ASH_TRAY_LVL_VALID_THRESHOLD){
+#ifdef _USE_MINUS_COMPARE
+        if(ashTrayLvl.offValue - ashTrayLvl.onValue > SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD){
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
             ashTrayLvl.validCnt++;
         }else{
             gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
         }
+#else
+        if(ashTrayLvl.value < SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD){
+            gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
+            ashTrayLvl.validCnt++;
+        }else{
+            gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
+        }
+#endif
         
         if(ashTrayLvl.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayLvl.validFlag = 1;
@@ -191,12 +206,17 @@ static void SweepRobot_AshTrayTestProc(void)
     if(gSwrbTestTaskRunCnt > 1){
         SweepRobot_AshTrayInsTestProc();
     }
-
+#ifdef _USE_MINUS_COMPARE
     if(gSwrbTestTaskRunCnt%2){
         SweepRobot_AshTrayLvlTestTxOffProc();
     }else{
         SweepRobot_AshTrayLvlTestTxOnProc();
     }
+#else
+    if(gSwrbTestTaskRunCnt > 1){
+        SweepRobot_AshTrayLvlTestTxOnProc();
+    }
+#endif
 
     if(ashTrayIns.validFlag && ashTrayLvl.validFlag){
         gSwrbTestTaskRunCnt = 0;

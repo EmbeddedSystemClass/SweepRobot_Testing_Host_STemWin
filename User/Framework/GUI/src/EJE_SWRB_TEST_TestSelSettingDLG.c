@@ -60,7 +60,7 @@ static void Button_ConfirmProc(WM_HWIN hWin)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-    
+
     SWRB_ValidTestTaskCntGet();
 
     WM_HideWin(hWin);
@@ -123,7 +123,7 @@ static void Button_CancelProc(WM_HWIN hWin)
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-    
+
     Button_CancelResetCheckBoxStateProc();
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_START);
@@ -198,6 +198,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
         }
     }
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TESTSEL_BUTTON_FRONT_IFRD);
+    WM_EnableWindow(hItem);
 
     WM_HideWin(pMsg->hWin);
     break;
