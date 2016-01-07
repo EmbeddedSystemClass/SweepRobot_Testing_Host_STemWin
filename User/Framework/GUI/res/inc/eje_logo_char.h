@@ -12,7 +12,6 @@
 #include "GUI.h"
 
 extern const U8 _acImage_eje_logo[138054];
-extern const U8 _acImage_power_station[125654];
 
 #endif
 

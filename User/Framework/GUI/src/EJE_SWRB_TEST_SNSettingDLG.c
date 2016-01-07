@@ -156,10 +156,10 @@ static void ListWheel_Init(WM_HWIN hItem)
     LISTWHEEL_SetDeceleration(hItem, 10);
     LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTWHEEL_SetSnapPosition(hItem, 115);
-    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_SEL, GUI_LIGHTRED);
-    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_UNSEL, GUI_BLACK);
-    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_SEL, GUI_WHITE);
-    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_UNSEL, GUI_GRAY);
+//    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_SEL, GUI_LIGHTRED);
+//    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_UNSEL, GUI_BLACK);
+//    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_SEL, GUI_WHITE);
+//    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_UNSEL, GUI_GRAY);
 }
 
 static void ListWheel_SelChangeProc(WM_HWIN hWin, int lwId, int editId)
@@ -331,13 +331,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             // Initialization of 'SettingDLG'
             //
             hItem = pMsg->hWin;
-            FRAMEWIN_SetTextColor(hItem, 0x00000000);
+//            FRAMEWIN_SetTextColor(hItem, 0x00000000);
             //
             // Initialization of 'TEXT'
             //
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_TEXT_0);
             TEXT_SetFont(hItem, &GUI_Font32_ASCII);
-            TEXT_SetTextColor(hItem, GUI_WHITE);
+//            TEXT_SetTextColor(hItem, GUI_WHITE);
             //
             // Initialization of 'button'
             //

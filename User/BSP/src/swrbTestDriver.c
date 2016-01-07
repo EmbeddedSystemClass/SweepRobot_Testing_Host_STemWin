@@ -55,11 +55,11 @@
 
 #define IRDA_TEST_TX_TIM_RCC                RCC_APB1Periph_TIM7
 #define IRDA_TEST_TX_TIM                    TIM7
-#define IRDA_TEST_TX_RCC                    RCC_AHB1Periph_GPIOA
-#define IRDA_TEST_TX_GPIO                   GPIOA
-#define IRDA_TEST_TX_L_PIN                  GPIO_Pin_4
-#define IRDA_TEST_TX_R_PIN                  GPIO_Pin_5
-#define IRDA_TEST_TX_M_PIN                  GPIO_Pin_6
+#define IRDA_TEST_TX_RCC                    RCC_AHB1Periph_GPIOG
+#define IRDA_TEST_TX_GPIO                   GPIOG
+#define IRDA_TEST_TX_L_PIN                  GPIO_Pin_15
+#define IRDA_TEST_TX_R_PIN                  GPIO_Pin_6
+#define IRDA_TEST_TX_M_PIN                  GPIO_Pin_7
 
 #define IRDA_TEST_TX_PIN_SET(pin)           GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_SET)
 #define IRDA_TEST_TX_PIN_RESET(pin)         GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_RESET)

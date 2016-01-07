@@ -503,8 +503,8 @@ static void SweepRobot_ManulTestProc(void)
     OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_MANUL_READ_WAIT_TIME);
     if(usartRxFlag){
         SweepRobot_ManulTestRxDataProc();
-        SweepRobot_ManulTestBatteryVoltDisp();
         SweepRobot_ManulTestDataArrayDisp();
+        SweepRobot_ManulTestBatteryVoltDisp();
         usartRxFlag = 0;
         USART_RX_STA = 0;
     }
@@ -522,7 +522,7 @@ static void SweepRobot_ManulTestProc(void)
 
 static void SweepRobot_ManulTestOverTimeProc(void)
 {
-    SweepRobot_ManulStartBtnProc();
+    
 }
 
 void SweepRobot_ManulTestTask(void *pdata)

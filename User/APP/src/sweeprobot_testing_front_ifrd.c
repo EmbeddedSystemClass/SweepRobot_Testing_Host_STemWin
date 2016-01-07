@@ -40,6 +40,22 @@ static u16 gSwrbFrontIFRDTestStateMap = 0;
 
 static void SweepRobot_FrontIFRDTestFinishProc(void);
 
+static void SweepRobot_FrontIFRDTestListviewSetStr(char *str)
+{
+    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
+                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
+                                                            str);
+}
+
+static void SweepRobot_FrontIFRDTestListviewSetColor(GUI_COLOR color)
+{
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
+                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
+                                                                   color);
+}
+
 static void SweepRobot_FrontIFRDTestStepMotorISRCB(void)
 {
     if( SweepRobotTest_StepMotorModeGet() == STEP_MOTOR_MODE_STOP ){
@@ -47,9 +63,23 @@ static void SweepRobot_FrontIFRDTestStepMotorISRCB(void)
     }
 }
 
+void SweepRobot_FrontIFRDTestStateReset(void)
+{
+    int i;
+    
+    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+        frontIFRD[i].offValue = 0;
+        frontIFRD[i].onValue = 0;
+        frontIFRD[i].validCnt = 0;
+        frontIFRD[i].validFlag = 0;
+    }
+    gSwrbFrontIFRDTestStepMotorMoveCnt = 0;
+    gSwrbFrontIFRDTestChanCnt = 0;
+    gSwrbFrontIFRDTestStateMap = 0;
+}
+
 static void SweepRobot_FrontIFRDTestInit(void)
 {
-    u8 i;
     char *str;
 
     gSwrbTestRuningTaskPrio = SWRB_FRONT_IFRD_TEST_TASK_PRIO;
@@ -65,12 +95,7 @@ static void SweepRobot_FrontIFRDTestInit(void)
     printf("SNSR->IFRD=0\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
 
-    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        frontIFRD[i].offValue = 0;
-        frontIFRD[i].onValue = 0;
-        frontIFRD[i].validCnt = 0;
-        frontIFRD[i].validFlag = 0;
-    }
+    SweepRobot_FrontIFRDTestStateReset();
 
     /* XXX: REG StepMotorISRCB, Do not forget to dereg when not use it */
     STEP_MOTOR_ISR_CB_REG(SweepRobot_FrontIFRDTestStepMotorISRCB);
@@ -114,10 +139,7 @@ static void SweepRobot_FrontIFRDTestTxOffProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
-                                                            str);
+                    SweepRobot_FrontIFRDTestListviewSetStr(str);
                     myfree(SRAMIN, str);
                 }
                 usartRxNum = 0;
@@ -151,10 +173,7 @@ static void SweepRobot_FrontIFRDTestTxOnProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
-                                                            str);
+                    SweepRobot_FrontIFRDTestListviewSetStr(str);
                     myfree(SRAMIN, str);
                 }
                 usartRxNum = 0;
@@ -172,25 +191,16 @@ static void SweepRobot_FrontIFRDTestTxOnProc(void)
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].validCnt++;
             }else{
                 gSwrbFrontIFRDTestStateMap |= (1<<gSwrbFrontIFRDTestChanCnt);
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
-                                                                   GUI_LIGHTRED);
+                SweepRobot_FrontIFRDTestListviewSetColor(GUI_LIGHTRED);
             }
 
             if(frontIFRD[gSwrbFrontIFRDTestChanCnt].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].validFlag = 1;
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
-                                                                   GUI_LIGHTBLUE);
+                SweepRobot_FrontIFRDTestListviewSetColor(GUI_LIGHTBLUE);
             }
         }else{
             gSwrbFrontIFRDTestStateMap |= 1<<(gSwrbFrontIFRDTestChanCnt);
-            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
-                                                                   GUI_LIGHTRED);
+            SweepRobot_FrontIFRDTestListviewSetColor(GUI_LIGHTRED);
         }
     }
     printf("SNSR->IFRD=0\r\n");
@@ -233,8 +243,9 @@ void SweepRobot_FrontIFRDTestTask(void *pdata)
                 }else{
                     SweepRobot_FrontIFRDTestTxOnProc();
                 }
-
-                gSwrbTestTaskRunCnt++;
+                
+                if(gSwrbFrontIFRDTestStepMotorMoveCnt != 0)
+                    gSwrbTestTaskRunCnt++;
             }else{
                SweepRobot_FrontIFRDTestFinishProc(); 
             }

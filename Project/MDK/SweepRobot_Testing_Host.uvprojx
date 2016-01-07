@@ -1144,6 +1144,11 @@
               <FilePath>..\..\User\APP\src\sweeprobot_testing_ifrd.c</FilePath>
             </File>
             <File>
+              <FileName>sweeprobot_testing_front_ifrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_front_ifrd.c</FilePath>
+            </File>
+            <File>
               <FileName>sweeprobot_testing_collision.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_collision.c</FilePath>
@@ -1192,11 +1197,6 @@
               <FileName>sweeprobot_testing_power_station.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_power_station.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_front_ifrd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\APP\src\sweeprobot_testing_front_ifrd.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_manul.c</FileName>
@@ -2323,6 +2323,11 @@
               <FilePath>..\..\User\APP\src\sweeprobot_testing_ifrd.c</FilePath>
             </File>
             <File>
+              <FileName>sweeprobot_testing_front_ifrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_front_ifrd.c</FilePath>
+            </File>
+            <File>
               <FileName>sweeprobot_testing_collision.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_collision.c</FilePath>
@@ -2371,11 +2376,6 @@
               <FileName>sweeprobot_testing_power_station.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_power_station.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_front_ifrd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\APP\src\sweeprobot_testing_front_ifrd.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_manul.c</FileName>
