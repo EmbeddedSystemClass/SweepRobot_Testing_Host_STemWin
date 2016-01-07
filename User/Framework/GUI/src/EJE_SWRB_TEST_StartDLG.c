@@ -139,12 +139,12 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             Button_Init(hItem);
             
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
-            BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "SLAM");
             Button_Init(hItem);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_STEP_MOTOR);
-            BUTTON_SetFont(hItem, GUI_FONT_10_ASCII);
+            BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
             BUTTON_SetText(hItem, "STEP MOTOR");
             Button_Init(hItem);
 

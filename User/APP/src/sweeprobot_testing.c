@@ -566,8 +566,6 @@ void SweepRobot_PCBTestStartProc(void)
             SWRB_ValidTestTaskCntGet();
         }
 
-        gSwrbTestMode = SWRB_TEST_MODE_RUN;
-
         SWRB_PCBTestCheckboxDisable();
 
         TEST_LED_TASK_CB_REG(SWRB_PCBTestIndicateButtonToggle);
@@ -584,14 +582,15 @@ void SweepRobot_PCBTestStartProc(void)
         if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
             gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
         }
+        gSwrbTestMode = SWRB_TEST_MODE_RUN;
         OSTaskResume(gSwrbTestRuningTaskPrio);
         OS_EXIT_CRITICAL();
     }else if(gSwrbTestMode == SWRB_TEST_MODE_RUN){
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-        /* FIXME:  Task count would be wrong if click checkbox when uncomment this code */
-//        SWRB_PCBTestCheckboxEnable();
+        /* FIXME:  Task count would be wrong if click checkbox when pause */
+        SWRB_PCBTestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE, GUI_GREEN);
@@ -787,16 +786,16 @@ static void SweepRobot_PCBTestGUIReset(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE");
-
-    Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, 0);
+    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
+        Checkbox_Set_Text_Color(i, GUI_BLACK);
+    }
 
     Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE, GUI_LIGHTGRAY);
     Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START, GUI_LIGHTBLUE);
 //    Button_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START, "START");
     BUTTON_DispStartCHNStr(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START, 18, 43);
-    for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
-        Checkbox_Set_Text_Color(i, GUI_BLACK);
-    }
+
+    Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, 0);
 
     SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_STOP);
     SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);

@@ -473,6 +473,7 @@ static void SweepRobot_ManulTestValueValidCmp(void)
     SweepRobot_ManulTest_IrDADataProc();
     SweepRobot_ManulTest_ChargeDataProc();
     SweepRobot_ManulTest_InternalVRefDataProc();
+    /* TODO: Add Power Station Data Proc here */
 }
 
 static void SweepRobot_ManulTestInit(void)
