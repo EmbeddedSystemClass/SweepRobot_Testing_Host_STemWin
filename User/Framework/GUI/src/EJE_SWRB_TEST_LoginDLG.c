@@ -98,15 +98,14 @@ static void Button_OKProc(void)
             
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 
-            Button_Set_BkColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_BLACK);
-            Button_Set_TextColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_WHITE);
+            Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
 
-            SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
-            SWRB_TestSelLastCheckBoxStateSave();
+            SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSET);
+            SWRB_TestTaskCheckBoxLastStateSave();
 
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
-            WM_ShowWin(hWin_SWRB_SNSETTING);
+            WM_ShowWin(hWin_SWRB_SNSET);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }

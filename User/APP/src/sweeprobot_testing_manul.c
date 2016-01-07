@@ -22,6 +22,17 @@ static const char *gSwrbManulTestListviewSNQueryCmd[] = {
     "SNR->SN",
 };
 
+enum PwrStationSignal {
+
+    PWR_STATION_BACKOFF_SIG_L   = 0x46,
+    PWR_STATION_BACKOFF_SIG_R   = 0x45,
+    PWR_STATION_HOME_SIG_LL     = 0x41,
+    PWR_STATION_HOME_SIG_LS     = 0x44,
+    PWR_STATION_HOME_SIG_RL     = 0x43,
+    PWR_STATION_HOME_SIG_RS     = 0x42,
+    PWR_STATION_HOME_SIG_CENTER = 0x40,
+};
+
 u8 gSwrbManulTestListviewDispNameCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL},
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH},
@@ -36,10 +47,16 @@ u8 gSwrbManulTestListviewDispNameCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER},
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED},
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF},
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},
 };
 
 u8 gSwrbManulTestListviewDispNameFrontIFRDCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},
+};
+
+u8 gSwrbManulTestListviewDispNamePowerStationCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},
 };
 
 u8 gSwrbManulTestListviewDispNameSystemCoord[][2] = {
@@ -101,7 +118,18 @@ u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFL,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R2
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFR,SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD},    //FRONT_IFRD_R1
 };
-    
+
+u8 gSwrbManulTestListviewDispDataPowerStationCoord[][2] = {
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_LL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},   //PS_LS
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_M, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_M
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FR, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_RS
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_R, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_RL
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BL, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_LB
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFL, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_RB
+    {SWRB_MANUL_TEST_LISTVIEW_COLUMN_BFR, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION},    //PS_PWR
+};
+
 u8 gSwrbManulTestListviewDispSNCoord[][2] = {
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_L, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},         //SNUM_YEAR
     {SWRB_MANUL_TEST_LISTVIEW_COLUMN_FL, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM},        //SNUM_MONTH
@@ -113,6 +141,9 @@ static char aSwrbTestData[SWRB_MANUL_TEST_DATA_BOUND][5] = { 0 };
 static int  aSwrbTestValue[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
 static u8   aSwrbTestDataValidCnt[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
 static u8   aSwrbTestDataValidFlag[SWRB_MANUL_TEST_DATA_BOUND] = { 0 };
+
+static u8 aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_BOUND] = { 0 };
+static u8 aSwrbTestPowerStationValidFlag[SWRB_MANUL_TEST_DATA_POWER_STATION_BOUND] = { 0 };
 
 static int voltPercent = 0;
 static int lastVoltPercent = 0;
@@ -167,13 +198,13 @@ static void SweepRobot_ManulTestRxDataProc(void)
 
 void SweepRobot_ManulTestBatteryVoltDisp(void)
 {
-    float volt = 0;
+    double volt = 0;
 
     if(atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])){
         volt = atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])/atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS])*1.2f*6;
         Edit_Set_FloatValue(hWin_SWRB_MANUL, ID_MANUL_EDIT_VOLT, volt);
 
-        voltPercent = ((volt - SWRB_BATTERY_LOW_BOUND) / (SWRB_BATTERY_HIGH_BOUND - SWRB_BATTERY_LOW_BOUND))*100;
+        voltPercent = (int)(((volt - SWRB_BATTERY_LOW_BOUND) / (SWRB_BATTERY_HIGH_BOUND - SWRB_BATTERY_LOW_BOUND))*100);
         if(VoltCnt > 5){
             if(voltPercent != lastVoltPercent){
                 VoltCnt++;
@@ -197,14 +228,17 @@ void SweepRobot_ManulTestDataReset(void)
     int i;
 
     for(i=0;i<SWRB_MANUL_TEST_DATA_BOUND;i++){
-        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "0");
+        if(i == SWRB_MANUL_TEST_DATA_BUZZER_POS){
+            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "OFF");
+        }else{
+            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], "0");
+        }
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataCoord[i][0], gSwrbManulTestListviewDispDataCoord[i][1], GUI_WHITE);
         aSwrbTestDataValidCnt[i] = 0;
         aSwrbTestDataValidFlag[i] = 0;
     }
-    
+
     for(i=0;i<SWRB_MANUL_TEST_DATA_RGB_LED_BOUND;i++){
-        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], "0");
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], GUI_WHITE);
     }
     
@@ -212,7 +246,14 @@ void SweepRobot_ManulTestDataReset(void)
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataFrontIFRDCoord[i][0], gSwrbManulTestListviewDispDataFrontIFRDCoord[i][1], "0");
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataFrontIFRDCoord[i][0], gSwrbManulTestListviewDispDataFrontIFRDCoord[i][1], GUI_WHITE);
     }
+    
+    for(i=0;i<SWRB_MANUL_TEST_DATA_POWER_STATION_BOUND;i++){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataPowerStationCoord[i][0], gSwrbManulTestListviewDispDataPowerStationCoord[i][1], GUI_WHITE);
+        aSwrbTestPowerStationCnt[i] = 0;
+        aSwrbTestPowerStationValidFlag[i] = 0;
+    }
 
+    SweepRobot_ManulTest_CtrlBtnStateArrayReset();
     voltPercent = 0;
     lastVoltPercent = 0;
     VoltCnt = 0;
@@ -377,6 +418,82 @@ static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DAT
 //    }
 }
 
+static void SweepRobot_ManulTest_PwrStationCodeCmpProc(GUI_COLOR validColor, GUI_COLOR faultColor)
+{
+    int i;
+    
+    /* IrDA values have already been calculated in IrDA process */
+    for(i=SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS;i<=SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS;i++){
+        switch(aSwrbTestValue[i]){
+            case PWR_STATION_HOME_SIG_LL:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_LL_POS]++;
+                continue;
+            case PWR_STATION_HOME_SIG_LS:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_LS_POS]++;
+                continue;
+            case PWR_STATION_HOME_SIG_CENTER:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_CNTR_POS]++;
+                continue;
+            case PWR_STATION_HOME_SIG_RS:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_RS_POS]++;
+                continue;
+            case PWR_STATION_HOME_SIG_RL:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_RL_POS]++;
+                continue;
+            case PWR_STATION_BACKOFF_SIG_L:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_LB_POS]++;
+                continue;
+            case PWR_STATION_BACKOFF_SIG_R:
+                aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_RB_POS]++;
+                continue;
+            default: continue;
+        }
+    }
+    
+    for(i=SWRB_MANUL_TEST_DATA_POWER_STATION_LL_POS;i<=SWRB_MANUL_TEST_DATA_POWER_STATION_RB_POS;i++){
+        if(!aSwrbTestPowerStationValidFlag[i]){
+            if(aSwrbTestPowerStationCnt[i] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
+                aSwrbTestPowerStationValidFlag[i] = 1;
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[i][0],\
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[i][1],\
+                                                           validColor);
+            }else{
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[i][0],\
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[i][1],\
+                                                           faultColor);
+            }
+        }else{
+            continue;
+        }
+    }
+}
+
+static void SweepRobot_ManulTest_PwrStationPwrCmpProc(GUI_COLOR validColor, GUI_COLOR faultColor)
+{
+    if(!aSwrbTestPowerStationValidFlag[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS]){
+        if(aSwrbTestValue[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS]){
+            aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS]++;
+        }else{
+            aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS] = 0;
+        }
+        
+        if(aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
+            aSwrbTestPowerStationValidFlag[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS] = 1;
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS][0],\
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS][1],\
+                                                           validColor);
+        }else{
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS][0],\
+                                                           gSwrbManulTestListviewDispDataPowerStationCoord[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS][1],\
+                                                           faultColor);
+        }
+    }
+}
+
 static void SweepRobot_ManulTest_WheelDataProc(void)
 {
     SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS, GUI_LIGHTBLUE, GUI_WHITE);
@@ -454,6 +571,12 @@ static void SweepRobot_ManulTest_ChargeDataProc(void)
     SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, GUI_LIGHTBLUE, GUI_WHITE);
 }
 
+static void SweepRobot_ManulTest_PowerStationDataProc(void)
+{
+    SweepRobot_ManulTest_PwrStationCodeCmpProc(GUI_LIGHTBLUE, GUI_LIGHTRED);
+    SweepRobot_ManulTest_PwrStationPwrCmpProc(GUI_LIGHTBLUE, GUI_LIGHTRED);
+}
+
 static void SweepRobot_ManulTest_InternalVRefDataProc(void)
 {
     SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1400, 1600, SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS, GUI_LIGHTBLUE, GUI_WHITE);
@@ -472,8 +595,8 @@ static void SweepRobot_ManulTestValueValidCmp(void)
     SweepRobot_ManulTest_KeyDataProc();
     SweepRobot_ManulTest_IrDADataProc();
     SweepRobot_ManulTest_ChargeDataProc();
+    SweepRobot_ManulTest_PowerStationDataProc();
     SweepRobot_ManulTest_InternalVRefDataProc();
-    /* TODO: Add Power Station Data Proc here */
 }
 
 static void SweepRobot_ManulTestInit(void)

@@ -86,12 +86,12 @@ static void SweepRobot_BuzzerTestOKProc(void)
         Edit_Clear();
     }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][1],\
-                                                                "1");
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
+                                                                "OK");
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][1],\
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
                                                                 GUI_LIGHTBLUE);
     }
 
@@ -118,12 +118,12 @@ static void SweepRobot_BuzzerTestErrProc(void)
         Edit_Clear();
     }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][1],\
-                                                                "0");
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
+                                                                "ERR");
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_OK_POS][1],\
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
                                                                 GUI_LIGHTRED);
     }
 

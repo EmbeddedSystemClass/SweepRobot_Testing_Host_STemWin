@@ -53,8 +53,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 500, 205, 200, 180, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 300, 205, 200, 90, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "SET", ID_START_BUTTON_SET, 300, 295, 200, 90, 0, 0x0, 0 },
+//    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 300, 205, 200, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SET", ID_START_BUTTON_SET, 300, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
@@ -106,14 +106,14 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_IMAGE_LOGO);
             pData = _GetImageById(ID_START_IMAGE_EJE_LOGO, &FileSize);
             IMAGE_SetBMP(hItem, pData, FileSize);
-        
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_EDIT_DATE);
             EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
             EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
             EDIT_SetTextColor(hItem, EDIT_CI_ENABELD, GUI_BLUE);
             EDIT_SetFocussable(hItem, DISABLE);
-            
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_TITLE);
             BUTTON_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
@@ -127,17 +127,17 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_PCB_TEST, &_bmPCBTestCHN, 36, 74);
             Button_Init(hItem);
 
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
-            BUTTON_SetText(hItem, " ");
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 19, 28);
-            Button_Init(hItem);
-            
+//            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
+//            BUTTON_SetText(hItem, " ");
+//            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 19, 28);
+//            Button_Init(hItem);
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SET);
             BUTTON_SetText(hItem, "");
             BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
-            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_SET, &_bmSetCHN, 68, 28);
+            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_SET, &_bmSetCHN, 68, 74);
             Button_Init(hItem);
-            
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "SLAM");
@@ -182,15 +182,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
-                case ID_START_BUTTON_POWER_STATION: // Notifications sent by 'POWER STATION'
-                    switch(NCode) {
-                        case WM_NOTIFICATION_CLICKED:
-                            break;
-                        case WM_NOTIFICATION_RELEASED:
-                            SweepRobot_StartDlgPowerStationBtnClickPorc();
-                            break;
-                    }
-                    break;
+//                case ID_START_BUTTON_POWER_STATION: // Notifications sent by 'POWER STATION'
+//                    switch(NCode) {
+//                        case WM_NOTIFICATION_CLICKED:
+//                            break;
+//                        case WM_NOTIFICATION_RELEASED:
+//                            SweepRobot_StartDlgPowerStationBtnClickPorc();
+//                            break;
+//                    }
+//                    break;
                 case ID_START_BUTTON_MANUL: // Notifications sent by 'MANUL'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:

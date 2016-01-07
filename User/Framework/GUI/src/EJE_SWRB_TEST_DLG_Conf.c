@@ -25,6 +25,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmResetCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmTestSelCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmOKCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmErrorCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmReTestCHN;
@@ -153,6 +154,11 @@ void BUTTON_DispSerialNumCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 void BUTTON_DispTimeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 {
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmTimeCHN, x, y);
+}
+
+void BUTTON_DispTestSelCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmTestSelCHN, x, y);
 }
 
 void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
@@ -546,9 +552,9 @@ static void Edit_Update(WM_HWIN hWin, int editStartId, int editStopId, int lwId)
 void SWRB_SET_EditTextUpdate(void)
 {
     if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
-        Edit_Update(hWin_SWRB_SNSETTING, ID_SNSET_EDIT_YEAR, ID_SNSET_EDIT_SN3, ID_SNSET_LISTWHEEL_YEAR);
+        Edit_Update(hWin_SWRB_SNSET, ID_SNSET_EDIT_YEAR, ID_SNSET_EDIT_SN3, ID_SNSET_LISTWHEEL_YEAR);
     }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
-        Edit_Update(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_YEAR, ID_TIMESET_EDIT_SEC, ID_TIMESET_LISTWHEEL_YEAR);
+        Edit_Update(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_YEAR, ID_TIMESET_EDIT_SEC, ID_TIMESET_LISTWHEEL_YEAR);
     }
 }
 
@@ -559,13 +565,13 @@ void SWRB_SET_ListwheelSnapPosUpdate(void)
 
     if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
         for(i=ID_SNSET_LISTWHEEL_YEAR;i<=ID_SNSET_LISTWHEEL_SN3;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, i);
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSET, i);
             j = LISTWHEEL_GetPos(hItem);
             LISTWHEEL_SetSel(hItem, j);
         }
     }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
         for(i=ID_TIMESET_LISTWHEEL_YEAR;i<=ID_TIMESET_LISTWHEEL_SEC;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, i);
+            hItem = WM_GetDialogItem(hWin_SWRB_TIMESET, i);
             j = LISTWHEEL_GetPos(hItem);
             LISTWHEEL_SetSel(hItem, j);
         }

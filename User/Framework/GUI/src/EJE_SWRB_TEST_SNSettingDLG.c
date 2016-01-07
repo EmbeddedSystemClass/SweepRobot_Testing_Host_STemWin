@@ -35,6 +35,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmConfirmCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmCheckCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmResetCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmTestselCHN;
 
 /*********************************************************************
 *
@@ -356,6 +357,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             BUTTON_DispCancelCHNStr(pMsg->hWin, ID_SNSET_BUTTON_CANCEL, 18, 43);
             BUTTON_DispSerialNumCHNStr(pMsg->hWin, ID_SNSET_BUTTON_SNSET, 14, 18);
             BUTTON_DispTimeCHNStr(pMsg->hWin, ID_SNSET_BUTTON_TIMESET, 26, 18);
+            BUTTON_DispTestSelCHNStr(pMsg->hWin, ID_SNSET_BUTTON_TESTSELECT, 14, 18);
             //
             // Initialization of 'lwYear'
             //
@@ -456,13 +458,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TIMESET_BUTTON_TIMESET);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-                            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+                            Button_Set_BkColor(hWin_SWRB_TIMESET, ID_TIMESET_BUTTON_TIMESET, GUI_LIGHTRED);
                             gSwrbTestSetState = SWRB_TEST_SET_STATE_TIME;
                             WM_HideWin(pMsg->hWin);
-                            WM_ShowWin(hWin_SWRB_TIMESETTING);
+                            WM_ShowWin(hWin_SWRB_TIMESET);
                             break;
                     }
                     break;
@@ -471,10 +470,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TESTSEL_BUTTON_TESTSELSET);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-                            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-                            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+                            Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSEL, GUI_LIGHTRED);
                             gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWin_SWRB_TESTSEL);
@@ -561,7 +557,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 **********************************************************************
 */
 
-WM_HWIN hWin_SWRB_SNSETTING;
+WM_HWIN hWin_SWRB_SNSET;
 
 /*********************************************************************
 *
@@ -681,7 +677,7 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     pathStr = mymalloc(SRAMIN, sizeof(char)*40);
     *pathStr = 0;
 
-    ListWheel_TestDataFilePathGet(hWin_SWRB_SNSETTING, pathStr);
+    ListWheel_TestDataFilePathGet(hWin_SWRB_SNSET, pathStr);
     flErr = f_open(file, pathStr, fileOpenMode);
     myfree(SRAMIN, pathStr);
     f_lseek(file, file->fsize);
@@ -712,12 +708,12 @@ void SWRB_TestDataFileWriteSN(void)
 
     swrbTestSerialNum = strcat(swrbTestSerialNum, cBuf);
 
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_MONTH, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_DATE, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN1, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN2, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN3, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, swrbTestSerialNum);
+    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, swrbTestSerialNum);
 
     f_printf(file, "%s\r\n", swrbTestSerialNum);
 
@@ -739,31 +735,31 @@ void SWRB_TestDUTWriteSN(void)
     str = mymalloc(SRAMIN, sizeof(char)*10);
 
     *str = 0;
-    ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, str);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, str);
     printf("SNW->YEAR=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
-    ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_MONTH, str);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, str);
     printf("SNW->MNTH=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
-    ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_DATE, str);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, str);
     printf("SNW->DATE=%s\r\n", str);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
-    ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN1, str);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, str);
     tempSN = 0;
     tempSN += 100*(*str-'0');
 
     *str = 0;
-    ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN2, str);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, str);
     tempSN += 10*(*str-'0');
 
     *str = 0;
-    ListWheel_GetText(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_SN3, str);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, str);
     tempSN += *str-'0';
 
     printf("SNW->SN=%d\r\n", tempSN);

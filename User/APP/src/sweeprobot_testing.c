@@ -67,8 +67,8 @@ static FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode);
 static void SWRB_TestFinishProc(void);
 static void SWRB_PCBTestWarningDlgHide(void);
 static void SweepRobot_ManulTestCtrlReset(void);
-static void SweepRobot_ManulTestValidTaskStateDisp(void);
-static void SweepRobot_ManulTestTaskStateReset(void);
+static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void);
+static void SweepRobot_ManulTestManulModeTaskStateReset(void);
 
 #define TEST_LED_TASK_CB_REG(f)             do{gLedTaskCB=f;}while(0)
 #define TEST_LED_TASK_CB_DEREG()            do{gLedTaskCB=NULL;}while(0)
@@ -137,8 +137,8 @@ static void emWin_TaskInit(void)
 
     OS_ENTER_CRITICAL();
 
-    hWin_SWRB_SNSETTING = CreateSNSettingDLG();
-    hWin_SWRB_TIMESETTING = CreateTimeSettingDLG();
+    hWin_SWRB_SNSET = CreateSNSettingDLG();
+    hWin_SWRB_TIMESET = CreateTimeSettingDLG();
     hWin_SWRB_TESTSEL = CreateTestSelSettingDLG();
     hWin_SWRB_LOGIN = CreateLoginDLG();
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
@@ -158,8 +158,8 @@ static void emWin_TaskInit(void)
 
     OS_EXIT_CRITICAL();
 
-    SWRB_ListWheelRTCDateUpdate(hWin_SWRB_SNSETTING, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_LISTWHEEL_DATE);
-    SWRB_ListWheelRTCDateUpdate(hWin_SWRB_TIMESETTING, ID_TIMESET_LISTWHEEL_YEAR, ID_TIMESET_LISTWHEEL_MONTH, ID_TIMESET_LISTWHEEL_DAY);
+    SWRB_ListWheelRTCDateUpdate(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_LISTWHEEL_DATE);
+    SWRB_ListWheelRTCDateUpdate(hWin_SWRB_TIMESET, ID_TIMESET_LISTWHEEL_YEAR, ID_TIMESET_LISTWHEEL_MONTH, ID_TIMESET_LISTWHEEL_DAY);
 }
 
 void emWin_Maintask(void *pdata)
@@ -176,6 +176,10 @@ void emWin_Maintask(void *pdata)
         if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SLAM){
             WM_InvalidateWindow(hWin_SWRB_SLAM);
         }
+
+//        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+//            WM_InvalidateWindow(hWin_SWRB_MANUL);
+//        }
 
         GUI_Exec();
         OSTimeDlyHMSM(0,0,0,10);
@@ -239,7 +243,7 @@ void Rtc_Task(void *pdata)
         else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_NONE)
             SWRB_RTC_TIME_Disp(hWin_SWRB_START, ID_START_EDIT_DATE, &rtcDate, &rtcTime);
         else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET)
-            SWRB_RTC_TIME_Disp(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, &rtcDate, &rtcTime);
+            SWRB_RTC_TIME_Disp(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_ACTVALUE, &rtcDate, &rtcTime);
         else
             ;
 
@@ -478,8 +482,9 @@ void SWRB_TestCtrlTask(void *pdata)
     OSTaskCreate(SweepRobot_ManulTestTask,(void*)0,(OS_STK*)&SWRB_MANUL_TASK_STK[SWRB_MANUL_TEST_STK_SIZE-1],SWRB_MANUL_TEST_TASK_PRIO);
     OSTaskSuspend(SWRB_MANUL_TEST_TASK_PRIO);
 
-    OSTaskCreate(SweepRobot_StepMotorTask,(void*)0,(OS_STK*)&SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE-1],SWRB_STEPMOTOR_TASK_PRIO);
-    OSTaskSuspend(SWRB_STEPMOTOR_TASK_PRIO);
+    /* Task for StepMotor Test */
+//    OSTaskCreate(SweepRobot_StepMotorTask,(void*)0,(OS_STK*)&SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE-1],SWRB_STEPMOTOR_TASK_PRIO);
+//    OSTaskSuspend(SWRB_STEPMOTOR_TASK_PRIO);
 
     OSTaskCreate(SweepRobot_FrontIFRDTestTask,(void*)0,(OS_STK*)&SWRB_FRONT_IFRD_TASK_STK[SWRB_FRONT_IFRD_TASK_STK_SIZE-1],SWRB_FRONT_IFRD_TEST_TASK_PRIO);
     OSTaskSuspend(SWRB_FRONT_IFRD_TEST_TASK_PRIO);
@@ -646,15 +651,15 @@ void SweepRobotTest_SetSNPressedProc(void)
         gSwrbTestMode = SWRB_TEST_MODE_SET;
         gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
 
-        hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET);
         BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
         BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
         BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
 
-        SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSETTING);
+        SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSET);
 
         WM_HideWin(hWin_SWRB_PCBTEST);
-        WM_ShowWin(hWin_SWRB_SNSETTING);
+        WM_ShowWin(hWin_SWRB_SNSET);
     }
 }
 
@@ -942,7 +947,7 @@ static void SWRB_PCBTestFinishProc(void)
 
     SweepRobot_PCBTestGUIReset();
 
-    SWRB_ListWheelSNInc(hWin_SWRB_SNSETTING);
+    SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
 }
 
 static void SWRB_ManulTestFinishProc(void)
@@ -1011,9 +1016,9 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
 
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
-        SweepRobot_ManulTestValidTaskStateDisp();
+        SweepRobot_ManulTestAutoModeValidTaskStateDisp();
     }else{
-        SweepRobot_ManulTestTaskStateReset();
+        SweepRobot_ManulTestManulModeTaskStateReset();
     }
 
     WM_HideWin(hWin_SWRB_START);
@@ -1279,7 +1284,7 @@ void SweepRobot_ManulStartBtnProc(void)
     }
 }
 
-static void SweepRobot_ManulTestValidTaskStateDisp(void)
+static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
 {
     int i;
 
@@ -1310,16 +1315,20 @@ static void SweepRobot_ManulTestValidTaskStateDisp(void)
                                                  GUI_LIGHTGRAY);
     }
 
+    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][0],\
+                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][1],\
+                                                 GUI_LIGHTGRAY);
+
     for(i=0;i<2;i++){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispNameSystemCoord[i][0],\
                                                      gSwrbManulTestListviewDispNameSystemCoord[i][1],\
                                                      GUI_LIGHTGRAY);
     }
-
 }
 
-static void SweepRobot_ManulTestTaskStateReset(void)
+static void SweepRobot_ManulTestManulModeTaskStateReset(void)
 {
     int i;
 
@@ -1333,6 +1342,11 @@ static void SweepRobot_ManulTestTaskStateReset(void)
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
                                                  gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
+                                                 GUI_BLACK);
+
+    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][0],\
+                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][1],\
                                                  GUI_BLACK);
 
     for(i=0;i<2;i++){
@@ -1349,14 +1363,14 @@ void SweepRobot_ManulSetBtnProc(void)
 
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
 
-        SweepRobot_ManulTestValidTaskStateDisp();
+        SweepRobot_ManulTestAutoModeValidTaskStateDisp();
 
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTCYAN);
         BUTTON_DispAutoModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }else{
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
 
-        SweepRobot_ManulTestTaskStateReset();
+        SweepRobot_ManulTestManulModeTaskStateReset();
 
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
         BUTTON_DispManulModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
@@ -1369,7 +1383,6 @@ void SweepRobot_ManulResetBtnProc(void)
 
         SweepRobot_ManulTestDataReset();
         SweepRobot_ManulTestGuiReset();
-        SweepRobot_ManulTest_CtrlBtnStateArrayReset();
 
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
     }

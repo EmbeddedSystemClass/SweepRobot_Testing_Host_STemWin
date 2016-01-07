@@ -8,6 +8,10 @@
 **********************************************************************
 */
 
+extern GUI_CONST_STORAGE GUI_BITMAP _bmConfirmCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
+                
+
 #define IS_TESTSEL_BUTTON_ID(id)   (  (id == ID_TESTSEL_BUTTON_WHEEL)       ||\
                                       (id == ID_TESTSEL_BUTTON_BRUSH)       ||\
                                       (id == ID_TESTSEL_BUTTON_FAN)         ||\
@@ -39,7 +43,7 @@
 **********************************************************************
 */
 
-static u8 gSwrbTest_TaskSelState[SWRB_TEST_TASK_NUM] = { 0 };
+static u8 aSwrbTest_TaskLastState[SWRB_TEST_TASK_NUM] = { 0 };
 
 /*********************************************************************
 *
@@ -110,8 +114,8 @@ static void Button_CancelResetCheckBoxStateProc(void)
     u8 i;
 
     for(i=0;i<=SWRB_TEST_TASK_NUM;i++){
-        Checkbox_Set_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL,gSwrbTest_TaskSelState[i]);
-        if(gSwrbTest_TaskSelState[i] == 1){
+        Checkbox_Set_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL,aSwrbTest_TaskLastState[i]);
+        if(aSwrbTest_TaskLastState[i] == 1){
             Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_WHEEL+i, GUI_LIGHTBLUE);
         }else{
             Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_WHEEL+i, GUI_LIGHTGRAY);
@@ -160,7 +164,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "SelNone", ID_TESTSEL_BUTTON_SELNONE, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Cancel", ID_TESTSEL_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "SnSet", ID_TESTSEL_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TestSel", ID_TESTSEL_BUTTON_TESTSELSET, 100, 420, 100, 60, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "TestSel", ID_TESTSEL_BUTTON_TESTSEL, 100, 420, 100, 60, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Rsrv2", ID_TESTSEL_BUTTON_RESERVE1, 200, 420, 100, 60, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Rsrv3", ID_TESTSEL_BUTTON_RESERVE2, 300, 420, 100, 60, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Rsrv4", ID_TESTSEL_BUTTON_RESERVE3, 400, 420, 100, 60, 0, 0x0, 0 },
@@ -198,9 +202,21 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
         }
     }
-
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TESTSEL_BUTTON_FRONT_IFRD);
-    WM_EnableWindow(hItem);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CONFIRM, "");
+    BUTTON_DispConfirmCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_CONFIRM, 18, 43);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CANCEL, "");
+    BUTTON_DispCancelCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_CANCEL, 18, 43);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_SNSET, "");
+    BUTTON_DispSerialNumCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_SNSET, 14, 18);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_TIMESET, "");
+    BUTTON_DispTimeCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_TIMESET, 26, 18);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_TESTSEL, "");
+    BUTTON_DispTestSelCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_TESTSEL, 14, 18);
 
     WM_HideWin(pMsg->hWin);
     break;
@@ -260,13 +276,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
           case WM_NOTIFICATION_CLICKED:
             break;
           case WM_NOTIFICATION_RELEASED:
-            hItem = WM_GetDialogItem(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+            Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
             gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
             WM_HideWin(pMsg->hWin);
-            WM_ShowWin(hWin_SWRB_SNSETTING);
+            WM_ShowWin(hWin_SWRB_SNSET);
             break;
           }
           break;
@@ -275,17 +288,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
           case WM_NOTIFICATION_CLICKED:
             break;
           case WM_NOTIFICATION_RELEASED:
-            hItem = WM_GetDialogItem(hWin_SWRB_TIMESETTING, ID_TIMESET_BUTTON_TIMESET);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_BLACK);
-            BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_BLACK);
-            BUTTON_SetTextColor(hItem, BUTTON_CI_UNPRESSED, GUI_WHITE);
+            Button_Set_BkColor(hWin_SWRB_TIMESET, ID_TIMESET_BUTTON_TIMESET, GUI_LIGHTRED);
             gSwrbTestSetState = SWRB_TEST_SET_STATE_TIME;
             WM_HideWin(pMsg->hWin);
-            WM_ShowWin(hWin_SWRB_TIMESETTING);
+            WM_ShowWin(hWin_SWRB_TIMESET);
             break;
           }
           break;
-        case ID_TESTSEL_BUTTON_TESTSELSET: // Notifications sent by 'btnTestSelSet'
+        case ID_TESTSEL_BUTTON_TESTSEL: // Notifications sent by 'btnTestSelSet'
           switch(NCode) {
           case WM_NOTIFICATION_CLICKED:
             break;
@@ -346,12 +356,12 @@ WM_HWIN CreateTestSelSettingDLG(void)
   return hWin;
 }
 
-void SWRB_TestSelLastCheckBoxStateSave(void)
+void SWRB_TestTaskCheckBoxLastStateSave(void)
 {
     u8 i;
 
     for(i=0;i<SWRB_TEST_TASK_NUM;i++){
-        gSwrbTest_TaskSelState[i] = Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i);
+        aSwrbTest_TaskLastState[i] = Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i);
     }
 }
 

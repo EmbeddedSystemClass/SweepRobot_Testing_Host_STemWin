@@ -57,19 +57,11 @@ static void SweepRobot_RGBLEDManulTestSingleProc(int *ledState, enum SWRB_MANUL_
 {
     if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
         if(*ledState){
-            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
-                                                                "1");
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                 gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
                                                                 gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
                                                                 okColor);
         }else{
-            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
-                                                                "0");
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                 gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
                                                                 gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\

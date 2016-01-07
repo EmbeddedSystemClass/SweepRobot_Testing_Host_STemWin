@@ -5,30 +5,10 @@ static GUI_CONST_STORAGE GUI_COLOR _aColorsCHNText[] = {
   0xFFFFFF, 0x000000,
 };
 
-static GUI_CONST_STORAGE GUI_COLOR _aColorsCHNTextRvrs[] = {
-  0x000000, 0xFFFFFF, 
-};
-
-static GUI_CONST_STORAGE GUI_COLOR _aColorsCHNTextBlue[] = {
-  0xFF0000, 0x000000,
-};
-
 static GUI_CONST_STORAGE GUI_LOGPALETTE _PalCHNText = {
   2,	/* number of entries */
   1, 	/* No transparency */
   &_aColorsCHNText[0]
-};
-
-static GUI_CONST_STORAGE GUI_LOGPALETTE _PalCHNTextRvrs = {
-  2,	/* number of entries */
-  1, 	/* No transparency */
-  &_aColorsCHNTextRvrs[0]
-};
-
-static GUI_CONST_STORAGE GUI_LOGPALETTE _PalCHNTextBlue = {
-  2,	/* number of entries */
-  1, 	/* No transparency */
-  &_aColorsCHNTextBlue[0]
 };
 
 static GUI_CONST_STORAGE unsigned char acSWRBTestTitle48[] = {        //\u626b\u5730\u673a\u5668\u4eba\u6d4b\u8bd5\u7cfb\u7edf
@@ -88,7 +68,7 @@ GUI_CONST_STORAGE GUI_BITMAP _bmSWRBTestTitleCHN48 = {
   54,                   /* BytesPerLine */
   1,                    /* BitsPerPixel */
   acSWRBTestTitle48,    /* Pointer to picture data (indices) */
-  &_PalCHNTextBlue      /* Pointer to palette */
+  &_PalCHNText          /* Pointer to palette */
 };
 
 static GUI_CONST_STORAGE unsigned char acSWRBTestTitle32[] = {
@@ -133,7 +113,7 @@ GUI_CONST_STORAGE GUI_BITMAP _bmSWRBTestTitleCHN32 = {
   36,                   /* BytesPerLine */
   1,                    /* BitsPerPixel */
   acSWRBTestTitle32,    /* Pointer to picture data (indices) */
-  &_PalCHNTextBlue      /* Pointer to palette */
+  &_PalCHNText          /* Pointer to palette */
 };
 
 static GUI_CONST_STORAGE unsigned char acPCBTestStr[] = { /* code PCB Test */

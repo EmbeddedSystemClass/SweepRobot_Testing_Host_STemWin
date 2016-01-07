@@ -29,7 +29,7 @@
 **********************************************************************
 */
 
-#define SWRB_MANUL_LISTVIEW_ROW_NUM   16
+#define SWRB_MANUL_LISTVIEW_ROW_NUM   17
 
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTestNameCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmLeftCHN;
@@ -62,9 +62,10 @@ static const char *aListview_RowInitText[][10] = {
     {"UNIWHEEL","0"},
     {"KEY","0"},
     {"IRDA","0","0","","0","0","0"},
-    {"BUZZER","0"},
-    {"RGB_LED","0","0","0"},
+    {"BUZZER","OFF"},
+    {"RGB_LED","R","G","B"},
     {"CHARGE","0","0","0"},
+    {"PWRSTATION","LL","LS","M","RS","RL","LB","RB","PWR"},
     {"INT_VREF","0"},
     {"SNUM","0","0","0","0"},
 };
@@ -156,7 +157,7 @@ static void Listview_Init(WM_HWIN hItem)
 static void SWRB_MANUL_PAINT_Proc(void)
 {
     GUI_SetColor(GUI_GRAY);
-//    GUI_DrawRect(669, 410, 675, 420);
+    GUI_DrawRect(669, 410, 675, 420);
 }
 
 /*********************************************************************

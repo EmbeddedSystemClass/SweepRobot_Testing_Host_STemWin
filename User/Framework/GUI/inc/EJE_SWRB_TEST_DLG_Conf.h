@@ -513,7 +513,7 @@
         ID_TIMESET_BUTTON_CANCEL,
         ID_TIMESET_BUTTON_SNSET,
         ID_TIMESET_BUTTON_TIMESET,
-        ID_TIMESET_BUTTON_TESTSELSET,
+        ID_TIMESET_BUTTON_TESTSELECT,
         ID_TIMESET_BUTTON_RESERVE2,
         ID_TIMESET_BUTTON_RESERVE3,
         ID_TIMESET_BUTTON_RESERVE4,
@@ -738,7 +738,7 @@
         ID_TESTSEL_BUTTON_CANCEL,
         ID_TESTSEL_BUTTON_SNSET,
         ID_TESTSEL_BUTTON_TIMESET,
-        ID_TESTSEL_BUTTON_TESTSELSET,
+        ID_TESTSEL_BUTTON_TESTSEL,
         ID_TESTSEL_BUTTON_RESERVE1,
         ID_TESTSEL_BUTTON_RESERVE2,
         ID_TESTSEL_BUTTON_RESERVE3,
@@ -912,11 +912,11 @@
 #endif
 
 #if __EJE_SWRB_TEST_SNSETTING_DLG
-    extern WM_HWIN hWin_SWRB_SNSETTING;
+    extern WM_HWIN hWin_SWRB_SNSET;
 #endif
 
 #if __EJE_SWRB_TEST_TIMESETTING_DLG
-    extern  WM_HWIN hWin_SWRB_TIMESETTING;
+    extern  WM_HWIN hWin_SWRB_TIMESET;
 #endif
 
 #if __EJE_SWRB_TEST_LOGIN_DLG
@@ -970,6 +970,7 @@ void BUTTON_DispResetCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispCancelCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispSerialNumCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispTimeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispTestSelCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispOKCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispErrorCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispReTestCHNStr(WM_HWIN hWin, int buttonId, int x, int y);

@@ -52,7 +52,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "Reset", ID_TIMESET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Cancel", ID_TIMESET_BUTTON_CANCEL, 700, 360, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SNSet", ID_TIMESET_BUTTON_SNSET, 0, 420, 100, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "TestSel", ID_TIMESET_BUTTON_TESTSELSET, 100, 420, 100, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "TestSel", ID_TIMESET_BUTTON_TESTSELECT, 100, 420, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Rsrv2", ID_TIMESET_BUTTON_RESERVE2, 200, 420, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Rsrv3", ID_TIMESET_BUTTON_RESERVE3, 300, 420, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Rsrv4", ID_TIMESET_BUTTON_RESERVE4, 400, 420, 100, 60, 0, 0x0, 0 },
@@ -130,19 +130,15 @@ static void Button_CancelProc(WM_HWIN hWin)
 
 static void Button_SNSetProc(WM_HWIN hWin)
 {
-    Button_Set_BkColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_BLACK);
-    Button_Set_TextColor(hWin_SWRB_SNSETTING, ID_SNSET_BUTTON_SNSET, GUI_WHITE);
-
+    Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
     gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
     WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_SNSETTING);
+    WM_ShowWin(hWin_SWRB_SNSET);
 }
 
 static void Button_TestSelSetProc(WM_HWIN hWin)
 {
-    Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSELSET, GUI_BLACK);
-    Button_Set_TextColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSELSET, GUI_WHITE);
-
+    Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSEL, GUI_LIGHTRED);
     gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_TESTSEL);
@@ -307,6 +303,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             BUTTON_DispCancelCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_CANCEL, 18, 43);
             BUTTON_DispSerialNumCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_SNSET, 14, 18);
             BUTTON_DispTimeCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_TIMESET, 26, 18);
+            BUTTON_DispTestSelCHNStr(pMsg->hWin, ID_TIMESET_BUTTON_TESTSELECT, 14, 18);
             //
             // Initialization of 'lwYear'
             //
@@ -405,7 +402,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                     }
                     break;
-                case ID_TIMESET_BUTTON_TESTSELSET:
+                case ID_TIMESET_BUTTON_TESTSELECT:
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
@@ -494,7 +491,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 **********************************************************************
 */
 
-WM_HWIN hWin_SWRB_TIMESETTING;
+WM_HWIN hWin_SWRB_TIMESET;
 
 /*********************************************************************
 *

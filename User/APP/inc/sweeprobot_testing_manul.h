@@ -13,6 +13,7 @@ enum SWRB_MANUL_TEST_DATA_SNUM_POS{
 
 extern u8 gSwrbManulTestListviewDispNameCoord[][2];
 extern u8 gSwrbManulTestListviewDispNameFrontIFRDCoord[][2];
+extern u8 gSwrbManulTestListviewDispNamePowerStationCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2];
