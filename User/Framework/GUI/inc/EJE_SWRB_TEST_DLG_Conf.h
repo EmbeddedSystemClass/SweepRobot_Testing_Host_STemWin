@@ -1003,6 +1003,7 @@ void Listview_Set_Text_Color(WM_HWIN hWin, int id, GUI_COLOR color);
 void Listview_Set_Item_BkColor(WM_HWIN hWin, int id, int column, int row, GUI_COLOR color);
 void Listview_Set_Item_BkColor_withCoord(WM_HWIN hWin, int id, u8 aCoord[][2],enum SWRB_MANUL_TEST_DATA_POS pos, GUI_COLOR color);
 void ListWheel_AddNumString(WM_HWIN hItem, int startStringNum, int endStringNum);
+void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id);
 void Multiedit_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s);

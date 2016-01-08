@@ -52,7 +52,6 @@ static RTC_DateTypeDef rtcDate;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-//    { FRAMEWIN_CreateIndirect, "SettingDLG", ID_SNSET_FRAMEWIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { WINDOW_CreateIndirect, "TEST SETTING", ID_SNSET_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Set Serial Number", ID_SNSET_TEXT_0, 20, 10, 680, 50, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Confirm", ID_SNSET_BUTTON_CONFIRM, 700, 0, 100, 120, 0, 0x0, 0 },
@@ -91,7 +90,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 static void ListWheel_ResetToLastPos(void);
 static void ListWheel_ResetToZero(void);
 static void ListWheel_TestDataFilePathGet(char *dest_str);
-static void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id, char *strPath);
 
 static void Button_Init(WM_HWIN hItem)
 {
@@ -103,18 +101,10 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(void)
 {
-    char *str;
-
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    str = mymalloc(SRAMIN, sizeof(char)*40);
-    *str = 0;
-    ListWheel_TestDataFilePathGet(str);
-    ListWheel_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET, str);
-    ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN, str);
-    
-    myfree(SRAMIN, str);
+    ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
 
     WM_HideWin(hWin_SWRB_SNSET);
     WM_ShowWin(hWin_SWRB_START);
@@ -123,15 +113,7 @@ static void Button_ConfirmProc(void)
 
 static void Button_CheckProc(void)
 {
-    char *str;
-
-    str = mymalloc(SRAMIN, sizeof(char)*40);
-    *str = 0;
-    ListWheel_TestDataFilePathGet(str);
-    ListWheel_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET, str);
-    ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN, str);
-    
-    myfree(SRAMIN, str);
+    ListWheel_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET);
 }
 
 static void Button_ResetProc(void)
@@ -151,14 +133,14 @@ static void Button_CancelProc()
 
 static void ListWheel_Init(WM_HWIN hItem)
 {
-    LISTWHEEL_SetFont(hItem, GUI_FONT_32_ASCII);
+    LISTWHEEL_SetFont(hItem, GUI_FONT_32B_ASCII);
     LISTWHEEL_SetDeceleration(hItem, 10);
     LISTWHEEL_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     LISTWHEEL_SetSnapPosition(hItem, 115);
 //    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_SEL, GUI_LIGHTRED);
 //    LISTWHEEL_SetBkColor(hItem, LISTWHEEL_CI_UNSEL, GUI_BLACK);
-//    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_SEL, GUI_WHITE);
-//    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_UNSEL, GUI_GRAY);
+    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_SEL, GUI_RED);
+    LISTWHEEL_SetTextColor(hItem, LISTWHEEL_CI_UNSEL, GUI_LIGHTGRAY);
 }
 
 static void ListWheel_SelChangeProc(WM_HWIN hWin, int lwId, int editId)
@@ -341,14 +323,6 @@ static void ListWheel_TestDataFilePathGet(char *dest_str)
     myfree(SRAMIN, swrbTestDataFilePath);
 }
 
-static void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id, char *strPath)
-{
-    WM_HWIN hItem;
-    
-    hItem = WM_GetDialogItem(hWin, id);
-    EDIT_SetText(hItem, strPath);
-}
-
 /*********************************************************************
 *
 *       _cbDialog
@@ -362,14 +336,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
             //
-            // Initialization of 'SettingDLG'
-            //
-            hItem = pMsg->hWin;
-//            FRAMEWIN_SetTextColor(hItem, 0x00000000);
-            //
             // Initialization of 'TEXT'
             //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_TEXT_0);
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_TEXT_TITLE);
             TEXT_SetFont(hItem, &GUI_Font32_ASCII);
 //            TEXT_SetTextColor(hItem, GUI_WHITE);
             //
@@ -436,7 +405,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             WM_HideWin(pMsg->hWin);
             break;
         case WM_PAINT:
-//            ListWheel_SnapLineDraw(GUI_RED);
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -611,14 +579,14 @@ WM_HWIN CreateSNSettingDLG(void) {
 }
 
 
-void SWRB_ListWheelLastItemPosGet(WM_HWIN hWin)
+void SWRB_ListWheelLastItemPosGet(void)
 {
     WM_HWIN hItem;
     int i;
     u8 j;
 
     for(i=ID_SNSET_LISTWHEEL_YEAR,j=0;i<=ID_SNSET_LISTWHEEL_SN3;i++,j++){
-        hItem = WM_GetDialogItem(hWin, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSET, i);
         lastLwIndex[j] = LISTWHEEL_GetPos(hItem);
     }
 }
@@ -786,6 +754,21 @@ void SWRB_TestDUTWriteSN(void)
     printf("SNW->SN=%d\r\n", tempSN);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
+    myfree(SRAMIN, str);
+}
+
+void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id)
+{
+    WM_HWIN hItem;
+    char *str;
+    
+    str = mymalloc(SRAMIN, sizeof(char)*50);
+    *str = 0;
+    ListWheel_TestDataFilePathGet(str);
+    
+    hItem = WM_GetDialogItem(hWin, id);
+    EDIT_SetText(hItem, str);
+    
     myfree(SRAMIN, str);
 }
 

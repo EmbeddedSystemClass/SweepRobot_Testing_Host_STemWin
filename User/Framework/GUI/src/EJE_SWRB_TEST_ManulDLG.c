@@ -171,31 +171,23 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
-    //
-    // Initialization of 'lstviewSWRBTest'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_LISTVIEW_MAIN);
     Listview_Init(hItem);
-    //
-    // Initialization of 'textTitle'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_TEXT_TITLE);
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetTextColor(hItem, 0x00CB8872);
     TEXT_SetText(hItem, "SWRB Manul Test");
     TEXT_SetFont(hItem, GUI_FONT_32B_ASCII);
-    //
-    // Initialization of 'editDate'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_EDIT_DATE);
     EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
     EDIT_SetText(hItem, "");
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_BLUE);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
-    //
-    // Initialization of 'editVolt'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_EDIT_VOLT);
     EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
     EDIT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
@@ -203,46 +195,37 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     EDIT_SetFloatMode(hItem, 0.0, 0, 20, 2, GUI_EDIT_NORMAL|GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     EDIT_SetFloatValue(hItem, 0);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
-    //
-    // Initialization of 'textVolt'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_TEXT_VOLT);
     TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
     TEXT_SetText(hItem, "V");
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
-    //
-    // Initialization of 'btnStart'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_START);
     Button_Init(hItem);
     BUTTON_DispStartCHNStr(pMsg->hWin, ID_MANUL_BUTTON_START, 18, 43);
     Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
-    //
-    // Initialization of 'btnSet'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_SET);
     Button_Init(hItem);
-    BUTTON_DispManulModeCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO)
+        BUTTON_DispAutoModeCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+    else{
+        BUTTON_DispManulModeCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+    }
     Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
-//    BUTTON_DispSetCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
-    //
-    // Initialization of 'btnReset'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_RESET);
     Button_Init(hItem);
     BUTTON_DispResetCHNStr(pMsg->hWin, ID_MANUL_BUTTON_RESET, 18, 43);
     Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_RESET, GUI_LIGHTRED);
     WM_DisableWindow(hItem);
-    //
-    // Initialization of 'btnExit'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_EXIT);
     Button_Init(hItem);
     BUTTON_DispExitCHNStr(pMsg->hWin, ID_MANUL_BUTTON_EXIT, 18, 43);
     Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_EXIT, GUI_LIGHTGREEN);
-    //
-    // Initialization of 'btnIndicate'
-    //
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_INDICATE);
     Button_Init(hItem);
     BUTTON_SetText(hItem, "");

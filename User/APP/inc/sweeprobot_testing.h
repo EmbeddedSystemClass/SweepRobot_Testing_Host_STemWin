@@ -369,12 +369,13 @@ void SweepRobot_StartDlgSLAMBtnClickProc(void);
 void SweepRobot_StartDlgStepMotorBtnClickProc(void);
 
 void SweepRobot_PCBTestStartProc(void);
-void SweepRobot_PCBTestLoginProc(void);
+//void SweepRobot_PCBTestLoginProc(void);
 void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopProc(void);
 void SweepRobot_PCBTestExitProc(void);
 
 void SweepRobot_ManulStartBtnProc(void);
+void SweepRobot_ManulSetEnterManulModeProc(void);
 void SweepRobot_ManulSetBtnProc(void);
 void SweepRobot_ManulResetBtnProc(void);
 void SweepRobot_ManulExitBtnProc(void);

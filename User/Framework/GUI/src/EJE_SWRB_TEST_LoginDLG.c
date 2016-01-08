@@ -49,7 +49,8 @@
 **********************************************************************
 */
 
-static char* gLoginPassWord = "123";
+static char* gSetDialogLoginPassWord = "123";
+static char* gManulTestEnterManulModePassWord = "123456";
 
 static char strPasswd[10] = { 0 };
 static u8 strPasswdLen = 0;
@@ -91,21 +92,32 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_OKProc(void)
 {
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
-        if(!(strcmp(strPasswd,gLoginPassWord))){
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        if(!(strcmp(strPasswd,gManulTestEnterManulModePassWord))){
+            SweepRobot_ManulSetEnterManulModeProc();
+            
+            FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
+            
+            WM_HideWin(hWin_SWRB_LOGIN);
+        }else{
+            FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
+        }
+    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
+        if(!(strcmp(strPasswd,gSetDialogLoginPassWord))){
 
-            gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+            gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
             
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 
-            Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
+//            Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
+            Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSEL, GUI_LIGHTRED);
 
-            SWRB_ListWheelLastItemPosGet(hWin_SWRB_SNSET);
+            SWRB_ListWheelLastItemPosGet();
             SWRB_TestTaskCheckBoxLastStateSave();
 
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
-            WM_ShowWin(hWin_SWRB_SNSET);
+            WM_ShowWin(hWin_SWRB_TESTSEL);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
@@ -114,10 +126,19 @@ static void Button_OKProc(void)
 
 static void Button_CancelProc(void)
 {
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+        
+        WM_HideWin(hWin_SWRB_LOGIN);
+    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
+        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
 
-    WM_HideWin(hWin_SWRB_LOGIN);
-    WM_ShowWin(hWin_SWRB_START);
+        WM_HideWin(hWin_SWRB_LOGIN);
+        WM_ShowWin(hWin_SWRB_START);
+    }
 }
 
 static void Button_DeleteProc(void)

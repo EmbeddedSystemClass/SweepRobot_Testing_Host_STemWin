@@ -58,14 +58,28 @@
 **********************************************************************
 */
 
+static const char *aSwrbPCBTestChkBoxInitText[][1] = {
+    {"WHEEL"},
+    {"BRUSH"},
+    {"FRN"},
+    {"IFRD"},
+    {"COLLISION"},
+    {"WHEEL FLOAT"},
+    {"ASH TRAY"},
+    {"UNIWHEEL"},
+    {"KEY"},
+    {"IRDA"},
+    {"BUZZER"},
+    {"RGB LED"},
+    {"CHARGE"},
+};
+
 /*********************************************************************
 *
 *       _aPCBTestMainDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aPCBTestMainDialogCreate[] = {
-//    { FRAMEWIN_CreateIndirect, "EJE_SweepRobot_test_System", ID_FRAMEWIN_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { WINDOW_CreateIndirect, "EJE_SWRB_TEST_SYSTEM", ID_PCBTEST_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-//    { MULTIPAGE_CreateIndirect, "Multipage_Main", ID_PCBTEST_MULTIPAGE_0, 0, 0, 800, 460, 0, 0x0, 0 },
     { MULTIEDIT_CreateIndirect, "Msg Multiedit",  ID_PCBTEST_MULTIEDIT_MAIN, 10, 77, 440, 330, 0, 0x0, 0 },
     { PROGBAR_CreateIndirect,   "Progbar",        ID_PCBTEST_PROGBAR_MAIN, 10, 442, 440, 20, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "START", ID_PCBTEST_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
@@ -88,7 +102,6 @@ static const GUI_WIDGET_CREATE_INFO _aPCBTestMainDialogCreate[] = {
     { CHECKBOX_CreateIndirect,  "cbxBuzzer",      ID_PCBTEST_CHECKBOX_BUZZER, 460, 367, 210, 25, 0, 0x0, 0 },
     { CHECKBOX_CreateIndirect,  "cbxRgbLed",      ID_PCBTEST_CHECKBOX_RGB_LED, 460, 402, 210, 25, 0, 0x0, 0 },
     { CHECKBOX_CreateIndirect,  "cbxCharge",      ID_PCBTEST_CHECKBOX_CHARGE, 460, 437, 210, 25, 0, 0x0, 0 },
-//    { GRAPH_CreateIndirect, "Graph", ID_PCBTEST_GRAPH_0, 10, 310, 440, 100, 0, 0x0, 0 },
     { EDIT_CreateIndirect, "EditU1", ID_PCBTEST_EDIT_U1, 10, 17, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditU2", ID_PCBTEST_EDIT_U2, 65, 17, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditU3", ID_PCBTEST_EDIT_U3, 120, 17, 55, 30, 0, 0x64, 0 },
@@ -165,41 +178,32 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
 
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
-            //
-            // Initialization of 'START'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_START);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
             BUTTON_DispStartCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_START, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTBLUE);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTBLUE);
-            //
-            // Initialization of 'SET'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_SET);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
             BUTTON_DispSetCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_SET, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
-            //
-            // Initialization of 'SET SN'
-            //
+            SWRB_WM_DisableWindow(pMsg->hWin, ID_PCBTEST_BUTTON_SET);
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_SET_SN);
             Button_Init(hItem);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
             WM_HideWin(hItem);
-            //
-            // Initialization of 'SET TIME'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_SET_TIME);
             Button_Init(hItem);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTCYAN);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTCYAN);
             WM_HideWin(hItem);
-            //
-            // Initialization of 'STOP'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_STOP);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
@@ -207,18 +211,14 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTRED);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTRED);
             WM_DisableWindow(hItem);
-            //
-            // Initialization of 'EXIT'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_EXIT);
             Button_Init(hItem);
             BUTTON_SetText(hItem, " ");
             BUTTON_DispExitCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_EXIT, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
-            //
-            // Initialization of 'Indicate'
-            //
+            
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_INDICATE);
             WM_BringToTop(hItem);
             BUTTON_SetSkinClassic(hItem);
@@ -226,9 +226,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             Button_Set_BkColor(hWin_SWRB_PCBTEST,ID_PCBTEST_BUTTON_INDICATE, GUI_LIGHTGRAY);
             Button_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE, " ");
             BUTTON_SetFocussable(hItem, 0);
-            //
-            // Initialization of 'Msg Multiedit'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_MULTIEDIT_MAIN);
             MULTIEDIT_SetText(hItem, "Waiting for Start");
             MULTIEDIT_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -236,111 +234,31 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             MULTIEDIT_SetWrapWord(hItem);
             MULTIEDIT_SetBufferSize(hItem, 2048);
             WM_DisableWindow(hItem);
-            //
-            // Initialization of 'cbxWheel Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_WHEEL);
-            CHECKBOX_SetText(hItem, "WHEEL");
+            
             CHECKBOX_SetDefaultSkinClassic();
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxSBrush Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_BRUSH);
-            CHECKBOX_SetText(hItem, "BRUSH");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxFan Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_FAN);
-            CHECKBOX_SetText(hItem, "FAN");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxIFRD Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_IFRD);
-            CHECKBOX_SetText(hItem, "IFRD");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxCollision Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_COLLISION);
-            CHECKBOX_SetText(hItem, "COLLISION");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxWheelFloat Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_WHEEL_FLOAT);
-            CHECKBOX_SetText(hItem, "WHEEL FLOAT");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxAshTray Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_ASH_TRAY);
-            CHECKBOX_SetText(hItem, "ASH TRAY");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxUniWheel Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_UNIWHEEL);
-            CHECKBOX_SetText(hItem, "UNIWHEEL");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxKey Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_KEY);
-            CHECKBOX_SetText(hItem, "KEY");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxIRDA Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_IRDA);
-            CHECKBOX_SetText(hItem, "IRDA");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxBuzzer Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_BUZZER);
-            CHECKBOX_SetText(hItem, "BUZZER");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxRgbLED Test'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_RGB_LED);
-            CHECKBOX_SetText(hItem, "RGB LED");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'cbxCharge'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_CHECKBOX_CHARGE);
-            CHECKBOX_SetText(hItem, "CHARGE");
-            Checkbox_Init(hItem);
-            //
-            // Initialization of 'Edit'
-            //
+            for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
+                hItem = WM_GetDialogItem(pMsg->hWin, i);
+                Checkbox_Init(hItem);
+                CHECKBOX_SetText(hItem, aSwrbPCBTestChkBoxInitText[i][0]);
+            }
+
             for(i=ID_PCBTEST_EDIT_U1;i<=ID_PCBTEST_EDIT_D8;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
                 EDIT_SetFont(hItem, &GUI_Font20_ASCII);
                 EDIT_SetDecMode(hItem, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
                 EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             }
-            //
-            // Initialization of 'EditDate'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_EDIT_DATE);
             EDIT_SetFont(hItem, &GUI_Font20_ASCII);
             EDIT_SetFocussable(hItem, DISABLE);
             EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            //
-            // Initialization of 'EditSN'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_EDIT_SN);
             EDIT_SetFont(hItem, &GUI_Font20_ASCII);
             EDIT_SetFocussable(hItem, DISABLE);
             EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            //
-            // Initialization of 'PROGBAR'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_PROGBAR_MAIN);
             PROGBAR_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
