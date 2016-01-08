@@ -858,14 +858,10 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     }else{
         SWRB_TestFinishProc();
     }
-
-#ifdef _TASK_WAIT_WHEN_ERROR
-
-#else
+    
     OS_ENTER_CRITICAL();
     OSTaskSuspend(taskPrio);
     OS_EXIT_CRITICAL();
-#endif
 }
 
 static void SWRB_PCBTestWarningDlgHide(void)

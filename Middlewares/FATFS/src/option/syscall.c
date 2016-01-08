@@ -122,6 +122,7 @@ void ff_rel_grant (
 
 
 #if _USE_LFN == 3	/* LFN with a working buffer on the heap */
+#include "malloc.h"
 /*------------------------------------------------------------------------*/
 /* Allocate a memory block                                                */
 /*------------------------------------------------------------------------*/
@@ -132,7 +133,8 @@ void* ff_memalloc (	/* Returns pointer to the allocated memory block */
 	UINT msize		/* Number of bytes to allocate */
 )
 {
-	return malloc(msize);	/* Allocate a new memory block with POSIX API */
+//	return malloc(msize);	/* Allocate a new memory block with POSIX API */
+    return mymalloc(SRAMIN, msize);
 }
 
 

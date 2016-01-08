@@ -88,10 +88,10 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 **********************************************************************
 */
 
-static void ListWheel_ResetToLastPos(WM_HWIN hWin);
-static void ListWheel_ResetToZero(WM_HWIN hWin);
-static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str);
-
+static void ListWheel_ResetToLastPos(void);
+static void ListWheel_ResetToZero(void);
+static void ListWheel_TestDataFilePathGet(char *dest_str);
+static void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id, char *strPath);
 
 static void Button_Init(WM_HWIN hItem)
 {
@@ -101,55 +101,53 @@ static void Button_Init(WM_HWIN hItem)
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
 
-static void Button_ConfirmProc(WM_HWIN hWin)
+static void Button_ConfirmProc(void)
 {
     char *str;
-    
+
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    ListWheel_TestDataFilePathGet(hWin,str);
+    str = mymalloc(SRAMIN, sizeof(char)*40);
+    *str = 0;
+    ListWheel_TestDataFilePathGet(str);
+    ListWheel_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET, str);
+    ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN, str);
+    
+    myfree(SRAMIN, str);
 
-    WM_HideWin(hWin);
+    WM_HideWin(hWin_SWRB_SNSET);
     WM_ShowWin(hWin_SWRB_START);
     WM_BringToTop(hWin_SWRB_START);
 }
 
-static void Button_CheckProc(WM_HWIN hWin)
+static void Button_CheckProc(void)
 {
     char *str;
 
-    ListWheel_TestDataFilePathGet(hWin, str);
+    str = mymalloc(SRAMIN, sizeof(char)*40);
+    *str = 0;
+    ListWheel_TestDataFilePathGet(str);
+    ListWheel_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET, str);
+    ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN, str);
+    
+    myfree(SRAMIN, str);
 }
 
-static void Button_ResetProc(WM_HWIN hWin)
+static void Button_ResetProc(void)
 {
-    ListWheel_ResetToZero(hWin);
+    ListWheel_ResetToZero();
 }
 
-static void Button_CancelProc(WM_HWIN hWin)
+static void Button_CancelProc()
 {
     gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-    
-    ListWheel_ResetToLastPos(hWin);
-    WM_HideWin(hWin);
+
+    ListWheel_ResetToLastPos();
+    WM_HideWin(hWin_SWRB_SNSET);
     WM_ShowWin(hWin_SWRB_START);
 }
-
-//static void ListWheel_SnapLineDraw(GUI_COLOR color)
-//{
-//    uint8_t prevPenSize;
-//    GUI_COLOR prevColor;
-
-//    prevPenSize = GUI_GetPenSize();
-//    GUI_SetPenSize(10);
-//    prevColor = GUI_GetColor();
-//    GUI_SetColor(color);
-//    GUI_DrawLine(20, 160, 570, 190);
-//    GUI_SetPenSize(prevPenSize);
-//    GUI_SetColor(prevColor);
-//}
 
 static void ListWheel_Init(WM_HWIN hItem)
 {
@@ -190,35 +188,34 @@ static void ListWheel_GetText(WM_HWIN hWin,int listwheelId, char *str)
     lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
     *lwBuf = 0;
     LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-//    mymemcpy(str,lwBuf, sizeof(*lwBuf));
     sprintf(str, "%s", lwBuf);
     myfree(SRAMIN, lwBuf);
 }
 
-static void ListWheel_ResetToLastPos(WM_HWIN hWin)
+static void ListWheel_ResetToLastPos(void)
 {
     WM_HWIN hItem;
     int i;
     u8 j;
 
     for(i=ID_SNSET_LISTWHEEL_YEAR,j=0;i<=ID_SNSET_LISTWHEEL_SN3;i++,j++){
-        hItem = WM_GetDialogItem(hWin, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSET, i);
         LISTWHEEL_SetPos(hItem, lastLwIndex[j]);
     }
 }
 
-static void ListWheel_ResetToZero(WM_HWIN hWin)
+static void ListWheel_ResetToZero(void)
 {
     WM_HWIN hItem;
     int i;
 
     for(i=ID_SNSET_LISTWHEEL_0;i<=ID_SNSET_LISTWHEEL_5;i++){
-        hItem = WM_GetDialogItem(hWin, i);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSET, i);
         LISTWHEEL_MoveToPos(hItem, 0);
     }
 }
 
-static void SerialNum_Comb(WM_HWIN hWin, int id, char *dest_SNumStr)
+static void ListWheel_TextGet(WM_HWIN hWin, int id, char *dest_str)
 {
     WM_HWIN hItem;
     int     lwItemIndex;
@@ -228,92 +225,128 @@ static void SerialNum_Comb(WM_HWIN hWin, int id, char *dest_SNumStr)
     lwItemIndex = LISTWHEEL_GetPos(hItem);
     lwBuf = mymalloc(SRAMIN, sizeof(char)*10);
     LISTWHEEL_GetItemText(hItem, lwItemIndex, lwBuf, 10);
-    dest_SNumStr = strcat(dest_SNumStr, lwBuf);
+    sprintf((char*)dest_str, "%s", lwBuf);
     myfree(SRAMIN, lwBuf);
 }
 
-static char* ListWheel_TextGet(WM_HWIN hWin, int id)
+static void ListWheel_TestDataFilePathGen(char *dest_str)
 {
-    WM_HWIN hItem;
-    int     lwItemIndex;
-    char    *str;
+    static char *strSNYear,*strSNMonth, *strSNDate;
     
-    return str;
+    strSNYear = mymalloc(SRAMIN, sizeof(char)*6);
+    *strSNYear = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, strSNYear);
+
+    strSNMonth = mymalloc(SRAMIN, sizeof(char)*4);
+    *strSNMonth = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, strSNMonth);
+
+    strSNDate = mymalloc(SRAMIN, sizeof(char)*4);
+    *strSNDate = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, strSNDate);
+    
+    sprintf(dest_str, "0:/%s%02d%02d", strSNYear, atoi(strSNMonth), atoi(strSNDate));
+    
+    myfree(SRAMIN, (void*)strSNYear);
+    myfree(SRAMIN, (void*)strSNMonth);
+    myfree(SRAMIN, (void*)strSNDate);
 }
 
-/* TODO: Add file path display function */
-void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id)
+static void ListWheel_TestDataFileGen(char *dest_str)
 {
-    
-}
-
-/* TODO: Improve path generation method */
-static void ListWheel_TestDataFilePathGet(WM_HWIN hWin, char *dest_str)
-{
-    WM_HWIN hItem;
-    FRESULT flErr;
-    char    *lwBuf;
     char *swrbTestDataFilePath;
-    OS_CPU_SR cpu_sr;
+    static char *strSN1, *strSN2, *strSN3;
+    
+    swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+    *swrbTestDataFilePath = 0;
+    ListWheel_TestDataFilePathGen(swrbTestDataFilePath);
+    
+    strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
+    *strSN1 = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, strSN1);
+
+    strSN2 = mymalloc(SRAMIN, sizeof(char)*3);
+    *strSN2 = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, strSN2);
+
+    strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
+    *strSN3 = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, strSN3);
+    
+    sprintf(dest_str, "%s/%s%s%s.txt", swrbTestDataFilePath, strSN1, strSN2, strSN3);
+    
+    myfree(SRAMIN, swrbTestDataFilePath);
+    myfree(SRAMIN, (void*)strSN1);
+    myfree(SRAMIN, (void*)strSN2);
+    myfree(SRAMIN, (void*)strSN3);
+}
+
+static void ListWheel_TestDataFileSerialNumberGen(char *dest_str)
+{
+    static char *strSNYear,*strSNMonth, *strSNDate;
+    static char *strSN1, *strSN2, *strSN3;
+    
+    strSNYear = mymalloc(SRAMIN, sizeof(char)*6);
+    *strSNYear = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, strSNYear);
+
+    strSNMonth = mymalloc(SRAMIN, sizeof(char)*4);
+    *strSNMonth = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, strSNMonth);
+
+    strSNDate = mymalloc(SRAMIN, sizeof(char)*4);
+    *strSNDate = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, strSNDate);
+    
+    strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
+    *strSN1 = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, strSN1);
+
+    strSN2 = mymalloc(SRAMIN, sizeof(char)*3);
+    *strSN2 = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, strSN2);
+
+    strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
+    *strSN3 = 0;
+    ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, strSN3);
+    
+    sprintf(dest_str, "SerialNumber: %s%02d%02d%s%s%s", strSNYear, atoi(strSNMonth), atoi(strSNDate), strSN1, strSN2, strSN3);
+    
+    myfree(SRAMIN, (void*)strSNYear);
+    myfree(SRAMIN, (void*)strSNMonth);
+    myfree(SRAMIN, (void*)strSNDate);
+    myfree(SRAMIN, (void*)strSN1);
+    myfree(SRAMIN, (void*)strSN2);
+    myfree(SRAMIN, (void*)strSN3);
+}
+
+static void ListWheel_TestDataFilePathGet(char *dest_str)
+{
+    FRESULT flErr;
+    static char *swrbTestDataFilePath;
 
     flErr = flErr;
-    
-    OS_ENTER_CRITICAL();
 
     swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
     *swrbTestDataFilePath = 0;
 
-#ifdef  _USE_IMPROVED_PATH_GEN
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
-        sprintf(swrbTestDataFilePath, "0:/PCBTest");
-        flErr = f_mkdir(swrbTestDataFilePath);
-    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
-        sprintf(swrbTestDataFilePath, "0:/RobotTest");
-        flErr = f_mkdir(swrbTestDataFilePath);
-    }
-    
-    
-#else
-    lwBuf = "0:/";
-    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
-
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_YEAR, swrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_MONTH, swrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_DATE, swrbTestDataFilePath);
+    ListWheel_TestDataFilePathGen(swrbTestDataFilePath);
 
     flErr = f_mkdir(swrbTestDataFilePath);
     
-    *swrbTestDataFilePath = 0;
-
-    lwBuf = "0:/";
-    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
-
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_YEAR, swrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_MONTH, swrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_DATE, swrbTestDataFilePath);
-
-    lwBuf = "/";
-    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
-
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN1, swrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN2, swrbTestDataFilePath);
-    SerialNum_Comb(hWin, ID_SNSET_LISTWHEEL_SN3, swrbTestDataFilePath);
-
-    lwBuf = ".txt";
-    swrbTestDataFilePath = strcat(swrbTestDataFilePath, lwBuf);
-
-    hItem = WM_GetDialogItem(hWin, ID_SNSET_EDIT_COMB_SET);
-    EDIT_SetText(hItem, swrbTestDataFilePath);
-
-    hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
-    EDIT_SetText(hItem, swrbTestDataFilePath);
-
+    ListWheel_TestDataFileGen(swrbTestDataFilePath);
+    
     sprintf(dest_str, "%s", swrbTestDataFilePath);
-#endif
 
     myfree(SRAMIN, swrbTestDataFilePath);
+}
 
-    OS_EXIT_CRITICAL();
+static void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id, char *strPath)
+{
+    WM_HWIN hItem;
+    
+    hItem = WM_GetDialogItem(hWin, id);
+    EDIT_SetText(hItem, strPath);
 }
 
 /*********************************************************************
@@ -414,7 +447,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            Button_ConfirmProc(pMsg->hWin);
+                            Button_ConfirmProc();
                             break;
                     }
                     break;
@@ -423,7 +456,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            Button_CheckProc(pMsg->hWin);
+                            Button_CheckProc();
                             break;
                     }
                     break;
@@ -432,7 +465,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            Button_ResetProc(pMsg->hWin);
+                            Button_ResetProc();
                             break;
                     }
                     break;
@@ -441,7 +474,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            Button_CancelProc(pMsg->hWin);
+                            Button_CancelProc();
                             break;
                     }
                     break;
@@ -677,7 +710,7 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     pathStr = mymalloc(SRAMIN, sizeof(char)*40);
     *pathStr = 0;
 
-    ListWheel_TestDataFilePathGet(hWin_SWRB_SNSET, pathStr);
+    ListWheel_TestDataFilePathGet(pathStr);
     flErr = f_open(file, pathStr, fileOpenMode);
     myfree(SRAMIN, pathStr);
     f_lseek(file, file->fsize);
@@ -695,30 +728,18 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 void SWRB_TestDataFileWriteSN(void)
 {
     char *swrbTestSerialNum;
-    char *cBuf;
 
     SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
 
     swrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
-    mymemset(swrbTestSerialNum, 0, sizeof(char)*50);
-
     *swrbTestSerialNum = 0;
 
-    cBuf = "\nSerialNumber:";
-
-    swrbTestSerialNum = strcat(swrbTestSerialNum, cBuf);
-
-    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, swrbTestSerialNum);
-    SerialNum_Comb(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, swrbTestSerialNum);
+    ListWheel_TestDataFileSerialNumberGen(swrbTestSerialNum);
 
     f_printf(file, "%s\r\n", swrbTestSerialNum);
 
     f_close(file);
-    
+
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, swrbTestSerialNum);
 
     myfree(SRAMIN, swrbTestSerialNum);
