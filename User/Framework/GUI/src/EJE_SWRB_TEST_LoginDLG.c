@@ -51,6 +51,7 @@
 
 static char* gSetDialogLoginPassWord = "123";
 static char* gManulTestEnterManulModePassWord = "123456";
+static const char * gSetDialogConfirmPassWord = "123456";
 
 static char strPasswd[10] = { 0 };
 static u8 strPasswdLen = 0;
@@ -92,20 +93,23 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_OKProc(void)
 {
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         if(!(strcmp(strPasswd,gManulTestEnterManulModePassWord))){
             SweepRobot_ManulSetEnterManulModeProc();
             
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
             
             WM_HideWin(hWin_SWRB_LOGIN);
+            WM_ShowWin(hWin_SWRB_MANUL);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
-    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
+    }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_NONE){
         if(!(strcmp(strPasswd,gSetDialogLoginPassWord))){
 
-            gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
+            gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_SET;
+            
+            gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_TESTSEL;
             
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 
@@ -121,23 +125,40 @@ static void Button_OKProc(void)
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
+    }else if ( (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET) && (gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME) ){
+        if(!(strcmp(strPasswd,gSetDialogConfirmPassWord))){
+            SWRB_TimeSettingsChangeConfirmProc();
+            
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_TIMESET);
+            WM_ShowWin(hWin_SWRB_START);
+        }else{
+            FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
+        }
     }
 }
 
 static void Button_CancelProc(void)
 {
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
         
         WM_HideWin(hWin_SWRB_LOGIN);
-    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
-        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        WM_ShowWin(hWin_SWRB_MANUL);
+        WM_BringToTop(hWin_SWRB_MANUL);
+    }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_NONE){
+        gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 
         WM_HideWin(hWin_SWRB_LOGIN);
         WM_ShowWin(hWin_SWRB_START);
+        WM_BringToTop(hWin_SWRB_START);
+    }else if ( (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET) && (gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME) ){
+        WM_HideWin(hWin_SWRB_LOGIN);
+        WM_ShowWin(hWin_SWRB_TIMESET);
+        WM_BringToTop(hWin_SWRB_TIMESET);
     }
 }
 

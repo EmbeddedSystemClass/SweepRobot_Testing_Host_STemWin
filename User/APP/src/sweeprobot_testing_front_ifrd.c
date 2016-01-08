@@ -135,7 +135,7 @@ static void SweepRobot_FrontIFRDTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].offValue = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
@@ -169,7 +169,7 @@ static void SweepRobot_FrontIFRDTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].onValue = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
@@ -217,7 +217,7 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
 
     SWRB_TestDataSaveToFile(FrontIFRD_TestDataSave);
     
-    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+//    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
 
     OSTaskResume(SWRB_IFRD_TEST_TASK_PRIO);
     OSTaskSuspend(OS_PRIO_SELF);

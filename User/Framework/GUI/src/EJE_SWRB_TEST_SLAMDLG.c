@@ -183,7 +183,7 @@ static void SLAM_ButtonExitClickedProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
-        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 
         WM_HideWin(hWin_SWRB_SLAM);
         WM_ShowWin(hWin_SWRB_START);

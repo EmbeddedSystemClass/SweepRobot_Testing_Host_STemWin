@@ -551,9 +551,9 @@ static void Edit_Update(WM_HWIN hWin, int editStartId, int editStopId, int lwId)
 
 void SWRB_SET_EditTextUpdate(void)
 {
-    if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
+    if(gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_SN){
         Edit_Update(hWin_SWRB_SNSET, ID_SNSET_EDIT_YEAR, ID_SNSET_EDIT_SN3, ID_SNSET_LISTWHEEL_YEAR);
-    }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
+    }else if(gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME){
         Edit_Update(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_YEAR, ID_TIMESET_EDIT_SEC, ID_TIMESET_LISTWHEEL_YEAR);
     }
 }
@@ -563,13 +563,13 @@ void SWRB_SET_ListwheelSnapPosUpdate(void)
     int i,j;
     WM_HWIN hItem;
 
-    if(gSwrbTestSetState == SWRB_TEST_SET_STATE_SN){
+    if(gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_SN){
         for(i=ID_SNSET_LISTWHEEL_YEAR;i<=ID_SNSET_LISTWHEEL_SN3;i++){
             hItem = WM_GetDialogItem(hWin_SWRB_SNSET, i);
             j = LISTWHEEL_GetPos(hItem);
             LISTWHEEL_SetSel(hItem, j);
         }
-    }else if(gSwrbTestSetState == SWRB_TEST_SET_STATE_TIME){
+    }else if(gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME){
         for(i=ID_TIMESET_LISTWHEEL_YEAR;i<=ID_TIMESET_LISTWHEEL_SEC;i++){
             hItem = WM_GetDialogItem(hWin_SWRB_TIMESET, i);
             j = LISTWHEEL_GetPos(hItem);

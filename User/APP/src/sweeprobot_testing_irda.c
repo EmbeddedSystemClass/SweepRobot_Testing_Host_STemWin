@@ -51,11 +51,11 @@ static void SweepRobot_IrDATestCodeArrayToNum(void)
             *str = 0;
             mymemcpy(str, aIrDATestRxData[i], sizeof(aIrDATestRxData[i]));
             IrDA[i].code = atoi(str);
-            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                 Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, str);
 //            Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
 //            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
-            }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\
                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][1],\
@@ -124,7 +124,7 @@ static void SweepRobot_IrDATestProc(void)
             if(IrDA[i].validCnt){
                 IrDA[i].validFlag = 1;
                 
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][1],\
@@ -153,7 +153,7 @@ static void SweepRobot_IrDATestProc(void)
         
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "IRDA OK\r\n";
             SWRB_TestDataFileWriteString(str);
             
@@ -253,9 +253,9 @@ static void SweepRobot_IrDATestOverTimeProc(void)
 
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
     
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_IrDAPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_IrDAManulTestOverTimeProc();
     }
 

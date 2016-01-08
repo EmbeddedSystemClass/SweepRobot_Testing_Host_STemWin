@@ -104,7 +104,7 @@ static void Button_DisableProc(void)
 
 static void Button_ExitProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
     
     SweepRobotTest_StepMotorEnStateSet(ENABLE);
     
@@ -310,9 +310,9 @@ WM_HWIN hWin_SWRB_STEPMOTOR;
 */
 /*********************************************************************
 *
-*       CreatewinStepMotor
+*       CreatewinStepMotorDLG
 */
-WM_HWIN CreatewinStepMotor(void) {
+WM_HWIN CreatewinStepMotorDLG(void) {
   WM_HWIN hWin;
 
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);

@@ -3,7 +3,7 @@
 
 #include "Dialog.h"
 
-WM_HWIN CreatewinStepMotor(void);
+WM_HWIN CreatewinStepMotorDLG(void);
 
 
 #endif

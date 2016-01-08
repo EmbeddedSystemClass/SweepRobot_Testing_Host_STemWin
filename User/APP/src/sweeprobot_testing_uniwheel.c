@@ -43,9 +43,9 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 uniwheel.offValue = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
-                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
@@ -78,9 +78,9 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 uniwheel.onValue = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1, usartRxNum);
-                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
@@ -110,7 +110,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
         if(uniwheel.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             uniwheel.validFlag = 1;
 
-            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][0],\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][1],\
@@ -124,7 +124,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
 
             SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
 
-            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                 str = "UNIWHEEL OK\r\n";
                 SWRB_TestDataFileWriteString(str);
 
@@ -167,9 +167,9 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
 
     SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_UniwheelPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_UniwheelManulTestOverTimeProc();
     }
 

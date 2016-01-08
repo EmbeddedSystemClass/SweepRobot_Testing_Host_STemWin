@@ -18,7 +18,7 @@
 
 #define STEP_MOTOR_STEPS_PER_REV    1600
 
-#define STEP_MOTOR_MAX_STEPS        65530
+#define STEP_MOTOR_MAX_STEPS        20000
 
 stepMotorDriverISRCB_t stepMotorDriverISRCB = NULL;
 
@@ -335,6 +335,7 @@ enum STEP_MOTOR_POS SweepRobotTest_StepMotorPosGet(void)
     return stepMotor.pos;
 }
 
+/* TODO: Add Absolute Position Move function */
 void SweepRobotTest_StepMotorGotoPos(enum STEP_MOTOR_POS pos)
 {
     switch(pos){

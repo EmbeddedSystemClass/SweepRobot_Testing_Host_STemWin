@@ -50,7 +50,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
     { EDIT_CreateIndirect, "Date", ID_START_EDIT_DATE, 0,430,200,50,0, 0x64, 0 },
-    { TEXT_CreateIndirect, "Title", ID_START_TEXT_TITLE, 225, 100, 350, 35, 0, 0x64, 0 },
+    { TEXT_CreateIndirect, "SD Warning", ID_START_TEXT_SD_WARNING, 20, 20, 150, 30, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 500, 205, 200, 180, 0, 0x0, 0 },
 //    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 300, 205, 200, 90, 0, 0x0, 0 },
@@ -58,7 +58,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
-//    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 203, 200, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 385, 100, 90, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
 
@@ -156,18 +156,26 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetText(hItem, "Decrypto");
             Button_Init(hItem);
 
-//            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_TITLE);
-//            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
-//            TEXT_SetTextColor(hItem, GUI_BLUE);
-//            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-//            TEXT_SetText(hItem, "SweepRobot Test System");
-//            WM_BringToTop(hItem);
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_SD_WARNING);
+            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            TEXT_SetFont(hItem, GUI_FONT_20B_ASCII);
+            if(gSwrbTestSDCardInsertState){
+                TEXT_SetTextColor(hItem, GUI_BLUE);
+                TEXT_SetText(hItem, "SD Card Inserted");
+            }else{
+                TEXT_SetTextColor(hItem, GUI_RED);
+                TEXT_SetText(hItem, "No SD Card!");
+            }
+            WM_BringToTop(hItem);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_VERSION);
             TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetText(hItem, "SWRB Fixture Ver:1.0");
             TEXT_SetTextColor(hItem, GUI_BLUE);
+            break;
+        case WM_PAINT:
+            
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -232,7 +240,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-//                            SweepRobot_StartDlgDecryptoBtnClickPorc();
+                            SweepRobot_StartDlgDecryptoBtnClickProc();
                             break;
                     }
                     break;

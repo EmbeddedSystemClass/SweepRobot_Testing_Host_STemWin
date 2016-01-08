@@ -37,8 +37,8 @@ static void SWRB_WheelTestInit(void)
 
     printf("WHL->DIR=1\r\n");
 
-    printf("LW->SPD=40\r\n");
-    printf("RW->SPD=40\r\n");
+    printf("LW->SPD=50\r\n");
+    printf("RW->SPD=50\r\n");
     /*
     printf("WHL->ON=%d\r\n",WHEEL_CHAN_L);
     printf("WHL->ON=%d\r\n",WHEEL_CHAN_R);
@@ -57,9 +57,9 @@ static void SWRB_WheelTestProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     wheel[i].speed = (u8)usartRxNum;
-                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, wheel[i].speed);
-                    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
@@ -89,7 +89,7 @@ static void SWRB_WheelTestProc(void)
                 wheel[i].validFlag = 1;
                 printf("WHL->OFF=%d\r\n",i);
 
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
@@ -104,7 +104,7 @@ static void SWRB_WheelTestProc(void)
 
         SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "WHEEL OK\r\n";
             SWRB_TestDataFileWriteString(str);
 
@@ -165,9 +165,9 @@ static void SWRB_WheelTestOverTimeProc(void)
     printf("WHL->OFF=0\r\n");
     printf("WHL->OFF=1\r\n");
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SWRB_WheelPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SWRB_WheelManulTestOverTimeProc();
     }
 

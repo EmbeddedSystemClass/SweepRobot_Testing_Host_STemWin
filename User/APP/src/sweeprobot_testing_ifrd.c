@@ -59,9 +59,9 @@ static void SweepRobot_IFRDTestTxOffProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     ifrd[i].offValue = usartRxNum;
-                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
-                    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
@@ -105,9 +105,9 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     ifrd[i].onValue = usartRxNum;
-                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
-                    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
@@ -138,7 +138,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
                 if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                     ifrd[i].validFlag = 1;
                     
-                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
@@ -162,7 +162,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "IFRD OK\r\n";
             SWRB_TestDataFileWriteString(str);
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
@@ -170,7 +170,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD OK");
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
             Edit_Clear();
-        }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
             SweepRobot_FrontIFRDTestStartProc();
         }
         
@@ -238,9 +238,9 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
 
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_IFRDPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_IFRDManulTestOverTimeProc();
         
         SweepRobot_FrontIFRDTestStartProc();

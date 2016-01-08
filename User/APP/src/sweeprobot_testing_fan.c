@@ -42,9 +42,9 @@ static void SweepRobot_FanTestProc(void)
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         if(usartRxFlag){
             fan.current = usartRxNum;
-            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                 Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
-            }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 str = mymalloc(SRAMIN, sizeof(char)*10);
                 *str = 0;
                 sprintf(str, "%d", usartRxNum);
@@ -74,7 +74,7 @@ static void SweepRobot_FanTestProc(void)
         fan.validFlag = 1;
         printf("FAN->SPD=0\r\n");
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][0],\
                                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][1],\
@@ -87,7 +87,7 @@ static void SweepRobot_FanTestProc(void)
         
         SWRB_TestDataSaveToFile(Fan_TestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "FAN OK\r\n";
             SWRB_TestDataFileWriteString(str);
             
@@ -131,9 +131,9 @@ static void SweepRobot_FanTestOverTimeProc(void)
 
     SWRB_TestDataSaveToFile(Fan_TestDataSave);
     
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_FanPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_FanManulTestOverTimeProc();
     }
 

@@ -47,6 +47,7 @@
 *       CreateSettingDLG
 */
 WM_HWIN CreateTimeSettingDLG(void);
+void SWRB_TimeSettingsChangeConfirmProc(void);
 
 #endif
 /*************************** End of file ****************************/

@@ -27,13 +27,13 @@ enum CryptoMode{
 };
 static char *gEncryptStr;
 
-enum SWRB_TEST_SELECT gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+enum SWRB_DIALOG_SELECT gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
 enum SWRB_TEST_RUN_STATE gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
-enum SWRB_TEST_SET_STATE gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+enum SWRB_TEST_SET_SELECT gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_SN;
 enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
-FunctionalState gSwrbTestDataSaveState = ENABLE;
+FunctionalState gSwrbTestSDCardInsertState = ENABLE;
 u32 gSwrbTestStateMap = 0;
 u16 gSwrbTestTaskRunCnt = 0;
 int gSwrbTestValidTaskCnt;
@@ -142,8 +142,9 @@ static void emWin_TaskInit(void)
     hWin_SWRB_TESTSEL = CreateTestSelSettingDLG();
     hWin_SWRB_LOGIN = CreateLoginDLG();
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
+    hWin_SWRB_DECRYPTO = CreatewinDecryptoDLG();
     hWin_SWRB_MANUL = CreateManulTestDLG();
-    hWin_SWRB_STEPMOTOR = CreatewinStepMotor();
+    hWin_SWRB_STEPMOTOR = CreatewinStepMotorDLG();
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_PCBTestDLG();
     hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
@@ -168,16 +169,16 @@ void emWin_Maintask(void *pdata)
 
     while(1)
     {
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET){
             SWRB_SET_ListwheelSnapPosUpdate();
             SWRB_SET_EditTextUpdate();
         }
 
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SLAM){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SLAM){
             WM_InvalidateWindow(hWin_SWRB_SLAM);
         }
 
-//        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+//        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
 //            WM_InvalidateWindow(hWin_SWRB_MANUL);
 //        }
 
@@ -236,13 +237,13 @@ void Rtc_Task(void *pdata)
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
 
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB)
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
             SWRB_RTC_TIME_Disp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_DATE, &rtcDate, &rtcTime);
-        else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL)
+        else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL)
             SWRB_RTC_TIME_Disp(hWin_SWRB_MANUL, ID_MANUL_EDIT_DATE, &rtcDate, &rtcTime);
-        else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_NONE)
+        else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_NONE)
             SWRB_RTC_TIME_Disp(hWin_SWRB_START, ID_START_EDIT_DATE, &rtcDate, &rtcTime);
-        else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_SET)
+        else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET)
             SWRB_RTC_TIME_Disp(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_ACTVALUE, &rtcDate, &rtcTime);
         else
             ;
@@ -253,7 +254,7 @@ void Rtc_Task(void *pdata)
 
 void SWRB_TestDataFileWriteString(char *str)
 {
-    if(gSwrbTestDataSaveState){
+    if(gSwrbTestSDCardInsertState){
         SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
         f_puts(str,file);
         f_close(file);
@@ -264,7 +265,7 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 {
     char *dataStr;
 
-    if(gSwrbTestDataSaveState){
+    if(gSwrbTestSDCardInsertState){
         dataStr = mymalloc(SRAMIN, sizeof(char)*10);
         mymemset(dataStr, 0, sizeof(char)*10);
         if(CRflag){
@@ -281,7 +282,7 @@ void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTy
 {
     char *dateStr;
 
-    if(gSwrbTestDataSaveState){
+    if(gSwrbTestSDCardInsertState){
         dateStr = mymalloc(SRAMIN, sizeof(char)*40);
         *dateStr = 0;
 
@@ -302,7 +303,7 @@ FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode)
     int fileLength, leftFileLength;
     char *str;
 
-    if(gSwrbTestDataSaveState){
+    if(gSwrbTestSDCardInsertState){
         SWRB_TestDataFileOpen(FA_READ|FA_OPEN_ALWAYS);
 
         fileLength = f_size(file);
@@ -357,50 +358,54 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
     WM_HWIN hItem;
 
     if(ENABLE == encryptoState){
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n>>>Start Encrypting TestData<<<\r\n");
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n>>>Start Encrypting TestData<<<\r\n");
 
-        for(i=ID_PCBTEST_BUTTON_START;i<=ID_PCBTEST_BUTTON_EXIT;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
-            WM_DisableWindow(hItem);
+            for(i=ID_PCBTEST_BUTTON_START;i<=ID_PCBTEST_BUTTON_EXIT;i++){
+                hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
+                WM_DisableWindow(hItem);
+            }
         }
 
+        /* Test Data Encrypt or Decrypt Process */
         flErr = SWRB_TestDataFileCrypt(EncryptMode);
-//            SWRB_TestDataFileCrypt(DecryptMode);
 
-        for(i=ID_PCBTEST_BUTTON_START;i<=ID_PCBTEST_BUTTON_EXIT;i++){
-            hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
-            WM_EnableWindow(hItem);
-        }
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+            for(i=ID_PCBTEST_BUTTON_START;i<=ID_PCBTEST_BUTTON_EXIT;i++){
+                hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
+                WM_EnableWindow(hItem);
+            }
 
-        if(flErr == FR_OK){
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
-        }else{
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
+            if(flErr == FR_OK){
+                MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
+            }else{
+                MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
+            }
         }
     }
 }
 
 static void SWRB_TEST_BUTTON_CTRL_Start(void)
 {
-    switch(gSwrbTestSelectFlag){
-        case SWRB_TEST_SELECT_NONE:
+    switch(gSwrbDialogSelectFlag){
+        case SWRB_DIALOG_SELECT_NONE:
             break;
-        case SWRB_TEST_SELECT_PCB:
+        case SWRB_DIALOG_SELECT_PCB:
             SweepRobot_PCBTestStartProc();
             break;
-        case SWRB_TEST_SELECT_SLAM:
+        case SWRB_DIALOG_SELECT_SLAM:
             break;
     }
 }
 
 static void SWRB_TEST_BUTTON_CTRL_Set(void)
 {
-    switch(gSwrbTestSelectFlag){
-        case SWRB_TEST_SELECT_NONE:
+    switch(gSwrbDialogSelectFlag){
+        case SWRB_DIALOG_SELECT_NONE:
             break;
-        case SWRB_TEST_SELECT_PCB:
+        case SWRB_DIALOG_SELECT_PCB:
             break;
-        case SWRB_TEST_SELECT_SLAM:
+        case SWRB_DIALOG_SELECT_SLAM:
             ;
             break;
     }
@@ -408,27 +413,27 @@ static void SWRB_TEST_BUTTON_CTRL_Set(void)
 
 static void SWRB_TEST_BUTTON_CTRL_Stop(void)
 {
-    switch(gSwrbTestSelectFlag){
-        case SWRB_TEST_SELECT_NONE:
+    switch(gSwrbDialogSelectFlag){
+        case SWRB_DIALOG_SELECT_NONE:
             SweepRobot_StartDlgPCBBtnClickProc();
             break;
-        case SWRB_TEST_SELECT_PCB:
+        case SWRB_DIALOG_SELECT_PCB:
             SweepRobot_PCBTestStopProc();
             break;
-        case SWRB_TEST_SELECT_SLAM:
+        case SWRB_DIALOG_SELECT_SLAM:
             break;
     }
 }
 
 static void SWRB_TEST_BUTTON_CTRL_Exit(void)
 {
-    switch(gSwrbTestSelectFlag){
-        case SWRB_TEST_SELECT_NONE:
+    switch(gSwrbDialogSelectFlag){
+        case SWRB_DIALOG_SELECT_NONE:
             break;
-        case SWRB_TEST_SELECT_PCB:
+        case SWRB_DIALOG_SELECT_PCB:
             SweepRobot_PCBTestExitProc();
             break;
-        case SWRB_TEST_SELECT_SLAM:
+        case SWRB_DIALOG_SELECT_SLAM:
             break;
     }
 }
@@ -696,7 +701,7 @@ void SweepRobot_PCBTestExitProc(void)
 
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
-        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 
         SWRB_PCBTestCheckboxEnable();
 
@@ -912,8 +917,10 @@ static void SWRB_PCBTestFinishProc(void)
     str = "\r\n***TEST FINISHED***\r\n";
     SWRB_TestDataFileWriteString(str);
 
-    /* Encrypt Test Data File when set enable */
-    SWRB_TestDataFileEncryptoProc(DISABLE);
+    if(gSwrbTestSDCardInsertState){
+        /* Encrypt Test Data File when set enable */
+        SWRB_TestDataFileEncryptoProc(ENABLE);
+    }
 
     SWRB_PCBTestCheckboxEnable();
 
@@ -929,6 +936,11 @@ static void SWRB_ManulTestFinishProc(void)
     int i;
 
     SweepRobot_ManulTestCtrlReset();
+    
+    if(gSwrbTestSDCardInsertState){
+        /* Encrypt Test Data File when set enable */
+        SWRB_TestDataFileEncryptoProc(ENABLE);
+    }
 
     BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
     Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
@@ -948,9 +960,9 @@ static void SWRB_TestFinishProc(void)
 {
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SWRB_PCBTestFinishProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SWRB_ManulTestFinishProc();
     }
 
@@ -963,7 +975,7 @@ static void SWRB_TestFinishProc(void)
 
 void SweepRobot_StartDlgPCBBtnClickProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_PCB;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_PCB;
 
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 
@@ -977,7 +989,7 @@ void SweepRobot_StartDlgPCBBtnClickProc(void)
 #ifdef _USE_POWER_STATION_DIALOG
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_POWER_STATION;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_POWER_STATION;
 
     gSwrbTestRuningTaskPrio = SWRB_POWER_STATION_TEST_TASK_PRIO;
     WM_HideWin(hWin_SWRB_START);
@@ -987,7 +999,7 @@ void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
 
 void SweepRobot_StartDlgManulBtnClickProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_MANUL;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_MANUL;
 
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
 
@@ -1003,15 +1015,13 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
 
 void SweepRobot_StartDlgSetBtnClickProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_SET;
-
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_LOGIN);
 }
 
 void SweepRobot_StartDlgSLAMBtnClickProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_SLAM;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_SLAM;
 
     gSwrbTestRuningTaskPrio = SWRB_SLAM_MONITOR_TASK_PRIO;
 
@@ -1021,7 +1031,7 @@ void SweepRobot_StartDlgSLAMBtnClickProc(void)
 
 void SweepRobot_StartDlgStepMotorBtnClickProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_STEP_MOTOR;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_STEP_MOTOR;
 
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_STEPMOTOR);
@@ -1029,7 +1039,10 @@ void SweepRobot_StartDlgStepMotorBtnClickProc(void)
 
 void SweepRobot_StartDlgDecryptoBtnClickProc(void)
 {
-
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_DECRYPTO;
+    
+    WM_HideWin(hWin_SWRB_START);
+    WM_ShowWin(hWin_SWRB_DECRYPTO);
 }
 
 #ifdef _USE_POWER_STATION_DIALOG
@@ -1136,7 +1149,7 @@ void SweepRobot_PowerStationTestExitProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
-        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 
         printf("T->OFF\r\n");
         WM_HideWin(hWin_SWRB_POWER_STATION);
@@ -1280,6 +1293,11 @@ static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
 
         }
     }
+    
+    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                 SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME,\
+                                                 SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM,\
+                                                 GUI_BLUE);
 
     if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
@@ -1298,12 +1316,10 @@ static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
                                                  gSwrbManulTestListviewDispNamePowerStationCoord[0][1],\
                                                  GUI_LIGHTGRAY);
 
-    for(i=0;i<2;i++){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispNameSystemCoord[i][0],\
-                                                     gSwrbManulTestListviewDispNameSystemCoord[i][1],\
-                                                     GUI_LIGHTGRAY);
-    }
+    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                 SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME,\
+                                                 SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF,\
+                                                 GUI_LIGHTGRAY);
 }
 
 static void SweepRobot_ManulTestManulModeTaskStateReset(void)
@@ -1339,10 +1355,6 @@ void SweepRobot_ManulSetEnterManulModeProc(void)
 {
     gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
     
-    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
-    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
-
     SweepRobot_ManulTestManulModeTaskStateReset();
 
     Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
@@ -1360,11 +1372,8 @@ void SweepRobot_ManulSetBtnProc(void)
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, GUI_LIGHTCYAN);
         BUTTON_DispAutoModeCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET, 18, 43);
     }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
-        
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
-        
+
+        WM_HideWin(hWin_SWRB_MANUL);
         WM_ShowWin(hWin_SWRB_LOGIN);
         WM_BringToTop(hWin_SWRB_LOGIN);
     }
@@ -1385,7 +1394,7 @@ void SweepRobot_ManulExitBtnProc(void)
 {
     if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
-        gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+        gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 
         printf("T->OFF\r\n");
         WM_HideWin(hWin_SWRB_MANUL);

@@ -57,9 +57,9 @@ static void SweepRobot_AshTrayInsTestProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayIns.value = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1, usartRxNum);
-                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
@@ -90,7 +90,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
         if(ashTrayIns.validFlag){
             SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
             
-            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][1],\
@@ -112,9 +112,9 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.offValue = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U2, usartRxNum);
-                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
@@ -148,9 +148,9 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
             if(usartRxFlag){
                 ashTrayLvl.onValue = usartRxNum;
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D2, usartRxNum);
-                }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
@@ -189,7 +189,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
         if(ashTrayLvl.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayLvl.validFlag = 1;
             
-            if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
@@ -225,7 +225,7 @@ static void SweepRobot_AshTrayTestProc(void)
 
         SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "ASH TRAY OK\r\n";
             SWRB_TestDataFileWriteString(str);
             
@@ -282,9 +282,9 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
 
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
     
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_AshTrayPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_AshTrayManulTestOverTimeProc();
     }
     

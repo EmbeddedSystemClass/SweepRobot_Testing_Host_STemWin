@@ -49,9 +49,9 @@ static void SweepRobot_CollisionTestProc(void)
                     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                     if(usartRxFlag){
                         collision[i].onValue = usartRxNum;
-                        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                             Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
-                        }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                        }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                             str = mymalloc(SRAMIN, sizeof(char)*10);
                             *str = 0;
                             sprintf(str, "%d", usartRxNum);
@@ -88,9 +88,9 @@ static void SweepRobot_CollisionTestProc(void)
                     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                     if(usartRxFlag){
                         collision[i].offValue = usartRxNum;
-                        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                             Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
-                        }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                        }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                             str = mymalloc(SRAMIN, sizeof(char)*10);
                             *str = 0;
                             sprintf(str, "%d", usartRxNum);
@@ -120,7 +120,7 @@ static void SweepRobot_CollisionTestProc(void)
                 if(collision[i].offValidCnt > 1){
                     collision[i].validFlag = 1;
                     
-                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
@@ -138,7 +138,7 @@ static void SweepRobot_CollisionTestProc(void)
 
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
 
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "COLLISION OK\r\n";
             SWRB_TestDataFileWriteString(str);
 
@@ -219,9 +219,9 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
     
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
     
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_CollisionPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_CollisionManulTestOverTimeProc();
     }
 

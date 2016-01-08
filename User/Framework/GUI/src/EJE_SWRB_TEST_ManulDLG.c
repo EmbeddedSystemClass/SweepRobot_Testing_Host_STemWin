@@ -65,7 +65,7 @@ static const char *aListview_RowInitText[][10] = {
     {"BUZZER","OFF"},
     {"RGB_LED","R","G","B"},
     {"CHARGE","0","0","0"},
-    {"PWRSTATION","LL","LS","M","RS","RL","LB","RB","PWR"},
+    {"POWER","LL","LS","M","RS","RL","LB","RB","24V"},
     {"INT_VREF","0"},
     {"SNUM","0","0","0","0"},
 };
@@ -115,7 +115,7 @@ static void Listview_Init(WM_HWIN hItem)
 {
     u8 i;
     HEADER_Handle hHeader;
-    
+
     LISTVIEW_SetRowHeight(hItem, 20);
     LISTVIEW_SetFont(hItem, GUI_FONT_COMIC18B_ASCII);
     LISTVIEW_SetGridVis(hItem, 1);

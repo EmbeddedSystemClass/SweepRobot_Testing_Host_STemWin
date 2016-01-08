@@ -76,7 +76,7 @@ static void SweepRobot_BuzzerTestOKProc(void)
     
     GUI_EndDialog(hWin_SWRB_BUZZER, 0);
     
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         str = "BUZZER OK\r\n";
         SWRB_TestDataFileWriteString(str);
 
@@ -84,7 +84,7 @@ static void SweepRobot_BuzzerTestOKProc(void)
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER OK");
         Edit_Clear();
-    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                 gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
                                                                 gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
@@ -108,7 +108,7 @@ static void SweepRobot_BuzzerTestErrProc(void)
     
     SWRB_TestDataSaveToFile(BUZZER_TestDataSave);
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         str = "ERROR->BUZZER\r\n";
         SWRB_TestDataFileWriteString(str);
 
@@ -116,7 +116,7 @@ static void SweepRobot_BuzzerTestErrProc(void)
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BUZZER, GUI_RED);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER ERROR");
         Edit_Clear();
-    }else if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                 gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
                                                                 gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\

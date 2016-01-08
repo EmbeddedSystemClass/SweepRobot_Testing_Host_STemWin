@@ -21,10 +21,9 @@ int main(void)
     SweepRobotTest_StepMotorDriverGPIOInit();
 
     if(SD_Init()){
-        gSwrbTestDataSaveState = DISABLE;
-//        goto NO_SD_FAULT;
+        gSwrbTestSDCardInsertState = DISABLE;
     }else{
-        gSwrbTestDataSaveState = ENABLE;
+        gSwrbTestSDCardInsertState = ENABLE;
     }
 
     W25QXX_Init();

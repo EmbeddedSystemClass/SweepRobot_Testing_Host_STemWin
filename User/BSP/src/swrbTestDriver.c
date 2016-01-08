@@ -5,6 +5,7 @@
 
 #include "delay.h"
 
+/* Collision Relay Control GPIO */
 #define COLLISION_SIDE_TEST_CTRL_RCC        RCC_AHB1Periph_GPIOD
 #define COLLISION_SIDE_TEST_CTRL_GPIO       GPIOD
 #define COLLISION_SIDE_TEST_CTRL_L_PIN      GPIO_Pin_6
@@ -15,6 +16,10 @@
 #define COLLISION_FRONT_TEST_CTRL_L_PIN     GPIO_Pin_5
 #define COLLISION_FRONT_TEST_CTRL_R_PIN     GPIO_Pin_6
 
+/* TODO: Collision Steering Motor Control GPIO */
+
+
+/* Wheel Float Steering Motor Control GPIO */
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_RCC      RCC_AHB1Periph_GPIOB
 #define WHEEL_FLOAT_TEST_CTRL_GPIO          GPIOB
 #define WHEEL_FLOAT_TEST_CTRL_L_PIN         GPIO_Pin_10
@@ -29,6 +34,7 @@
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_TEST_POS   1000
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME 100
 
+/* Ash Tray Steering Motor Control GPIO */
 #define ASH_TRAY_TEST_CTRL_RCC              RCC_AHB1Periph_GPIOB
 #define ASH_TRAY_TEST_CTRL_GPIO             GPIOB
 #define ASH_TRAY_TEST_CTRL_PIN              GPIO_Pin_6
@@ -37,6 +43,7 @@
 #define ASH_TRAY_TEST_CTRL_TIM              TIM4
 #define ASH_TRAY_TEST_CTRL_TIM_RCC          RCC_APB1Periph_TIM4
 
+/* Key Steering Motor Control GPIO */
 #define KEY_TEST_CTRL_RCC                   RCC_AHB1Periph_GPIOB
 #define KEY_TEST_CTRL_GPIO                  GPIOB
 #define KEY_TEST_CTRL_PIN                   GPIO_Pin_7
@@ -45,6 +52,7 @@
 #define KEY_TEST_CTRL_TIM_RCC               RCC_APB1Periph_TIM4
 #define KEY_TEST_CTRL_TIM                   TIM4
 
+/* IFRD Front Test Steering Motor Control GPIO */
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_RCC             RCC_AHB1Periph_GPIOC
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_GPIO            GPIOC
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_PIN             GPIO_Pin_7
@@ -53,6 +61,7 @@
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM_RCC         RCC_APB1Periph_TIM3
 #define IFRD_FRONT_TEST_STEP_MOTOR_CTRL_TIM             TIM3
 
+/* IrDA Tx GPIO */
 #define IRDA_TEST_TX_TIM_RCC                RCC_APB1Periph_TIM7
 #define IRDA_TEST_TX_TIM                    TIM7
 #define IRDA_TEST_TX_RCC                    RCC_AHB1Periph_GPIOG
@@ -67,7 +76,6 @@
 static u8 gIrDACodeTxSeqNum = 0;
 static u8 gIrDACodeTxCnt = 0;
 static u32 gIrDACodeTxSeqTime = 0;
-
 
 /* COLLISION TEST GPIO INIT */
 void SweepRobot_CollisionTestGPIOInit(void)
@@ -422,6 +430,7 @@ void SweepRobot_IrDATestGPIOPINReset(void)
 }
 
 /* Improved IrDA Code Tx process */
+/* FIXME: Need to Change IrDA Tx process to adjust 35khz receiver */
 void SweepRobot_IrDACodeTxProc(u8 code)
 {
     plat_int_reg_cb(STM32F4xx_INT_TIM7, SweepRobot_IrDACodeTxProc);

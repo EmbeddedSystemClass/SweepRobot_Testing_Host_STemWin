@@ -96,18 +96,8 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(WM_HWIN hWin)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
-    
-    TimeStr_Comb(hWin, ID_TIMESET_EDIT_SETVALUE);
-    PWR_BackupAccessCmd(ENABLE);
-    while(!(RTC_SetDate(RTC_Format_BIN, &rtcDate)));
-    while(!(RTC_SetTime(RTC_Format_BIN, &rtcTime)));
-    while(!RTC_WaitForSynchro());
-    PWR_BackupAccessCmd(DISABLE);
-
-    WM_HideWin(hWin);
-    WM_ShowWin(hWin_SWRB_START);
+    WM_HideWin(hWin_SWRB_TIMESET);
+    WM_ShowWin(hWin_SWRB_LOGIN);
 }
 
 static void Button_CheckProc(WM_HWIN hWin)
@@ -131,7 +121,7 @@ static void Button_CancelProc(WM_HWIN hWin)
 static void Button_SNSetProc(WM_HWIN hWin)
 {
     Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
-    gSwrbTestSetState = SWRB_TEST_SET_STATE_SN;
+    gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_SN;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_SNSET);
 }
@@ -139,7 +129,7 @@ static void Button_SNSetProc(WM_HWIN hWin)
 static void Button_TestSelSetProc(WM_HWIN hWin)
 {
     Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSEL, GUI_LIGHTRED);
-    gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
+    gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_TESTSEL;
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_TESTSEL);
 }
@@ -510,6 +500,18 @@ WM_HWIN CreateTimeSettingDLG(void) {
     return hWin;
 }
 
-
+void SWRB_TimeSettingsChangeConfirmProc(void)
+{
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
+    gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_NONE;
+    
+    TimeStr_Comb(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_SETVALUE);
+    
+    PWR_BackupAccessCmd(ENABLE);
+    while(!(RTC_SetDate(RTC_Format_BIN, &rtcDate)));
+    while(!(RTC_SetTime(RTC_Format_BIN, &rtcTime)));
+    while(!RTC_WaitForSynchro());
+    PWR_BackupAccessCmd(DISABLE);
+}
 
 /*************************** End of file ****************************/

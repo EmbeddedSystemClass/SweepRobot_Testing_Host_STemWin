@@ -101,7 +101,7 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_ConfirmProc(void)
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
@@ -123,7 +123,7 @@ static void Button_ResetProc(void)
 
 static void Button_CancelProc()
 {
-    gSwrbTestSelectFlag = SWRB_TEST_SELECT_NONE;
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     ListWheel_ResetToLastPos();
@@ -460,7 +460,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             Button_Set_BkColor(hWin_SWRB_TIMESET, ID_TIMESET_BUTTON_TIMESET, GUI_LIGHTRED);
-                            gSwrbTestSetState = SWRB_TEST_SET_STATE_TIME;
+                            gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_TIME;
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWin_SWRB_TIMESET);
                             break;
@@ -472,7 +472,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_TESTSEL, GUI_LIGHTRED);
-                            gSwrbTestSetState = SWRB_TEST_SET_STATE_TESTSEL;
+                            gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_TESTSEL;
                             WM_HideWin(pMsg->hWin);
                             WM_ShowWin(hWin_SWRB_TESTSEL);
                             break;

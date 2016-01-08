@@ -20,7 +20,7 @@
 #define __EJE_SWRB_TEST_SLAM_DLG            1
 #define __EJE_SWRB_TEST_MANUL_DLG           1
 #define __EJE_SWRB_TEST_STEPMOTOR_DLG       1
-#define __EJE_SWRB_TEST_DECRYPTO_DLG        0
+#define __EJE_SWRB_TEST_DECRYPTO_DLG        1
 
 #include "stm32f4xx.h"
 #include "DIALOG.h"
@@ -62,11 +62,15 @@
 #endif
 
 #if __EJE_SWRB_TEST_MANUL_DLG
-    #include "EJE_SWRB_TEST_MANULDLG.h"
+    #include "EJE_SWRB_TEST_ManulDLG.h"
 #endif
 
 #if __EJE_SWRB_TEST_STEPMOTOR_DLG
-    #include "EJE_SWRB_TEST_STEPMOTORTESTDLG.h"
+    #include "EJE_SWRB_TEST_StepMotorTestDLG.h"
+#endif
+
+#if __EJE_SWRB_TEST_DECRYPTO_DLG
+    #include "EJE_SWRB_TEST_DecryptoDLG.h"
 #endif
 
 /*********************************************************************
@@ -110,7 +114,7 @@
 
     enum ID_START_TEXT{
         ID_START_TEXT_VERSION = ID_START_TEXT_0,
-        ID_START_TEXT_TITLE,
+        ID_START_TEXT_SD_WARNING,
         ID_START_TEXT_BOUND,
     };
     
@@ -888,6 +892,44 @@
         ID_STEPMOTOR_EDIT_BOUND,
     };
 #endif
+    
+#if __EJE_SWRB_TEST_DECRYPTO_DLG
+    
+    enum ID_DECRYPTO_WIDGET{
+        ID_DECRYPTO_WINDOW_0 = ID_STEPMOTOR_BOUND,
+        ID_DECRYPTO_TREEVIEW_0,
+        ID_DECRYPTO_MULTIEDIT_0,
+        ID_DECRYPTO_BUTTON_0,
+        ID_DECRYPTO_BUTTON_1,
+        ID_DECRYPTO_BUTTON_2,
+        ID_DECRYPTO_BUTTON_3,
+        ID_DECRYPTO_BOUND,
+    };
+    
+    enum ID_DECRYPTO_WINDOW{
+        ID_DECRYPTO_WINDOW_MAIN = ID_DECRYPTO_WINDOW_0,
+        ID_DECRYPTO_WINDOW_BOUND,
+    };
+    
+    enum ID_DECRYPTO_TREEVIEW{
+        ID_DECRYPTO_TREEVIEW_MAIN = ID_DECRYPTO_TREEVIEW_0,
+        ID_DECRYPTO_TREEVIEW_BOUND,
+    };
+    
+    enum ID_DECRYPTO_MULTIEDIT{
+        ID_DECRYPTO_MULTIEDIT_MAIN = ID_DECRYPTO_MULTIEDIT_0,
+        ID_DECRYPTO_MULTIEDIT_BOUND,
+    };
+    
+    enum ID_DECRYPTO_BUTTON{
+        ID_DECRYPTO_BUTTON_OPEN = ID_DECRYPTO_BUTTON_0,
+        ID_DECRYPTO_BUTTON_DECRYPT,
+        ID_DECRYPTO_BUTTON_SAVE,
+        ID_DECRYPTO_BUTTON_EXIT,
+        ID_DECRYPTO_BUTTON_BOUND,
+    };
+
+#endif
 
 /*********************************************************************
 *
@@ -941,6 +983,10 @@
 
 #if __EJE_SWRB_TEST_STEPMOTOR_DLG
     extern WM_HWIN hWin_SWRB_STEPMOTOR;
+#endif
+
+#if __EJE_SWRB_TEST_DECRYPTO_DLG
+    extern WM_HWIN hWin_SWRB_DECRYPTO;
 #endif
 
 /*********************************************************************

@@ -96,15 +96,25 @@ enum SWRB_TEST_STATE{
   SWRB_TEST_STATE_BOUND,
 };
 
-enum SWRB_TEST_SELECT{
+enum SWRB_DIALOG_SELECT{
     
-    SWRB_TEST_SELECT_NONE,
-    SWRB_TEST_SELECT_PCB,
-    SWRB_TEST_SELECT_POWER_STATION,
-    SWRB_TEST_SELECT_MANUL,
-    SWRB_TEST_SELECT_SET,
-    SWRB_TEST_SELECT_SLAM,
-    SWRB_TEST_SELECT_STEP_MOTOR,
+    SWRB_DIALOG_SELECT_NONE,
+    SWRB_DIALOG_SELECT_PCB,
+    SWRB_DIALOG_SELECT_POWER_STATION,
+    SWRB_DIALOG_SELECT_MANUL,
+    SWRB_DIALOG_SELECT_SET,
+    SWRB_DIALOG_SELECT_SLAM,
+    SWRB_DIALOG_SELECT_STEP_MOTOR,
+    SWRB_DIALOG_SELECT_DECRYPTO,
+};
+
+enum SWRB_TEST_SET_SELECT{
+    
+    SWRB_TEST_SET_SELECT_NONE,
+    SWRB_TEST_SET_SELECT_SN,
+    SWRB_TEST_SET_SELECT_TIME,
+    SWRB_TEST_SET_SELECT_TESTSEL,
+    SWRB_TEST_SET_SELECT_BOUND,
 };
 
 enum SWRB_TEST_MODE{
@@ -118,14 +128,6 @@ enum SWRB_TEST_RUN_STATE{
     SWRB_TEST_RUN_STATE_NORMAL,
     SWRB_TEST_RUN_STATE_ERROR,
     SWRB_TEST_RUN_STATE_RETEST,
-};
-
-enum SWRB_TEST_SET_STATE{
-    
-    SWRB_TEST_SET_STATE_SN,
-    SWRB_TEST_SET_STATE_TIME,
-    SWRB_TEST_SET_STATE_TESTSEL,
-    SWRB_TEST_SET_STATE_BOUND,
 };
 
 enum SWRB_TEST_MANUL_SUB_MODE{
@@ -335,13 +337,13 @@ enum SWRB_TEST_TASK_PRIO{
 extern u8 usartRxFlag;
 extern int usartRxNum;
 
-extern enum SWRB_TEST_SELECT gSwrbTestSelectFlag;
+extern enum SWRB_DIALOG_SELECT gSwrbDialogSelectFlag;
 extern enum SWRB_TEST_MODE gSwrbTestMode;
 extern enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode;
 extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;
-extern enum SWRB_TEST_SET_STATE gSwrbTestSetState;
+extern enum SWRB_TEST_SET_SELECT gSwrbTestSetSelectFlag;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
-extern FunctionalState gSwrbTestDataSaveState;
+extern FunctionalState gSwrbTestSDCardInsertState;
 extern u32 gSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
@@ -367,6 +369,7 @@ void SweepRobot_StartDlgManulBtnClickProc(void);
 void SweepRobot_StartDlgSetBtnClickProc(void);
 void SweepRobot_StartDlgSLAMBtnClickProc(void);
 void SweepRobot_StartDlgStepMotorBtnClickProc(void);
+void SweepRobot_StartDlgDecryptoBtnClickProc(void);
 
 void SweepRobot_PCBTestStartProc(void);
 //void SweepRobot_PCBTestLoginProc(void);

@@ -42,7 +42,7 @@ static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char
     Text_Set_Color(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, color);
     Text_Set_Text(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, strText);
     OSTaskSuspend(gSwrbTestRuningTaskPrio);
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         if(*ledState){
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit1);
             SWRB_TestDataFileWriteString(strMultiEdit1);
@@ -55,7 +55,7 @@ static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char
 
 static void SweepRobot_RGBLEDManulTestSingleProc(int *ledState, enum SWRB_MANUL_TEST_DATA_RGB_LED_POS pos, GUI_COLOR okColor, GUI_COLOR errColor)
 {
-    if (gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         if(*ledState){
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                 gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
@@ -102,7 +102,7 @@ static void SweepRobot_RGBLEDTestOKProc(void)
     
     SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
     
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         str = "RGB LED OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
@@ -127,7 +127,7 @@ static void SweepRobot_RGBLEDTestErrProc(void)
     
     SWRB_TestDataSaveToFile(RGB_LED_TestDataSave);
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_RGB_LED, GUI_RED);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_RGB_LED, "RGB LED ERROR");
         Edit_Clear();

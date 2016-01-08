@@ -45,9 +45,9 @@ static void SweepRobot_WheelFloatTestProc(void)
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
                     wheelFloat[i].value = usartRxNum;
-                    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
-                    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
@@ -74,7 +74,7 @@ static void SweepRobot_WheelFloatTestProc(void)
             if(wheelFloat[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 wheelFloat[i].validFlag = 1;
                 
-                if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+                if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
@@ -90,7 +90,7 @@ static void SweepRobot_WheelFloatTestProc(void)
 
         SWRB_TestDataSaveToFile(SweepRobot_WheelFloatTestDataSave);
         
-        if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "WHEEL FLOAT OK\r\n";
             SWRB_TestDataFileWriteString(str);
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
@@ -146,9 +146,9 @@ static void SweepRobot_WheelFloatTestOverTimeProc(void)
     
     SWRB_TestDataSaveToFile(SweepRobot_WheelFloatTestDataSave);
 
-    if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_PCB){
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_WheelFloatPCBTestOverTimeProc();
-    }else if(gSwrbTestSelectFlag == SWRB_TEST_SELECT_MANUL){
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_WheelFloatManulTestOverTimeProc();
     }
     
