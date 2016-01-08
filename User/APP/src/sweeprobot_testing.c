@@ -54,6 +54,7 @@ static RTC_DateTypeDef rtcDate;
 //static WM_MESSAGE *pWmMsg;
 
 static void Start_Task(void *pdata);
+static void SelfTest_Task(void *pdata);
 static void emWin_Maintask(void *pdata);
 static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
@@ -98,6 +99,7 @@ OS_STK SWRB_POWER_STATION_TASK_STK[SWRB_POWER_STATION_TEST_STK_SIZE];//23
 OS_STK SWRB_MANUL_TASK_STK[SWRB_MANUL_TEST_STK_SIZE];
 OS_STK SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE];
 OS_STK SWRB_FRONT_IFRD_TASK_STK[SWRB_FRONT_IFRD_TASK_STK_SIZE];
+OS_STK SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE];
 
 void OS_Task_Create(void)
 {
@@ -115,9 +117,29 @@ void Start_Task(void *pdata)
 
     OS_ENTER_CRITICAL();
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWIN_TASK_STK[EMWIN_STK_SIZE-1],EMWIN_TASK_PRIO);
+    /* Self Test Task for System self test */
+    OSTaskCreate(SelfTest_Task,(void*)0,(OS_STK*)&SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE-1],SELF_TEST_TASK_PRIO);
+    OSTaskSuspend(SELF_TEST_TASK_PRIO);
     OS_EXIT_CRITICAL();
 
     OSTaskDel(OS_PRIO_SELF);
+}
+
+static void SelfTest_Task(void *pdata)
+{
+    OS_CPU_SR cpu_sr;
+    
+    while(1){
+
+        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+            SweepRobot_PCBTestStartProc();
+        }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+            SweepRobot_ManulStartBtnProc();
+        }
+        OSTaskSuspend(OS_PRIO_SELF);
+
+        OSTimeDlyHMSM(0,0,0,100);
+    }
 }
 
 static void emWin_TaskInit(void)
@@ -837,14 +859,17 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     if(gSwrbTestValidTaskCnt){
         OS_ENTER_CRITICAL();
         OSTaskResume(taskPrio+1);
+        OSTaskSuspend(taskPrio);
         OS_EXIT_CRITICAL();
     }else{
         SWRB_TestFinishProc();
+        
+        OS_ENTER_CRITICAL();
+        OSTaskSuspend(taskPrio);
+        /* FIXME: comment this when not run self test */
+        OSTaskResume(SELF_TEST_TASK_PRIO);
+        OS_EXIT_CRITICAL();
     }
-    
-    OS_ENTER_CRITICAL();
-    OSTaskSuspend(taskPrio);
-    OS_EXIT_CRITICAL();
 }
 
 static void SWRB_PCBTestWarningDlgHide(void)
