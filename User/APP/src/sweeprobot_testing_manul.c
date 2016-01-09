@@ -283,7 +283,7 @@ void SweepRobot_ManulTestSNDisp(void)
             mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
             switch(i){
                 case SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS:
-                    /* no need to translate str of serialnum year */
+                    /* no need to translate str of serial number year */
                     break;
                 case SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS:
                     sprintf(str, "%02d", atoi(str));

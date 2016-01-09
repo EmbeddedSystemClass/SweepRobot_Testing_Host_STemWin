@@ -99,9 +99,9 @@ static void Button_OKProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         if(!(strcmp(strPasswd,gManulTestEnterManulModePasswd))){
             SweepRobot_ManulSetEnterManulModeProc();
-            
+
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
-            
+
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_ShowWin(hWin_SWRB_MANUL);
         }else{
@@ -111,9 +111,9 @@ static void Button_OKProc(void)
         if(!(strcmp(strPasswd,gSetDlgLoginPasswd))){
 
             gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_SET;
-            
+
             gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_TESTSEL;
-            
+
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 
 //            Button_Set_BkColor(hWin_SWRB_SNSET, ID_SNSET_BUTTON_SNSET, GUI_LIGHTRED);
@@ -143,7 +143,7 @@ static void Button_OKProc(void)
     }else if ( (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET) && (gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME) ){
         if(!(strcmp(strPasswd,gSetDlgConfirmPasswd))){
             SWRB_TimeSettingsChangeConfirmProc();
-            
+
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_TIMESET);
             WM_ShowWin(hWin_SWRB_START);
@@ -156,11 +156,11 @@ static void Button_OKProc(void)
 static void Button_CancelProc(void)
 {
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        
+
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
-        
+
         WM_HideWin(hWin_SWRB_LOGIN);
         WM_ShowWin(hWin_SWRB_MANUL);
         WM_BringToTop(hWin_SWRB_MANUL);
@@ -180,7 +180,7 @@ static void Button_CancelProc(void)
 static void Button_DeleteProc(void)
 {
     WM_HWIN hItem;
-    
+
     hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
     EDIT_AddKey(hItem, '\b');
     if(strPasswdLen){
@@ -227,7 +227,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 //    BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
 //    BUTTON_SetText(hItem, "DEL");
     BUTTON_DispDeleteCHNStr(pMsg->hWin, ID_LOGIN_BUTTON_DELETE, 28 ,13);
-  
+
     str = mymalloc(SRAMIN, sizeof(char)*5);
     for(i=ID_LOGIN_BUTTON_NUM0;i<=ID_LOGIN_BUTTON_NUM9;i++){
         hItem = WM_GetDialogItem(pMsg->hWin, i);
@@ -259,7 +259,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-  
+
     if(IS_LOGIN_BUTTON_ID_NUM(Id)){
         switch(NCode) {
             case WM_NOTIFICATION_CLICKED:

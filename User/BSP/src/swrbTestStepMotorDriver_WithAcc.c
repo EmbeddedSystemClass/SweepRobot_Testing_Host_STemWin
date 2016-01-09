@@ -40,14 +40,18 @@ typedef struct{
     enum STEP_MOTOR_POS pos;
     StepMotorDriverCtrl_TypeDef ctrl;
     FunctionalState enState;
+    FunctionalState pwrState;
 }StepMotorDriver_TypeDef;
 StepMotorDriver_TypeDef stepMotor;
 
-static void StepMotorDriver_PWMTimISR(void);
+static void StepMotorDriver_PWMTimerISR(void);
 static void SweepRobotTest_StepMotorStop(void);
 
 void SweepRobotTest_StepMotorDriverConf(void)
 {
+    stepMotor.mode = STEP_MOTOR_MODE_STOP;
+    stepMotor.dir = STEP_MOTOR_DIR_BACKWARD;
+    stepMotor.pos = STEP_MOTOR_POS_UNKNOWN;
     stepMotor.ctrl.minSpeed = STEP_MOTOR_MIN_SPEED;
     stepMotor.ctrl.maxSpeed = STEP_MOTOR_MAX_SPEED;
     stepMotor.ctrl.acceleration = STEP_MOTOR_ACCELERATION;
@@ -59,8 +63,9 @@ void SweepRobotTest_StepMotorDriverConf(void)
 
 void SweepRobotTest_StepMotorDriverReset(void)
 {
+    SweepRobotTest_StepMotorPwrOff();
     SweepRobotTest_StepMotorDriverConf();
-    SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_FORWARD);
+    SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
     SweepRobotTest_StepMotorEnStateSet(ENABLE);
 }
 
@@ -84,7 +89,7 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(STEP_MOTOR_DRIVER_GPIO, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = STEP_MOTOR_DRIVER_DIR_PIN | STEP_MOTOR_DRIVER_EN_OUT_PIN;
+    GPIO_InitStructure.GPIO_Pin = STEP_MOTOR_DRIVER_DIR_PIN | STEP_MOTOR_DRIVER_EN_OUT_PIN | STEP_MOTOR_DRIVER_24V_CTRL_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -122,14 +127,14 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT, StepMotorDriver_PWMTimISR);
+    plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT, StepMotorDriver_PWMTimerISR);
 
     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, DISABLE);
 
     SweepRobotTest_StepMotorDriverReset();
 }
 
-void StepMotorDriver_PWMTimISR(void)
+void StepMotorDriver_PWMTimerISR(void)
 {
     float stepMotorTimerPeriod = 0;
 
@@ -189,6 +194,23 @@ void StepMotorDriver_PWMTimISR(void)
             }
         }
     }
+}
+
+void SweepRobotTest_StepMotorPwrOn(void)
+{
+    stepMotor.pwrState = ENABLE;
+    STEP_MOTOR_PWR_ON();
+}
+
+void SweepRobotTest_StepMotorPwrOff(void)
+{
+    stepMotor.pwrState = DISABLE;
+    STEP_MOTOR_PWR_OFF();
+}
+
+FunctionalState SweepRobotTest_StepMotorPwrStateGet(void)
+{
+    return stepMotor.pwrState;
 }
 
 static void SweepRobotTest_StepMotorRun(void)

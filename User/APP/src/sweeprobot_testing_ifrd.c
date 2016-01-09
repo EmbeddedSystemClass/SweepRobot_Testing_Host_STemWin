@@ -167,7 +167,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "IFRD OK\r\n";
             SWRB_TestDataFileWriteString(str);
-    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+//            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
             Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IFRD, GUI_BLUE);
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD OK");
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);

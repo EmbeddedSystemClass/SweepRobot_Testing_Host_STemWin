@@ -5,9 +5,9 @@
 #include "usart.h"
 #include "includes.h"
 
-#define CHARGE_TEST_CTRL_RCC        RCC_AHB1Periph_GPIOC
-#define CHARGE_TEST_CTRL_GPIO       GPIOC
-#define CHARGE_TEST_CTRL_PIN        GPIO_Pin_7
+#define CHARGE_TEST_24V_CTRL_RCC        RCC_AHB1Periph_GPIOC
+#define CHARGE_TEST_24V_CTRL_GPIO       GPIOC
+#define CHARGE_TEST_24V_CTRL_PIN        GPIO_Pin_7
 
 static u8 swrbChargeTestStateMap = 0;
 
@@ -35,24 +35,24 @@ static void SweepRobot_ChargeTestGPIOInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_AHB1PeriphClockCmd(CHARGE_TEST_CTRL_RCC, ENABLE);
+    RCC_AHB1PeriphClockCmd(CHARGE_TEST_24V_CTRL_RCC, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = CHARGE_TEST_CTRL_PIN;
+    GPIO_InitStructure.GPIO_Pin = CHARGE_TEST_24V_CTRL_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_Init(CHARGE_TEST_CTRL_GPIO, &GPIO_InitStructure);
+    GPIO_Init(CHARGE_TEST_24V_CTRL_GPIO, &GPIO_InitStructure);
 }
 
 void SweepRobot_Charge24VOn(void)
 {
-    GPIO_ResetBits(CHARGE_TEST_CTRL_GPIO, CHARGE_TEST_CTRL_PIN);
+    GPIO_ResetBits(CHARGE_TEST_24V_CTRL_GPIO, CHARGE_TEST_24V_CTRL_PIN);
 }
 
 void SweepRobot_Charge24VOff(void)
 {
-    GPIO_SetBits(CHARGE_TEST_CTRL_GPIO, CHARGE_TEST_CTRL_PIN);
+    GPIO_SetBits(CHARGE_TEST_24V_CTRL_GPIO, CHARGE_TEST_24V_CTRL_PIN);
 }
 
 static void SweepRobot_ChargeTestInit(void)

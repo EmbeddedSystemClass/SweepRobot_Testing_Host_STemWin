@@ -3,15 +3,19 @@
 
 #include "stm32f4xx.h"
 
+#define STEP_MOTOR_DRIVER_24V_CTRL_RCC      
+#define STEP_MOTOR_DRIVER_24V_CTRL_GPIO
+
 #define STEP_MOTOR_DRIVER_GPIO_RCC          RCC_AHB1Periph_GPIOA
 #define STEP_MOTOR_DRIVER_GPIO              GPIOA
 #define STEP_MOTOR_DRIVER_PWM_OUT_PIN       GPIO_Pin_6
 #define STEP_MOTOR_DRIVER_DIR_PIN           GPIO_Pin_5
 #define STEP_MOTOR_DRIVER_EN_OUT_PIN        GPIO_Pin_4
+#define STEP_MOTOR_DRIVER_24V_CTRL_PIN      GPIO_Pin_12
 
 /* TODO: Define this macro to use actual position detect key */
 #ifdef _USE_ACTUAL_POS_DETECT_KEY
-    #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_3
+    #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_11
 #else
     #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_0
 #endif
@@ -31,6 +35,9 @@
 
 #define STEP_MOTOR_EN_OUT_ENABLE()  GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_EN_OUT_PIN, Bit_SET)
 #define STEP_MOTOR_EN_OUT_DISABLE()  GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_EN_OUT_PIN, Bit_RESET)
+
+#define STEP_MOTOR_PWR_ON()     GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_24V_CTRL_PIN, Bit_RESET)
+#define STEP_MOTOR_PWR_OFF()    GPIO_WriteBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_24V_CTRL_PIN, Bit_SET)
 
 #define STEP_MOTOR_POS_DETECT_SIGN  GPIO_ReadInputDataBit(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_POS_DETECT_PIN)
 
@@ -68,6 +75,9 @@ void SweepRobotTest_StepMotorMoveSteps(float speed, u16 steps);
 void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode);
 void SweepRobotTest_StepMotorModeSet(enum STEP_MOTOR_MODE mode);
 enum STEP_MOTOR_MODE SweepRobotTest_StepMotorModeGet(void);
+void SweepRobotTest_StepMotorPwrOn(void);
+void SweepRobotTest_StepMotorPwrOff(void);
+FunctionalState SweepRobotTest_StepMotorPwrStateGet(void);
 void SweepRobotTest_StepMotorDirSet(enum STEP_MOTOR_DIR dir);
 enum STEP_MOTOR_DIR SweepRobotTest_StepMotorDirGet(void);
 void SweepRobotTest_StepMotorSpeedSet(float speed);
