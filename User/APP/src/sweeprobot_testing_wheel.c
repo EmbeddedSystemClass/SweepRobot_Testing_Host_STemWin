@@ -27,6 +27,8 @@ static void SWRB_WheelTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
 
+    SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 
     for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){

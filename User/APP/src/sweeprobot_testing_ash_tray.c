@@ -28,6 +28,8 @@ static void SweepRobot_AshTrayTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
+    SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    
     printf("SNSR->IFRD=0\r\n");
     SweepRobot_AshTrayTestInsCtrlMoveToTestPos();
     

@@ -21,6 +21,8 @@ static void SweepRobot_KeyTestInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
+    SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    
     SweepRobot_KeyTestCtrlTestPos();
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);

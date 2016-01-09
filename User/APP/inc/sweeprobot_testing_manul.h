@@ -11,13 +11,13 @@ enum SWRB_MANUL_TEST_DATA_SNUM_POS{
     SWRB_MANUL_TEST_DATA_SNUM_BOUND,
 };
 
-extern u8 gSwrbManulTestListviewDispNameCoord[][2];
-extern u8 gSwrbManulTestListviewDispNameFrontIFRDCoord[][2];
-extern u8 gSwrbManulTestListviewDispNamePowerStationCoord[][2];
+extern u8 gSwrbManulTestListviewDispItemCoord[][2];
+extern u8 gSwrbManulTestListviewDispItemFrontIFRDCoord[][2];
+extern u8 gSwrbManulTestListviewDispItemPowerStationCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataRGBLEDCoord[][2];
 extern u8 gSwrbManulTestListviewDispDataFrontIFRDCoord[][2];
-extern u8 gSwrbManulTestListviewDispNameSystemCoord[][2];
+extern u8 gSwrbManulTestListviewDispItemSystemCoord[][2];
 extern u8 gSwrbManulTestListviewDispSNCoord[][2];
 
 void SweepRobot_ManulTestTask(void *pdata);

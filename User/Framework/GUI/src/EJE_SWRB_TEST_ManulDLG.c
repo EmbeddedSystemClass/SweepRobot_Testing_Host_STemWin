@@ -50,7 +50,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomRightCHN;
 */
 
 static const char *aListview_RowInitText[][10] = {
-/* name,left,frontLeft,middle,frontRight,right,bottomLeft,bottomFLeft,bottomFRight,bottomRight */
+/* item,left,frontLeft,middle,frontRight,right,bottomLeft,bottomFLeft,bottomFRight,bottomRight */
     {"WHEEL","0","","","","0"},
     {"BRUSH","0","","0","","0"},
     {"FAN","","","0","",""},
@@ -125,7 +125,7 @@ static void Listview_Init(WM_HWIN hItem)
     LISTVIEW_SetAutoScrollV(hItem, ENABLE);
     LISTVIEW_SetHeaderHeight(hItem, 30);
     
-    LISTVIEW_AddColumn(hItem, 110, "", GUI_TA_HCENTER | GUI_TA_VCENTER);    //Name
+    LISTVIEW_AddColumn(hItem, 110, "", GUI_TA_HCENTER | GUI_TA_VCENTER);    //Item
     LISTVIEW_AddColumn(hItem, 45, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //Left
     LISTVIEW_AddColumn(hItem, 55, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //FrontLeft
     LISTVIEW_AddColumn(hItem, 60, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //Middle

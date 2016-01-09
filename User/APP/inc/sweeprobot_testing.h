@@ -353,6 +353,7 @@ extern int gSwrbTestValidTaskCnt;
 extern int gSwrbTestValidTaskCntTotal;
 
 void OS_Task_Create(void);
+void SWRB_TestInitCommonAct(u8 taskPrio);
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio);
 void SWRB_NextTestTaskResumePostAct(u8 taskPrio);
 void SWRB_TestTaskErrorAct(void);

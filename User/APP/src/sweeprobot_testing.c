@@ -136,8 +136,11 @@ static void SelfTest_Task(void *pdata)
         }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
             SweepRobot_ManulStartBtnProc();
         }
+        
+        OS_ENTER_CRITICAL();
         OSTaskSuspend(OS_PRIO_SELF);
-
+        OS_EXIT_CRITICAL();
+        
         OSTimeDlyHMSM(0,0,0,100);
     }
 }
@@ -838,6 +841,16 @@ void SWRB_ValidTestTaskCntGet(void)
     gSwrbTestValidTaskCntTotal = gSwrbTestValidTaskCnt;
 }
 
+void SWRB_TestInitCommonAct(u8 taskPrio)
+{
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][0], \
+                                                     gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][1], \
+                                                     GUI_RED);
+    }
+}
+
 void SWRB_NextTestTaskResumePreAct(u8 taskPrio)
 {
     OS_CPU_SR cpu_sr;
@@ -855,6 +868,13 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     gSwrbTestValidTaskCnt--;
 
     Progbar_Set_Percent();
+    
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][0], \
+                                                     gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][1], \
+                                                     GUI_BLUE);
+    }
 
     if(gSwrbTestValidTaskCnt){
         OS_ENTER_CRITICAL();
@@ -1230,7 +1250,7 @@ static void SweepRobot_ManulStartBtnStartProc(void)
         OS_EXIT_CRITICAL();
     }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
         printf("T->ON\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
 
         SWRB_ValidTestTaskCntGet();
 
@@ -1307,42 +1327,42 @@ static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
     for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
         if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i)){
             Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                         gSwrbManulTestListviewDispNameCoord[i][0],\
-                                                         gSwrbManulTestListviewDispNameCoord[i][1],\
+                                                         gSwrbManulTestListviewDispItemCoord[i][0],\
+                                                         gSwrbManulTestListviewDispItemCoord[i][1],\
                                                          GUI_BLUE);
         }else{
             Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                         gSwrbManulTestListviewDispNameCoord[i][0],\
-                                                         gSwrbManulTestListviewDispNameCoord[i][1],\
+                                                         gSwrbManulTestListviewDispItemCoord[i][0],\
+                                                         gSwrbManulTestListviewDispItemCoord[i][1],\
                                                          GUI_LIGHTGRAY);
 
         }
     }
     
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME,\
+                                                 SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM,\
                                                  SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM,\
                                                  GUI_BLUE);
 
     if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
+                                                 gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0],\
+                                                 gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1],\
                                                  GUI_BLUE);
     }else{
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
+                                                 gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0],\
+                                                 gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1],\
                                                  GUI_LIGHTGRAY);
     }
 
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][0],\
-                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][1],\
+                                                 gSwrbManulTestListviewDispItemPowerStationCoord[0][0],\
+                                                 gSwrbManulTestListviewDispItemPowerStationCoord[0][1],\
                                                  GUI_LIGHTGRAY);
 
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 SWRB_MANUL_TEST_LISTVIEW_COLUMN_NAME,\
+                                                 SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM,\
                                                  SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF,\
                                                  GUI_LIGHTGRAY);
 }
@@ -1353,25 +1373,25 @@ static void SweepRobot_ManulTestManulModeTaskStateReset(void)
 
     for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispNameCoord[i][0],\
-                                                     gSwrbManulTestListviewDispNameCoord[i][1],\
+                                                     gSwrbManulTestListviewDispItemCoord[i][0],\
+                                                     gSwrbManulTestListviewDispItemCoord[i][1],\
                                                      GUI_BLACK);
     }
 
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][0],\
-                                                 gSwrbManulTestListviewDispNameFrontIFRDCoord[0][1],\
+                                                 gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0],\
+                                                 gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1],\
                                                  GUI_BLACK);
 
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][0],\
-                                                 gSwrbManulTestListviewDispNamePowerStationCoord[0][1],\
+                                                 gSwrbManulTestListviewDispItemPowerStationCoord[0][0],\
+                                                 gSwrbManulTestListviewDispItemPowerStationCoord[0][1],\
                                                  GUI_BLACK);
 
     for(i=0;i<2;i++){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispNameSystemCoord[i][0],\
-                                                     gSwrbManulTestListviewDispNameSystemCoord[i][1],\
+                                                     gSwrbManulTestListviewDispItemSystemCoord[i][0],\
+                                                     gSwrbManulTestListviewDispItemSystemCoord[i][1],\
                                                      GUI_BLACK);
     }
 }
