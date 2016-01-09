@@ -49,9 +49,12 @@
 **********************************************************************
 */
 
-static char* gSetDialogLoginPassWord = "123";
-static char* gManulTestEnterManulModePassWord = "123456";
-static const char * gSetDialogConfirmPassWord = "123456";
+static char* gSetDlgLoginPasswd = "123";
+static char* gDecryptDlgLoginPasswd  = "0549832761";
+static char* gSLAMDlgLoginPasswd = "167238";
+static char* gStepMotorLoginPasswd = "054983";
+static char* gManulTestEnterManulModePasswd = "123456";
+static const char * gSetDlgConfirmPasswd = "123456";
 
 static char strPasswd[10] = { 0 };
 static u8 strPasswdLen = 0;
@@ -94,7 +97,7 @@ static void Button_Init(WM_HWIN hItem)
 static void Button_OKProc(void)
 {
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        if(!(strcmp(strPasswd,gManulTestEnterManulModePassWord))){
+        if(!(strcmp(strPasswd,gManulTestEnterManulModePasswd))){
             SweepRobot_ManulSetEnterManulModeProc();
             
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
@@ -105,7 +108,7 @@ static void Button_OKProc(void)
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
     }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_NONE){
-        if(!(strcmp(strPasswd,gSetDialogLoginPassWord))){
+        if(!(strcmp(strPasswd,gSetDlgLoginPasswd))){
 
             gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_SET;
             
@@ -122,11 +125,23 @@ static void Button_OKProc(void)
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_TESTSEL);
+        }else if(!(strcmp(strPasswd,gDecryptDlgLoginPasswd))){
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_START);
+            WM_ShowWin(hWin_SWRB_DECRYPTO);
+        }else if(!(strcmp(strPasswd,gSLAMDlgLoginPasswd))){
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_START);
+            WM_ShowWin(hWin_SWRB_SLAM);
+        }else if(!(strcmp(strPasswd,gStepMotorLoginPasswd))){
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_START);
+            WM_ShowWin(hWin_SWRB_STEPMOTOR);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
     }else if ( (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET) && (gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME) ){
-        if(!(strcmp(strPasswd,gSetDialogConfirmPassWord))){
+        if(!(strcmp(strPasswd,gSetDlgConfirmPasswd))){
             SWRB_TimeSettingsChangeConfirmProc();
             
             WM_HideWin(hWin_SWRB_LOGIN);

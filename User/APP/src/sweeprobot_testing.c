@@ -54,7 +54,9 @@ static RTC_DateTypeDef rtcDate;
 //static WM_MESSAGE *pWmMsg;
 
 static void Start_Task(void *pdata);
+#ifdef _USE_SELF_TESTING
 static void SelfTest_Task(void *pdata);
+#endif
 static void emWin_Maintask(void *pdata);
 static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
@@ -99,7 +101,9 @@ OS_STK SWRB_POWER_STATION_TASK_STK[SWRB_POWER_STATION_TEST_STK_SIZE];//23
 OS_STK SWRB_MANUL_TASK_STK[SWRB_MANUL_TEST_STK_SIZE];
 OS_STK SWRB_STEPMOTOR_TASK_STK[SWRB_STEPMOTOR_TASK_STK_SIZE];
 OS_STK SWRB_FRONT_IFRD_TASK_STK[SWRB_FRONT_IFRD_TASK_STK_SIZE];
-OS_STK SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE];
+#ifdef _USE_SELF_TESTING
+    OS_STK SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE];
+#endif
 
 void OS_Task_Create(void)
 {
@@ -117,14 +121,17 @@ void Start_Task(void *pdata)
 
     OS_ENTER_CRITICAL();
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWIN_TASK_STK[EMWIN_STK_SIZE-1],EMWIN_TASK_PRIO);
+#ifdef _USE_SELF_TESTING
     /* Self Test Task for System self test */
     OSTaskCreate(SelfTest_Task,(void*)0,(OS_STK*)&SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE-1],SELF_TEST_TASK_PRIO);
     OSTaskSuspend(SELF_TEST_TASK_PRIO);
+#endif
     OS_EXIT_CRITICAL();
 
     OSTaskDel(OS_PRIO_SELF);
 }
 
+#ifdef _USE_SELF_TESTING
 static void SelfTest_Task(void *pdata)
 {
     OS_CPU_SR cpu_sr;
@@ -141,9 +148,10 @@ static void SelfTest_Task(void *pdata)
         OSTaskSuspend(OS_PRIO_SELF);
         OS_EXIT_CRITICAL();
         
-        OSTimeDlyHMSM(0,0,0,100);
+        OSTimeDlyHMSM(0,0,1,0);
     }
 }
+#endif
 
 static void emWin_TaskInit(void)
 {
@@ -886,9 +894,12 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
         
         OS_ENTER_CRITICAL();
         OSTaskSuspend(taskPrio);
+#ifdef _USE_SELF_TESTING
         /* FIXME: comment this when not run self test */
         OSTaskResume(SELF_TEST_TASK_PRIO);
+#endif
         OS_EXIT_CRITICAL();
+
     }
 }
 
@@ -1060,8 +1071,8 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
 
 void SweepRobot_StartDlgSetBtnClickProc(void)
 {
-    WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_LOGIN);
+    WM_BringToTop(hWin_SWRB_LOGIN);
 }
 
 void SweepRobot_StartDlgSLAMBtnClickProc(void)
@@ -1217,6 +1228,49 @@ static void SWRB_ManulTestIndicateButtonToggle()
     SWRB_IndicateButtonToggle(hWin_SWRB_MANUL, ID_MANUL_BUTTON_INDICATE);
 }
 
+static void SweepRobot_ManulStartBtnManulModeStartProc(void)
+{
+    OS_CPU_SR cpu_sr;
+    
+    printf("T->ON\r\n");
+    printf("SNSR->IFRD=1\r\n");
+    printf("IRDA->ON\r\n");
+
+    SweepRobot_ManulTestSNDisp();
+
+    OS_ENTER_CRITICAL();
+    gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
+    OSTaskResume(gSwrbTestRuningTaskPrio);
+    OS_EXIT_CRITICAL();
+}
+
+static void SweepRobot_ManulStartBtnAutoModeStartProc(void)
+{
+    int i;
+    OS_CPU_SR cpu_sr;
+    
+    printf("T->ON\r\n");
+//        GUI_Delay(1);
+
+    SWRB_ValidTestTaskCntGet();
+
+    SweepRobot_ManulTestDataReset();
+    SweepRobot_ManulTestGuiReset();
+    SweepRobot_ManulTestSNDisp();
+    SweepRobot_ManulTestDataQuery();
+    SweepRobot_ManulTestBatteryVoltDisp();
+    SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
+
+    for(i=ID_MANUL_BUTTON_WHEEL;i<ID_MANUL_BUTTON_BOUND;i++){
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, i);
+    }
+
+    OS_ENTER_CRITICAL();
+    gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
+    OSTaskResume(gSwrbTestRuningTaskPrio);
+    OS_EXIT_CRITICAL();
+}
+
 static void SweepRobot_ManulStartBtnStartProc(void)
 {
     int i;
@@ -1231,44 +1285,18 @@ static void SweepRobot_ManulStartBtnStartProc(void)
     BUTTON_DispStopCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
     Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTRED);
 
+    OS_ENTER_CRITICAL();
     TEST_LED_TASK_CB_REG(SWRB_ManulTestIndicateButtonToggle);
+    OS_EXIT_CRITICAL();
 
     SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
     SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
     SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
-        printf("T->ON\r\n");
-        printf("SNSR->IFRD=1\r\n");
-        printf("IRDA->ON\r\n");
-
-        SweepRobot_ManulTestSNDisp();
-
-        OS_ENTER_CRITICAL();
-        gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
-        OSTaskResume(gSwrbTestRuningTaskPrio);
-        OS_EXIT_CRITICAL();
+        SweepRobot_ManulStartBtnManulModeStartProc();
     }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
-        printf("T->ON\r\n");
-//        GUI_Delay(1);
-
-        SWRB_ValidTestTaskCntGet();
-
-        SweepRobot_ManulTestDataReset();
-        SweepRobot_ManulTestGuiReset();
-        SweepRobot_ManulTestSNDisp();
-        SweepRobot_ManulTestDataQuery();
-        SweepRobot_ManulTestBatteryVoltDisp();
-        SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
-
-        for(i=ID_MANUL_BUTTON_WHEEL;i<ID_MANUL_BUTTON_BOUND;i++){
-            SWRB_WM_DisableWindow(hWin_SWRB_MANUL, i);
-        }
-
-        OS_ENTER_CRITICAL();
-        gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
-        OSTaskResume(gSwrbTestRuningTaskPrio);
-        OS_EXIT_CRITICAL();
+        SweepRobot_ManulStartBtnAutoModeStartProc();
     }
 }
 

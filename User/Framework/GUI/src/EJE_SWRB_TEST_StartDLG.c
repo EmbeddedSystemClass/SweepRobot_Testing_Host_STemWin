@@ -142,11 +142,13 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "SLAM");
             Button_Init(hItem);
+            WM_HideWin(hItem);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_STEP_MOTOR);
             BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
             BUTTON_SetText(hItem, "STEP MOTOR");
             Button_Init(hItem);
+            WM_HideWin(hItem);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_MANUL);
             BUTTON_DispRobotTestTitleCHNStr(pMsg->hWin, ID_START_BUTTON_MANUL, 36, 74);
@@ -155,6 +157,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_DECRYPTO);
             BUTTON_SetText(hItem, "Decrypto");
             Button_Init(hItem);
+            WM_HideWin(hItem);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_SD_WARNING);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);

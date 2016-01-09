@@ -112,10 +112,12 @@ static void Button_ResetProc(WM_HWIN hWin)
 
 static void Button_CancelProc(WM_HWIN hWin)
 {
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
+    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
+    
     ListWheel_ResetToLastPos(hWin);
     WM_HideWin(hWin);
     WM_ShowWin(hWin_SWRB_START);
-    gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 }
 
 static void Button_SNSetProc(WM_HWIN hWin)

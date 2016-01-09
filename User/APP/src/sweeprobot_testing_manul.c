@@ -241,12 +241,12 @@ void SweepRobot_ManulTestDataReset(void)
     for(i=0;i<SWRB_MANUL_TEST_DATA_RGB_LED_BOUND;i++){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataRGBLEDCoord[i][0], gSwrbManulTestListviewDispDataRGBLEDCoord[i][1], GUI_WHITE);
     }
-    
+
     for(i=0;i<SWRB_MANUL_TEST_DATA_FRONT_IFRD_BOUND;i++){
         Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataFrontIFRDCoord[i][0], gSwrbManulTestListviewDispDataFrontIFRDCoord[i][1], "0");
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataFrontIFRDCoord[i][0], gSwrbManulTestListviewDispDataFrontIFRDCoord[i][1], GUI_WHITE);
     }
-    
+
     for(i=0;i<SWRB_MANUL_TEST_DATA_POWER_STATION_BOUND;i++){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispDataPowerStationCoord[i][0], gSwrbManulTestListviewDispDataPowerStationCoord[i][1], GUI_WHITE);
         aSwrbTestPowerStationCnt[i] = 0;
@@ -283,6 +283,7 @@ void SweepRobot_ManulTestSNDisp(void)
             mymemcpy(str, USART_RX_BUF, sizeof(USART_RX_BUF));
             switch(i){
                 case SWRB_MANUL_TEST_DATA_SNUM_YEAR_POS:
+                    /* no need to translate str of serialnum year */
                     break;
                 case SWRB_MANUL_TEST_DATA_SNUM_MONTH_POS:
                     sprintf(str, "%02d", atoi(str));
@@ -296,7 +297,7 @@ void SweepRobot_ManulTestSNDisp(void)
             }
             hItem = WM_GetDialogItem(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN);
             LISTVIEW_SetItemText(hItem, gSwrbManulTestListviewDispSNCoord[i][0], gSwrbManulTestListviewDispSNCoord[i][1], str);
-            
+
             usartRxFlag = 0;
             for(j=0;j<5;j++)
                 USART_RX_BUF[j] = 0;
@@ -421,7 +422,7 @@ static void SweepRobot_ManulTest_SingleIrDAValueCmpProc(enum SWRB_MANUL_TEST_DAT
 static void SweepRobot_ManulTest_PwrStationCodeCmpProc(GUI_COLOR validColor, GUI_COLOR faultColor)
 {
     int i;
-    
+
     /* IrDA values have already been calculated in IrDA process */
     for(i=SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS;i<=SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS;i++){
         switch(aSwrbTestValue[i]){
@@ -449,7 +450,7 @@ static void SweepRobot_ManulTest_PwrStationCodeCmpProc(GUI_COLOR validColor, GUI
             default: continue;
         }
     }
-    
+
     for(i=SWRB_MANUL_TEST_DATA_POWER_STATION_LL_POS;i<=SWRB_MANUL_TEST_DATA_POWER_STATION_RB_POS;i++){
         if(!aSwrbTestPowerStationValidFlag[i]){
             if(aSwrbTestPowerStationCnt[i] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
@@ -478,7 +479,7 @@ static void SweepRobot_ManulTest_PwrStationPwrCmpProc(GUI_COLOR validColor, GUI_
         }else{
             aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS] = 0;
         }
-        
+
         if(aSwrbTestPowerStationCnt[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS] > SWRB_MANUL_TEST_DATA_VALID_CMP_TIMES){
             aSwrbTestPowerStationValidFlag[SWRB_MANUL_TEST_DATA_POWER_STATION_PWR_POS] = 1;
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
@@ -646,7 +647,7 @@ static void SweepRobot_ManulTestProc(void)
 
 static void SweepRobot_ManulTestOverTimeProc(void)
 {
-    
+
 }
 
 void SweepRobot_ManulTestTask(void *pdata)
