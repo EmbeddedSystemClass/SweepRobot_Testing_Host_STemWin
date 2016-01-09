@@ -50,15 +50,15 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
     { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
     { EDIT_CreateIndirect, "Date", ID_START_EDIT_DATE, 0,430,200,50,0, 0x64, 0 },
-    { TEXT_CreateIndirect, "SD Warning", ID_START_TEXT_SD_WARNING, 20, 20, 150, 30, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 500, 205, 200, 180, 0, 0x0, 0 },
 //    { BUTTON_CreateIndirect, "POWER STATION", ID_START_BUTTON_POWER_STATION, 300, 205, 200, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SET", ID_START_BUTTON_SET, 300, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 385, 100, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "SD Warning", ID_START_TEXT_SD_WARNING, 325, 430, 150, 50, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
 

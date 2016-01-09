@@ -180,7 +180,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
         }
 #else
-        if(ashTrayLvl.value < SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD){
+        if( (0 > ashTrayLvl.value) && (ashTrayLvl.value < SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD) ){
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
             ashTrayLvl.validCnt++;
         }else{

@@ -91,6 +91,9 @@ static void SweepRobot_FrontIFRDTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
 #endif
+    
+    SweepRobotTest_StepMotorPwrOn();
+    OSTimeDlyHMSM(0,0,1,0);
 
     printf("SNSR->IFRD=0\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
@@ -214,6 +217,8 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
     printf("SNSR->IFRD=0\r\n");
 
     STEP_MOTOR_ISR_CB_DEREG();
+    
+    SweepRobotTest_StepMotorPwrOff();
 
     SWRB_TestDataSaveToFile(FrontIFRD_TestDataSave);
     

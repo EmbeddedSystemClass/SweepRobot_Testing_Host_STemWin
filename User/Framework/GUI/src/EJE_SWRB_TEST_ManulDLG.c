@@ -49,6 +49,15 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomRightCHN;
 **********************************************************************
 */
 
+static const char *aButton_InitText[][1] = {
+    {"WHEEL"},
+    {"BRUSH"},
+    {"FAN"},
+    {"IFRD"},
+    {"BUZZER"},
+    {"RGB LED"},
+};
+
 static const char *aListview_RowInitText[][10] = {
 /* item,left,frontLeft,middle,frontRight,right,bottomLeft,bottomFLeft,bottomFRight,bottomRight */
     {"WHEEL","0","","","","0"},
@@ -230,35 +239,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Init(hItem);
     BUTTON_SetText(hItem, "");
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_WHEEL);
-    Button_Init(hItem);
-    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "WHEEL");
-
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_BRUSH);
-    Button_Init(hItem);
-    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "BRUSH");
-
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_FAN);
-    Button_Init(hItem);
-    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "FAN");
-    
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_IFRD);
-    Button_Init(hItem);
-    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "IFRD");
-
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_BUZZER);
-    Button_Init(hItem);
-    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "BUZZER");
-
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_RGB_LED);
-    Button_Init(hItem);
-    BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "RGB LED");
+    for(Id=ID_MANUL_BUTTON_WHEEL;Id<ID_MANUL_BUTTON_BOUND;Id++){
+        hItem = WM_GetDialogItem(pMsg->hWin, Id);
+        Button_Init(hItem);
+        BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
+        BUTTON_SetText(hItem, aButton_InitText[Id-ID_MANUL_BUTTON_WHEEL][0]);
+        WM_DisableWindow(hItem);
+    }
 
     WM_HideWin(pMsg->hWin);
     break;
