@@ -686,7 +686,7 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 FilePathGetLoop:
         *pathStr = 0;
         ListWheel_TestDataFilePathGet(pathStr);
-        if(*pathStr != '0' || *(pathStr+1) != ':'){
+        if(*pathStr != '0' || *(pathStr+1) != ':' || *(pathStr+2) != '/'){
             goto FilePathGetLoop;
         }
         flErr = f_open(file, pathStr, fileOpenMode);
@@ -695,6 +695,7 @@ FilePathGetLoop:
         }
         cnt++;
     }while((flErr != FR_OK) && (cnt < 10));
+    
     myfree(SRAMIN, pathStr);
     flErr = f_lseek(file, file->fsize);
 
@@ -703,7 +704,7 @@ FilePathGetLoop:
 
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 {
-    SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
+    SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
     dataSaveProc();
     f_close(file);
 }
@@ -712,7 +713,7 @@ void SWRB_TestDataFileWriteSN(void)
 {
     char *swrbTestSerialNum;
 
-    SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
+    SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
 
     swrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
     *swrbTestSerialNum = 0;
@@ -720,7 +721,6 @@ void SWRB_TestDataFileWriteSN(void)
     ListWheel_TestDataFileSerialNumberGen(swrbTestSerialNum);
 
     f_printf(file, "%s\r\n", swrbTestSerialNum);
-
     f_close(file);
 
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, swrbTestSerialNum);
