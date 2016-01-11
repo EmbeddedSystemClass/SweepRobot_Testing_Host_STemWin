@@ -30,7 +30,7 @@ enum SWRB_FRONT_IFRD_TEST_POS{
 
 static FRONT_IFRD_TestTypeDef frontIFRD[SWRB_FRONT_IFRD_CHAN_NUM];
 
-static const u16 SWRB_FRONT_IFRD_VALID_THRESHOLD[SWRB_FRONT_IFRD_CHAN_NUM] = { 1000, 1000, 1000, 1000, 2000, 1000, 1000, 1000 };
+static const u16 SWRB_FRONT_IFRD_VALID_THRESHOLD[SWRB_FRONT_IFRD_CHAN_NUM] = { 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000 };
 
 static const u16 gSwrbFrontIFRDTestMoveStepSeq[SWRB_FRONT_IFRD_CHAN_NUM] = { 1500, 1500, 1500, 1500, 3000, 1500, 1500, 1500 };
 
@@ -83,6 +83,18 @@ static void SweepRobot_FrontIFRDTestInit(void)
     char *str;
 
     gSwrbTestRuningTaskPrio = SWRB_FRONT_IFRD_TEST_TASK_PRIO;
+    
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][0], \
+                                                     gSwrbManulTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][1], \
+                                                     GUI_BLUE);
+        
+        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
+                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
+                                                     GUI_RED);
+    }
 
     str = "\r\n>>>FRONT IFRD TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
@@ -215,6 +227,11 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
     gSwrbFrontIFRDTestStepMotorMoveCnt = 0;
     gSwrbFrontIFRDTestChanCnt = 0;
     printf("SNSR->IFRD=0\r\n");
+    
+    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
+                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
+                                                     GUI_BLUE);
 
     STEP_MOTOR_ISR_CB_DEREG();
     

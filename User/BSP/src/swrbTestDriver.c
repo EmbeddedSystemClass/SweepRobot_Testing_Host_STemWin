@@ -382,7 +382,7 @@ void SweepRobot_IrDATestGPIOPINReset(void)
 }
 
 /* Improved IrDA Code Tx process */
-/* FIXME: Need to Change IrDA Tx process to adjust 35khz receiver */
+/* FIXME: Need to Change IrDA Tx process to match 38khz receiver */
 void SweepRobot_IrDACodeTxProc(u8 code)
 {
     plat_int_reg_cb(STM32F4xx_INT_TIM7, SweepRobot_IrDACodeTxProc);

@@ -19,7 +19,7 @@ static void SweepRobot_IrDATestRxCodeProc(int rxDataLen)
 {
     int i,j,m;
     OS_CPU_SR cpu_sr;
-    
+
     OS_ENTER_CRITICAL();
 
     i = 0;
@@ -84,22 +84,22 @@ static void SweepRobot_IrDATestInit(void)
 {
     u8 i;
     char *str;
-    
+
     gSwrbTestRuningTaskPrio = SWRB_IRDA_TEST_TASK_PRIO;
-    
+
     str = "\r\n>>>IRDA TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef _SHOW_TEST_TITLE    
+#ifdef _SHOW_TEST_TITLE
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
-    
+
     printf("IRDA->ON\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    
+
     for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
         IrDA[i].code = 0;
         IrDA[i].validCnt = 0;
@@ -113,9 +113,9 @@ static void SweepRobot_IrDATestProc(void)
 {
     u8 i,j;
     char *str;
-    
+
     SweepRobot_IrDACodeQuery();
-    
+
     for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
         if(!IrDA[i].validFlag){
             if(IS_IRDA_CODE(IrDA[i].code)){
@@ -125,7 +125,7 @@ static void SweepRobot_IrDATestProc(void)
             }
             if(IrDA[i].validCnt){
                 IrDA[i].validFlag = 1;
-                
+
                 if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\
@@ -144,21 +144,21 @@ static void SweepRobot_IrDATestProc(void)
         }
     }
     mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
-    
+
     if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
         gSwrbTestTaskRunCnt = 0;
-        
+
 //        printf("IRDA->OFF\r\n");
 //        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
         printf("IRDA->ERS\r\n");
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
-        
+
         SWRB_TestDataSaveToFile(IRDA_TestDataSave);
-        
+
         if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "IRDA OK\r\n";
             SWRB_TestDataFileWriteString(str);
-            
+
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
             Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
@@ -176,7 +176,7 @@ static void SweepRobot_IrDAPCBTestOverTimeProc(void)
 {
     u8 i;
     char *str;
-    
+
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
         str = "ERROR->IRDA_B\r\n";
         SWRB_TestDataFileWriteString(str);
@@ -254,7 +254,7 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
 
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
-    
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_IrDAPCBTestOverTimeProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -270,11 +270,11 @@ static void SweepRobot_IrDATestOverTimeProc(void)
 
 void SweepRobot_IrDATestTask(void *pdata)
 {
-    
+
     SweepRobot_IrDATestGPIOInit();
 
     while(1){
-        
+
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA)){
             SWRB_NextTestTaskResumePreAct(SWRB_IRDA_TEST_TASK_PRIO);
         }else{
@@ -299,11 +299,11 @@ void SweepRobot_IrDATestTask(void *pdata)
 void IRDA_TestDataSave(void)
 {
     u8 i;
-    
+
     for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
         gSwrbTestAcquiredData[SWRB_TEST_DATA_IRDA_B_RxCODE_POS+i] = IrDA[i].code;
     }
-    
+
     SWRB_TestDataFileWriteData("IRDA->B_Code=", IrDA[SWRB_IRDA_CHAN_BACK].code, 1);
     SWRB_TestDataFileWriteData("IRDA->L_Code=", IrDA[SWRB_IRDA_CHAN_LEFT].code, 1);
     SWRB_TestDataFileWriteData("IRDA->FL_Code=", IrDA[SWRB_IRDA_CHAN_FLEFT].code, 1);

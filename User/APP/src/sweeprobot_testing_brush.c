@@ -25,6 +25,13 @@ static void SWRB_BrushTestTaskInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
+    printf("LB->SPD=100\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
+    printf("RB->SPD=100\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
+    printf("MB->SPD=40\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
+    
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
@@ -34,16 +41,6 @@ static void SWRB_BrushTestTaskInit(void)
         brush[i].validCnt = 0;
         brush[i].validFlag = 0;
     }
-    
-    printf("LB->SPD=100\r\n");
-    printf("RB->SPD=100\r\n");
-    printf("MB->SPD=40\r\n");
-    /* TODO: if using default brush startup speed,uncomment this */
-    /*
-    printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_L);
-    printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_R);
-    printf("BRUSH->ON=%d\r\n",BRUSH_CHAN_M);
-    */
 }
 
 static void SWRB_BrushTestProc(void)
@@ -170,7 +167,9 @@ void SWRB_BrushTestOverTimeProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("BRS->OFF=%d\r\n",BRUSH_CHAN_L);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("BRS->OFF=%d\r\n",BRUSH_CHAN_R);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("BRS->OFF=%d\r\n",BRUSH_CHAN_M);
     
     SWRB_TestDataSaveToFile(Brush_TestDataSave);

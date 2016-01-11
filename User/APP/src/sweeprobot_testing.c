@@ -131,19 +131,19 @@ void Start_Task(void *pdata)
 static void SelfTest_Task(void *pdata)
 {
     OS_CPU_SR cpu_sr;
-    
+
     while(1){
 
         if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-            SweepRobot_PCBTestStartProc();
+            SweepRobot_PCBTestStartBtnProc();
         }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
             SweepRobot_ManulStartBtnProc();
         }
-        
+
         OS_ENTER_CRITICAL();
         OSTaskSuspend(OS_PRIO_SELF);
         OS_EXIT_CRITICAL();
-        
+
         OSTimeDlyHMSM(0,0,1,0);
     }
 }
@@ -182,7 +182,7 @@ static void emWin_TaskInit(void)
     OSTaskCreate(Led_Task,(void*)0,(OS_STK*)&LED_TASK_STK[LED_STK_SIZE-1],LED_TASK_PRIO);
     OSTaskCreate(Rtc_Task,(void*)0,(OS_STK*)&RTC_TASK_STK[RTC_STK_SIZE-1],RTC_TASK_PRIO);
     OSTaskCreate(SWRB_TestCtrlTask,(void*)0,(OS_STK*)&SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE-1],SWRB_TEST_CTRL_TASK_PRIO);
-    
+
     OS_EXIT_CRITICAL();
 
     SWRB_ListWheelRTCDateUpdate(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, ID_SNSET_LISTWHEEL_MONTH, ID_SNSET_LISTWHEEL_DATE);
@@ -302,6 +302,8 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 
 void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTypeDef *time)
 {
+    FRESULT flErr;
+
     char *dateStr;
 
     if(gSwrbTestSDCardInsertState){
@@ -310,9 +312,9 @@ void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTy
 
         SWRB_TestDataFileOpen(FA_WRITE|FA_OPEN_ALWAYS);
 
-        sprintf(dateStr, "\r\n%s:20%d/%d/%d %d:%d:%d\r\n", headStr, date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
-        f_puts(dateStr, file);
-        f_close(file);
+        sprintf(dateStr, "\r\n%s:20%d/%02d/%02d %02d:%02d:%02d\r\n", headStr, date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
+        flErr = f_puts(dateStr, file);
+        flErr = f_close(file);
 
         myfree(SRAMIN, dateStr);
     }
@@ -368,6 +370,8 @@ FRESULT SWRB_TestDataFileCrypt(enum CryptoMode mode)
 
         }
         myfree(SRAMIN, gEncryptStr);
+    }else{
+        flErr = FR_NOT_READY;
     }
 
     return flErr;
@@ -387,6 +391,8 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
                 hItem = WM_GetDialogItem(hWin_SWRB_PCBTEST, i);
                 WM_DisableWindow(hItem);
             }
+        }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+            SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
         }
 
         /* Test Data Encrypt or Decrypt Process */
@@ -403,6 +409,8 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
             }else{
                 MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Fault*****\r\n");
             }
+        }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+            SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
         }
     }
 }
@@ -413,10 +421,10 @@ static void SWRB_TEST_BUTTON_CTRL_Start(void)
         case SWRB_DIALOG_SELECT_NONE:
             break;
         case SWRB_DIALOG_SELECT_PCB:
-            SweepRobot_PCBTestStartProc();
+            SweepRobot_PCBTestStartBtnProc();
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-            
+
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -431,7 +439,7 @@ static void SWRB_TEST_BUTTON_CTRL_Set(void)
         case SWRB_DIALOG_SELECT_PCB:
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-            
+
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             ;
@@ -446,10 +454,10 @@ static void SWRB_TEST_BUTTON_CTRL_Stop(void)
             SweepRobot_StartDlgPCBBtnClickProc();
             break;
         case SWRB_DIALOG_SELECT_PCB:
-            SweepRobot_PCBTestStopProc();
+            SweepRobot_PCBTestStopBtnProc();
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-            
+
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -462,10 +470,10 @@ static void SWRB_TEST_BUTTON_CTRL_Exit(void)
         case SWRB_DIALOG_SELECT_NONE:
             break;
         case SWRB_DIALOG_SELECT_PCB:
-            SweepRobot_PCBTestExitProc();
+            SweepRobot_PCBTestExitBtnProc();
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-            
+
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -547,7 +555,7 @@ static void SWRB_PCBTestIndicateButtonToggle()
     SWRB_IndicateButtonToggle(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE);
 }
 
-void SweepRobot_PCBTestStartProc(void)
+void SweepRobot_PCBTestStartBtnProc(void)
 {
     char *str;
     OS_CPU_SR cpu_sr;
@@ -562,7 +570,7 @@ void SweepRobot_PCBTestStartProc(void)
             OS_ENTER_CRITICAL();
             ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
             SWRB_TestDataFileWriteSN();
-            SWRB_TestDataFileWriteDate("Test Start Time", &rtcDate, &rtcTime);
+            SWRB_TestDataFileWriteDate("PCB Test Start Time", &rtcDate, &rtcTime);
             OS_EXIT_CRITICAL();
 
             str = mymalloc(SRAMIN, sizeof(char)*50);
@@ -599,7 +607,7 @@ void SweepRobot_PCBTestStartProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-        /* FIXME:  Task count would be wrong if click checkbox when pause */
+        /* FIXME:  Valide Task count would be wrong if click checkbox when pause */
 //        SWRB_PCBTestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
@@ -632,7 +640,7 @@ void SweepRobot_PCBTestStartProc(void)
         GUI_Delay(1);
         printf("SNSR->BSWC=0\r\n");
         GUI_Delay(1);
-        
+
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "PRESS RESUME TO RESUME TEST\r\n");
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "TEST PAUSED\r\n");
     }
@@ -661,7 +669,7 @@ void SweepRobot_PCBTestNumPadOKProc(void)
     WM_BringToTop(hWin_SWRB_LOGIN);
 }
 
-void SweepRobot_PCBTestStopProc(void)
+void SweepRobot_PCBTestStopBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
     char *str;
@@ -710,7 +718,7 @@ void SweepRobot_PCBTestStopProc(void)
     }
 }
 
-void SweepRobot_PCBTestExitProc(void)
+void SweepRobot_PCBTestExitBtnProc(void)
 {
     OS_CPU_SR cpu_sr;
 
@@ -858,7 +866,7 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     gSwrbTestValidTaskCnt--;
 
     Progbar_Set_Percent();
-    
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][0], \
@@ -873,7 +881,7 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
         OS_EXIT_CRITICAL();
     }else{
         SWRB_TestFinishProc();
-        
+
         OS_ENTER_CRITICAL();
         OSTaskSuspend(taskPrio);
 #ifdef _USE_SELF_TESTING
@@ -940,11 +948,12 @@ static void SWRB_PCBTestFinishProc(void)
 
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
-    SWRB_TestDataFileWriteDate("Test finish time", &rtcDate, &rtcTime);
+    SWRB_TestDataFileWriteDate("PCB Test finish time", &rtcDate, &rtcTime);
 
     SWRB_TestDUTWriteSN();
 
     str = mymalloc(SRAMIN, sizeof(char)*50);
+    *str = 0;
     sprintf(str, "\r\nTest Finish Time:20%02d/%02d/%02d %02d:%02d:%02d\r\n",\
                     rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date,\
                     rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
@@ -956,7 +965,7 @@ static void SWRB_PCBTestFinishProc(void)
 
     if(gSwrbTestSDCardInsertState){
         /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileEncryptoProc(DISABLE);
+        SWRB_TestDataFileEncryptoProc(ENABLE);
     }
 
     SWRB_PCBTestCheckboxEnable();
@@ -971,11 +980,15 @@ static void SWRB_PCBTestFinishProc(void)
 static void SWRB_ManulTestFinishProc(void)
 {
     SweepRobot_ManulTestCtrlReset();
-    
+
     if(gSwrbTestSDCardInsertState){
         /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileEncryptoProc(ENABLE);
+        SWRB_TestDataFileEncryptoProc(DISABLE);
     }
+
+    RTC_GetDate(RTC_Format_BIN, &rtcDate);
+    RTC_GetTime(RTC_Format_BIN, &rtcTime);
+    SWRB_TestDataFileWriteDate("Manul Test finish time", &rtcDate, &rtcTime);
 
     BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
     Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
@@ -1071,7 +1084,7 @@ void SweepRobot_StartDlgStepMotorBtnClickProc(void)
 void SweepRobot_StartDlgDecryptoBtnClickProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_DECRYPTO;
-    
+
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_DECRYPTO);
 }
@@ -1339,7 +1352,7 @@ static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
 
         }
     }
-    
+
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM,\
                                                  SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM,\
@@ -1400,11 +1413,11 @@ static void SweepRobot_ManulTestManulModeTaskStateReset(void)
 void SweepRobot_ManulSetEnterManulModeProc(void)
 {
     int Id;
-    
+
     gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_MANUL;
-    
+
     SweepRobot_ManulTestManulModeTaskStateReset();
-    
+
     for(Id=ID_MANUL_BUTTON_WHEEL;Id<ID_MANUL_BUTTON_BOUND;Id++){
         SWRB_WM_EnableWindow(hWin_SWRB_MANUL, Id);
     }
@@ -1416,13 +1429,13 @@ void SweepRobot_ManulSetEnterManulModeProc(void)
 void SweepRobot_ManulSetBtnProc(void)
 {
     int Id;
-    
+
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
 
         gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
 
         SweepRobot_ManulTestAutoModeValidTaskStateDisp();
-        
+
         for(Id=ID_MANUL_BUTTON_WHEEL;Id<ID_MANUL_BUTTON_BOUND;Id++){
             SWRB_WM_DisableWindow(hWin_SWRB_MANUL, Id);
         }
@@ -1467,16 +1480,14 @@ void SweepRobot_ManulWheelBtnProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
+        printf("T->ON\r\n");
         printf("WHL->DIR=1\r\n");
-        GUI_Delay(1);
         printf("LW->SPD=25\r\n");
-        GUI_Delay(1);
         printf("RW->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTBLUE);
     }else{
         printf("LW->SPD=0\r\n");
-        GUI_Delay(1);
         printf("RW->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_GRAY);
@@ -1492,18 +1503,15 @@ void SweepRobot_ManulBrushBtnProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
+        printf("T->ON\r\n");
         printf("LB->SPD=30\r\n");
-        GUI_Delay(1);
         printf("RB->SPD=30\r\n");
-        GUI_Delay(1);
         printf("MB->SPD=40\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTBLUE);
     }else{
         printf("LB->SPD=0\r\n");
-        GUI_Delay(1);
         printf("RB->SPD=0\r\n");
-        GUI_Delay(1);
         printf("MB->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_GRAY);
@@ -1519,6 +1527,7 @@ void SweepRobot_ManulFanBtnProc(void)
     OS_ENTER_CRITICAL();
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_FAN]){
+        printf("T->ON\r\n");
         printf("FAN->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTBLUE);
@@ -1556,6 +1565,7 @@ void SweepRobot_ManulBuzzerBtnProc(void)
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_GRAY);
             break;
         case 1:
+            printf("T->ON\r\n");
             printf("BZR->ON=1\r\n");
             aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTRED);
@@ -1589,6 +1599,7 @@ void SweepRobot_ManulRGBLEDBtnProc(void)
             aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
             break;
         case 1:
+            printf("T->ON\r\n");
             printf("RGB->ON=%d\r\n", RGB_LED_RED);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTRED);
             aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;

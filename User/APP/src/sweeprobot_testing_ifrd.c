@@ -29,6 +29,7 @@ static void SweepRobot_IFRDTestInit(void)
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
     printf("SNSR->IFRD=0\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("SNSR->BSWC=0\r\n");
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
@@ -48,9 +49,9 @@ static void SweepRobot_IFRDTestTxOffProc(void)
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!ifrd[i].validFlag){
-            if(i==6){
+            if(i>=6){
                 printf("SNSR->BSWC=1\r\n");
-                OSTimeDlyHMSM(0,0,0,1);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
             }
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                 if(i<6){
@@ -83,7 +84,6 @@ static void SweepRobot_IFRDTestTxOffProc(void)
             }
         }
     }
-    printf("SNSR->BSWC=0\r\n");
     printf("SNSR->IFRD=1\r\n");
 }
 
@@ -94,9 +94,9 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(!ifrd[i].validFlag){
-            if(i==6){
+            if(i>=6){
                 printf("SNSR->BSWC=1\r\n");
-                OSTimeDlyHMSM(0,0,0,1);
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
             }
             for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                 if(i<6){
@@ -152,7 +152,6 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             }
         }
     }
-    printf("SNSR->BSWC=0\r\n");
     printf("SNSR->IFRD=0\r\n");
 
     if( ifrd[0].validFlag && ifrd[1].validFlag && ifrd[2].validFlag && ifrd[3].validFlag && \
@@ -160,6 +159,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
         ){
         gSwrbTestTaskRunCnt = 0;
         printf("SNSR->IFRD=0\r\n");
+        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
         printf("SNSR->BSWC=0\r\n");
         
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
@@ -236,6 +236,7 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("SNSR->IFRD=0\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("SNSR->BSWC=0\r\n");
 
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);

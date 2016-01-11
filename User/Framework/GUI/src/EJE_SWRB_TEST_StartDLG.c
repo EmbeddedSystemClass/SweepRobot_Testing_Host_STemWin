@@ -192,15 +192,6 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
-//                case ID_START_BUTTON_POWER_STATION: // Notifications sent by 'POWER STATION'
-//                    switch(NCode) {
-//                        case WM_NOTIFICATION_CLICKED:
-//                            break;
-//                        case WM_NOTIFICATION_RELEASED:
-//                            SweepRobot_StartDlgPowerStationBtnClickPorc();
-//                            break;
-//                    }
-//                    break;
                 case ID_START_BUTTON_MANUL: // Notifications sent by 'MANUL'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:

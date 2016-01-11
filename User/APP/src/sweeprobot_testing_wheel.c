@@ -36,6 +36,10 @@ static void SWRB_WheelTestInit(void)
         wheel[i].validCnt = 0;
         wheel[i].validFlag = 0;
     }
+    
+    for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){
+        mymemset(&wheel[i], 0, sizeof(wheel[i]));
+    }
 
     printf("WHL->DIR=1\r\n");
 

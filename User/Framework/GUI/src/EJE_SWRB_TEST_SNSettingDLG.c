@@ -315,6 +315,9 @@ static void ListWheel_TestDataFilePathGet(char *dest_str)
     ListWheel_TestDataFilePathGen(swrbTestDataFilePath);
 
     flErr = f_mkdir(swrbTestDataFilePath);
+    if(flErr != FR_OK){
+        flErr = flErr;
+    }
     
     ListWheel_TestDataFileGen(swrbTestDataFilePath);
     
@@ -674,14 +677,26 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 {
     FRESULT flErr;
     char *pathStr;
+    int cnt;
 
     pathStr = mymalloc(SRAMIN, sizeof(char)*40);
-    *pathStr = 0;
-
-    ListWheel_TestDataFilePathGet(pathStr);
-    flErr = f_open(file, pathStr, fileOpenMode);
+    cnt = 0;
+    
+    do{
+FilePathGetLoop:
+        *pathStr = 0;
+        ListWheel_TestDataFilePathGet(pathStr);
+        if(*pathStr != '0' || *(pathStr+1) != ':'){
+            goto FilePathGetLoop;
+        }
+        flErr = f_open(file, pathStr, fileOpenMode);
+        if(flErr != FR_OK){
+            flErr = flErr;
+        }
+        cnt++;
+    }while((flErr != FR_OK) && (cnt < 10));
     myfree(SRAMIN, pathStr);
-    f_lseek(file, file->fsize);
+    flErr = f_lseek(file, file->fsize);
 
     return flErr;
 }

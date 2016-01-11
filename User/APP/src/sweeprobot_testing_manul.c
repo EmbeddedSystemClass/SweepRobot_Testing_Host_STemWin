@@ -517,8 +517,14 @@ static void SweepRobot_ManulTest_IFRDDataProc(void)
 {
     enum SWRB_MANUL_TEST_DATA_POS i;
 
-    for(i=SWRB_MANUL_TEST_DATA_IFRD_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS;i++){
+    for(i=SWRB_MANUL_TEST_DATA_IFRD_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_R_POS;i++){
         SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1000, 3000, i, GUI_LIGHTBLUE, GUI_WHITE);
+    }
+    for(i=SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS;i++){
+        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(500, 3500, i, GUI_LIGHTBLUE, GUI_WHITE);
+    }
+    for(i=SWRB_MANUL_TEST_DATA_IFRD_B_SL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS;i++){
+        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(200, 3800, i, GUI_LIGHTBLUE, GUI_WHITE);
     }
 }
 
