@@ -23,13 +23,11 @@ static void SweepRobot_KeyTestInit(void)
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
-    SweepRobot_KeyTestCtrlTestPos();
+    mymemset(&key, 0, sizeof(key));
+    
+//    SweepRobot_KeyTestCtrlTestPos();
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-
-    key.value = 0;
-    key.validCnt = 0;
-    key.validFlag = 0;
 }
 
 static void SweepRobot_KeyTestProc(void)

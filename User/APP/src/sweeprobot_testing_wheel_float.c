@@ -24,15 +24,13 @@ void SweepRobot_WheelFloatTestInit(void)
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
-    SweepRobot_WheelFloatCtrlMoveToTestPos();
+    for(i=0;i<SWRB_WHEEL_FLOAT_CHAN_NUM;i++){
+        mymemset(&wheelFloat[i], 0, sizeof(wheelFloat[i]));
+    }
+    
+    SweepRobot_WheelFloatCtrlSteerMotorPosMove(STEER_MOTOR_UP_POS);
     
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-
-    for(i=0;i<SWRB_WHEEL_FLOAT_CHAN_NUM;i++){
-        wheelFloat[i].value = 0;
-        wheelFloat[i].validCnt = 0;
-        wheelFloat[i].validFlag = 0;
-    }
 }
 
 static void SweepRobot_WheelFloatTestProc(void)

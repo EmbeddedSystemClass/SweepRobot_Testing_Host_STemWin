@@ -3,14 +3,26 @@
 
 #include "sweeprobot_testing_conf.h"
 
+enum STEER_MOTOR_POS{
+    STEER_MOTOR_IDLE_POS,
+    STEER_MOTOR_FRONT_POS,
+    STEER_MOTOR_SIDE_POS,
+    STEER_MOTOR_UP_POS,
+    STEER_MOTOR_DOWN_POS,
+};
+
 void SweepRobot_CollisionTestGPIOInit(void);
-void SweepRobot_CollisionCtrlOn(enum CollisionChan chan);
-void SweepRobot_CollisionCtrlOff(enum CollisionChan chan);
+void SweepRobot_CollisionRelayCtrlOn(enum CollisionChan chan);
+void SweepRobot_CollisionRelayCtrlOff(enum CollisionChan chan);
+void SweepRobot_CollisionCtrlSteerMotorStateSet(FunctionalState state);
+void SweepRobot_CollisionCtrlLeftSteerMotorPosMove(enum STEER_MOTOR_POS pos);
+void SweepRobot_CollisionCtrlRightSteerMotorPosMove(enum STEER_MOTOR_POS pos);
 
 void SweepRobot_WheelFloatTestGPIOInit(void);
+void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos);
+void SweepRobot_WheelFloatCtrlShutDown(void);
 void SweepRobot_WheelFloatCtrlMoveToTestPos(void);
 void SweepRobot_WheelFloatCtrlMoveToIdlePos(void);
-void SweepRobot_WheelFloatCtrlShutDown(void);
 
 void SweepRobot_AshTrayTestGPIOInit(void);
 void SweepRobot_AshTrayTestInsCtrlMoveToTestPos(void);

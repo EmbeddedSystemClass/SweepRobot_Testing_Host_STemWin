@@ -13,32 +13,31 @@ static FAN_TestTypeDef fan;
 static void SweepRobot_FanTestInit(void)
 {
     char *str;
-    
+
     gSwrbTestRuningTaskPrio = SWRB_FAN_TEST_TASK_PRIO;
-    
+
     str = "\r\n>>>FAN TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef _SHOW_TEST_TITLE    
+#ifdef _SHOW_TEST_TITLE
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
-    printf("FAN->SPD=50\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
+    mymemset(&fan, 0, sizeof(fan));
 
-    fan.current = 0;
-    fan.validCnt = 0;
-    fan.validFlag = 0;
+    printf("FAN->SPD=50\r\n");
+    
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_FanTestProc(void)
 {
     u8 i;
     char *str;
-    
+
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
         printf("FAN->RD\r\n");
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -56,7 +55,7 @@ static void SweepRobot_FanTestProc(void)
                                         str);
                 myfree(SRAMIN, str);
             }
-            
+
             usartRxNum = 0;
             usartRxFlag = 0;
             USART_RX_STA = 0;
@@ -75,7 +74,7 @@ static void SweepRobot_FanTestProc(void)
     if(fan.validCnt > SWRB_TEST_VALID_COMP_TIMES){
         fan.validFlag = 1;
         printf("FAN->SPD=0\r\n");
-        
+
         if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_FAN_CUR_POS][0],\
@@ -86,13 +85,13 @@ static void SweepRobot_FanTestProc(void)
 
     if(fan.validFlag){
         gSwrbTestTaskRunCnt = 0;
-        
+
         SWRB_TestDataSaveToFile(Fan_TestDataSave);
-        
+
         if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "FAN OK\r\n";
             SWRB_TestDataFileWriteString(str);
-            
+
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
             Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_FAN, GUI_BLUE);
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN OK");
@@ -107,10 +106,10 @@ static void SweepRobot_FanTestProc(void)
 static void SweepRobot_FanPCBTestOverTimeProc(void)
 {
     char *str;
-    
+
     str = "ERROR->FAN\r\n";
     SWRB_TestDataFileWriteString(str);
-    
+
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_FAN, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN ERROR");
@@ -132,7 +131,7 @@ static void SweepRobot_FanTestOverTimeProc(void)
     printf("FAN->SPD=0\r\n");
 
     SWRB_TestDataSaveToFile(Fan_TestDataSave);
-    
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_FanPCBTestOverTimeProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -149,7 +148,7 @@ static void SweepRobot_FanTestOverTimeProc(void)
 void SweepRobot_FanTestTask(void *pdata)
 {
     while(1){
-        
+
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN)){
             SWRB_NextTestTaskResumePreAct(SWRB_FAN_TEST_TASK_PRIO);
         }else{

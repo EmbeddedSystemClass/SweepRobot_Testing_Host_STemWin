@@ -26,16 +26,12 @@ static void SweepRobot_RGBLEDTestInit(void)
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
+    mymemset(&rgb_led, 0, sizeof(rgb_led));
+    
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     hWin_SWRB_RGB_LED = CreateRGB_LED_TestDLG();
     WM_BringToTop(hWin_SWRB_RGB_LED);
-    
-    rgb_led.r_state = 0;
-    rgb_led.g_state = 0;
-    rgb_led.b_state = 0;
-    rgb_led.validCnt = 0;
-    rgb_led.validFlag = 0;
 }
 
 static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char *strText, char *strMultiEdit1, char *strMultiEdit2)

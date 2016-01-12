@@ -96,17 +96,16 @@ static void SweepRobot_IrDATestInit(void)
 #endif
 
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
-
-    printf("IRDA->ON\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-
+    
     for(i=0;i<SWRB_IRDA_CHAN_BOUND;i++){
-        IrDA[i].code = 0;
-        IrDA[i].validCnt = 0;
-        IrDA[i].validFlag = 0;
+        mymemset(&IrDA[i], 0, sizeof(IrDA[i]));
         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0);
     }
     mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
+
+    printf("IRDA->ON\r\n");
+    
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_IrDATestProc(void)

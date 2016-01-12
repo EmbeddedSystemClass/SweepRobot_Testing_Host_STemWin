@@ -13,6 +13,7 @@ static void SWRBTest_CtrlPanelInit(void)
 	KEY_Init();
     TFTLCD_Init();
     SweepRobotTest_StepMotorDriverGPIOInit();
+    SweepRobot_WheelFloatTestGPIOInit();
 }
 
 static int SWRBTest_StorageInit(void)

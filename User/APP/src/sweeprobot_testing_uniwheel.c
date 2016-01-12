@@ -24,14 +24,12 @@ static void SweepRobot_UniWheelTestInit(void)
 #endif
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    
+    mymemset(&uniwheel, 0, sizeof(uniwheel));
+    
+    printf("SNSR->IFRD=0\r\n");
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-
-    printf("SNSR->IFRD=0\r\n");
-    uniwheel.onValue = 0;
-    uniwheel.offValue = 0;
-    uniwheel.validCnt = 0;
-    uniwheel.validFlag = 0;
 }
 
 static void SweepRobot_UniWheelTestTxOffProc(void)

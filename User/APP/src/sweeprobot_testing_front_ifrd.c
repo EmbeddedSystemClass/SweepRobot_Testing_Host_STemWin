@@ -68,11 +68,9 @@ void SweepRobot_FrontIFRDTestStateReset(void)
     int i;
     
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        frontIFRD[i].offValue = 0;
-        frontIFRD[i].onValue = 0;
-        frontIFRD[i].validCnt = 0;
-        frontIFRD[i].validFlag = 0;
+        mymemset(&frontIFRD[i], 0, sizeof(frontIFRD[i]));
     }
+    
     gSwrbFrontIFRDTestStepMotorMoveCnt = 0;
     gSwrbFrontIFRDTestChanCnt = 0;
     gSwrbFrontIFRDTestStateMap = 0;

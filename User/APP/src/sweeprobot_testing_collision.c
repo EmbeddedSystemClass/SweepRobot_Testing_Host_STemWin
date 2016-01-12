@@ -23,17 +23,12 @@ static void SweepRobot_CollisionTestInit(void)
 #endif
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
-    
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 
     for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
-        collision[i].onValue = 0;
-        collision[i].offValue = 0;
-        collision[i].onValidCnt = 0;
-        collision[i].offValidCnt = 0;
-        collision[i].onValidFlag = 0;
-        collision[i].validFlag = 0;
+        mymemset(&collision[i], 0, sizeof(collision[i]));
     }
+    
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SweepRobot_CollisionTestProc(void)
@@ -44,7 +39,7 @@ static void SweepRobot_CollisionTestProc(void)
     for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         if(!collision[i].validFlag){
             if(!collision[i].onValidFlag){
-                SweepRobot_CollisionCtrlOn((enum CollisionChan)i);
+                SweepRobot_CollisionRelayCtrlOn((enum CollisionChan)i);
                 OSTimeDlyHMSM(0,0,0,2);
                 for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                     printf("CLSN->RD=%d\r\n",i);
@@ -83,7 +78,7 @@ static void SweepRobot_CollisionTestProc(void)
                     collision[i].onValidFlag = 1;
                 }
             }else{
-                SweepRobot_CollisionCtrlOff((enum CollisionChan)i);
+                SweepRobot_CollisionRelayCtrlOff((enum CollisionChan)i);
                 OSTimeDlyHMSM(0,0,0,2);
                 for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                     printf("CLSN->RD=%d\r\n",i);
@@ -136,7 +131,7 @@ static void SweepRobot_CollisionTestProc(void)
     if(collision[COLLISION_CHAN_L].validFlag && collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_R].validFlag && collision[COLLISION_CHAN_FR].validFlag){
         gSwrbTestTaskRunCnt = 0;
 
-        SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
+        SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
 
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
 
@@ -217,7 +212,7 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
 
     gSwrbTestTaskRunCnt = 0;
 
-    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
+    SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
     

@@ -25,22 +25,20 @@ static void SWRB_BrushTestTaskInit(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
     
+    SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    
+    for(i=0;i<SWRB_BRUSH_CHAN_NUM;i++){
+        mymemset(&brush[i], 0, sizeof(brush[i]));
+    }
+    
     printf("LB->SPD=100\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("RB->SPD=100\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("MB->SPD=40\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
-    
-    SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    
-    for(i=0;i<SWRB_BRUSH_CHAN_NUM;i++){
-        brush[i].current = 0;
-        brush[i].validCnt = 0;
-        brush[i].validFlag = 0;
-    }
 }
 
 static void SWRB_BrushTestProc(void)

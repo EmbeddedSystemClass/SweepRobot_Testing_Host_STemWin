@@ -26,6 +26,8 @@ static void SweepRobot_BuzzerTestInit(void)
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
+    mymemset(&buzzer, 0, sizeof(buzzer));
+    
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     
     hWin_SWRB_BUZZER = CreateBUZZER_TestDLG();
@@ -33,10 +35,6 @@ static void SweepRobot_BuzzerTestInit(void)
 
     Text_Set_Color(hWin_SWRB_BUZZER, ID_PCBTEST_TEXT_BUZZER, GUI_BLACK);
     Text_Set_Text(hWin_SWRB_BUZZER, ID_PCBTEST_TEXT_BUZZER, "IS BUZZER OK?");
-    
-    buzzer.state = 0;
-    buzzer.validCnt = 0;
-    buzzer.validFlag = 0;
 }
 
 static void SweepRobot_BuzzerTestProc(void)

@@ -10,7 +10,7 @@ enum CollisionChan{
     COLLISION_CHAN_FL,
     COLLISION_CHAN_R,
     COLLISION_CHAN_FR,
-    COLLISION_CHAN_ALL
+    COLLISION_CHAN_ALL,
 };
 
 typedef struct{
@@ -24,7 +24,7 @@ typedef struct{
 
 void SweepRobot_CollisionTestTask(void *pdata);
 void Collision_TestDataSave(void);
-void SweepRobot_CollisionCtrlOn(enum CollisionChan chan);
-void SweepRobot_CollisionCtrlOff(enum CollisionChan chan);
+void SweepRobot_CollisionRelayCtrlOn(enum CollisionChan chan);
+void SweepRobot_CollisionRelayCtrlOff(enum CollisionChan chan);
 
 #endif

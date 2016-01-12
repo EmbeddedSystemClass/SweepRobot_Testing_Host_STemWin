@@ -26,17 +26,17 @@
 #define COLLISION_TEST_RIGHT_STEER_MOTOR_CTRL_PIN GPIO_Pin_6            //TIM9_CH2
 
 #define COLLISION_TEST_LEFT_STEERING_MOTOR_IDLE_POS 1250
-#define COLLISION_TEST_FRONT_LEFT_STEERING_MOTOR_POS 1500
-#define COLLISION_TEST_SIDE_LEFT_STEERING_MOTOR_POS 1000
+#define COLLISION_TEST_LEFT_STEERING_MOTOR_FRONT_POS 1500
+#define COLLISION_TEST_LEFT_STEERING_MOTOR_SIDE_POS 1000
 
 #define COLLISION_TEST_RIGHT_STEERING_MOTOR_IDLE_POS 1250
-#define COLLISION_TEST_FRONT_RIGHT_STEERING_MOTOR_POS 1500
-#define COLLISION_TEST_SIDE_RIGHT_STEERING_MOTOR_POS 1000
+#define COLLISION_TEST_RIGHT_STEERING_MOTOR_FRONT_POS 1500
+#define COLLISION_TEST_RIGHT_STEERING_MOTOR_SIDE_POS 1000
 
 /* Wheel Float Steering Motor Control GPIO */
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_PERIPH_ID    RCC_AHB1Periph_GPIOB
 #define WHEEL_FLOAT_TEST_CTRL_GPIO  GPIOB
-#define WHEEL_FLOAT_TEST_CTRL_L_PIN GPIO_Pin_10
+#define WHEEL_FLOAT_TEST_CTRL_L_PIN GPIO_Pin_10                         //TIM2_CH3
 #define WHEEL_FLOAT_TEST_CTRL_R_PIN GPIO_Pin_11
 #define WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE  GPIO_PinSource10
 #define WHEEL_FLOAT_TSET_CTRL_R_PIN_SOURCE  GPIO_PinSource11
@@ -44,7 +44,9 @@
 #define WHEEL_FLOAT_TEST_CTRL_TIM_PERIPH_ID RCC_APB1Periph_TIM2
 #define WHEEL_FLOAT_TEST_CTRL_TIM   TIM2
 
-#define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS   500
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS   750
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS     800
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS   700
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_TEST_POS   1000
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME 100
 
@@ -141,7 +143,7 @@ void SweepRobot_CollisionTestGPIOInit(void)
     TIM_Cmd(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, ENABLE);
 }
 
-void SweepRobot_CollisionCtrlOn(enum CollisionChan chan)
+void SweepRobot_CollisionRelayCtrlOn(enum CollisionChan chan)
 {
     switch(chan){
         case COLLISION_CHAN_L:
@@ -165,7 +167,7 @@ void SweepRobot_CollisionCtrlOn(enum CollisionChan chan)
     }
 }
 
-void SweepRobot_CollisionCtrlOff(enum CollisionChan chan)
+void SweepRobot_CollisionRelayCtrlOff(enum CollisionChan chan)
 {
     switch(chan){
         case COLLISION_CHAN_L:
@@ -189,7 +191,50 @@ void SweepRobot_CollisionCtrlOff(enum CollisionChan chan)
     }
 }
 
-void SweepRobot_CollisionCtrl
+void SweepRobot_CollisionCtrlSteerMotorStateSet(FunctionalState state)
+{
+    switch(state){
+        case ENABLE:
+            TIM_Cmd(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, ENABLE);
+            break;
+        case DISABLE:
+            TIM_Cmd(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, DISABLE);
+            break;
+        default:break;
+    }
+}
+
+void SweepRobot_CollisionCtrlLeftSteerMotorPosMove(enum STEER_MOTOR_POS pos)
+{
+    switch(pos){
+        case STEER_MOTOR_IDLE_POS:
+            TIM_SetCompare1(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, COLLISION_TEST_LEFT_STEERING_MOTOR_IDLE_POS);
+            break;
+        case STEER_MOTOR_FRONT_POS:
+            TIM_SetCompare1(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, COLLISION_TEST_LEFT_STEERING_MOTOR_FRONT_POS);
+            break;
+        case STEER_MOTOR_SIDE_POS:
+            TIM_SetCompare1(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, COLLISION_TEST_LEFT_STEERING_MOTOR_SIDE_POS);
+            break;
+        default:break;
+    }
+}
+
+void SweepRobot_CollisionCtrlRightSteerMotorPosMove(enum STEER_MOTOR_POS pos)
+{
+    switch(pos){
+        case STEER_MOTOR_IDLE_POS:
+            TIM_SetCompare2(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, COLLISION_TEST_RIGHT_STEERING_MOTOR_IDLE_POS);
+            break;
+        case STEER_MOTOR_FRONT_POS:
+            TIM_SetCompare2(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, COLLISION_TEST_RIGHT_STEERING_MOTOR_FRONT_POS);
+            break;
+        case STEER_MOTOR_SIDE_POS:
+            TIM_SetCompare2(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, COLLISION_TEST_RIGHT_STEERING_MOTOR_SIDE_POS);
+            break;
+        default:break;
+    }
+}
 
 /* WHEEL FLOAT TEST GPIO INIT */
 void SweepRobot_WheelFloatTestGPIOInit(void)
@@ -234,6 +279,22 @@ void SweepRobot_WheelFloatTestGPIOInit(void)
     TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
+}
+
+void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos)
+{
+    switch(pos){
+        case STEER_MOTOR_IDLE_POS:
+            TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
+            break;
+        case STEER_MOTOR_UP_POS:
+            TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
+            break;
+        case STEER_MOTOR_DOWN_POS:
+            TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
+            break;
+        default:break;
+    }
 }
 
 void SweepRobot_WheelFloatCtrlMoveToTestPos(void)

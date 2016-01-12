@@ -70,21 +70,14 @@ static void SweepRobot_ChargeTestInit(void)
 #endif
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    
+    mymemset(&charge, 0, sizeof(charge));
 
     SweepRobot_Charge24VOn();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     printf("CRG->ON=20\r\n");
+    
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-
-    charge.current = 0;
-    charge.curValidCnt = 0;
-    charge.curValidFlag = 0;
-    charge.voltage = 0;
-    charge.volValidCnt = 0;
-    charge.volValidFlag = 0;
-    charge.charge24vState = 0;
-    charge.charge24vValidCnt = 0;
-    charge.charge24vValidFlag = 0;
 }
 
 static void SweepRobot_ChargeTestProc(void)

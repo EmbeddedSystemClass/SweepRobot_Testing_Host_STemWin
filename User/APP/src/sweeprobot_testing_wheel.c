@@ -29,26 +29,23 @@ static void SWRB_WheelTestInit(void)
 
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-
-    for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){
-        wheel[i].speed = 0;
-        wheel[i].validCnt = 0;
-        wheel[i].validFlag = 0;
-    }
-    
     for(i=0;i<SWRB_WHEEL_CHAN_NUM;i++){
         mymemset(&wheel[i], 0, sizeof(wheel[i]));
     }
-
+    
     printf("WHL->DIR=1\r\n");
-
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("LW->SPD=50\r\n");
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("RW->SPD=50\r\n");
+    
     /*
     printf("WHL->ON=%d\r\n",WHEEL_CHAN_L);
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("WHL->ON=%d\r\n",WHEEL_CHAN_R);
     */
+
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
 static void SWRB_WheelTestProc(void)

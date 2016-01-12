@@ -46,8 +46,10 @@ static u8 aSwrbManulTestState[SWRB_TEST_STATE_BOUND] = { 0 };
 typedef void (*TestCBFunc_t)(void);
 static TestCBFunc_t gLedTaskCB = NULL;
 
+#ifdef _USE_KEY_BUTTON
 static u8 gkeyCode = 0;
 static u8 gkeyCodeGetFinishFlag = 0;
+#endif
 
 static RTC_TimeTypeDef rtcTime;
 static RTC_DateTypeDef rtcDate;
@@ -61,7 +63,9 @@ static void SelfTest_Task(void *pdata);
 static void emWin_Maintask(void *pdata);
 static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
+#ifdef _USE_KEY_BUTTON
 static void Key_Task(void *pdata);
+#endif
 static void Rtc_Task(void *pdata);
 static void SWRB_TestCtrlTask(void *pdata);
 static void SweepRobotTest_PCBTestInitProc(void);
@@ -77,7 +81,9 @@ static void SweepRobot_ManulTestManulModeTaskStateReset(void);
 
 OS_STK START_TASK_STK[START_STK_SIZE];
 OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
+#ifdef _USE_KEY_BUTTON
 OS_STK KEY_TASK_STK[KEY_STK_SIZE];
+#endif
 OS_STK RTC_TASK_STK[RTC_STK_SIZE];
 OS_STK EMWIN_TASK_STK[EMWIN_STK_SIZE];
 OS_STK LED_TASK_STK[LED_STK_SIZE];
@@ -174,6 +180,7 @@ static void emWin_TaskInit(void)
     hWin_SWRB_DECRYPTO = CreatewinDecryptoDLG();
     hWin_SWRB_MANUL = CreateManulTestDLG();
     hWin_SWRB_STEPMOTOR = CreatewinStepMotorDLG();
+    hWin_SWRB_STEERMOTOR = CreatewinSteerMotorDLG();
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_PCBTestDLG();
     hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
@@ -240,6 +247,7 @@ void Led_Task(void *pdata)
 	}
 }
 
+#ifdef _USE_KEY_BUTTON
 void Key_Task(void *pdata)
 {
 	while(1){
@@ -251,6 +259,7 @@ void Key_Task(void *pdata)
 		OSTimeDlyHMSM(0,0,0,5);
 	}
 }
+#endif
 
 void Rtc_Task(void *pdata)
 {
@@ -415,6 +424,7 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
     }
 }
 
+#ifdef _USE_KEY_BUTTON
 static void SWRB_TEST_BUTTON_CTRL_Start(void)
 {
     switch(gSwrbDialogSelectFlag){
@@ -479,6 +489,7 @@ static void SWRB_TEST_BUTTON_CTRL_Exit(void)
             break;
     }
 }
+#endif
 
 void SWRB_TestCtrlTask(void *pdata)
 {
@@ -517,35 +528,39 @@ void SWRB_TestCtrlTask(void *pdata)
     OSTaskSuspend(SWRB_FRONT_IFRD_TEST_TASK_PRIO);
 
     OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
+#ifdef _USE_KEY_BUTTON
     OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
+#endif
 
     OS_EXIT_CRITICAL();
 
     while(1){
-//        if(gkeyCodeGetFinishFlag){
-//            switch(gkeyCode){
-//                /* TEST START/PAUSE/RESUME PRESSED*/
-//                case 1:
-//                    SWRB_TEST_BUTTON_CTRL_Start();
-//                    break;
-//                /* TEST SET PRESSED */
-//                case 2:
-//                    SWRB_TEST_BUTTON_CTRL_Set();
-//                    break;
-//                /* TEST STOP PRESSED */
-//                case 3:
-//                    SWRB_TEST_BUTTON_CTRL_Stop();
-//                    break;
-//                /* TEST EXIT PRESSED */
-//                case 4:
-//                    SWRB_TEST_BUTTON_CTRL_Exit();
-//                    break;
-//                default:
-//                    break;
-//            }
-//            gkeyCode = 0;
-//            gkeyCodeGetFinishFlag = 0;
-//        }
+#ifdef _USE_KEY_BUTTON
+        if(gkeyCodeGetFinishFlag){
+            switch(gkeyCode){
+                /* TEST START/PAUSE/RESUME PRESSED*/
+                case 1:
+                    SWRB_TEST_BUTTON_CTRL_Start();
+                    break;
+                /* TEST SET PRESSED */
+                case 2:
+                    SWRB_TEST_BUTTON_CTRL_Set();
+                    break;
+                /* TEST STOP PRESSED */
+                case 3:
+                    SWRB_TEST_BUTTON_CTRL_Stop();
+                    break;
+                /* TEST EXIT PRESSED */
+                case 4:
+                    SWRB_TEST_BUTTON_CTRL_Exit();
+                    break;
+                default:
+                    break;
+            }
+            gkeyCode = 0;
+            gkeyCodeGetFinishFlag = 0;
+        }
+#endif
         OSTimeDlyHMSM(0,0,0,40);
     }
 }
@@ -755,7 +770,7 @@ static void SweepRobot_TestHostCtrlStateReset(void)
 {
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestCtrlIdlePos();
-    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
+    SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToIdlePos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
     SweepRobotTest_StepMotorSetIdle();
@@ -1206,7 +1221,7 @@ static void SweepRobot_ManulTestCtrlReset(void)
 {
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestCtrlIdlePos();
-    SweepRobot_CollisionCtrlOff(COLLISION_CHAN_ALL);
+    SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToIdlePos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 }

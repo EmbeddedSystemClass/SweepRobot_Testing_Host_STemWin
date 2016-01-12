@@ -17,42 +17,33 @@ static ASH_TRAY_TestTypeDef ashTrayLvl;
 static void SweepRobot_AshTrayTestInit(void)
 {
     char *str;
-    
+
     gSwrbTestRuningTaskPrio = SWRB_ASH_TRAY_TEST_TASK_PRIO;
-    
+
     str = "\r\n>>>ASH TRAY TEST<<<\r\n";
     SWRB_TestDataFileWriteString(str);
 
-#ifdef _SHOW_TEST_TITLE    
+#ifdef _SHOW_TEST_TITLE
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
+    mymemset(&ashTrayIns, 0, sizeof(ashTrayIns));
+    mymemset(&ashTrayLvl, 0, sizeof(ashTrayLvl));
+
     printf("SNSR->IFRD=0\r\n");
-    SweepRobot_AshTrayTestInsCtrlMoveToTestPos();
-    
+//    SweepRobot_AshTrayTestInsCtrlMoveToTestPos();
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    
-    ashTrayIns.value = 0;
-    ashTrayIns.onValue = 0;
-    ashTrayIns.offValue = 0;
-    ashTrayIns.validCnt = 0;
-    ashTrayIns.validFlag = 0;
-    
-    ashTrayLvl.value = 0;
-    ashTrayLvl.onValue = 0;
-    ashTrayLvl.offValue = 0;
-    ashTrayLvl.validCnt = 0;
-    ashTrayLvl.validFlag = 0;
 }
 
 static void SweepRobot_AshTrayInsTestProc(void)
 {
     u8 i;
     char *str;
-    
+
     if(!ashTrayIns.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("AT->RD=0\r\n");
@@ -88,10 +79,10 @@ static void SweepRobot_AshTrayInsTestProc(void)
         if(ashTrayIns.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayIns.validFlag = 1;
         }
-        
+
         if(ashTrayIns.validFlag){
             SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
-            
+
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][0],\
@@ -107,7 +98,7 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
 {
     u8 i;
     char *str;
-    
+
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("SNSR->RD=14\r\n");
@@ -143,7 +134,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
 {
     u8 i;
     char *str;
-    
+
     if(!ashTrayLvl.validFlag){
         for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
             printf("SNSR->RD=14\r\n");
@@ -187,10 +178,10 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
         }
 #endif
-        
+
         if(ashTrayLvl.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayLvl.validFlag = 1;
-            
+
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
@@ -204,7 +195,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
 static void SweepRobot_AshTrayTestProc(void)
 {
     char *str;
-    
+
     if(gSwrbTestTaskRunCnt > 1){
         SweepRobot_AshTrayInsTestProc();
     }
@@ -226,11 +217,11 @@ static void SweepRobot_AshTrayTestProc(void)
         SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
         SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
-        
+
         if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
             str = "ASH TRAY OK\r\n";
             SWRB_TestDataFileWriteString(str);
-            
+
     //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
             Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_ASH_TRAY, GUI_BLUE);
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY, "ASH TRAY OK");
@@ -244,7 +235,7 @@ static void SweepRobot_AshTrayTestProc(void)
 static void SweepRobot_AshTrayPCBTestOverTimeProc(void)
 {
     char *str;
-    
+
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK){
         str = "ERROR->ASH TRAY INS\r\n";
         SWRB_TestDataFileWriteString(str);
@@ -283,13 +274,13 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
-    
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_AshTrayPCBTestOverTimeProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         SweepRobot_AshTrayManulTestOverTimeProc();
     }
-    
+
 #ifdef _TASK_WAIT_WHEN_ERROR
     SWRB_TestTaskErrorAct();
 #else
@@ -303,7 +294,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
     SweepRobot_AshTrayTestGPIOInit();
 
     while(1){
-        
+
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY)){
             SWRB_NextTestTaskResumePreAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
         }else{
@@ -312,7 +303,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt == 1){
                 SweepRobot_AshTrayTestInit();
             }
-            
+
             SweepRobot_AshTrayTestProc();
 
             if(gSwrbTestTaskRunCnt > 20){

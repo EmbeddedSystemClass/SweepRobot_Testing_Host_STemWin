@@ -28,18 +28,15 @@ static void SweepRobot_IFRDTestInit(void)
     
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
     
+    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+        mymemset(&ifrd[i], 0, sizeof(ifrd[i]));
+    }
+    
     printf("SNSR->IFRD=0\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("SNSR->BSWC=0\r\n");
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    
-    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        ifrd[i].offValue = 0;
-        ifrd[i].onValue = 0;
-        ifrd[i].validCnt = 0;
-        ifrd[i].validFlag = 0;
-    }
 }
 
 static void SweepRobot_IFRDTestTxOffProc(void)
