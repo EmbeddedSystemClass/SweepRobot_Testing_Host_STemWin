@@ -12,8 +12,8 @@ enum STEER_MOTOR_POS{
 };
 
 void SweepRobot_CollisionTestGPIOInit(void);
-void SweepRobot_CollisionRelayCtrlOn(enum CollisionChan chan);
-void SweepRobot_CollisionRelayCtrlOff(enum CollisionChan chan);
+void SweepRobot_CollisionRelayCtrlOn(enum COLLISION_CHAN chan);
+void SweepRobot_CollisionRelayCtrlOff(enum COLLISION_CHAN chan);
 void SweepRobot_CollisionCtrlSteerMotorStateSet(FunctionalState state);
 void SweepRobot_CollisionCtrlLeftSteerMotorPosMove(enum STEER_MOTOR_POS pos);
 void SweepRobot_CollisionCtrlRightSteerMotorPosMove(enum STEER_MOTOR_POS pos);

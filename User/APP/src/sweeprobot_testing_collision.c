@@ -7,7 +7,9 @@
 
 static COLLISION_TestTypeDef collision[SWRB_COLLISION_CHAN_NUM];
 
-static void SweepRobot_CollisionTestInit(void)
+static u8 gSwrbFrontCollisionTestFinishFlag = 0;
+
+static void SweepRobot_CollisionPCBTestInit(void)
 {
     u8 i;
     char *str;
@@ -21,17 +23,17 @@ static void SweepRobot_CollisionTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
 
     for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         mymemset(&collision[i], 0, sizeof(collision[i]));
     }
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
-static void SweepRobot_CollisionTestProc(void)
+static void SweepRobot_CollisionPCBTestProc(void)
 {
     u8 i,j;
     char *str;
@@ -39,7 +41,7 @@ static void SweepRobot_CollisionTestProc(void)
     for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         if(!collision[i].validFlag){
             if(!collision[i].onValidFlag){
-                SweepRobot_CollisionRelayCtrlOn((enum CollisionChan)i);
+                SweepRobot_CollisionRelayCtrlOn((enum COLLISION_CHAN)i);
                 OSTimeDlyHMSM(0,0,0,2);
                 for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                     printf("CLSN->RD=%d\r\n",i);
@@ -78,7 +80,7 @@ static void SweepRobot_CollisionTestProc(void)
                     collision[i].onValidFlag = 1;
                 }
             }else{
-                SweepRobot_CollisionRelayCtrlOff((enum CollisionChan)i);
+                SweepRobot_CollisionRelayCtrlOff((enum COLLISION_CHAN)i);
                 OSTimeDlyHMSM(0,0,0,2);
                 for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                     printf("CLSN->RD=%d\r\n",i);
@@ -116,7 +118,7 @@ static void SweepRobot_CollisionTestProc(void)
 
                 if(collision[i].offValidCnt > 1){
                     collision[i].validFlag = 1;
-                    
+
                     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
@@ -135,15 +137,13 @@ static void SweepRobot_CollisionTestProc(void)
 
         SWRB_TestDataSaveToFile(Collision_TestDataSave);
 
-        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-            str = "COLLISION OK\r\n";
-            SWRB_TestDataFileWriteString(str);
+        str = "COLLISION OK\r\n";
+        SWRB_TestDataFileWriteString(str);
 
-    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
-            Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_COLLISION, GUI_BLUE);
-            Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_COLLISION, "COLLISION OK");
-            Edit_Clear();
-        }
+//        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_COLLISION, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_COLLISION, "COLLISION OK");
+        Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
     }
@@ -153,6 +153,8 @@ static void SweepRobot_CollisionPCBTestOverTimeProc(void)
 {
     char *str;
     
+    SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
         str = "ERROR->COLLISION_L\r\n";
         SWRB_TestDataFileWriteString(str);
@@ -181,6 +183,9 @@ static void SweepRobot_CollisionPCBTestOverTimeProc(void)
 
 static void SweepRobot_CollisionManulTestOverTimeProc(void)
 {
+    SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
+    SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
+    
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][0],\
@@ -209,13 +214,11 @@ static void SweepRobot_CollisionManulTestOverTimeProc(void)
 
 static void SweepRobot_CollisionTestOverTimeProc(void)
 {
-
     gSwrbTestTaskRunCnt = 0;
-
-    SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+    gSwrbFrontCollisionTestFinishFlag = 0;
     
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
-    
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_CollisionPCBTestOverTimeProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -229,10 +232,200 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
 #endif
 }
 
+static void SweepRobot_CollisionManulTestInit(void)
+{
+    u8 i;
+    char *str;
+
+    if(!gSwrbFrontCollisionTestFinishFlag){
+        gSwrbTestRuningTaskPrio = SWRB_COLLISION_TEST_TASK_PRIO;
+
+        str = "\r\n>>>COLLISION TEST<<<\r\n";
+        SWRB_TestDataFileWriteString(str);
+
+        SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
+    }
+
+    for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
+        if(gSwrbFrontCollisionTestFinishFlag){
+            if(i==COLLISION_CHAN_L || i==COLLISION_CHAN_FR){
+                mymemset(&collision[i], 0, sizeof(collision[i]));
+            }
+        }else{
+            mymemset(&collision[i], 0, sizeof(collision[i]));
+        }
+    }
+
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
+}
+
+static void SweepRobot_CollisionTestDataQuery(enum COLLISION_CHAN chan, int *dest_value)
+{
+    char *str;
+    int i;
+    
+    for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
+        printf("CLSN->RD=%d\r\n",chan);
+        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+        if(usartRxFlag){
+            *dest_value = usartRxNum;
+            str = mymalloc(SRAMIN, sizeof(char)*10);
+            *str = 0;
+            sprintf(str, "%d", usartRxNum);
+            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
+                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
+                                    str);
+            myfree(SRAMIN, str);
+            usartRxNum = 0;
+            usartRxFlag = 0;
+            USART_RX_STA = 0;
+            break;
+        }else{
+            continue;
+        }
+    }
+}
+
+static void SweepRobot_CollisionTestSteerMotorOffDataValidCmp(enum COLLISION_CHAN chan, int *value, u8 *cnt, u8 *flag)
+{
+    SweepRobot_CollisionTestDataQuery(chan, value);
+    
+    if(*value){
+        (*cnt)++;
+        gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+chan));
+    }else{
+        gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+chan));
+    }
+    
+    if((*cnt) > 1){
+        *flag = 1;
+    }
+}
+
+static void SweepRobot_CollisionTestSteerMotorOnDataValidCmp(enum COLLISION_CHAN chan, int *value, u8 *cnt, u8 *flag)
+{
+    SweepRobot_CollisionTestDataQuery(chan, value);
+    
+    if(!(*value)){
+        (*cnt)++;
+        gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+chan));
+    }else{
+        gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+chan));
+    }
+    
+    if((*cnt) > 1){
+        *flag = 1;
+    }
+}
+
+
+
+static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
+{
+    if(chan == COLLISION_CHAN_FL || chan == COLLISION_CHAN_R){
+        if(!collision[chan].validFlag){
+            if(!collision[chan].offValidFlag){
+                SweepRobot_CollisionTestSteerMotorOffDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].offValue, &collision[chan].offValidCnt, &collision[chan].offValidFlag);
+                
+                if(collision[chan].offValidFlag){
+                    if(chan == COLLISION_CHAN_FL){
+                        SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
+                    }else if(chan == COLLISION_CHAN_R){
+                        SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
+                    }
+                }
+            }else{
+                SweepRobot_CollisionTestSteerMotorOnDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].onValue, &collision[chan].onValidCnt, &collision[chan].onValidFlag);
+                
+                if(collision[chan].validFlag){
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
+                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
+                                                            GUI_LIGHTBLUE);
+                    if(chan == COLLISION_CHAN_FL){
+                        SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
+                    }else if(chan == COLLISION_CHAN_R){
+                        SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
+                    }
+                }
+                
+                if( collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_R].validFlag ){
+                    gSwrbTestTaskRunCnt = 0;
+                    gSwrbFrontCollisionTestFinishFlag = 1;
+                }
+            }
+        }
+    }
+}
+
+static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
+{
+    if(chan == COLLISION_CHAN_L || chan == COLLISION_CHAN_FR){
+        if(!collision[chan].validFlag){
+            if(!collision[chan].offValidFlag){
+                SweepRobot_CollisionTestSteerMotorOffDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].offValue, &collision[chan].offValidCnt, &collision[chan].offValidFlag);
+                
+                if(collision[chan].offValidFlag){
+                    if(chan == COLLISION_CHAN_L){
+                        SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
+                    }else if(chan == COLLISION_CHAN_FR){
+                        SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
+                    }
+                }
+            }else{
+                SweepRobot_CollisionTestSteerMotorOnDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].onValue, &collision[chan].onValidCnt, &collision[chan].onValidFlag);
+                
+                if(collision[chan].validFlag){
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
+                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
+                                                            GUI_LIGHTBLUE);
+                    if(chan == COLLISION_CHAN_L){
+                        SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
+                    }else if(chan == COLLISION_CHAN_FR){
+                        SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
+                    }
+                }
+            }
+        }
+    }
+}
+
+static void SweepRobot_CollisionManulTestProc(void)
+{
+    u8 i;
+    char *str;
+
+    for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
+        if(!gSwrbFrontCollisionTestFinishFlag){
+            SweepRobot_CollisionManulTestFrontDataProc((enum COLLISION_CHAN)i);
+        }else{
+            SweepRobot_CollisionManulTestSideDataProc((enum COLLISION_CHAN)i);
+        }
+    }
+    
+    if( collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_FR].validFlag && \
+        collision[COLLISION_CHAN_L].validFlag && collision[COLLISION_CHAN_R].validFlag \
+    ){
+        gSwrbTestTaskRunCnt = 0;
+        gSwrbFrontCollisionTestFinishFlag = 0;
+
+        SWRB_TestDataSaveToFile(Collision_TestDataSave);
+
+        str = "COLLISION OK\r\n";
+        SWRB_TestDataFileWriteString(str);
+
+        SWRB_NextTestTaskResumePostAct(SWRB_COLLISION_TEST_TASK_PRIO);
+    }
+}
+
 void SweepRobot_CollisionTestTask(void *pdata)
 {
 
     SweepRobot_CollisionTestGPIOInit();
+    
+    gSwrbFrontCollisionTestFinishFlag = 0;
 
     while(1){
 
@@ -241,17 +434,39 @@ void SweepRobot_CollisionTestTask(void *pdata)
         }else{
             gSwrbTestTaskRunCnt++;
 
-            if(gSwrbTestTaskRunCnt == 1){
-                SweepRobot_CollisionTestInit();
+            if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+                /* PCB TEST Collision Test Proc */
+                if(gSwrbTestTaskRunCnt == 1){
+                    SweepRobot_CollisionPCBTestInit();
+                }
+
+                if(gSwrbTestTaskRunCnt > 1){
+                    SweepRobot_CollisionPCBTestProc();
+                }
+
+                if(gSwrbTestTaskRunCnt > 20){
+                    SweepRobot_CollisionTestOverTimeProc();
+                }
+            }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+                /* Manul Test Collision Test Proc */
+                if(gSwrbTestTaskRunCnt == 1){
+                    SweepRobot_CollisionManulTestInit();
+                }
+
+                if(gSwrbTestTaskRunCnt > 1){
+                    SweepRobot_CollisionManulTestProc();
+                }
+
+                if(gSwrbTestTaskRunCnt > 20){
+                    if(gSwrbFrontCollisionTestFinishFlag){
+                        SweepRobot_CollisionTestOverTimeProc();
+                    }else{
+                        gSwrbTestTaskRunCnt = 0;
+                        gSwrbFrontCollisionTestFinishFlag = 1;
+                    }
+                }
             }
 
-            if(gSwrbTestTaskRunCnt > 1){
-                SweepRobot_CollisionTestProc();
-            }
-
-            if(gSwrbTestTaskRunCnt > 20){
-                SweepRobot_CollisionTestOverTimeProc();
-            }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
     }

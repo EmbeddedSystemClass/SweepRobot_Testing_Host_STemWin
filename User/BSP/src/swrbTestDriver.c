@@ -143,7 +143,7 @@ void SweepRobot_CollisionTestGPIOInit(void)
     TIM_Cmd(COLLISION_TEST_STEER_MOTOR_CTRL_TIM, ENABLE);
 }
 
-void SweepRobot_CollisionRelayCtrlOn(enum CollisionChan chan)
+void SweepRobot_CollisionRelayCtrlOn(enum COLLISION_CHAN chan)
 {
     switch(chan){
         case COLLISION_CHAN_L:
@@ -167,7 +167,7 @@ void SweepRobot_CollisionRelayCtrlOn(enum CollisionChan chan)
     }
 }
 
-void SweepRobot_CollisionRelayCtrlOff(enum CollisionChan chan)
+void SweepRobot_CollisionRelayCtrlOff(enum COLLISION_CHAN chan)
 {
     switch(chan){
         case COLLISION_CHAN_L:

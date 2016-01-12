@@ -622,7 +622,7 @@ void SweepRobot_PCBTestStartBtnProc(void)
 
         gSwrbTestMode = SWRB_TEST_MODE_PAUSE;
 
-        /* FIXME:  Valide Task count would be wrong if click checkbox when pause */
+        /* FIXME:  Valid Task count would be wrong if click checkbox when pause */
 //        SWRB_PCBTestCheckboxEnable();
 
         TEST_LED_TASK_CB_DEREG();
