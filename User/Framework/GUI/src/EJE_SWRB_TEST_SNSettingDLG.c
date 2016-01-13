@@ -89,7 +89,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 static void ListWheel_ResetToLastPos(void);
 static void ListWheel_ResetToZero(void);
-static void ListWheel_TestDataFilePathGet(char *dest_str);
 
 static void Button_Init(WM_HWIN hItem)
 {
@@ -104,7 +103,7 @@ static void Button_ConfirmProc(void)
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
-    ListWheel_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
+    SWRB_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
 
     WM_HideWin(hWin_SWRB_SNSET);
     WM_ShowWin(hWin_SWRB_START);
@@ -113,7 +112,7 @@ static void Button_ConfirmProc(void)
 
 static void Button_CheckProc(void)
 {
-    ListWheel_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET);
+    SWRB_TestDataFilePathDisp(hWin_SWRB_SNSET, ID_SNSET_EDIT_COMB_SET);
 }
 
 static void Button_ResetProc(void)
@@ -211,38 +210,58 @@ static void ListWheel_TextGet(WM_HWIN hWin, int id, char *dest_str)
     myfree(SRAMIN, lwBuf);
 }
 
-static void ListWheel_TestDataFilePathGen(char *dest_str)
+static void SweepRobotTest_TestDataFileFolderPathGet(char *dest_str)
 {
-    static char *strSNYear,*strSNMonth, *strSNDate;
-    
-    strSNYear = mymalloc(SRAMIN, sizeof(char)*6);
+    char *strSNYear,*strSNMonth, *strSNDate;
+
+    strSNYear = mymalloc(SRAMIN, sizeof(char)*10);
     *strSNYear = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, strSNYear);
 
-    strSNMonth = mymalloc(SRAMIN, sizeof(char)*4);
+    strSNMonth = mymalloc(SRAMIN, sizeof(char)*10);
     *strSNMonth = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, strSNMonth);
 
-    strSNDate = mymalloc(SRAMIN, sizeof(char)*4);
+    strSNDate = mymalloc(SRAMIN, sizeof(char)*10);
     *strSNDate = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, strSNDate);
-    
+
     sprintf(dest_str, "0:/%s%02d%02d", strSNYear, atoi(strSNMonth), atoi(strSNDate));
-    
+
     myfree(SRAMIN, (void*)strSNYear);
     myfree(SRAMIN, (void*)strSNMonth);
     myfree(SRAMIN, (void*)strSNDate);
 }
 
-static void ListWheel_TestDataFileGen(char *dest_str)
+static FRESULT SweepRobotTest_TestDataFileFolderMkdir(void)
 {
-    char *swrbTestDataFilePath;
-    static char *strSN1, *strSN2, *strSN3;
-    
-    swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
-    *swrbTestDataFilePath = 0;
-    ListWheel_TestDataFilePathGen(swrbTestDataFilePath);
-    
+    FRESULT flErr;
+    char *strFolderPath;
+    int cnt;
+
+    strFolderPath = mymalloc(SRAMIN, sizeof(char)*20);
+    *strFolderPath = 0;
+
+    cnt = 0;
+    do{
+        SweepRobotTest_TestDataFileFolderPathGet(strFolderPath);
+        cnt++;
+    }while((*(strFolderPath) != '0' && *(strFolderPath+1) != ':') && cnt<10);
+
+    if(cnt < 10){
+        flErr = f_mkdir(strFolderPath);
+        return flErr;
+    }
+
+    myfree(SRAMIN, strFolderPath);
+
+    return flErr;
+}
+
+static void SweepRobotTest_TestDataFileNameGet(char *dest_str)
+{
+    char *strSN1, *strSN2, *strSN3;
+
     strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
     *strSN1 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, strSN1);
@@ -254,20 +273,38 @@ static void ListWheel_TestDataFileGen(char *dest_str)
     strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
     *strSN3 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, strSN3);
-    
-    sprintf(dest_str, "%s/%s%s%s.txt", swrbTestDataFilePath, strSN1, strSN2, strSN3);
-    
-    myfree(SRAMIN, swrbTestDataFilePath);
+
+    sprintf(dest_str, "%s%s%s.txt", strSN1, strSN2, strSN3);
+
     myfree(SRAMIN, (void*)strSN1);
     myfree(SRAMIN, (void*)strSN2);
     myfree(SRAMIN, (void*)strSN3);
+}
+
+static void SweepRobotTest_TestDataFilePathGet(char *dest_str)
+{
+    char *strTestDataFileFolderPath;
+    char *strTestDataFileNamePath;
+
+    strTestDataFileFolderPath = mymalloc(SRAMIN, sizeof(char)*50);
+    *strTestDataFileFolderPath = 0;
+    SweepRobotTest_TestDataFileFolderPathGet(strTestDataFileFolderPath);
+
+    strTestDataFileNamePath = mymalloc(SRAMIN, sizeof(char)*50);
+    *strTestDataFileNamePath = 0;
+    SweepRobotTest_TestDataFileNameGet(strTestDataFileNamePath);
+
+    sprintf(dest_str, "%s/%s", strTestDataFileFolderPath, strTestDataFileNamePath);
+
+    myfree(SRAMIN, strTestDataFileFolderPath);
+    myfree(SRAMIN, strTestDataFileNamePath);
 }
 
 static void ListWheel_TestDataFileSerialNumberGen(char *dest_str)
 {
-    static char *strSNYear,*strSNMonth, *strSNDate;
-    static char *strSN1, *strSN2, *strSN3;
-    
+    char *strSNYear,*strSNMonth, *strSNDate;
+    char *strSN1, *strSN2, *strSN3;
+
     strSNYear = mymalloc(SRAMIN, sizeof(char)*6);
     *strSNYear = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, strSNYear);
@@ -279,7 +316,7 @@ static void ListWheel_TestDataFileSerialNumberGen(char *dest_str)
     strSNDate = mymalloc(SRAMIN, sizeof(char)*4);
     *strSNDate = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, strSNDate);
-    
+
     strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
     *strSN1 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, strSN1);
@@ -291,39 +328,15 @@ static void ListWheel_TestDataFileSerialNumberGen(char *dest_str)
     strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
     *strSN3 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, strSN3);
-    
+
     sprintf(dest_str, "SerialNumber: %s%02d%02d%s%s%s", strSNYear, atoi(strSNMonth), atoi(strSNDate), strSN1, strSN2, strSN3);
-    
+
     myfree(SRAMIN, (void*)strSNYear);
     myfree(SRAMIN, (void*)strSNMonth);
     myfree(SRAMIN, (void*)strSNDate);
     myfree(SRAMIN, (void*)strSN1);
     myfree(SRAMIN, (void*)strSN2);
     myfree(SRAMIN, (void*)strSN3);
-}
-
-static void ListWheel_TestDataFilePathGet(char *dest_str)
-{
-    FRESULT flErr;
-    static char *swrbTestDataFilePath;
-
-    flErr = flErr;
-
-    swrbTestDataFilePath = mymalloc(SRAMIN, sizeof(char)*40);
-    *swrbTestDataFilePath = 0;
-
-    ListWheel_TestDataFilePathGen(swrbTestDataFilePath);
-
-    flErr = f_mkdir(swrbTestDataFilePath);
-    if(flErr != FR_OK){
-        flErr = flErr;
-    }
-    
-    ListWheel_TestDataFileGen(swrbTestDataFilePath);
-    
-    sprintf(dest_str, "%s", swrbTestDataFilePath);
-
-    myfree(SRAMIN, swrbTestDataFilePath);
 }
 
 /*********************************************************************
@@ -574,7 +587,8 @@ WM_HWIN hWin_SWRB_SNSET;
 *
 *       CreateSNSettingDLG
 */
-WM_HWIN CreateSNSettingDLG(void) {
+WM_HWIN CreateSNSettingDLG(void)
+{
     WM_HWIN hWin;
 
     hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 0, 0);
@@ -673,34 +687,96 @@ void SWRB_ListWheelSNInc(WM_HWIN hWin)
     myfree(SRAMIN, strSN3);
 }
 
+/* TODO: Add Test Data File Create function */
+FRESULT SWRB_TestDataFileCreate(void)
+{
+    FRESULT flErr;
+    char *strFilePath;
+
+    strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+
+    SweepRobotTest_TestDataFileFolderMkdir();
+    SweepRobotTest_TestDataFilePathGet(strFilePath);
+
+    return flErr;
+}
+
+FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
+{
+    FRESULT flErr;
+    int cnt;
+    char *strFilePath;
+
+    strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+    *strFilePath = 0;
+
+    cnt = 0;
+    do{
+        SweepRobotTest_TestDataFilePathGet(strFilePath);
+        flErr = f_open(file, strFilePath, fileOpenMode);
+        switch(flErr){
+            case FR_NO_PATH:
+                SweepRobotTest_TestDataFileFolderMkdir();
+                break;
+            case FR_INVALID_NAME:
+                SweepRobotTest_TestDataFilePathGet(strFilePath);
+                flErr = f_open(file, strFilePath, fileOpenMode | FA_OPEN_ALWAYS);
+                break;
+            case FR_DISK_ERR:
+                break;
+            default:break;
+        }
+        cnt++;
+    }while(flErr!=FR_OK && cnt<10);
+
+    myfree(SRAMIN, strFilePath);
+
+    cnt = 0;
+    do{
+        flErr = f_lseek(file, file->fsize);
+        cnt++;
+    }while(flErr!=FR_OK && cnt<10);
+
+    return flErr;
+}
+
+/*
 FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 {
     FRESULT flErr;
     char *pathStr;
-    int cnt;
+    int cnt1,cnt2;
 
     pathStr = mymalloc(SRAMIN, sizeof(char)*40);
-    cnt = 0;
-    
+
+    cnt1 = 0;
     do{
-FilePathGetLoop:
-        *pathStr = 0;
-        ListWheel_TestDataFilePathGet(pathStr);
-        if(*pathStr != '0' || *(pathStr+1) != ':' || *(pathStr+2) != '/'){
-            goto FilePathGetLoop;
-        }
+        cnt2 = 0;
+        do{
+            *pathStr = 0;
+            SweepRobotTest_TestDataFilePathGet(pathStr);
+            cnt2++;
+        }while(*(pathStr) != '/') && cnt2<10);
+
         flErr = f_open(file, pathStr, fileOpenMode);
-        if(flErr != FR_OK){
-            flErr = flErr;
+        if(flErr == FR_INVALID_NAME){
+            flErr = f_open(file, pathStr, fileOpenMode | FA_OPEN_ALWAYS);
         }
-        cnt++;
-    }while((flErr != FR_OK) && (cnt < 10));
-    
+
+        cnt1++;
+    }while((flErr != FR_OK) && (cnt1 < 10));
+
     myfree(SRAMIN, pathStr);
-    flErr = f_lseek(file, file->fsize);
+
+    cnt1 = 0;
+    do{
+        flErr = f_lseek(file, file->fsize);
+        cnt1++;
+    }while(flErr!=FR_OK && cnt1<10);
 
     return flErr;
 }
+*/
 
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 {
@@ -712,19 +788,20 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 void SWRB_TestDataFileWriteSN(void)
 {
     char *swrbTestSerialNum;
-
-    SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
-
+    
     swrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
     *swrbTestSerialNum = 0;
-
+    
     ListWheel_TestDataFileSerialNumberGen(swrbTestSerialNum);
-
-    f_printf(file, "%s\r\n", swrbTestSerialNum);
-    f_close(file);
-
+    
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, swrbTestSerialNum);
 
+    if(gSwrbTestSDCardInsertState){
+        SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
+        f_printf(file, "%s\r\n", swrbTestSerialNum);
+        f_close(file);
+    }
+    
     myfree(SRAMIN, swrbTestSerialNum);
 }
 
@@ -734,24 +811,28 @@ void SWRB_TestDUTWriteSN(void)
     int tempSN;
 
     printf("SNW->ERS\r\n");
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+    GUI_Delay(SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     str = mymalloc(SRAMIN, sizeof(char)*10);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, str);
     printf("SNW->YEAR=%s\r\n", str);
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+    GUI_Delay(SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, str);
     printf("SNW->MNTH=%s\r\n", str);
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+    GUI_Delay(SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, str);
     printf("SNW->DATE=%s\r\n", str);
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+    GUI_Delay(SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     *str = 0;
     ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, str);
@@ -767,23 +848,25 @@ void SWRB_TestDUTWriteSN(void)
     tempSN += *str-'0';
 
     printf("SNW->SN=%d\r\n", tempSN);
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+//    OSTimeDlyHMSM(0,0,0,SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
+    GUI_Delay(SWRB_TEST_DUT_SN_WRITE_WAIT_TIME);
 
     myfree(SRAMIN, str);
 }
 
-void ListWheel_TestDataFilePathDisp(WM_HWIN hWin, int id)
+void SWRB_TestDataFilePathDisp(WM_HWIN hWin, int id)
 {
     WM_HWIN hItem;
     char *str;
-    
+
     str = mymalloc(SRAMIN, sizeof(char)*50);
     *str = 0;
-    ListWheel_TestDataFilePathGet(str);
-    
+
+    SweepRobotTest_TestDataFilePathGet(str);
+
     hItem = WM_GetDialogItem(hWin, id);
     EDIT_SetText(hItem, str);
-    
+
     myfree(SRAMIN, str);
 }
 

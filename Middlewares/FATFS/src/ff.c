@@ -733,7 +733,6 @@ FRESULT move_window (	/* FR_OK(0):succeeded, !=0:error */
 {
 	FRESULT res = FR_OK;
 
-
 	if (sector != fs->winsect) {	/* Window offset changed? */
 #if !_FS_READONLY
 		res = sync_window(fs);		/* Write-back changes */
@@ -2099,12 +2098,8 @@ FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
 			dp->sclust = ld_clust(dp->fs, dir);
 		}
 	}
-
 	return res;
 }
-
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Get logical drive number from path name                               */
