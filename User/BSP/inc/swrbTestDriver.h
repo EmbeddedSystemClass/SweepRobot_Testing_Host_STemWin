@@ -16,12 +16,14 @@ void SweepRobot_CollisionRelayCtrlOn(enum COLLISION_CHAN chan);
 void SweepRobot_CollisionRelayCtrlOff(enum COLLISION_CHAN chan);
 void SweepRobot_CollisionCtrlSteerMotorStateSet(FunctionalState state);
 void SweepRobot_CollisionCtrlLeftSteerMotorPosMove(enum STEER_MOTOR_POS pos);
+void SweepRobot_CollisionCtrlLeftSteerMotorPosSet(int DutyCycle);
 void SweepRobot_CollisionCtrlRightSteerMotorPosMove(enum STEER_MOTOR_POS pos);
+void SweepRobot_CollisionCtrlRightSteerMotorPosSet(int DutyCycle);
 
 void SweepRobot_WheelFloatTestGPIOInit(void);
 void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos);
+void SweepRobot_WheelFloatCtrlSteerMotorPosSet(int DutyCycle);
 void SweepRobot_WheelFloatCtrlShutDown(void);
-void SweepRobot_WheelFloatCtrlMoveToTestPos(void);
 void SweepRobot_WheelFloatCtrlMoveToIdlePos(void);
 
 void SweepRobot_AshTrayTestGPIOInit(void);

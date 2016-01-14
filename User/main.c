@@ -10,9 +10,10 @@ extern GUI_CONST_STORAGE GUI_FONT GUI_FontSDErrCHN;
 static void SWRBTest_CtrlPanelInit(void)
 {
     LED_Init();
-	KEY_Init();
+    KEY_Init();
     TFTLCD_Init();
     SweepRobotTest_StepMotorDriverGPIOInit();
+    SweepRobot_CollisionTestGPIOInit();
     SweepRobot_WheelFloatTestGPIOInit();
 }
 
@@ -31,12 +32,12 @@ static int SWRBTest_StorageInit(void)
         return -1;
     }
 
-	mem_init(SRAMIN);
-	mem_init(SRAMEX);
-	mem_init(SRAMCCM);
+    mem_init(SRAMIN);
+    mem_init(SRAMEX);
+    mem_init(SRAMCCM);
 
-	f_mount(fs[0],"0:",1);
-	f_mount(fs[1],"1:",1);
+    f_mount(fs[0],"0:",1);
+    f_mount(fs[1],"1:",1);
     
     return 0;
 }
@@ -44,18 +45,18 @@ static int SWRBTest_StorageInit(void)
 int main(void)
 {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-	delay_init(168);
-	uart_init(115200);
+    delay_init(168);
+    uart_init(115200);
     USER_RTC_Init();
-	SWRBTest_CtrlPanelInit();
+    SWRBTest_CtrlPanelInit();
 
     if(SWRBTest_StorageInit()){
         goto MEM_INIT_FAULT;
     }
 
-	OSInit();
-	OS_Task_Create();
-	OSStart();
+    OSInit();
+    OS_Task_Create();
+    OSStart();
     
 MEM_INIT_FAULT:
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
@@ -72,10 +73,10 @@ MEM_INIT_FAULT:
     goto INFINITY_LOOP;
     
 INFINITY_LOOP:
-	while(1){
+    while(1){
         
-	}
+    }
 
     /* XXX: should never get here */
-	return -1;
+    return -1;
 }

@@ -331,8 +331,10 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
                 if(collision[chan].offValidFlag){
                     if(chan == COLLISION_CHAN_FL){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
+                        OSTimeDlyHMSM(0,0,1,0);
                     }else if(chan == COLLISION_CHAN_R){
                         SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
+                        OSTimeDlyHMSM(0,0,1,0);
                     }
                 }
             }else{
@@ -369,8 +371,11 @@ static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
                 if(collision[chan].offValidFlag){
                     if(chan == COLLISION_CHAN_L){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
+                        OSTimeDlyHMSM(0,0,1,0);
+                        /* TODO: Add Task Resume in UART Rx ISR to decrease waiting time */
                     }else if(chan == COLLISION_CHAN_FR){
                         SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
+                        OSTimeDlyHMSM(0,0,1,0);
                     }
                 }
             }else{

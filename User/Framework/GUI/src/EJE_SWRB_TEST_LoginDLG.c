@@ -354,4 +354,12 @@ WM_HWIN CreateLoginDLG(void) {
     return hWin;
 }
 
+void SweepRobotTest_LoginDlgPasswdClear(void)
+{
+    do{
+        strPasswdLen--;
+        strPasswd[strPasswdLen] = 0;
+    }while(strPasswdLen);
+}
+
 /*************************** End of file ****************************/
