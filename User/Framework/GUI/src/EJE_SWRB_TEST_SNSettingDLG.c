@@ -95,7 +95,7 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     BUTTON_SetSkinClassic(hItem);
     BUTTON_SetFocussable(hItem, DISABLE);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_3D);
 }
 
 static void Button_ConfirmProc(void)
@@ -706,36 +706,40 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     FRESULT flErr;
     int cnt;
     char *strFilePath;
+    
+    if(gSwrbTestSDCardInsertState){
+        strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+        *strFilePath = 0;
 
-    strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
-    *strFilePath = 0;
+        cnt = 0;
+        do{
+            SweepRobotTest_TestDataFilePathGet(strFilePath);
+            flErr = f_open(file, strFilePath, fileOpenMode);
+            switch(flErr){
+                case FR_NO_PATH:
+                    SweepRobotTest_TestDataFileFolderMkdir();
+                    break;
+                case FR_INVALID_NAME:
+                    SweepRobotTest_TestDataFilePathGet(strFilePath);
+                    flErr = f_open(file, strFilePath, fileOpenMode | FA_OPEN_ALWAYS);
+                    break;
+                case FR_DISK_ERR:
+                    break;
+                default:break;
+            }
+            cnt++;
+        }while(flErr!=FR_OK && cnt<10);
 
-    cnt = 0;
-    do{
-        SweepRobotTest_TestDataFilePathGet(strFilePath);
-        flErr = f_open(file, strFilePath, fileOpenMode);
-        switch(flErr){
-            case FR_NO_PATH:
-                SweepRobotTest_TestDataFileFolderMkdir();
-                break;
-            case FR_INVALID_NAME:
-                SweepRobotTest_TestDataFilePathGet(strFilePath);
-                flErr = f_open(file, strFilePath, fileOpenMode | FA_OPEN_ALWAYS);
-                break;
-            case FR_DISK_ERR:
-                break;
-            default:break;
-        }
-        cnt++;
-    }while(flErr!=FR_OK && cnt<10);
+        myfree(SRAMIN, strFilePath);
 
-    myfree(SRAMIN, strFilePath);
-
-    cnt = 0;
-    do{
-        flErr = f_lseek(file, file->fsize);
-        cnt++;
-    }while(flErr!=FR_OK && cnt<10);
+        cnt = 0;
+        do{
+            flErr = f_lseek(file, file->fsize);
+            cnt++;
+        }while(flErr!=FR_OK && cnt<10);
+    }else{
+        flErr = FR_DISK_ERR;
+    }
 
     return flErr;
 }
@@ -780,9 +784,11 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 {
-    SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
-    dataSaveProc();
-    f_close(file);
+    if(gSwrbTestSDCardInsertState){
+        SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
+        dataSaveProc();
+        f_close(file);
+    }
 }
 
 void SWRB_TestDataFileWriteSN(void)

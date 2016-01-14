@@ -5,8 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
-const static u16 swrbTestBrushCurLowBound[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
-const static u16 swrbTestBrushCurHighBound[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
+const static u16 aSwrbBrushTestCurLowThreshold[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
+const static u16 aSwrbBrushTestCurHighThreshold[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
 
 static BRUSH_TestTypeDef brush[SWRB_BRUSH_CHAN_NUM];
 
@@ -73,7 +73,7 @@ static void SWRB_BrushTestProc(void)
                     continue;
                 }
             }
-            if(swrbTestBrushCurLowBound[i]<brush[i].current && swrbTestBrushCurHighBound[i]>brush[i].current){
+            if(aSwrbBrushTestCurLowThreshold[i]<brush[i].current && aSwrbBrushTestCurHighThreshold[i]>brush[i].current){
                 gSwrbTestStateMap &= ~(1<<(SWRB_TEST_BRUSH_L_STATE_POS+i));
                 brush[i].validCnt++;
             }else{

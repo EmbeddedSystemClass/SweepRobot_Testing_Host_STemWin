@@ -5,7 +5,7 @@
 #include "usart.h"
 #include "includes.h"
 
-#define WHEEL_FLOAT_TEST_INIT_WAIT_TIME_MS     500
+#define WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC     1
 
 static WHEEL_FLOAT_TestTypeDef wheelFloat[SWRB_WHEEL_FLOAT_CHAN_NUM];
 
@@ -32,7 +32,7 @@ void SweepRobot_WheelFloatTestInit(void)
     
     SweepRobot_WheelFloatCtrlSteerMotorPosMove(STEER_MOTOR_UP_POS);
     
-    OSTimeDlyHMSM(0,0,0,WHEEL_FLOAT_TEST_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC,0);
 }
 
 static void SweepRobot_WheelFloatTestProc(void)

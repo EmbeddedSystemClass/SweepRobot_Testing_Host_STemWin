@@ -7,8 +7,8 @@
 #include "includes.h"
 #include "timer.h"
 
-const static int SWRB_TEST_WHEEL_SPEED_LOW_BOUND[SWRB_WHEEL_CHAN_NUM] = { 0, 0 };
-const static int SWRB_TEST_WHEEL_SPEED_HIGH_BOUND[SWRB_WHEEL_CHAN_NUM] = { 50, 50 };
+const static int aSwrbWheelTestSpeedLowThreshold[SWRB_WHEEL_CHAN_NUM] = { 0, 0 };
+const static int aSwrbWheelTestSpeedHighThreshold[SWRB_WHEEL_CHAN_NUM] = { 50, 50 };
 
 static WHEEL_TestTypeDef wheel[SWRB_WHEEL_CHAN_NUM];
 
@@ -81,7 +81,7 @@ static void SWRB_WheelTestProc(void)
                 }
             }
 
-            if(SWRB_TEST_WHEEL_SPEED_LOW_BOUND[i]<wheel[i].speed && SWRB_TEST_WHEEL_SPEED_HIGH_BOUND[i]>wheel[i].speed){
+            if(aSwrbWheelTestSpeedLowThreshold[i]<wheel[i].speed && aSwrbWheelTestSpeedHighThreshold[i]>wheel[i].speed){
                 gSwrbTestStateMap &= ~(1<<(SWRB_TEST_WHEEL_L_STATE_POS+i));
                 wheel[i].validCnt++;
             }else{

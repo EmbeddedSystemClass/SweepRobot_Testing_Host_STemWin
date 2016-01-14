@@ -91,7 +91,7 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     BUTTON_SetSkinClassic(hItem);
     BUTTON_SetFocussable(hItem, DISABLE);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_3D);
 }
 
 static void Button_ConfirmProc(WM_HWIN hWin)

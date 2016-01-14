@@ -5,8 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
-const static int SWRB_TEST_FAN_CUR_LOW_BOUND = 20;
-const static int SWRB_TEST_FAN_CUR_HIGH_BOUND = 500;
+const static int SWRB_TEST_FAN_CUR_LOW_THRESHOLD = 20;
+const static int SWRB_TEST_FAN_CUR_HIGH_THRESHOLD = 500;
 
 static FAN_TestTypeDef fan;
 
@@ -64,7 +64,7 @@ static void SweepRobot_FanTestProc(void)
             continue;
         }
     }
-    if(SWRB_TEST_FAN_CUR_LOW_BOUND < fan.current &&  SWRB_TEST_FAN_CUR_HIGH_BOUND > fan.current){
+    if(SWRB_TEST_FAN_CUR_LOW_THRESHOLD < fan.current &&  SWRB_TEST_FAN_CUR_HIGH_THRESHOLD > fan.current){
         gSwrbTestStateMap &= ~(1<<SWRB_TEST_FAN_POS);
         fan.validCnt++;
     }else{

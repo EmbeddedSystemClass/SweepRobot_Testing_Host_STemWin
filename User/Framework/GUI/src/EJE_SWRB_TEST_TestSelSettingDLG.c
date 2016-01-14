@@ -9,8 +9,24 @@
 */
 
 extern GUI_CONST_STORAGE GUI_BITMAP _bmConfirmCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSelectAllCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSelectNoneCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
-                
+
+
+extern GUI_CONST_STORAGE GUI_BITMAP _bmWheelCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBrushCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmFanCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmIFRDCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmCollisionCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmWheelFloatCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmAshTrayCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmUniWheelCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmKeyCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmIrDACHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBuzzerCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmRGBLEDCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmChargeCHN;
 
 #define IS_TESTSEL_BUTTON_ID(id)   (  (id == ID_TESTSEL_BUTTON_WHEEL)       ||\
                                       (id == ID_TESTSEL_BUTTON_BRUSH)       ||\
@@ -57,7 +73,7 @@ static void Button_Init(WM_HWIN hItem)
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     BUTTON_SetSkinClassic(hItem);
     BUTTON_SetFocussable(hItem, DISABLE);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_3D);
 }
 
 static void Button_ConfirmProc(WM_HWIN hWin)
@@ -139,26 +155,26 @@ static void Button_CancelProc(WM_HWIN hWin)
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "TestSelSettingDLG", ID_TESTSEL_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "WHEEL", ID_TESTSEL_BUTTON_WHEEL, 0, 0, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "BRUSH", ID_TESTSEL_BUTTON_BRUSH, 140, 0, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "FAN", ID_TESTSEL_BUTTON_FAN, 280, 0, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "IFRD", ID_TESTSEL_BUTTON_IFRD, 420, 0, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "COLLISION", ID_TESTSEL_BUTTON_COLLISION, 560, 0, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "WHEEL FLOAT", ID_TESTSEL_BUTTON_WHEEL_FLOAT, 0, 105, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "ASH TRAY", ID_TESTSEL_BUTTON_ASH_TRAY, 140, 105, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "UNIWHEEL", ID_TESTSEL_BUTTON_UNIWHEEL, 280, 105, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "KEY", ID_TESTSEL_BUTTON_KEY, 420, 105, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "IRDA", ID_TESTSEL_BUTTON_IRDA, 560, 105, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "BUZZER", ID_TESTSEL_BUTTON_BUZZER, 0, 210, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "RGB LED", ID_TESTSEL_BUTTON_RGB_LED, 140, 210, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "CHARGE", ID_TESTSEL_BUTTON_CHARGE, 280, 210, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST1", ID_TESTSEL_BUTTON_TEST1, 420, 210, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST2", ID_TESTSEL_BUTTON_TEST2, 560, 210, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "FRONT IFRD", ID_TESTSEL_BUTTON_FRONT_IFRD, 0, 315, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST4", ID_TESTSEL_BUTTON_TEST4, 140, 315, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST5", ID_TESTSEL_BUTTON_TEST5, 280, 315, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST6", ID_TESTSEL_BUTTON_TEST6, 420, 315, 140, 105, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "TEST7", ID_TESTSEL_BUTTON_TEST7, 560, 315, 140, 105, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "WHEEL", ID_TESTSEL_BUTTON_WHEEL, 0, 0, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "BRUSH", ID_TESTSEL_BUTTON_BRUSH, 140, 0, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "FAN", ID_TESTSEL_BUTTON_FAN, 280, 0, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "IFRD", ID_TESTSEL_BUTTON_IFRD, 420, 0, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "COLLISION", ID_TESTSEL_BUTTON_COLLISION, 560, 0, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "WHEEL FLOAT", ID_TESTSEL_BUTTON_WHEEL_FLOAT, 0, 140, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "ASH TRAY", ID_TESTSEL_BUTTON_ASH_TRAY, 140, 140, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "UNIWHEEL", ID_TESTSEL_BUTTON_UNIWHEEL, 280, 140, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "KEY", ID_TESTSEL_BUTTON_KEY, 420, 140, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "IRDA", ID_TESTSEL_BUTTON_IRDA, 560, 140, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "BUZZER", ID_TESTSEL_BUTTON_BUZZER, 0, 280, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "RGB LED", ID_TESTSEL_BUTTON_RGB_LED, 140, 280, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "CHARGE", ID_TESTSEL_BUTTON_CHARGE, 280, 280, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "TEST1", ID_TESTSEL_BUTTON_TEST1, 420, 280, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "TEST2", ID_TESTSEL_BUTTON_TEST2, 560, 280, 140, 140, 0, 0x0, 0 },
+//  { BUTTON_CreateIndirect, "FRONT IFRD", ID_TESTSEL_BUTTON_FRONT_IFRD, 0, 315, 140, 105, 0, 0x0, 0 },
+//  { BUTTON_CreateIndirect, "TEST4", ID_TESTSEL_BUTTON_TEST4, 140, 315, 140, 105, 0, 0x0, 0 },
+//  { BUTTON_CreateIndirect, "TEST5", ID_TESTSEL_BUTTON_TEST5, 280, 315, 140, 105, 0, 0x0, 0 },
+//  { BUTTON_CreateIndirect, "TEST6", ID_TESTSEL_BUTTON_TEST6, 420, 315, 140, 105, 0, 0x0, 0 },
+//  { BUTTON_CreateIndirect, "TEST7", ID_TESTSEL_BUTTON_TEST7, 560, 315, 140, 105, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Confirm", ID_TESTSEL_BUTTON_CONFIRM, 700, 0, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "SelAll", ID_TESTSEL_BUTTON_SELALL, 700, 120, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "SelNone", ID_TESTSEL_BUTTON_SELNONE, 700, 240, 100, 120, 0, 0x0, 0 },
@@ -206,6 +222,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CONFIRM, "");
     BUTTON_DispConfirmCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_CONFIRM, 18, 43);
     
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_SELALL, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_SELALL, &_bmSelectAllCHN, 18, 43);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_SELNONE, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_SELNONE, &_bmSelectNoneCHN, 2, 43);
+    
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CANCEL, "");
     BUTTON_DispCancelCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_CANCEL, 18, 43);
     
@@ -217,6 +239,45 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_TESTSEL, "");
     BUTTON_DispTestSelCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_TESTSEL, 14, 18);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL, &_bmWheelCHN, 34, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_BRUSH, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_BRUSH, &_bmBrushCHN, 46, 40);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_FAN, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_FAN, &_bmFanCHN, 46, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_IFRD, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_IFRD, &_bmIFRDCHN, 46, 40);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_COLLISION, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_COLLISION, &_bmCollisionCHN, 46, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL_FLOAT, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL_FLOAT, &_bmWheelFloatCHN, 34, 55);
+
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_ASH_TRAY, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_ASH_TRAY, &_bmAshTrayCHN, 46, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_UNIWHEEL, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_UNIWHEEL, &_bmUniWheelCHN, 34, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_KEY, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_KEY, &_bmKeyCHN, 46, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_IRDA, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_IRDA, &_bmIrDACHN, 46, 40);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_BUZZER, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_BUZZER, &_bmBuzzerCHN, 34, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_RGB_LED, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_RGB_LED, &_bmRGBLEDCHN, 34, 55);
+    
+    Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CHARGE, "");
+    BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_CHARGE, &_bmChargeCHN, 46, 55);
 
     WM_HideWin(pMsg->hWin);
     break;

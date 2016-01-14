@@ -53,8 +53,8 @@ static void SweepRobot_IrDATestCodeArrayToNum(void)
             IrDA[i].code = atoi(str);
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
                 Edit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, str);
-//            Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
-//            Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
+//                Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
+//                Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
             }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\

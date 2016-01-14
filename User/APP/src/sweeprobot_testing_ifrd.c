@@ -5,9 +5,9 @@
 #include "usart.h"
 #include "includes.h"
 
-static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
-
 static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 1000, 1000, 500, 500, 200, 200, 200, 200 };
+
+static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
 
 static void SweepRobot_FrontIFRDTestStartProc(void);
 

@@ -8,7 +8,7 @@
 #ifdef _USE_MINUS_COMPARE
     const static int SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD = 100;   //minus value
 #else
-    const static int SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD = 2000;
+    const static int SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD = 3000;
 #endif
 
 static ASH_TRAY_TestTypeDef ashTrayIns;

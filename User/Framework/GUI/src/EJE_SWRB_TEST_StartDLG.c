@@ -83,8 +83,8 @@ static const void * _GetImageById(U32 Id, U32 * pSize)
 
 static void Button_Init(WM_HWIN hItem)
 {
-    BUTTON_SetSkinClassic(hItem);
-    WIDGET_SetEffect(hItem, &WIDGET_Effect_Simple);
+//    BUTTON_SetSkinClassic(hItem);
+    WIDGET_SetEffect(hItem, &WIDGET_Effect_3D);
 }
 
 /*********************************************************************

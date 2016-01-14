@@ -286,7 +286,6 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_MANUL_TEST_TASK_PRIO,
     SWRB_FRONT_IFRD_TEST_TASK_PRIO,
     SWRB_SLAM_MONITOR_TASK_PRIO,
-    USART_TASK_PRIO,
     RTC_TASK_PRIO,
     LED_TASK_PRIO,
     START_TASK_PRIO,
@@ -299,8 +298,8 @@ enum SWRB_TEST_TASK_PRIO{
 #define KEY_STK_SIZE                        128
 #endif
 #define RTC_STK_SIZE                        128
-#define EMWIN_STK_SIZE		                512
-#define LED_STK_SIZE				        256
+#define EMWIN_STK_SIZE                      512
+#define LED_STK_SIZE                        256
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
@@ -324,7 +323,6 @@ enum SWRB_TEST_TASK_PRIO{
 #endif
 
 #define SWRB_TEST_USART_READ_TIMES              3
-#define SWRB_TEST_USART_IRDA_READ_TIMES         25
 #define SWRB_TEST_USART_WRITE_WAIT_TIME         1
 #define SWRB_TEST_USART_READ_WAIT_TIME          5
 #define SWRB_TEST_VALID_COMP_TIMES              3
