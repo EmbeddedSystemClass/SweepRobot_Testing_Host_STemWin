@@ -33,6 +33,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmSkipCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmDeleteCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmAutoModeCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmManulModeCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmPressKeyCHN;
 
 static WM_HWIN hLastShowWin = 0;
 static int gLastShowId = 0;
@@ -196,11 +197,16 @@ void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmManulModeCHN, x, y);
 }
 
+void BUTTON_DispPressKeyCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+{
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmPressKeyCHN, x, y);
+}
+
 void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue)
 {
-	WM_HWIN hItem;
-	hItem = WM_GetDialogItem(hWin, id);
-	PROGBAR_SetValue(hItem, progbarValue);
+    WM_HWIN hItem;
+    hItem = WM_GetDialogItem(hWin, id);
+    PROGBAR_SetValue(hItem, progbarValue);
 }
 
 void Progbar_Set_Percent(void)

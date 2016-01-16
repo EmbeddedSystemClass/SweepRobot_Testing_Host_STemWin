@@ -5,8 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
-#ifdef _USE_MINUS_COMPARE
-    const static int SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD = 100;   //minus value
+#ifdef _ASH_TRAY_USE_MINUS_COMPARE
+    const static int SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD = 400;
 #else
     const static int SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD = 3000;
 #endif
@@ -93,7 +93,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
     }
 }
 
-#ifdef _USE_MINUS_COMPARE
+#ifdef _ASH_TRAY_USE_MINUS_COMPARE
 static void SweepRobot_AshTrayLvlTestTxOffProc(void)
 {
     u8 i;
@@ -163,21 +163,16 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
         }
         printf("SNSR->IFRD=0\r\n");
 
-#ifdef _USE_MINUS_COMPARE
+#ifdef _ASH_TRAY_USE_MINUS_COMPARE
         if(ashTrayLvl.offValue - ashTrayLvl.onValue > SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD){
-            gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
-            ashTrayLvl.validCnt++;
-        }else{
-            gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
-        }
 #else
         if( (0 > ashTrayLvl.value) && (ashTrayLvl.value < SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD) ){
+#endif
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
             ashTrayLvl.validCnt++;
         }else{
             gSwrbTestStateMap |= ( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
         }
-#endif
 
         if(ashTrayLvl.validCnt > SWRB_TEST_VALID_COMP_TIMES){
             ashTrayLvl.validFlag = 1;
@@ -199,7 +194,7 @@ static void SweepRobot_AshTrayTestProc(void)
     if(gSwrbTestTaskRunCnt > 1){
         SweepRobot_AshTrayInsTestProc();
     }
-#ifdef _USE_MINUS_COMPARE
+#ifdef _ASH_TRAY_USE_MINUS_COMPARE
     if(gSwrbTestTaskRunCnt%2){
         SweepRobot_AshTrayLvlTestTxOffProc();
     }else{
@@ -232,7 +227,7 @@ static void SweepRobot_AshTrayTestProc(void)
     }
 }
 
-static void SweepRobot_AshTrayPCBTestOverTimeProc(void)
+static void SweepRobot_AshTrayPCBTestTimeOutProc(void)
 {
     char *str;
 
@@ -251,7 +246,7 @@ static void SweepRobot_AshTrayPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_AshTrayManulTestOverTimeProc(void)
+static void SweepRobot_AshTrayManulTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
@@ -267,7 +262,7 @@ static void SweepRobot_AshTrayManulTestOverTimeProc(void)
     }
 }
 
-static void SweepRobot_AshTrayTestOverTimeProc(void)
+static void SweepRobot_AshTrayTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("SNSR->IFRD=0\r\n");
@@ -276,9 +271,9 @@ static void SweepRobot_AshTrayTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_AshTrayPCBTestOverTimeProc();
+        SweepRobot_AshTrayPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_AshTrayManulTestOverTimeProc();
+        SweepRobot_AshTrayManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -307,7 +302,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
             SweepRobot_AshTrayTestProc();
 
             if(gSwrbTestTaskRunCnt > 20){
-                SweepRobot_AshTrayTestOverTimeProc();
+                SweepRobot_AshTrayTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }

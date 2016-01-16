@@ -43,6 +43,11 @@ s8 plat_int_dereg_cb(enum stm32f4xx_int_type type)
     return 0;
 }
 
+__asm void wait()
+{
+      BX lr
+}
+
 /** @addtogroup StdPeriph_Examples
   * @{
   */
@@ -83,6 +88,7 @@ void HardFault_Handler(void)
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
+      wait();
   }
 }
 

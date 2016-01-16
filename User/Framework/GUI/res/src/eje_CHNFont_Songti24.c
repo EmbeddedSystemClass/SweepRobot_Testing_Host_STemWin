@@ -2,13 +2,23 @@
 #include "stm32f4xx.h"
 
 static GUI_CONST_STORAGE GUI_COLOR _aColorsCHNText[] = {
-  0x0000FF, 0x000000
+  0xFFFFFF, 0x000000
+};
+
+static GUI_CONST_STORAGE GUI_COLOR _aColorsWhiteCHNText[] = {
+  0xFFFFFF, 0xFFFFFF
 };
 
 static GUI_CONST_STORAGE GUI_LOGPALETTE _PalCHNText = {
   2,    /* number of entries */
   1,     /* No transparency */
   &_aColorsCHNText[0]
+};
+
+static GUI_CONST_STORAGE GUI_LOGPALETTE _PalWhiteCHNText = {
+  2,    /* number of entries */
+  1,     /* No transparency */
+  &_aColorsWhiteCHNText[0]
 };
 
 static GUI_CONST_STORAGE unsigned char acSerialNumStr[] = {
@@ -81,6 +91,15 @@ GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN = {
   1,                /* BitsPerPixel */
   acTimeStr,     /* Pointer to picture data (indices) */
   &_PalCHNText      /* Pointer to palette */
+};
+
+GUI_CONST_STORAGE GUI_BITMAP _bmWhiteTimeCHN = {
+  48,              /* XSize */
+  24,               /* YSize */
+  6,                /* BytesPerLine */
+  1,                /* BitsPerPixel */
+  acTimeStr,     /* Pointer to picture data (indices) */
+  &_PalWhiteCHNText      /* Pointer to palette */
 };
 
 static GUI_CONST_STORAGE unsigned char acTestSelStr[] = {

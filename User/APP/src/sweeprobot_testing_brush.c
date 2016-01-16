@@ -114,7 +114,7 @@ static void SWRB_BrushTestProc(void)
     }
 }
 
-static void SWRB_BrushPCBTestOverTimeProc(void)
+static void SWRB_BrushPCBTestTimeOutProc(void)
 {
     char *str;
     
@@ -139,7 +139,7 @@ static void SWRB_BrushPCBTestOverTimeProc(void)
     Edit_Clear();   
 }
 
-static void SWRB_BrushManulTestOverTimeProc(void)
+static void SWRB_BrushManulTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
@@ -161,7 +161,7 @@ static void SWRB_BrushManulTestOverTimeProc(void)
     }
 }
 
-void SWRB_BrushTestOverTimeProc(void)
+void SWRB_BrushTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("BRS->OFF=%d\r\n",BRUSH_CHAN_L);
@@ -173,9 +173,9 @@ void SWRB_BrushTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(Brush_TestDataSave);
     
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SWRB_BrushPCBTestOverTimeProc();
+        SWRB_BrushPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SWRB_BrushManulTestOverTimeProc();
+        SWRB_BrushManulTestTimeOutProc();
     }
     
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -202,7 +202,7 @@ void SweepRobot_BrushTestTask(void *pdata)
                 SWRB_BrushTestProc();
             }
             if(gSwrbTestTaskRunCnt > 50){
-                SWRB_BrushTestOverTimeProc();
+                SWRB_BrushTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }

@@ -122,7 +122,7 @@ static void SWRB_WheelTestProc(void)
     }
 }
 
-static void SWRB_WheelPCBTestOverTimeProc(void)
+static void SWRB_WheelPCBTestTimeOutProc(void)
 {
     char *str;
 
@@ -145,7 +145,7 @@ static void SWRB_WheelPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SWRB_WheelManulTestOverTimeProc(void)
+static void SWRB_WheelManulTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
@@ -161,7 +161,7 @@ static void SWRB_WheelManulTestOverTimeProc(void)
     }
 }
 
-static void SWRB_WheelTestOverTimeProc(void)
+static void SWRB_WheelTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
 
@@ -169,9 +169,9 @@ static void SWRB_WheelTestOverTimeProc(void)
     printf("WHL->OFF=1\r\n");
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SWRB_WheelPCBTestOverTimeProc();
+        SWRB_WheelPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SWRB_WheelManulTestOverTimeProc();
+        SWRB_WheelManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -185,7 +185,6 @@ static void SWRB_WheelTestOverTimeProc(void)
 void SweepRobot_WheelTestTask(void *pdata)
 {
     while(1){
-
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
@@ -200,7 +199,7 @@ void SweepRobot_WheelTestTask(void *pdata)
             }
 
             if(20 < gSwrbTestTaskRunCnt){
-                SWRB_WheelTestOverTimeProc();
+                SWRB_WheelTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }

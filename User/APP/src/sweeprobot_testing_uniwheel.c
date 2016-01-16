@@ -7,8 +7,9 @@
 
 static UNIWHEEL_TestTypeDef uniwheel;
 
-#ifdef _USE_MINUS_COMPARE
-    static const int SWRB_UNIWHEEL_MINUS_THRESHOLD = 120;
+/* UNIVERSAL_WHEEL_ACTIVE_THRESHOLD */
+#ifdef _UNIWHEEL_USE_MINUS_COMPARE
+    static const int SWRB_UNIWHEEL_MINUS_THRESHOLD = 400;
 #else
     static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 3000;
 #endif
@@ -26,16 +27,21 @@ static void SweepRobot_UniWheelTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
-    
+
     mymemset(&uniwheel, 0, sizeof(uniwheel));
-    
+
+#ifdef _UNIWHEEL_USE_MINUS_COMPARE
     printf("SNSR->IFRD=0\r\n");
+#else
+    
+#endif
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
+#ifdef _UNIWHEEL_USE_MINUS_COMPARE
 static void SweepRobot_UniWheelTestTxOffProc(void)
 {
     u8 i;
@@ -70,6 +76,7 @@ static void SweepRobot_UniWheelTestTxOffProc(void)
         printf("SNSR->IFRD=1\r\n");
     }
 }
+#endif
 
 static void SweepRobot_UniWheelTestTxOnProc(void)
 {
@@ -86,13 +93,13 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1, usartRxNum);
                 }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                     str = mymalloc(SRAMIN, sizeof(char)*10);
-                        *str = 0;
-                        sprintf(str, "%d", usartRxNum);
-                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][1],\
-                                                str);
-                        myfree(SRAMIN, str);
+                    *str = 0;
+                    sprintf(str, "%d", usartRxNum);
+                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][0],\
+                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][1],\
+                                            str);
+                    myfree(SRAMIN, str);
                 }
                 usartRxFlag = 0;
                 usartRxNum = 0;
@@ -104,7 +111,11 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
         }
         printf("SNSR->IFRD=0\r\n");
 
-        if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_VALID_THRESHOLD){
+#ifdef _UNIWHEEL_USE_MINUS_COMPARE
+        if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_MINUS_THRESHOLD){
+#else
+        if(uniwheel.onValue < SWRB_UNIWHEEL_VALID_THRESHOLD){
+#endif
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
             uniwheel.validCnt++;
         }else{
@@ -143,10 +154,10 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
     }
 }
 
-static void SweepRobot_UniwheelPCBTestOverTimeProc(void)
+static void SweepRobot_UniwheelPCBTestTimeOutProc(void)
 {
     char *str;
-    
+
     str = "ERROR->UNIWHEEL\r\n";
     SWRB_TestDataFileWriteString(str);
 
@@ -156,7 +167,7 @@ static void SweepRobot_UniwheelPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_UniwheelManulTestOverTimeProc(void)
+static void SweepRobot_UniwheelManulTestTimeOutProc(void)
 {
     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][0],\
@@ -164,7 +175,7 @@ static void SweepRobot_UniwheelManulTestOverTimeProc(void)
                                                                GUI_LIGHTRED);
 }
 
-static void SweepRobot_UniwheelTestOverTimeProc(void)
+static void SweepRobot_UniwheelTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("SNSR->IFRD=0\r\n");
@@ -172,9 +183,9 @@ static void SweepRobot_UniwheelTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(UNIWHEEL_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_UniwheelPCBTestOverTimeProc();
+        SweepRobot_UniwheelPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_UniwheelManulTestOverTimeProc();
+        SweepRobot_UniwheelManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -196,14 +207,20 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
                 SweepRobot_UniWheelTestInit();
             }
 
+#ifdef _UNIWHEEL_USE_MINUS_COMPARE
             if(gSwrbTestTaskRunCnt%2){
                 SweepRobot_UniWheelTestTxOffProc();
             }else{
                 SweepRobot_UniWheelTestTxOnProc();
             }
+#else
+            if(gSwrbTestTaskRunCnt>1){
+                SweepRobot_UniWheelTestTxOnProc();
+            }
+#endif
 
             if(gSwrbTestTaskRunCnt > 20){
-                SweepRobot_UniwheelTestOverTimeProc();
+                SweepRobot_UniwheelTestTimeOutProc();
             }
 
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

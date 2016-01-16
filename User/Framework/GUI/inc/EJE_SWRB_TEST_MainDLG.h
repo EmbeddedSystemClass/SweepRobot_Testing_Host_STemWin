@@ -34,6 +34,7 @@
 *       CreateEJE_SWRB_TEST_PCBTestDLG
 */
 extern WM_HWIN CreateEJE_SWRB_TEST_PCBTestDLG(void);
+extern WM_HWIN CreateKEY_TestDLG(void);
 extern WM_HWIN CreateRGB_LED_TestDLG(void);
 extern WM_HWIN CreateBUZZER_TestDLG(void);
 extern WM_HWIN CreateWarningDLG(void);

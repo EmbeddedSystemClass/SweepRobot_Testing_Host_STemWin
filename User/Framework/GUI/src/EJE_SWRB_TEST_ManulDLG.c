@@ -64,7 +64,7 @@ static const char *aListview_RowInitText[][10] = {
     {"BRUSH","0","","0","","0"},
     {"FAN","","","0","",""},
     {"IFRD","0","0","","0","0","0","0","0","0"},
-    {"FRT IFRD","0","0","0","0","0","0","0","0"},
+    {"FRT IFRD","0","0","0","0","","0","0","0","0"},
     {"COLLISION","0","0","","0","0"},
     {"WHL_FLOAT","0","","","","0"},
     {"ASH_TRAY","0","0"},
@@ -133,7 +133,7 @@ static void Listview_Init(WM_HWIN hItem)
     LISTVIEW_SetAutoScrollH(hItem, ENABLE);
     LISTVIEW_SetAutoScrollV(hItem, ENABLE);
     LISTVIEW_SetHeaderHeight(hItem, 30);
-    
+
     LISTVIEW_AddColumn(hItem, 110, "", GUI_TA_HCENTER | GUI_TA_VCENTER);    //Item
     LISTVIEW_AddColumn(hItem, 45, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //Left
     LISTVIEW_AddColumn(hItem, 55, "", GUI_TA_HCENTER | GUI_TA_VCENTER);     //FrontLeft
@@ -147,7 +147,7 @@ static void Listview_Init(WM_HWIN hItem)
     for(i=0;i<SWRB_MANUL_LISTVIEW_ROW_NUM;i++){
         LISTVIEW_AddRow(hItem, aListview_RowInitText[i]);
     }
-    
+
     hHeader = LISTVIEW_GetHeader(hItem);
     HEADER_SetFont(hHeader, GUI_FONT_COMIC18B_ASCII);
 //    HEADER_SetSkinClassic(hHeader);
@@ -355,7 +355,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
             SweepRobot_ManulIFRDBtnProc();
             break;
         }
-        break; 
+        break;
     case ID_MANUL_BUTTON_BUZZER: // Notifications sent by 'btnBuzzer'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:

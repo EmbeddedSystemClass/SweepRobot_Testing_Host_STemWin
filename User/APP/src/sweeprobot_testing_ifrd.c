@@ -9,8 +9,6 @@ static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 1000, 1000, 5
 
 static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
 
-static void SweepRobot_FrontIFRDTestStartProc(void);
-
 static void SweepRobot_IFRDTestInit(void)
 {
     u8 i;
@@ -170,6 +168,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, GUI_LIGHTGRAY, CHECKBOX_CI_ENABLED);
             Edit_Clear();
         }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+            /* TODO: Add FrontIFRDTest Enable and Disable function here */
             SweepRobot_FrontIFRDTestStartProc();
         }
         
@@ -177,37 +176,37 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     }
 }
 
-static void SweepRobot_IFRDTestOverTimeErrProc(char *str)
+static void SweepRobot_IFRDTestTimeOutErrProc(char *str)
 {
     SWRB_TestDataFileWriteString(str);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 }
 
-static void SweepRobot_IFRDPCBTestOverTimeProc(void)
+static void SweepRobot_IFRDPCBTestTimeOutProc(void)
 {
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FL_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_F_L\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_F_L\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FR_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_F_R\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_F_R\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_L_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_S_L\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_S_L\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_R_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_S_R\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_S_R\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_FL\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_FL\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_FR\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_FR\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_SL\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_SL\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK){
-        SweepRobot_IFRDTestOverTimeErrProc("ERROR->IFRD_B_SR\r\n");
+        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_SR\r\n");
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD ERROR");
@@ -215,7 +214,7 @@ static void SweepRobot_IFRDPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_IFRDManulTestOverTimeProc(void)
+static void SweepRobot_IFRDManulTestTimeOutProc(void)
 {
     u8 i;
     
@@ -229,7 +228,7 @@ static void SweepRobot_IFRDManulTestOverTimeProc(void)
     }
 }
 
-static void SweepRobot_IFRDTestOverTimeProc(void)
+static void SweepRobot_IFRDTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("SNSR->IFRD=0\r\n");
@@ -239,9 +238,9 @@ static void SweepRobot_IFRDTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(IFRD_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_IFRDPCBTestOverTimeProc();
+        SweepRobot_IFRDPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_IFRDManulTestOverTimeProc();
+        SweepRobot_IFRDManulTestTimeOutProc();
         
         SweepRobot_FrontIFRDTestStartProc();
     }
@@ -272,7 +271,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
             }
             
             if(gSwrbTestTaskRunCnt > 20){
-                SweepRobot_IFRDTestOverTimeProc();
+                SweepRobot_IFRDTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }
@@ -304,10 +303,4 @@ void IFRD_TestDataSave(void)
     SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", ifrd[6].offValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[7].onValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[7].offValue, 1);
-}
-
-static void SweepRobot_FrontIFRDTestStartProc(void)
-{
-    OSTaskResume(SWRB_FRONT_IFRD_TEST_TASK_PRIO);
-    OSTaskSuspend(OS_PRIO_SELF);
 }

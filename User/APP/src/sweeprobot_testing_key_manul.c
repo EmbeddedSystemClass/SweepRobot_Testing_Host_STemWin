@@ -25,8 +25,8 @@ static void SweepRobot_KeyTestInit(void)
 
     mymemset(&key, 0, sizeof(key));
 
-//    SweepRobot_KeyTestCtrlTestPos();
-
+    hWin_SWRB_KEY = CreateKEY_TestDLG();
+    WM_BringToTop(hWin_SWRB_KEY);
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
@@ -67,7 +67,7 @@ static void SweepRobot_KeyTestProc(void)
         }
 
         if(key.validFlag){
-            SweepRobot_KeyTestCtrlIdlePos();
+            SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
@@ -80,7 +80,7 @@ static void SweepRobot_KeyTestProc(void)
 
     if(key.validFlag){
         gSwrbTestTaskRunCnt = 0;
-        SweepRobot_KeyTestCtrlIdlePos();
+        SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
 
         SWRB_TestDataSaveToFile(KEY_TestDataSave);
 
@@ -98,7 +98,7 @@ static void SweepRobot_KeyTestProc(void)
     }
 }
 
-static void SweepRobot_KeyPCBTestOverTimeProc(void)
+static void SweepRobot_KeyPCBTestTimeOutProc(void)
 {
     char *str;
 
@@ -111,7 +111,7 @@ static void SweepRobot_KeyPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_KeyManulTestOverTimeProc(void)
+static void SweepRobot_KeyManulTestTimeOutProc(void)
 {
     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][0],\
@@ -119,17 +119,17 @@ static void SweepRobot_KeyManulTestOverTimeProc(void)
                                                            GUI_LIGHTRED);
 }
 
-static void SweepRobot_KeyTestOverTimeProc(void)
+static void SweepRobot_KeyTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
-    SweepRobot_KeyTestCtrlIdlePos();
+    SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
 
     SWRB_TestDataSaveToFile(KEY_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_KeyPCBTestOverTimeProc();
+        SweepRobot_KeyPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_KeyManulTestOverTimeProc();
+        SweepRobot_KeyManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -159,7 +159,7 @@ void SweepRobot_KeyTestTask(void *pdata)
             }
 
             if(gSwrbTestTaskRunCnt > 20){
-                SweepRobot_KeyTestOverTimeProc();
+                SweepRobot_KeyTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
         }

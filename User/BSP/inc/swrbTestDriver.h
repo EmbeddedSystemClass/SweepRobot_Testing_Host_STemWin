@@ -25,6 +25,8 @@ void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos);
 void SweepRobot_WheelFloatCtrlSteerMotorPosSet(int DutyCycle);
 void SweepRobot_WheelFloatCtrlShutDown(void);
 void SweepRobot_WheelFloatCtrlMoveToIdlePos(void);
+void SweepRobot_WheelFloatCtrlMoveToUPPos(void);
+void SweepRobot_WheelFloatCtrlMoveToDOWNPos(void);
 
 void SweepRobot_AshTrayTestGPIOInit(void);
 void SweepRobot_AshTrayTestInsCtrlMoveToTestPos(void);
@@ -32,13 +34,17 @@ void SweepRobot_AshTrayTestInsCtrlMoveToIdlePos(void);
 void SweepRobot_AshTrayTestInsCtrlShutDown(void);
 
 void SweepRobot_KeyTestGPIOInit(void);
-void SweepRobot_KeyTestCtrlTestPos(void);
-void SweepRobot_KeyTestCtrlIdlePos(void);
+void SweepRobot_KeyTestElectroMagnetCtrlPushPos(void);
+void SweepRobot_KeyTestElectroMagnetCtrlReleasePos(void);
 
 void SweepRobot_IrDATestGPIOInit(void);
 void SweepRobot_IrDATestGPIOPINSet(void);
 void SweepRobot_IrDATestGPIOPINReset(void);
 void SweepRobot_IrDACodeTxProc(u8 code);
 void SweepRobot_IrDATestTxSendCmd(u8 code);
+
+void SweepRobot_ChargeTestGPIOInit(void);
+void SweepRobot_Charge24VOn(void);
+void SweepRobot_Charge24VOff(void);
 
 #endif

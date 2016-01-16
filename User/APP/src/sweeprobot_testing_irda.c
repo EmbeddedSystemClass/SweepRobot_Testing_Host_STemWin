@@ -171,7 +171,7 @@ static void SweepRobot_IrDATestProc(void)
     }
 }
 
-static void SweepRobot_IrDAPCBTestOverTimeProc(void)
+static void SweepRobot_IrDAPCBTestTimeOutProc(void)
 {
     u8 i;
     char *str;
@@ -209,7 +209,7 @@ static void SweepRobot_IrDAPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_IrDAManulTestOverTimeProc(void)
+static void SweepRobot_IrDAManulTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
@@ -243,7 +243,7 @@ static void SweepRobot_IrDAManulTestOverTimeProc(void)
     }
 }
 
-static void SweepRobot_IrDATestOverTimeProc(void)
+static void SweepRobot_IrDATestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
 
@@ -255,9 +255,9 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     SWRB_TestDataSaveToFile(IRDA_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_IrDAPCBTestOverTimeProc();
+        SweepRobot_IrDAPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_IrDAManulTestOverTimeProc();
+        SweepRobot_IrDAManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -269,9 +269,6 @@ static void SweepRobot_IrDATestOverTimeProc(void)
 
 void SweepRobot_IrDATestTask(void *pdata)
 {
-
-    SweepRobot_IrDATestGPIOInit();
-
     while(1){
 
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA)){
@@ -288,7 +285,7 @@ void SweepRobot_IrDATestTask(void *pdata)
             }
 
             if(gSwrbTestTaskRunCnt > 5){
-                SweepRobot_IrDATestOverTimeProc();
+                SweepRobot_IrDATestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_TASK_DLY_TIME);
         }

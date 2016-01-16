@@ -13,5 +13,6 @@ typedef struct{
 void SweepRobot_FrontIFRDTestTask(void *pdata);
 void FrontIFRD_TestDataSave(void);
 void SweepRobot_FrontIFRDTestStateReset(void);
+void SweepRobot_FrontIFRDTestStartProc(void);
 
 #endif

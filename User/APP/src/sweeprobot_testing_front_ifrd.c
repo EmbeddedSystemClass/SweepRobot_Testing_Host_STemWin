@@ -294,3 +294,9 @@ void FrontIFRD_TestDataSave(void)
     SWRB_TestDataFileWriteData("FrontIFRD->R1_onValue=", frontIFRD[7].onValue, 1);
     SWRB_TestDataFileWriteData("FrontIFRD->R1_offValue=", frontIFRD[7].offValue, 1);
 }
+
+void SweepRobot_FrontIFRDTestStartProc(void)
+{
+    OSTaskResume(SWRB_FRONT_IFRD_TEST_TASK_PRIO);
+    OSTaskSuspend(OS_PRIO_SELF);
+}

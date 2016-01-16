@@ -37,6 +37,8 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmResetCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmCancelCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTestselCHN;
 
+extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNumCHN;
+
 /*********************************************************************
 *
 *       Static data
@@ -53,7 +55,8 @@ static RTC_DateTypeDef rtcDate;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { WINDOW_CreateIndirect, "TEST SETTING", ID_SNSET_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "Set Serial Number", ID_SNSET_TEXT_0, 20, 10, 680, 50, 0, 0x0, 0 },
+//    { TEXT_CreateIndirect, "Set Serial Number", ID_SNSET_TEXT_TITLE, 20, 10, 680, 50, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SerialNum", ID_SNSET_BUTTON_TITLE, 20, 0, 680, 50, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Confirm", ID_SNSET_BUTTON_CONFIRM, 700, 0, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Check", ID_SNSET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Reset", ID_SNSET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
@@ -351,12 +354,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
-            //
-            // Initialization of 'TEXT'
-            //
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_TEXT_TITLE);
             TEXT_SetFont(hItem, &GUI_Font32_ASCII);
-//            TEXT_SetTextColor(hItem, GUI_WHITE);
+
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_SNSET_BUTTON_TITLE);
+            BUTTON_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetText(hItem, "");
+            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_SNSET_BUTTON_TITLE, &_bmSerialNumCHN, 0, 13);
+            Button_Set_BkColor(pMsg->hWin, ID_SNSET_BUTTON_TITLE, GUI_WHITE);
             //
             // Initialization of 'button'
             //

@@ -29,6 +29,9 @@
 **********************************************************************
 */
 
+extern GUI_CONST_STORAGE GUI_BITMAP _bmTimeCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmWhiteTimeCHN;
+
 /*********************************************************************
 *
 *       Static data
@@ -46,7 +49,8 @@ static RTC_TimeTypeDef rtcTime;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { WINDOW_CreateIndirect, "TEST SETTING", ID_TIMESET_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "Set Time", ID_TIMESET_TEXT_TITLE, 20, 10, 680, 50, 0, 0x0, 0 },
+//    { TEXT_CreateIndirect, "Set Time", ID_TIMESET_TEXT_TITLE, 20, 10, 680, 50, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Title", ID_TIMESET_BUTTON_TITLE, 20, 10, 680, 50, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Confirm", ID_TIMESET_BUTTON_CONFIRM, 700, 0, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Check", ID_TIMESET_BUTTON_CHECK, 700, 120, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Reset", ID_TIMESET_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
@@ -266,20 +270,21 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
     switch (pMsg->MsgId) {
         case WM_INIT_DIALOG:
-            //
-            // Initialization of 'SettingDLG'
-            //
+
             hItem = pMsg->hWin;
             FRAMEWIN_SetTextColor(hItem, 0x00000000);
-            //
-            // Initialization of 'TEXT'
-            //
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_TEXT_0);
-            TEXT_SetFont(hItem, &GUI_Font32_ASCII);
-            TEXT_SetTextColor(hItem, GUI_WHITE);
-            //
-            // Initialization of 'botton'
-            //
+
+//            hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_TEXT_0);
+//            TEXT_SetFont(hItem, &GUI_Font32_ASCII);
+//            TEXT_SetTextColor(hItem, GUI_WHITE);
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_TIMESET_BUTTON_TITLE);
+            BUTTON_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetText(hItem, "");
+            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TIMESET_BUTTON_TITLE, &_bmWhiteTimeCHN, 0, 13);
+            Button_Set_BkColor(pMsg->hWin, ID_TIMESET_BUTTON_TITLE, GUI_BLACK);
+
             for(i=ID_TIMESET_BUTTON_CONFIRM;i<=ID_TIMESET_BUTTON_RESERVE5;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
                 Button_Init(hItem);

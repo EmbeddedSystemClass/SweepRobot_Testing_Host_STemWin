@@ -4,6 +4,8 @@
 #include "stm32f4xx.h"
 
 typedef struct{
+    int pushValue;
+    int releaseValue;
     int value;
     u8 validCnt;
     u8 validFlag;
@@ -11,7 +13,5 @@ typedef struct{
 
 void SweepRobot_KeyTestTask(void *pdata);
 void KEY_TestDataSave(void);
-void SweepRobot_KeyTestCtrlTestPos(void);
-void SweepRobot_KeyTestCtrlIdlePos(void);
 
 #endif

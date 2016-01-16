@@ -5,10 +5,6 @@
 #include "usart.h"
 #include "includes.h"
 
-#define CHARGE_TEST_24V_CTRL_RCC        RCC_AHB1Periph_GPIOC
-#define CHARGE_TEST_24V_CTRL_GPIO       GPIOC
-#define CHARGE_TEST_24V_CTRL_PIN        GPIO_Pin_7
-
 static u8 swrbChargeTestStateMap = 0;
 
 #define SWRB_TEST_CHARGE_CUR_POS            0
@@ -19,41 +15,13 @@ static u8 swrbChargeTestStateMap = 0;
 #define SWRB_TEST_FAULT_CHARGE_VOL_MASK     0x02
 #define SWRB_TEST_FAULT_CHARGE_24V_MASK     0x04
 
-#define SWRB_TEST_CHARGE_CUR_HIGH_BOUND     100
-#define SWRB_TEST_CHARGE_CUR_LOW_BOUND      20
+#define SWRB_TEST_CHARGE_CUR_HIGH_THRESHOLD     100
+#define SWRB_TEST_CHARGE_CUR_LOW_THRESHOLD      20
 
-#define SWRB_TEST_CHARGE_OC_THRESHOLD       0
-
-#define SWRB_TEST_CHARGE_VOL_HIGH_BOUND     4000
-#define SWRB_TEST_CHARGE_VOL_LOW_BOUND      2000
-
-#define SWRB_TEST_CHARGE_OV_THRESHOLD       0
+#define SWRB_TEST_CHARGE_VOL_HIGH_THRESHOLD     4000
+#define SWRB_TEST_CHARGE_VOL_LOW_THRESHOLD      2000
 
 static CHARGE_TestTypeDef charge;
-
-static void SweepRobot_ChargeTestGPIOInit(void)
-{
-    GPIO_InitTypeDef GPIO_InitStructure;
-
-    RCC_AHB1PeriphClockCmd(CHARGE_TEST_24V_CTRL_RCC, ENABLE);
-
-    GPIO_InitStructure.GPIO_Pin = CHARGE_TEST_24V_CTRL_PIN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_Init(CHARGE_TEST_24V_CTRL_GPIO, &GPIO_InitStructure);
-}
-
-void SweepRobot_Charge24VOn(void)
-{
-    GPIO_ResetBits(CHARGE_TEST_24V_CTRL_GPIO, CHARGE_TEST_24V_CTRL_PIN);
-}
-
-void SweepRobot_Charge24VOff(void)
-{
-    GPIO_SetBits(CHARGE_TEST_24V_CTRL_GPIO, CHARGE_TEST_24V_CTRL_PIN);
-}
 
 static void SweepRobot_ChargeTestInit(void)
 {
@@ -112,7 +80,7 @@ static void SweepRobot_ChargeTestProc(void)
             }
         }
 
-        if( SWRB_TEST_CHARGE_CUR_LOW_BOUND<charge.current && SWRB_TEST_CHARGE_CUR_HIGH_BOUND>charge.current ){
+        if( SWRB_TEST_CHARGE_CUR_LOW_THRESHOLD<charge.current && SWRB_TEST_CHARGE_CUR_HIGH_THRESHOLD>charge.current ){
             swrbChargeTestStateMap &= ~(1<<SWRB_TEST_CHARGE_CUR_POS);
             charge.curValidCnt++;
         }else{
@@ -158,7 +126,7 @@ static void SweepRobot_ChargeTestProc(void)
             }
         }
 
-        if(SWRB_TEST_CHARGE_VOL_LOW_BOUND < charge.voltage && SWRB_TEST_CHARGE_VOL_HIGH_BOUND > charge.voltage){
+        if(SWRB_TEST_CHARGE_VOL_LOW_THRESHOLD < charge.voltage && SWRB_TEST_CHARGE_VOL_HIGH_THRESHOLD > charge.voltage){
             swrbChargeTestStateMap &= ~(1<<SWRB_TEST_CHARGE_VOL_POS);
             charge.volValidCnt++;
         }else{
@@ -244,7 +212,7 @@ static void SweepRobot_ChargeTestProc(void)
     }
 }
 
-static void SweepRobot_ChargePCBTestOverTimeProc(void)
+static void SweepRobot_ChargePCBTestTimeOutProc(void)
 {
     char *str;
     
@@ -268,7 +236,7 @@ static void SweepRobot_ChargePCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_ChargeManulTestOverTimeProc(void)
+static void SweepRobot_ChargeManulTestTimeOutProc(void)
 {
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
@@ -290,7 +258,7 @@ static void SweepRobot_ChargeManulTestOverTimeProc(void)
     }
 }
 
-static void SweepRobot_ChargeTestOverTimeProc(void)
+static void SweepRobot_ChargeTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("CRG->OFF\r\n");
@@ -299,9 +267,9 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_ChargePCBTestOverTimeProc();
+        SweepRobot_ChargePCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_ChargeManulTestOverTimeProc();
+        SweepRobot_ChargeManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -313,9 +281,7 @@ static void SweepRobot_ChargeTestOverTimeProc(void)
 
 void SweepRobot_ChargeTestTask(void *pdata)
 {
-    u16 overTimeWaitTime;
-
-    SweepRobot_ChargeTestGPIOInit();
+    u16 TimeOutWaitTime;
 
     while(1){
 
@@ -334,13 +300,13 @@ void SweepRobot_ChargeTestTask(void *pdata)
             }
 
             if(charge.charge24vState){
-                overTimeWaitTime = 600;
+                TimeOutWaitTime = 600;
             }else{
-                overTimeWaitTime = 100;
+                TimeOutWaitTime = 100;
             }
 
-            if(gSwrbTestTaskRunCnt > overTimeWaitTime){
-                SweepRobot_ChargeTestOverTimeProc();
+            if(gSwrbTestTaskRunCnt > TimeOutWaitTime){
+                SweepRobot_ChargeTestTimeOutProc();
             }
 
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

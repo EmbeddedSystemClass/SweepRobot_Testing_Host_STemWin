@@ -717,8 +717,6 @@ void SweepRobot_PCBTestStopBtnProc(void)
 
         SWRB_PCBTestCheckboxEnable();
 
-        TEST_LED_TASK_CB_DEREG();
-
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE, GUI_LIGHTGRAY);
         Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START, GUI_LIGHTBLUE);
 //        Button_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_START, "START");
@@ -734,16 +732,18 @@ void SweepRobot_PCBTestStopBtnProc(void)
         myfree(SRAMIN, str);
 
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "PRESS START TO START TEST\r\n");
-
-        OS_ENTER_CRITICAL();
-        OSTaskSuspend(gSwrbTestRuningTaskPrio);
-        gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)NULL;
-        OS_EXIT_CRITICAL();
-
+        
         for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
         }
 
+        OS_ENTER_CRITICAL();
+        TEST_LED_TASK_CB_DEREG();
+        OSTaskSuspend(gSwrbTestRuningTaskPrio);
+        gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)NULL;
+        OS_EXIT_CRITICAL();
+
+        
         SweepRobotTest_PCBTestInitProc();
     }
 }
@@ -758,7 +758,9 @@ void SweepRobot_PCBTestExitBtnProc(void)
 
         SWRB_PCBTestCheckboxEnable();
 
-        mf_close();
+        if(gSwrbTestSDCardInsertState){
+            f_close(file);
+        }
 
         OS_ENTER_CRITICAL();
         OSTaskSuspend(gSwrbTestRuningTaskPrio);
@@ -784,7 +786,7 @@ void SweepRobot_PCBTestExitBtnProc(void)
 static void SweepRobot_TestHostCtrlStateReset(void)
 {
     SweepRobot_Charge24VOff();
-    SweepRobot_KeyTestCtrlIdlePos();
+    SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToIdlePos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
@@ -1007,7 +1009,12 @@ static void SWRB_PCBTestFinishProc(void)
 
     SweepRobot_PCBTestGUIReset();
 
-    SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
+    SWRB_ValidTestTaskCntGet();
+    
+    if(gSwrbTestValidTaskCnt == SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)){
+        SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
+    }
+    gSwrbTestValidTaskCnt = 0;
 }
 
 static void SWRB_ManulTestFinishProc(void)
@@ -1238,7 +1245,7 @@ void SweepRobot_PowerStationTestExitProc(void)
 static void SweepRobot_ManulTestCtrlReset(void)
 {
     SweepRobot_Charge24VOff();
-    SweepRobot_KeyTestCtrlIdlePos();
+    SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToIdlePos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
@@ -1385,7 +1392,6 @@ static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
                                                          gSwrbManulTestListviewDispItemCoord[i][0],\
                                                          gSwrbManulTestListviewDispItemCoord[i][1],\
                                                          GUI_LIGHTGRAY);
-
         }
     }
 

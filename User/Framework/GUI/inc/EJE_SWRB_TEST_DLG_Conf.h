@@ -278,14 +278,17 @@
         ID_PCBTEST_BUTTON_12,
         ID_PCBTEST_BUTTON_13,
         ID_PCBTEST_BUTTON_14,
+        ID_PCBTEST_BUTTON_15,
         ID_PCBTEST_FRAMEWIN_0,
         ID_PCBTEST_FRAMEWIN_1,
+        ID_PCBTEST_FRAMEWIN_2,
         ID_PCBTEST_PROGBAR_0,
         ID_PCBTEST_MULTIEDIT_0,
         ID_PCBTEST_WINDOW_0,
         ID_PCBTEST_WINDOW_1,
         ID_PCBTEST_TEXT_0,
         ID_PCBTEST_TEXT_1,
+        ID_PCBTEST_TEXT_2,
         ID_PCBTEST_BOUND,
     };
     
@@ -298,6 +301,7 @@
         ID_PCBTEST_BUTTON_SET_TIME,
         ID_PCBTEST_BUTTON_WARNING_RETEST,
         ID_PCBTEST_BUTTON_WARNING_SKIP,
+        ID_PCBTEST_BUTTON_KEY_TITLE,
         ID_PCBTEST_BUTTON_RGB_LED_OK,
         ID_PCBTEST_BUTTON_RGB_LED_ERR,
         ID_PCBTEST_BUTTON_BUZZER_OK,
@@ -309,7 +313,8 @@
     };
     
     enum ID_PCBTEST_FRAMEWIN{
-        ID_PCBTEST_FRAMEWIN_RGB_LED = ID_PCBTEST_FRAMEWIN_0,
+        ID_PCBTEST_FRAMEWIN_KEY = ID_PCBTEST_FRAMEWIN_0,
+        ID_PCBTEST_FRAMEWIN_RGB_LED,
         ID_PCBTEST_FRAMEWIN_BUZZER,
         ID_PCBTEST_FRAMEWIN_BOUND,
     };
@@ -331,7 +336,8 @@
     };
     
     enum ID_PCBTEST_TEXT{
-        ID_PCBTEST_TEXT_RGB_LED = ID_PCBTEST_TEXT_0,
+        ID_PCBTEST_TEXT_KEY = ID_PCBTEST_TEXT_0,
+        ID_PCBTEST_TEXT_RGB_LED,
         ID_PCBTEST_TEXT_BUZZER,
         ID_PCBTEST_TEXT_BOUND,
     };
@@ -406,6 +412,7 @@
         ID_SNSET_BUTTON_8,
         ID_SNSET_BUTTON_9,
         ID_SNSET_BUTTON_10,
+        ID_SNSET_BUTTON_11,
         ID_SNSET_WINDOW_0,
         ID_SNSET_TEXT_0,
         ID_SNSET_BOUND,
@@ -434,7 +441,8 @@
     };
     
     enum ID_SNSET_BUTTON{
-        ID_SNSET_BUTTON_CONFIRM = ID_SNSET_BUTTON_0,
+        ID_SNSET_BUTTON_TITLE  = ID_SNSET_BUTTON_0,
+        ID_SNSET_BUTTON_CONFIRM,
         ID_SNSET_BUTTON_CHECK,
         ID_SNSET_BUTTON_RESET,
         ID_SNSET_BUTTON_CANCEL,
@@ -488,6 +496,7 @@
         ID_TIMESET_BUTTON_8,
         ID_TIMESET_BUTTON_9,
         ID_TIMESET_BUTTON_10,
+        ID_TIMESET_BUTTON_11,
         ID_TIMESET_WINDOW_0,
         ID_TIMESET_TEXT_0,
         ID_TIMESET_BOUND,
@@ -516,7 +525,8 @@
     };
     
     enum ID_TIMESET_BUTTON{
-        ID_TIMESET_BUTTON_CONFIRM = ID_TIMESET_BUTTON_0,
+        ID_TIMESET_BUTTON_TITLE = ID_TIMESET_BUTTON_0,
+        ID_TIMESET_BUTTON_CONFIRM,
         ID_TIMESET_BUTTON_CHECK,
         ID_TIMESET_BUTTON_RESET,
         ID_TIMESET_BUTTON_CANCEL,
@@ -1022,6 +1032,7 @@
 #if __EJE_SWRB_TEST_MAIN_DLG
     extern WM_HWIN hWin_SWRB_PCBTEST;
     extern WM_HWIN hWin_SWRB_WARNING;
+    extern WM_HWIN hWin_SWRB_KEY;
     extern WM_HWIN hWin_SWRB_RGB_LED;
     extern WM_HWIN hWin_SWRB_BUZZER;
 #endif
@@ -1101,6 +1112,7 @@ void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispDeleteCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispPressKeyCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue);
 void Progbar_Set_Percent(void);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);

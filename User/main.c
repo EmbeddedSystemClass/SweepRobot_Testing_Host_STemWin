@@ -15,6 +15,8 @@ static void SWRBTest_CtrlPanelInit(void)
     SweepRobotTest_StepMotorDriverGPIOInit();
     SweepRobot_CollisionTestGPIOInit();
     SweepRobot_WheelFloatTestGPIOInit();
+    SweepRobot_IrDATestGPIOInit();
+    SweepRobot_ChargeTestGPIOInit();
 }
 
 static int SWRBTest_StorageInit(void)

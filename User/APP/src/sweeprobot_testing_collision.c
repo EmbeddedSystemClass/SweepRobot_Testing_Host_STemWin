@@ -149,7 +149,7 @@ static void SweepRobot_CollisionPCBTestProc(void)
     }
 }
 
-static void SweepRobot_CollisionPCBTestOverTimeProc(void)
+static void SweepRobot_CollisionPCBTestTimeOutProc(void)
 {
     char *str;
     
@@ -181,7 +181,7 @@ static void SweepRobot_CollisionPCBTestOverTimeProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_CollisionManulTestOverTimeProc(void)
+static void SweepRobot_CollisionManulTestTimeOutProc(void)
 {
     SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
     SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
@@ -212,7 +212,7 @@ static void SweepRobot_CollisionManulTestOverTimeProc(void)
     }
 }
 
-static void SweepRobot_CollisionTestOverTimeProc(void)
+static void SweepRobot_CollisionTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     gSwrbFrontCollisionTestFinishFlag = 0;
@@ -220,9 +220,9 @@ static void SweepRobot_CollisionTestOverTimeProc(void)
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        SweepRobot_CollisionPCBTestOverTimeProc();
+        SweepRobot_CollisionPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_CollisionManulTestOverTimeProc();
+        SweepRobot_CollisionManulTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -427,9 +427,6 @@ static void SweepRobot_CollisionManulTestProc(void)
 
 void SweepRobot_CollisionTestTask(void *pdata)
 {
-
-    SweepRobot_CollisionTestGPIOInit();
-    
     gSwrbFrontCollisionTestFinishFlag = 0;
 
     while(1){
@@ -450,7 +447,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
                 }
 
                 if(gSwrbTestTaskRunCnt > 20){
-                    SweepRobot_CollisionTestOverTimeProc();
+                    SweepRobot_CollisionTestTimeOutProc();
                 }
             }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 /* Manul Test Collision Test Proc */
@@ -464,7 +461,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
 
                 if(gSwrbTestTaskRunCnt > 20){
                     if(gSwrbFrontCollisionTestFinishFlag){
-                        SweepRobot_CollisionTestOverTimeProc();
+                        SweepRobot_CollisionTestTimeOutProc();
                     }else{
                         gSwrbTestTaskRunCnt = 0;
                         gSwrbFrontCollisionTestFinishFlag = 1;

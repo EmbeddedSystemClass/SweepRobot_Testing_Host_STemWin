@@ -128,6 +128,12 @@ static const GUI_WIDGET_CREATE_INFO _aPCBTestWarningDialogCreate[] = {
     { BUTTON_CreateIndirect, "CONTINUE", ID_PCBTEST_BUTTON_WARNING_SKIP,  219, 0, 219, 58, 0, 0x0, 0 },
 };
 
+static const GUI_WIDGET_CREATE_INFO _aKeyTestDialogCreate[] = {
+    { FRAMEWIN_CreateIndirect, "KEY TEST", ID_PCBTEST_FRAMEWIN_KEY, 0, 0, 440, 210, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "TITLE", ID_PCBTEST_BUTTON_KEY_TITLE, 120, 100, 200, 60, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "KEY TEST", ID_PCBTEST_TEXT_KEY, 68, 17, 308, 65, 0, 0x64, 0 },
+};
+
 static const GUI_WIDGET_CREATE_INFO _aRgbLEDTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "RGB LED TEST", ID_PCBTEST_FRAMEWIN_RGB_LED, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "OK", ID_PCBTEST_BUTTON_RGB_LED_OK, 60, 100, 120, 60, 0, 0x0, 0 },
@@ -420,6 +426,51 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
     }
 }
 
+static void _cbKeyDialog(WM_MESSAGE * pMsg)
+{
+    WM_HWIN hItem;
+    int     NCode;
+    int     Id;
+    
+    switch(pMsg->MsgId){
+        case WM_INIT_DIALOG:
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE);
+//            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+            BUTTON_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            Button_Set_BkColor(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, GUI_WHITE);
+            Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, "");
+            BUTTON_DispPressKeyCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, 36, 13);
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_TEXT_KEY);
+            TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
+            TEXT_SetText(hItem, "KEY TEST");
+            TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+            TEXT_SetTextColor(hItem, GUI_BLACK);
+            
+            break;
+        case WM_PAINT:
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id) {
+                case ID_PCBTEST_BUTTON_KEY_TITLE: // Notifications sent by 'KEY TITLE'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            break;
+                    }
+                    break;
+            }
+        default:
+            WM_DefaultProc(pMsg);
+            break;
+    }
+}
+
 static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
 {
     WM_HWIN hItem;
@@ -448,7 +499,6 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
             
             break;
         case WM_PAINT:
-            GUI_MULTIBUF_Begin();
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -570,6 +620,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
 
 WM_HWIN hWin_SWRB_PCBTEST;
 WM_HWIN hWin_SWRB_WARNING;
+WM_HWIN hWin_SWRB_KEY;
 WM_HWIN hWin_SWRB_RGB_LED;
 WM_HWIN hWin_SWRB_BUZZER;
 
@@ -597,6 +648,19 @@ WM_HWIN CreateWarningDLG(void)
     WM_HWIN hWin;
 
     hWin = GUI_CreateDialogBox(_aPCBTestWarningDialogCreate, GUI_COUNTOF(_aPCBTestWarningDialogCreate), _cbPCBTestWarningDialog, WM_HBKWIN, 0, 0);
+    return hWin;
+}
+
+WM_HWIN CreateKEY_TestDLG(void)
+{
+    WM_HWIN hWin;
+    
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
+        hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_PCBTEST, 180, 135);
+    else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+        hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_MANUL, 180, 135);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+    }
     return hWin;
 }
 

@@ -10,9 +10,26 @@ enum WheelFloagChan{
     WHEEL_FLOAT_CHAN_R, 
 };
 
+/* TODO: Improve Test Typedef definition of Wheel Float Task */
+//typedef struct{
+//    int value;
+//    u8 validCnt;
+//    u8 ValideFlag;
+//}WHEEL_FLOAT_TEST_DATA_Typedef;
+
+//typedef struct{
+//    WHEEL_FLOAT_TEST_DATA_Typedef up;
+//    WHEEL_FLOAT_TEST_DATA_Typedef down;
+//}WHEEL_FLOAT_TEST_POS_Typedef;
+
 typedef struct{
-    u8 value;
+    int upValue;
+    int downValue;
+    int value;
+    u8 upValidCnt;
+    u8 downValidCnt;
     u8 validCnt;
+    u8 downValidFlag;
     u8 validFlag;
 }WHEEL_FLOAT_TestTypeDef;
 
