@@ -27,28 +27,26 @@
 #define COLLISION_TEST_LEFT_STEER_MOTOR_CTRL_PIN_SOURCE GPIO_PinSource5
 #define COLLISION_TEST_RIGHT_STEER_MOTOR_CTRL_PIN_SOURCE GPIO_PinSource6
 
-#define COLLISION_TEST_LEFT_STEERING_MOTOR_IDLE_POS     850
-#define COLLISION_TEST_LEFT_STEERING_MOTOR_FRONT_POS    550
-#define COLLISION_TEST_LEFT_STEERING_MOTOR_SIDE_POS     1350
+#define COLLISION_TEST_LEFT_STEERING_MOTOR_IDLE_POS     1120
+#define COLLISION_TEST_LEFT_STEERING_MOTOR_FRONT_POS    700
+#define COLLISION_TEST_LEFT_STEERING_MOTOR_SIDE_POS     1570
 
-#define COLLISION_TEST_RIGHT_STEERING_MOTOR_IDLE_POS    1650
-#define COLLISION_TEST_RIGHT_STEERING_MOTOR_FRONT_POS   1950
-#define COLLISION_TEST_RIGHT_STEERING_MOTOR_SIDE_POS    1250
+#define COLLISION_TEST_RIGHT_STEERING_MOTOR_IDLE_POS    970
+#define COLLISION_TEST_RIGHT_STEERING_MOTOR_FRONT_POS   1500
+#define COLLISION_TEST_RIGHT_STEERING_MOTOR_SIDE_POS    610
 
 /* Wheel Float Steering Motor Control GPIO */
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_PERIPH_ID            RCC_AHB1Periph_GPIOB
 #define WHEEL_FLOAT_TEST_CTRL_GPIO                      GPIOB
-#define WHEEL_FLOAT_TEST_CTRL_L_PIN                     GPIO_Pin_10             //TIM2_CH3
-#define WHEEL_FLOAT_TEST_CTRL_R_PIN                     GPIO_Pin_11
+#define WHEEL_FLOAT_TEST_STEER_MOTOR_CTRL_PIN           GPIO_Pin_10             //TIM2_CH3
 #define WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE              GPIO_PinSource10
-#define WHEEL_FLOAT_TSET_CTRL_R_PIN_SOURCE              GPIO_PinSource11
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP               GPIO_AF_TIM2
 #define WHEEL_FLOAT_TEST_CTRL_TIM_PERIPH_ID             RCC_APB1Periph_TIM2
 #define WHEEL_FLOAT_TEST_CTRL_TIM                       TIM2
 
-#define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS       650
-#define WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS         850
-#define WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS       450
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS       280
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS         435
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS       280
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME 100
 
 /* Ash Tray Steering Motor Control GPIO */
@@ -74,7 +72,7 @@
 #define IRDA_TEST_TX_TIM                                TIM7
 #define IRDA_TEST_TX_GPIO_PERIPH_ID                     RCC_AHB1Periph_GPIOG
 #define IRDA_TEST_TX_GPIO                               GPIOG
-#define IRDA_TEST_TX_L_PIN                              GPIO_Pin_15
+#define IRDA_TEST_TX_L_PIN                              GPIO_Pin_9
 #define IRDA_TEST_TX_R_PIN                              GPIO_Pin_6
 #define IRDA_TEST_TX_M_PIN                              GPIO_Pin_7
 
@@ -89,6 +87,20 @@
 static u8 gIrDACodeTxSeqNum = 0;
 static u8 gIrDACodeTxCnt = 0;
 static u32 gIrDACodeTxSeqTime = 0;
+
+void SweepRobotTest_SteerMotor5VCtrlGPIOInit(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    GPIO_InitStructure.GPIO_Pin = STEER_MOTOR_5V_CTRL_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(STEER_MOTOR_5V_CTRL_GPIO, &GPIO_InitStructure);
+    
+    STEER_MOTOR_5V_ON();
+}
 
 /* COLLISION TEST GPIO INIT */
 void SweepRobot_CollisionTestGPIOInit(void)
@@ -273,7 +285,7 @@ void SweepRobot_WheelFloatTestGPIOInit(void)
     GPIO_PinAFConfig(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE, WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP);
     GPIO_PinAFConfig(WHEEL_FLOAT_TEST_CTRL_GPIO, WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE, WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP);
 
-    GPIO_InitStructure.GPIO_Pin = WHEEL_FLOAT_TEST_CTRL_L_PIN | WHEEL_FLOAT_TEST_CTRL_R_PIN;
+    GPIO_InitStructure.GPIO_Pin = WHEEL_FLOAT_TEST_STEER_MOTOR_CTRL_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -295,12 +307,10 @@ void SweepRobot_WheelFloatTestGPIOInit(void)
     TIM_OC4Init(WHEEL_FLOAT_TEST_CTRL_TIM, &TIM_OCInitStructure);
 
     TIM_OC3PreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, TIM_OCPreload_Enable);
-    TIM_OC4PreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, TIM_OCPreload_Enable);
 
     TIM_ARRPreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
+    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
@@ -329,23 +339,20 @@ void SweepRobot_WheelFloatCtrlSteerMotorPosSet(int DutyCycle)
 void SweepRobot_WheelFloatCtrlMoveToIdlePos(void)
 {
     TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
 
-void SweepRobot_WheelFloatCtrlMoveToUPPos(void)
+void SweepRobot_WheelFloatCtrlMoveToUpPos(void)
 {
     TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
 
-void SweepRobot_WheelFloatCtrlMoveToDOWNPos(void)
+void SweepRobot_WheelFloatCtrlMoveToDownPos(void)
 {
     TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
@@ -353,7 +360,6 @@ void SweepRobot_WheelFloatCtrlMoveToDOWNPos(void)
 void SweepRobot_WheelFloatCtrlShutDown(void)
 {
     TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
-    TIM_SetCompare4(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
 
     OSTimeDlyHMSM(0,0,0,WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME);
 
@@ -540,6 +546,7 @@ void SweepRobot_IrDACodeTxProc(u8 code)
 }
 
 /* Original IrDA code Tx process */
+/* FIXME: Should modulate to match 38kHz IrDA Receiver */
 void SweepRobot_IrDATestTxSendCmd(u8 code)
 {
     u8 i;

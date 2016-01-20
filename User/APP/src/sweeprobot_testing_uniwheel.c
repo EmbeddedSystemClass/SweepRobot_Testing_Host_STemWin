@@ -11,7 +11,7 @@ static UNIWHEEL_TestTypeDef uniwheel;
 #ifdef _UNIWHEEL_USE_MINUS_COMPARE
     static const int SWRB_UNIWHEEL_MINUS_THRESHOLD = 400;
 #else
-    static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 3000;
+    static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 3900;
 #endif
 
 static void SweepRobot_UniWheelTestInit(void)

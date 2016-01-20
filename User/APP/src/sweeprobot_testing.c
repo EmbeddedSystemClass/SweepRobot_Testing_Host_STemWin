@@ -788,7 +788,7 @@ static void SweepRobot_TestHostCtrlStateReset(void)
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
-    SweepRobot_WheelFloatCtrlMoveToIdlePos();
+    SweepRobot_WheelFloatCtrlMoveToDownPos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
     SweepRobotTest_StepMotorSetIdle();
 }
@@ -967,7 +967,7 @@ void SWRB_TestTaskErrorAct(void)
 //    WM_BringToTop(hWin_SWRB_WARNING);
 
     OS_ENTER_CRITICAL();
-    OSTaskSuspend(gSwrbTestRuningTaskPrio);
+    OSTaskSuspend(OS_PRIO_SELF);
     OS_EXIT_CRITICAL();
 }
 
@@ -1247,7 +1247,7 @@ static void SweepRobot_ManulTestCtrlReset(void)
     SweepRobot_Charge24VOff();
     SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
-    SweepRobot_WheelFloatCtrlMoveToIdlePos();
+    SweepRobot_WheelFloatCtrlMoveToDownPos();
     SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 }
 

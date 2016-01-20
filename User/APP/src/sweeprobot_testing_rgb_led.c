@@ -109,11 +109,7 @@ static void SweepRobot_RGBLEDTestOKProc(void)
         Edit_Clear();
     }
     
-#ifdef _TASK_WAIT_WHEN_ERROR
-    SWRB_TestTaskErrorAct();
-#else
     SWRB_NextTestTaskResumePostAct(SWRB_RGB_LED_TEST_TASK_PRIO);
-#endif
 }
 
 static void SweepRobot_RGBLEDTestErrProc(void)

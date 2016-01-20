@@ -78,7 +78,7 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_APB1PeriphClockCmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_PERIPH_ID, ENABLE);
-    RCC_AHB1PeriphClockCmd(STEP_MOTOR_DRIVER_GPIO_RCC, ENABLE);
+    RCC_AHB1PeriphClockCmd(STEP_MOTOR_DRIVER_GPIO_PERIPH_ID, ENABLE);
 
     GPIO_PinAFConfig(STEP_MOTOR_DRIVER_GPIO, STEP_MOTOR_DRIVER_PWM_OUT_PIN_SOURCE, STEP_MOTOR_DRIVER_GPIO_AF_PPP);
 
@@ -95,7 +95,7 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(STEP_MOTOR_DRIVER_GPIO, &GPIO_InitStructure);
-    
+
     GPIO_InitStructure.GPIO_Pin = STEP_MOTOR_DRIVER_POS_DETECT_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
@@ -122,16 +122,19 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     TIM_ITConfig(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, TIM_IT_Update, ENABLE);
 
     NVIC_InitStructure.NVIC_IRQChannel=STEP_MOTOR_DRVIER_GPIO_PWM_OUT_TIM_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x01;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03;
-	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x01;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03;
+    NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 
     plat_int_reg_cb(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM_INT, StepMotorDriver_PWMTimerISR);
 
     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, DISABLE);
 
     SweepRobotTest_StepMotorDriverReset();
+    
+    /* FIXME: Comment this when release */
+//    STEP_MOTOR_PWR_ON();
 }
 
 void StepMotorDriver_PWMTimerISR(void)

@@ -3,6 +3,13 @@
 
 #include "sweeprobot_testing_conf.h"
 
+#define STEER_MOTOR_5V_CTRL_GPIO_PERIPH_ID              RCC_AHB1Periph_GPIOG
+#define STEER_MOTOR_5V_CTRL_GPIO                        GPIOG
+#define STEER_MOTOR_5V_CTRL_PIN                         GPIO_Pin_15
+
+#define STEER_MOTOR_5V_ON()     GPIO_WriteBit(STEER_MOTOR_5V_CTRL_GPIO, STEER_MOTOR_5V_CTRL_PIN, Bit_RESET)
+#define STEER_MOTOR_5V_OFF()     GPIO_WriteBit(STEER_MOTOR_5V_CTRL_GPIO, STEER_MOTOR_5V_CTRL_PIN, Bit_SET)
+
 enum STEER_MOTOR_POS{
     STEER_MOTOR_IDLE_POS,
     STEER_MOTOR_FRONT_POS,
@@ -10,6 +17,8 @@ enum STEER_MOTOR_POS{
     STEER_MOTOR_UP_POS,
     STEER_MOTOR_DOWN_POS,
 };
+
+void SweepRobotTest_SteerMotor5VCtrlGPIOInit(void);
 
 void SweepRobot_CollisionTestGPIOInit(void);
 void SweepRobot_CollisionRelayCtrlOn(enum COLLISION_CHAN chan);
@@ -25,8 +34,8 @@ void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos);
 void SweepRobot_WheelFloatCtrlSteerMotorPosSet(int DutyCycle);
 void SweepRobot_WheelFloatCtrlShutDown(void);
 void SweepRobot_WheelFloatCtrlMoveToIdlePos(void);
-void SweepRobot_WheelFloatCtrlMoveToUPPos(void);
-void SweepRobot_WheelFloatCtrlMoveToDOWNPos(void);
+void SweepRobot_WheelFloatCtrlMoveToUpPos(void);
+void SweepRobot_WheelFloatCtrlMoveToDownPos(void);
 
 void SweepRobot_AshTrayTestGPIOInit(void);
 void SweepRobot_AshTrayTestInsCtrlMoveToTestPos(void);

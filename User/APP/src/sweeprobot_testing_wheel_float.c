@@ -5,7 +5,7 @@
 #include "usart.h"
 #include "includes.h"
 
-#define WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC     1
+#define WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC     2
 
 static WHEEL_FLOAT_TestTypeDef wheelFloat[SWRB_WHEEL_FLOAT_CHAN_NUM];
 
@@ -29,9 +29,9 @@ void SweepRobot_WheelFloatTestInit(void)
     for(i=0;i<SWRB_WHEEL_FLOAT_CHAN_NUM;i++){
         mymemset(&wheelFloat[i], 0, sizeof(wheelFloat[i]));
     }
-    
+
     SweepRobot_WheelFloatCtrlSteerMotorPosMove(STEER_MOTOR_DOWN_POS);
-    
+
     OSTimeDlyHMSM(0,0,WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC,0);
 }
 
@@ -39,7 +39,7 @@ static void SweepRobot_WheelFloatTestDownPosRxDataProc(void)
 {
     int i;
     char *str;
-    
+
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
         printf("WF->RD=%d\r\n",i);
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -76,15 +76,17 @@ static void SweepRobot_WheelFloatTestDownPosProc(void)
         SweepRobot_WheelFloatTestDownPosRxDataProc();
 
         if(wheelFloat[i].downValue){
+            gSwrbTestStateMap &= ~(1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
             wheelFloat[i].downValidCnt++;
         }else{
+            gSwrbTestStateMap |= (1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
             wheelFloat[i].downValidCnt = 0;
         }
 
         if(wheelFloat[i].downValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             wheelFloat[i].downValidFlag = 1;
         }
-        
+
         if(wheelFloat[WHEEL_FLOAT_CHAN_L].downValidFlag && wheelFloat[WHEEL_FLOAT_CHAN_R].downValidFlag){
             SweepRobot_WheelFloatCtrlSteerMotorPosMove(STEER_MOTOR_UP_POS);
             OSTimeDlyHMSM(0,0,WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC,0);
@@ -96,7 +98,7 @@ static void SweepRobot_WheelFloatTestUpPosRxDataProc(void)
 {
     int i;
     char *str;
-    
+
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
         printf("WF->RD=%d\r\n",i);
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -131,7 +133,7 @@ static void SweepRobot_WheelFloatTestUpPosProc(void)
     for(i=0;i<SWRB_WHEEL_FLOAT_CHAN_NUM;i++){
         SweepRobot_WheelFloatTestUpPosRxDataProc();
 
-        if(wheelFloat[i].upValue){
+        if(!wheelFloat[i].upValue){
             gSwrbTestStateMap &= ~(1<<(SWRB_TEST_WHEEL_FLOAT_L_POS+i));
             wheelFloat[i].upValidCnt++;
         }else{
@@ -140,7 +142,7 @@ static void SweepRobot_WheelFloatTestUpPosProc(void)
 
         if(wheelFloat[i].upValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             wheelFloat[i].validFlag = 1;
-            
+
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
@@ -177,7 +179,7 @@ static void SweepRobot_WheelFloatTestProc(void)
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL_FLOAT, "WHEEL FLOAT OK");
             Edit_Clear();
         }
-        
+
         SWRB_NextTestTaskResumePostAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
     }
 }

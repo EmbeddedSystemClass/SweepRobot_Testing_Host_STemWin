@@ -6,7 +6,7 @@
 #include "includes.h"
 
 const static u16 aSwrbBrushTestCurLowThreshold[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
-const static u16 aSwrbBrushTestCurHighThreshold[SWRB_BRUSH_CHAN_NUM] = { 50, 50, 500 };
+const static u16 aSwrbBrushTestCurHighThreshold[SWRB_BRUSH_CHAN_NUM] = { 100, 100, 1000 };
 
 static BRUSH_TestTypeDef brush[SWRB_BRUSH_CHAN_NUM];
 
@@ -35,7 +35,7 @@ static void SWRB_BrushTestTaskInit(void)
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
     printf("RB->SPD=100\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
-    printf("MB->SPD=40\r\n");
+    printf("MB->SPD=60\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);

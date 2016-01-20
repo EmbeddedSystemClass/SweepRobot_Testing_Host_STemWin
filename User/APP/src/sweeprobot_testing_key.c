@@ -28,7 +28,9 @@ static void SweepRobot_KeyTestInit(void)
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
 
     mymemset(&key, 0, sizeof(key));
-    
+
+    SweepRobot_KeyTestElectroMagnetCtrlPushPos();
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
@@ -69,9 +71,6 @@ static void SweepRobot_KeyTestProc(void)
         }
 
         if(key.validFlag){
-            SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
-            SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
-
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_KEY_POS][0],\
@@ -106,8 +105,6 @@ static void SweepRobot_KeyPCBTestTimeOutProc(void)
     char *str;
 
     str = "ERROR->KEY\r\n";
-    SWRB_TestDataFileWriteString(str);
-
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_KEY, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_KEY, "KEY ERROR");
@@ -124,8 +121,13 @@ static void SweepRobot_KeyManulTestTimeOutProc(void)
 
 static void SweepRobot_KeyTestTimeOutProc(void)
 {
+    char *str;
+
     gSwrbTestTaskRunCnt = 0;
     SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
+
+    str = "ERROR->KEY\r\n";
+    SWRB_TestDataFileWriteString(str);
 
     SWRB_TestDataSaveToFile(KEY_TestDataSave);
 
@@ -159,7 +161,7 @@ void SweepRobot_KeyTestTask(void *pdata)
                 SweepRobot_KeyTestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 20){
+            if(gSwrbTestTaskRunCnt > 50){
                 SweepRobot_KeyTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

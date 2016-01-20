@@ -166,7 +166,7 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
 #ifdef _ASH_TRAY_USE_MINUS_COMPARE
         if(ashTrayLvl.offValue - ashTrayLvl.onValue > SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD){
 #else
-        if( (0 > ashTrayLvl.value) && (ashTrayLvl.value < SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD) ){
+        if( (0 < ashTrayLvl.onValue) && (ashTrayLvl.onValue < SWRB_ASH_TRAY_LVL_VALID_VALUE_THRESHOLD) ){
 #endif
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_ASH_TRAY_LVL_POS);
             ashTrayLvl.validCnt++;

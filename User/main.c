@@ -12,6 +12,7 @@ static void SWRBTest_CtrlPanelInit(void)
     LED_Init();
     KEY_Init();
     TFTLCD_Init();
+    SweepRobotTest_SteerMotor5VCtrlGPIOInit();
     SweepRobotTest_StepMotorDriverGPIOInit();
     SweepRobot_CollisionTestGPIOInit();
     SweepRobot_WheelFloatTestGPIOInit();
