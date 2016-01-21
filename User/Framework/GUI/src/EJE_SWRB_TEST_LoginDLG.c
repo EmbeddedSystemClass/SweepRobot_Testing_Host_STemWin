@@ -136,6 +136,7 @@ static void Button_OKProc(void)
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_SLAM);
         }else if(!(strcmp(strPasswd,gStepMotorLoginPasswd))){
+            STEP_MOTOR_ISR_CB_REG(StepMotorTest_PosStepCntDisp);
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_STEPMOTOR);

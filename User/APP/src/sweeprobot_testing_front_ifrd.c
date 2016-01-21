@@ -32,7 +32,10 @@ static FRONT_IFRD_TestTypeDef frontIFRD[SWRB_FRONT_IFRD_CHAN_NUM];
 
 static const u16 SWRB_FRONT_IFRD_VALID_THRESHOLD[SWRB_FRONT_IFRD_CHAN_NUM] = { 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000 };
 
-static const u16 gSwrbFrontIFRDTestMoveStepSeq[SWRB_FRONT_IFRD_CHAN_NUM] = { 1500, 1500, 1500, 1500, 3000, 1500, 1500, 1500 };
+/* Absolute Position */
+//static const u16 gSwrbFrontIFRDTestMoveStepSeq[SWRB_FRONT_IFRD_CHAN_NUM] = { 900, 5380, 10350, 14230, 20160, 24100, 28900, 33200 };
+/* Relative Position */
+static const u16 gSwrbFrontIFRDTestMoveStepSeq[SWRB_FRONT_IFRD_CHAN_NUM] = { 900, 4480, 4970, 3880, 5930, 3940, 4800, 4300 };
 
 static u8 gSwrbFrontIFRDTestStepMotorMoveCnt = 0;
 static u8 gSwrbFrontIFRDTestChanCnt = 0;

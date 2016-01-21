@@ -4,6 +4,6 @@
 #include "Dialog.h"
 
 WM_HWIN CreatewinStepMotorDLG(void);
-
+void StepMotorTest_PosStepCntDisp(void);
 
 #endif

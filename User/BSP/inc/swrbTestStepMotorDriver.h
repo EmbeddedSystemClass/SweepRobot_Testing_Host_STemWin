@@ -87,6 +87,7 @@ void SweepRobotTest_StepMotorEnStateSet(FunctionalState enState);
 FunctionalState SweepRobotTest_StepMotorEnStateGet(void);
 void SweepRobotTest_StepMotorDriverReset(void);
 enum STEP_MOTOR_POS SweepRobotTest_StepMotorPosGet(void);
+int32_t SweepRobotTest_StepMotorPosStepCntGet(void);
 void SweepRobotTest_StepMotorGoHome(void);
 void SweepRobotTest_StepMotorSetIdle(void);
 

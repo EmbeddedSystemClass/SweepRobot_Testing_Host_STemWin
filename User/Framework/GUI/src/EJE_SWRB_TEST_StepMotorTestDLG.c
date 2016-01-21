@@ -110,6 +110,8 @@ static void Button_ExitProc(void)
     
     SweepRobotTest_StepMotorEnStateSet(ENABLE);
     
+    STEP_MOTOR_ISR_CB_DEREG();
+    
     WM_HideWin(hWin_SWRB_STEPMOTOR);
     WM_ShowWin(hWin_SWRB_START);
 }
@@ -329,6 +331,19 @@ WM_HWIN CreatewinStepMotorDLG(void) {
 
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
   return hWin;
+}
+
+void StepMotorTest_PosStepCntDisp(void)
+{
+    enum STEP_MOTOR_MODE mode;
+    int32_t posStepCnt;
+    
+    mode = SweepRobotTest_StepMotorModeGet();
+    
+    if(mode == STEP_MOTOR_MODE_STOP){
+        posStepCnt = SweepRobotTest_StepMotorPosStepCntGet();
+        Edit_Set_Value(hWin_SWRB_STEPMOTOR, ID_STEPMOTOR_EDIT_POS, posStepCnt);
+    }
 }
 
 /*************************** End of file ****************************/

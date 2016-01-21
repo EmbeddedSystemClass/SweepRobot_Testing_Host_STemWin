@@ -36,15 +36,15 @@ static void SweepRobot_ChargeTestInit(void)
     MultiEdit_Set_Text_Color(GUI_BLACK);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
 #endif
-    
+
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
-    
+
     mymemset(&charge, 0, sizeof(charge));
 
     SweepRobot_Charge24VOn();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     printf("CRG->ON=20\r\n");
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 
@@ -89,7 +89,7 @@ static void SweepRobot_ChargeTestProc(void)
 
         if(charge.curValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.curValidFlag = 1;
-            
+
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
@@ -135,7 +135,7 @@ static void SweepRobot_ChargeTestProc(void)
 
         if(charge.volValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.volValidFlag = 1;
-            
+
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
@@ -181,7 +181,7 @@ static void SweepRobot_ChargeTestProc(void)
 
         if(charge.charge24vValidCnt > SWRB_TEST_VALID_COMP_TIMES){
             charge.charge24vValidFlag = 1;
-            
+
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
@@ -215,7 +215,7 @@ static void SweepRobot_ChargeTestProc(void)
 static void SweepRobot_ChargePCBTestTimeOutProc(void)
 {
     char *str;
-    
+
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
         str = "ERROR->CHARGE CUR\r\n";
         SWRB_TestDataFileWriteString(str);

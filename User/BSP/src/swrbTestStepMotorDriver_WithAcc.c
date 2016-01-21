@@ -18,7 +18,7 @@
 
 #define STEP_MOTOR_STEPS_PER_REV    1600
 
-#define STEP_MOTOR_MAX_STEPS        20000
+#define STEP_MOTOR_MAX_STEPS        40000
 
 stepMotorDriverISRCB_t stepMotorDriverISRCB = NULL;
 
@@ -31,7 +31,7 @@ typedef struct{
     float expSpeed;
     uint32_t expSteps;
     uint32_t runStepCnt;
-    uint32_t posStepCnt;
+    int32_t posStepCnt;
 }StepMotorDriverCtrl_TypeDef;
 
 typedef struct{
@@ -136,9 +136,6 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
     TIM_Cmd(STEP_MOTOR_DRIVER_GPIO_PWM_OUT_TIM, DISABLE);
 
     SweepRobotTest_StepMotorDriverReset();
-    
-    /* FIXME: Comment this when release */
-//    STEP_MOTOR_PWR_ON();
 }
 
 void StepMotorDriver_PWMTimerISR(void)
@@ -146,6 +143,12 @@ void StepMotorDriver_PWMTimerISR(void)
     float stepMotorTimerPeriod = 0;
 
     stepMotor.ctrl.runStepCnt++;
+    
+    if(stepMotor.dir == STEP_MOTOR_DIR_FORWARD){
+        stepMotor.ctrl.posStepCnt--;
+    }else{
+        stepMotor.ctrl.posStepCnt++;
+    }
 
 #ifdef _USE_ACTUAL_POS_DETECT_KEY
     if( !STEP_MOTOR_POS_DETECT_SIGN && (stepMotor.dir == STEP_MOTOR_DIR_FORWARD) ){
@@ -153,6 +156,7 @@ void StepMotorDriver_PWMTimerISR(void)
     if( STEP_MOTOR_POS_DETECT_SIGN && (stepMotor.dir == STEP_MOTOR_DIR_BACKWARD) ){
 #endif
         stepMotor.ctrl.runStepCnt = 0;
+        stepMotor.ctrl.posStepCnt = 0;
         stepMotor.mode = STEP_MOTOR_MODE_STOP;
         stepMotor.pos = STEP_MOTOR_POS_HOME;
         STEP_MOTOR_TIM_SET_STOP();
@@ -366,6 +370,11 @@ void SweepRobotTest_StepMotorPosSet(enum STEP_MOTOR_POS pos)
 enum STEP_MOTOR_POS SweepRobotTest_StepMotorPosGet(void)
 {
     return stepMotor.pos;
+}
+
+int32_t SweepRobotTest_StepMotorPosStepCntGet(void)
+{
+    return stepMotor.ctrl.posStepCnt;
 }
 
 /* TODO: Add Absolute Position Move function */
