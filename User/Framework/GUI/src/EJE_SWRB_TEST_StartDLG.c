@@ -22,14 +22,14 @@
 
 #include "sweeprobot_testing.h"
 
-#include "eje_logo_char.h"
-
 /*********************************************************************
 *
 *       Defines
 *
 **********************************************************************
 */
+
+extern GUI_CONST_STORAGE GUI_BITMAP bmDibeaLogo_300x64;
 
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPCBTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPSTestCHN;
@@ -48,7 +48,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmSetCHN;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-    { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 272, 32, 255, 62, 0, 0, 0 },
+    { IMAGE_CreateIndirect, "Image", ID_START_IMAGE_LOGO, 250, 32, 300, 64, 0, 0, 0 },
     { EDIT_CreateIndirect, "Date", ID_START_EDIT_DATE, 0,430,200,50,0, 0x64, 0 },
     { BUTTON_CreateIndirect, "PCB TEST", ID_START_BUTTON_PCB_TEST, 100, 205, 200, 180, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL, 500, 205, 200, 180, 0, 0x0, 0 },
@@ -68,18 +68,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
 **********************************************************************
 */
 /*********************************************************************
-*
-*       _GetImageById
 */
-static const void * _GetImageById(U32 Id, U32 * pSize)
-{
-    switch (Id) {
-        case ID_START_IMAGE_EJE_LOGO:
-            *pSize = sizeof(_acImage_eje_logo);
-            return (const void *)_acImage_eje_logo;
-    }
-    return NULL;
-}
 
 static void Button_Init(WM_HWIN hItem)
 {
@@ -93,9 +82,7 @@ static void Button_Init(WM_HWIN hItem)
 */
 static void _cbDialog(WM_MESSAGE * pMsg)
 {
-    const void * pData;
     WM_HWIN      hItem;
-    U32          FileSize;
     int          NCode;
     int          Id;
 
@@ -103,8 +90,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
         case WM_INIT_DIALOG:
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_IMAGE_LOGO);
-            pData = _GetImageById(ID_START_IMAGE_EJE_LOGO, &FileSize);
-            IMAGE_SetBMP(hItem, pData, FileSize);
+            IMAGE_SetBitmap(hItem, &bmDibeaLogo_300x64);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_EDIT_DATE);
             EDIT_SetFont(hItem, GUI_FONT_20_ASCII);

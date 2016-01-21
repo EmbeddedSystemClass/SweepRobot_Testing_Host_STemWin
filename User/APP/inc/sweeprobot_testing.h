@@ -30,9 +30,6 @@
 #include "swrbTestDriver.h"
 #include "swrbTestStepMotorDriver.h"
 
-#include "eje_logo_char.h"
-#include "myChineseText.h"
-
 enum SWRB_Test_State_Pos{
 
   SWRB_TEST_WHEEL_L_STATE_POS,
