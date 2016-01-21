@@ -5,6 +5,9 @@
 #include "usart.h"
 #include "includes.h"
 
+#define COLLISION_TEST_RELAY_SWITCH_WAIT_TIME_MS   5
+#define COLLISION_TEST_STEER_MOTOR_MOVE_WAIT_TIME_MS    500
+
 static COLLISION_TestTypeDef collision[SWRB_COLLISION_CHAN_NUM];
 
 static u8 gSwrbFrontCollisionTestFinishFlag = 0;
@@ -42,7 +45,7 @@ static void SweepRobot_CollisionPCBTestProc(void)
         if(!collision[i].validFlag){
             if(!collision[i].onValidFlag){
                 SweepRobot_CollisionRelayCtrlOn((enum COLLISION_CHAN)i);
-                OSTimeDlyHMSM(0,0,0,2);
+                OSTimeDlyHMSM(0,0,0,COLLISION_TEST_RELAY_SWITCH_WAIT_TIME_MS);
                 for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                     printf("CLSN->RD=%d\r\n",i);
                     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -81,7 +84,7 @@ static void SweepRobot_CollisionPCBTestProc(void)
                 }
             }else{
                 SweepRobot_CollisionRelayCtrlOff((enum COLLISION_CHAN)i);
-                OSTimeDlyHMSM(0,0,0,2);
+                OSTimeDlyHMSM(0,0,0,COLLISION_TEST_RELAY_SWITCH_WAIT_TIME_MS);
                 for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
                     printf("CLSN->RD=%d\r\n",i);
                     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -331,10 +334,10 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
                 if(collision[chan].offValidFlag){
                     if(chan == COLLISION_CHAN_FL){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
-                        OSTimeDlyHMSM(0,0,1,0);
+                        OSTimeDlyHMSM(0,0,0,COLLISION_TEST_STEER_MOTOR_MOVE_WAIT_TIME_MS);
                     }else if(chan == COLLISION_CHAN_R){
                         SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
-                        OSTimeDlyHMSM(0,0,1,0);
+                        OSTimeDlyHMSM(0,0,0,COLLISION_TEST_STEER_MOTOR_MOVE_WAIT_TIME_MS);
                     }
                 }
             }else{
@@ -371,11 +374,11 @@ static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
                 if(collision[chan].offValidFlag){
                     if(chan == COLLISION_CHAN_L){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
-                        OSTimeDlyHMSM(0,0,1,0);
+                        OSTimeDlyHMSM(0,0,0,COLLISION_TEST_STEER_MOTOR_MOVE_WAIT_TIME_MS);
                         /* TODO: Add Task Resume in UART Rx ISR to decrease waiting time */
                     }else if(chan == COLLISION_CHAN_FR){
                         SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
-                        OSTimeDlyHMSM(0,0,1,0);
+                        OSTimeDlyHMSM(0,0,0,COLLISION_TEST_STEER_MOTOR_MOVE_WAIT_TIME_MS);
                     }
                 }
             }else{

@@ -55,7 +55,8 @@ static const char *aButton_InitText[][1] = {
     {"FAN"},
     {"IFRD"},
     {"BUZZER"},
-    {"RGB LED"},
+    {"RGB"},
+    {"RELAY"},
 };
 
 static const char *aListview_RowInitText[][10] = {
@@ -87,23 +88,24 @@ static const char *aListview_RowInitText[][10] = {
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "winSWRBManulTest", ID_MANUL_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-  { LISTVIEW_CreateIndirect, "lstviewSWRBTest", ID_MANUL_LISTVIEW_MAIN, 20, 10, 655, 375, 0, 0x0, 0 },
+  { LISTVIEW_CreateIndirect, "lstviewSWRBTest", ID_MANUL_LISTVIEW_MAIN, 20, 10, 660, 375, 0, 0x0, 0 },
 //  { TEXT_CreateIndirect, "textTitle", ID_MANUL_TEXT_TITLE, 20, 10, 655, 60, 0, 0x64, 0 },
-  { EDIT_CreateIndirect, "editDate", ID_MANUL_EDIT_DATE, 490, 435, 185, 30, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "editDate", ID_MANUL_EDIT_DATE, 510, 435, 170, 30, 0, 0x64, 0 },
   { BUTTON_CreateIndirect, "btnStart", ID_MANUL_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnSet", ID_MANUL_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnReset", ID_MANUL_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_MANUL_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnIndicate", ID_MANUL_BUTTON_INDICATE, 490, 400, 30, 30, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnIndicate", ID_MANUL_BUTTON_INDICATE, 510, 400, 30, 30, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnWheel", ID_MANUL_BUTTON_WHEEL, 20, 400, 60, 65, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnBrush", ID_MANUL_BUTTON_BRUSH, 90, 400, 60, 65, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnFan", ID_MANUL_BUTTON_FAN, 160, 400, 60, 65, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnIFRD", ID_MANUL_BUTTON_IFRD, 230, 400, 60, 65, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnBuzzer", ID_MANUL_BUTTON_BUZZER, 300, 400, 60, 65, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "btnRGB", ID_MANUL_BUTTON_RGB_LED, 370, 400, 80, 65, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "editVolt", ID_MANUL_EDIT_VOLT, 535, 400, 55, 30, 0, 0x64, 0 },
-  { PROGBAR_CreateIndirect, "prgbVolt", ID_MANUL_PROGBAR_VOLT, 615, 400, 55, 30, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "textVolt", ID_MANUL_TEXT_VOLT, 590, 400, 25, 30, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "btnRGB", ID_MANUL_BUTTON_RGB_LED, 370, 400, 60, 65, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnRelay", ID_MANUL_BUTTON_RELAY, 440, 400, 60, 65, 0, 0x0, 0 },
+  { EDIT_CreateIndirect, "editVolt", ID_MANUL_EDIT_VOLT, 550, 400, 45, 30, 0, 0x64, 0 },
+  { PROGBAR_CreateIndirect, "prgbVolt", ID_MANUL_PROGBAR_VOLT, 620, 400, 55, 30, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "textVolt", ID_MANUL_TEXT_VOLT, 590, 400, 30, 30, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -371,6 +373,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         SweepRobot_ManulRGBLEDBtnProc();
+        break;
+      }
+      break;
+    case ID_MANUL_BUTTON_RELAY: // Notifications sent by 'btnRelay'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        SweepRobot_ManulRELAYBtnProc();
         break;
       }
       break;

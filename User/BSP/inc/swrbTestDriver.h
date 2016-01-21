@@ -19,6 +19,8 @@ enum STEER_MOTOR_POS{
 };
 
 void SweepRobotTest_SteerMotor5VCtrlGPIOInit(void);
+void SweepRobotTest_SteerMotor5VCtrlOn(void);
+void SweepRobotTest_SteerMotor5VCtrlOff(void);
 
 void SweepRobot_CollisionTestGPIOInit(void);
 void SweepRobot_CollisionRelayCtrlOn(enum COLLISION_CHAN chan);

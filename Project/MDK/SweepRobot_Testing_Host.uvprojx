@@ -696,6 +696,11 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_RelayCtrlDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_RelayCtrlDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StepMotorTestDLG.c</FilePath>
@@ -1925,6 +1930,11 @@
               <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_RelayCtrlDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_RelayCtrlDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>

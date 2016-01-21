@@ -54,6 +54,7 @@ static char* gDecryptDlgLoginPasswd  = "0549832761";
 static char* gSLAMDlgLoginPasswd = "167238";
 static char* gStepMotorLoginPasswd = "054983";
 static char* gSteerMotorLoginPasswd = "832761";
+static char* gRelayCtrlLoginPasswd = "387216";
 static char* gManulTestEnterManulModePasswd = "123456";
 static const char * gSetDlgConfirmPasswd = "123456";
 
@@ -142,6 +143,10 @@ static void Button_OKProc(void)
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_STEERMOTOR);
+        }else if(!(strcmp(strPasswd,gRelayCtrlLoginPasswd))){
+            WM_HideWin(hWin_SWRB_LOGIN);
+            WM_HideWin(hWin_SWRB_START);
+            WM_ShowWin(hWin_SWRB_RELAY);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }

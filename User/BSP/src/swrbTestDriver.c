@@ -99,7 +99,17 @@ void SweepRobotTest_SteerMotor5VCtrlGPIOInit(void)
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(STEER_MOTOR_5V_CTRL_GPIO, &GPIO_InitStructure);
     
+    SweepRobotTest_SteerMotor5VCtrlOn();
+}
+
+void SweepRobotTest_SteerMotor5VCtrlOn(void)
+{
     STEER_MOTOR_5V_ON();
+}
+
+void SweepRobotTest_SteerMotor5VCtrlOff(void)
+{
+    STEER_MOTOR_5V_OFF();
 }
 
 /* COLLISION TEST GPIO INIT */
@@ -173,16 +183,16 @@ void SweepRobot_CollisionRelayCtrlOn(enum COLLISION_CHAN chan)
 {
     switch(chan){
         case COLLISION_CHAN_L:
-            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
-            break;
-        case COLLISION_CHAN_FL:
-            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
-            break;
-        case COLLISION_CHAN_R:
             GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
             break;
-        case COLLISION_CHAN_FR:
+        case COLLISION_CHAN_FL:
+            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+            break;
+        case COLLISION_CHAN_R:
             GPIO_ResetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+            break;
+        case COLLISION_CHAN_FR:
+            GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
             break;
         case COLLISION_CHAN_ALL:
             GPIO_ResetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
@@ -197,16 +207,16 @@ void SweepRobot_CollisionRelayCtrlOff(enum COLLISION_CHAN chan)
 {
     switch(chan){
         case COLLISION_CHAN_L:
-            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
-            break;
-        case COLLISION_CHAN_FL:
-            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
-            break;
-        case COLLISION_CHAN_R:
             GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_L_PIN);
             break;
-        case COLLISION_CHAN_FR:
+        case COLLISION_CHAN_FL:
+            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);
+            break;
+        case COLLISION_CHAN_R:
             GPIO_SetBits(COLLISION_SIDE_TEST_CTRL_GPIO, COLLISION_SIDE_TEST_CTRL_R_PIN);
+            break;
+        case COLLISION_CHAN_FR:
+            GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_R_PIN);
             break;
         case COLLISION_CHAN_ALL:
             GPIO_SetBits(COLLISION_FRONT_TEST_CTRL_GPIO, COLLISION_FRONT_TEST_CTRL_L_PIN);

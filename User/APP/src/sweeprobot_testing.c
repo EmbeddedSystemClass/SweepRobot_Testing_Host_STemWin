@@ -68,6 +68,7 @@ static void Key_Task(void *pdata);
 #endif
 static void Rtc_Task(void *pdata);
 static void SWRB_TestCtrlTask(void *pdata);
+static void SweepRobot_PCBTestCheckboxTextReset(void);
 static void SweepRobotTest_PCBTestInitProc(void);
 static int SWRB_TestDataFileCrypt(enum CryptoMode mode);
 static void SWRB_TestFinishProc(void);
@@ -179,6 +180,7 @@ static void emWin_TaskInit(void)
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
     hWin_SWRB_DECRYPTO = CreatewinDecryptoDLG();
     hWin_SWRB_MANUL = CreateManulTestDLG();
+    hWin_SWRB_RELAY = CreatewinRelayDLG();
     hWin_SWRB_STEPMOTOR = CreatewinStepMotorDLG();
     hWin_SWRB_STEERMOTOR = CreatewinSteerMotorDLG();
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_PCBTestDLG();
@@ -592,6 +594,8 @@ void SweepRobot_PCBTestStartBtnProc(void)
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  ">TEST RESUMED\r\n");
         }else{
             MultiEdit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "");
+            
+            SweepRobot_PCBTestCheckboxTextReset();
 
             SWRB_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
             
@@ -808,14 +812,10 @@ static void SweepRobot_TestDUTStateReset(void)
     printf("SNSR->BSWC=0\r\n");
 }
 
-static void SweepRobot_PCBTestGUIReset(void)
+static void SweepRobot_PCBTestCheckboxTextReset(void)
 {
     int i;
-
-    for(i=ID_PCBTEST_EDIT_U1;i<=ID_PCBTEST_EDIT_D8;i++){
-        Edit_Set_Value(hWin_SWRB_PCBTEST, i, 0);
-    }
-
+    
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN");
@@ -831,6 +831,15 @@ static void SweepRobot_PCBTestGUIReset(void)
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE");
     for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
         Checkbox_Set_Text_Color(i, GUI_BLACK);
+    }
+}
+
+static void SweepRobot_PCBTestGUIReset(void)
+{
+    int i;
+
+    for(i=ID_PCBTEST_EDIT_U1;i<=ID_PCBTEST_EDIT_D8;i++){
+        Edit_Set_Value(hWin_SWRB_PCBTEST, i, 0);
     }
 
     Button_Set_BkColor(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_INDICATE, GUI_LIGHTGRAY);
@@ -850,6 +859,7 @@ void SweepRobotTest_PCBTestInitProc(void)
     SweepRobot_TestHostCtrlStateReset();
     SweepRobot_TestDUTStateReset();
     SweepRobot_PCBTestGUIReset();
+    SweepRobot_PCBTestCheckboxTextReset();
 
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
@@ -996,13 +1006,13 @@ static void SWRB_PCBTestFinishProc(void)
     
     if(gSwrbTestSDCardInsertState){
         /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileEncryptoProc(DISABLE);
+        SWRB_TestDataFileEncryptoProc(ENABLE);
         
         SWRB_TestDataFileWriteString(str);
     }
 
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-    
+
     myfree(SRAMIN, str);
 
     SWRB_PCBTestCheckboxEnable();
@@ -1010,7 +1020,7 @@ static void SWRB_PCBTestFinishProc(void)
     SweepRobot_PCBTestGUIReset();
 
     SWRB_ValidTestTaskCntGet();
-    
+
     if(gSwrbTestValidTaskCnt == SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)){
         SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
     }
@@ -1600,27 +1610,26 @@ void SweepRobot_ManulBuzzerBtnProc(void)
     OS_CPU_SR cpu_sr;
 
     OS_ENTER_CRITICAL();
+    
+    aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
 
     switch(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
-        case 0:
-            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
-            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_GRAY);
-            break;
         case 1:
             printf("T->ON\r\n");
             printf("BZR->ON=1\r\n");
-            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTRED);
             break;
         case 2:
             printf("BZR->ON=2\r\n");
-            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTGREEN);
             break;
         case 3:
             printf("BZR->ON=3\r\n");
-            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 0;
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTBLUE);
+            break;
+        case 4:
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_GRAY);
+            aSwrbManulTestState[SWRB_TEST_STATE_BUZZER] = 0;
             break;
         default:break;
     }
@@ -1633,38 +1642,74 @@ void SweepRobot_ManulRGBLEDBtnProc(void)
     OS_CPU_SR cpu_sr;
 
     OS_ENTER_CRITICAL();
+    
+    aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
 
     switch(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
-        case 0:
-            printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
-            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_GRAY);
-            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
-            break;
         case 1:
             printf("T->ON\r\n");
             printf("RGB->ON=%d\r\n", RGB_LED_RED);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTRED);
-            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
             break;
         case 2:
             printf("RGB->ON=%d\r\n", RGB_LED_GREEN);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTGREEN);
-            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
             break;
         case 3:
             printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTBLUE);
-            aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
             break;
         case 4:
             printf("RGB->ON=%d\r\n", RGB_LED_RGB);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_WHITE);
+            break;
+        case 5:
+            printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
+            Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_GRAY);
             aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED] = 0;
             break;
         default:break;
     }
 
     OS_EXIT_CRITICAL();
+}
+
+void SweepRobot_ManulRELAYBtnProc(void)
+{
+    aSwrbManulTestState[SWRB_TEST_STATE_COLLISION]++;
+    
+    switch(aSwrbManulTestState[SWRB_TEST_STATE_COLLISION]){
+        case 1:
+            SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+            SweepRobot_CollisionRelayCtrlOn(COLLISION_CHAN_L);
+            Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "L ON");
+            Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_LIGHTRED);
+            break;
+        case 2:
+            SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+            SweepRobot_CollisionRelayCtrlOn(COLLISION_CHAN_FL);
+            Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "fL ON");
+            Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_LIGHTYELLOW);
+            break;
+        case 3:
+            SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+            SweepRobot_CollisionRelayCtrlOn(COLLISION_CHAN_R);
+            Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "R ON");
+            Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_LIGHTBLUE);
+            break;
+        case 4:
+            SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+            SweepRobot_CollisionRelayCtrlOn(COLLISION_CHAN_FR);
+            Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "FR ON");
+            Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_LIGHTMAGENTA);
+            break;
+        case 5:
+            SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
+            aSwrbManulTestState[SWRB_TEST_STATE_COLLISION] = 0;
+            Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_GRAY);
+            break;
+        default:break;
+    }
 }
 
 void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void)

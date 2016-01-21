@@ -392,6 +392,7 @@ void SweepRobot_ManulFanBtnProc(void);
 void SweepRobot_ManulIFRDBtnProc(void);
 void SweepRobot_ManulBuzzerBtnProc(void);
 void SweepRobot_ManulRGBLEDBtnProc(void);
+void SweepRobot_ManulRELAYBtnProc(void);
 void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void);
 
 void SweepRobot_PowerStationTestStartProc(void);
