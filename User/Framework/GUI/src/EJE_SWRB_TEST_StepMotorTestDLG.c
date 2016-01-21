@@ -60,6 +60,8 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "textSteps", ID_STEPMOTOR_TEXT_STEPS, 530, 30, 80, 40, 0, 0x64, 0 },
   { SLIDER_CreateIndirect, "sliderSteps", ID_STEPMOTOR_SLIDER_STEPS, 540, 140, 60, 240, 8, 0x0, 0 },
   { EDIT_CreateIndirect, "editSteps", ID_STEPMOTOR_EDIT_STEPS, 530, 70, 80, 40, 0, 0x64, 0 },
+  { EDIT_CreateIndirect, "editPos", ID_STEPMOTOR_EDIT_POS, 220, 410, 150, 40, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "textPos", ID_STEPMOTOR_TEXT_POS, 170, 410, 40, 40, 0, 0x64, 0 },
 };
 
 /*********************************************************************
@@ -190,6 +192,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
     TEXT_SetText(hItem, "Steps");
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_EDIT_POS);
+    EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    EDIT_SetDecMode(hItem, 0, 0, 65535, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_TEXT_POS);
+    TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
+    TEXT_SetText(hItem, "Pos");
     
     WM_HideWin(pMsg->hWin);
     break;

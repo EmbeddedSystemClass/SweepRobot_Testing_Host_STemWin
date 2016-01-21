@@ -325,7 +325,7 @@ enum SWRB_TEST_TASK_PRIO{
 #endif
 
 #define SWRB_TEST_USART_READ_TIMES              3
-#define SWRB_TEST_USART_WRITE_WAIT_TIME         1
+#define SWRB_TEST_USART_WRITE_WAIT_TIME         3
 #define SWRB_TEST_USART_READ_WAIT_TIME          5
 #define SWRB_TEST_VALID_COMP_TIMES              3
 #define SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS   1
@@ -395,8 +395,10 @@ void SweepRobot_ManulRGBLEDBtnProc(void);
 void SweepRobot_ManulRELAYBtnProc(void);
 void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void);
 
+#ifdef _USE_POWER_STATION_DIALOG
 void SweepRobot_PowerStationTestStartProc(void);
 void SweepRobot_PowerStationTestStopProc(void);
 void SweepRobot_PowerStationTestExitProc(void);
+#endif
 
 #endif

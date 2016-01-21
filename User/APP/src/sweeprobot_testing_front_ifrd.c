@@ -103,7 +103,7 @@ static void SweepRobot_FrontIFRDTestInit(void)
 #endif
     
     SweepRobotTest_StepMotorPwrOn();
-    OSTimeDlyHMSM(0,0,1,0);
+    OSTimeDlyHMSM(0,0,0,500);
 
     printf("SNSR->IFRD=0\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
@@ -123,8 +123,12 @@ static void SweepRobot_FrontIFRDTestStepMotorMoveProc(void)
         gSwrbFrontIFRDTestStepMotorMoveCnt++;
 
         gSwrbFrontIFRDTestChanCnt = gSwrbFrontIFRDTestStepMotorMoveCnt-1;
-
+        
+#ifdef _USE_ACTUAL_POS_DETECT_KEY
+        SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
+#else
         SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_FORWARD);
+#endif
         SweepRobotTest_StepMotorMoveSteps(SWRB_FRONT_IFRD_TEST_STEP_MOTOR_MOVE_SPEED, gSwrbFrontIFRDTestMoveStepSeq[gSwrbFrontIFRDTestChanCnt]);
 
         OSTaskSuspend(OS_PRIO_SELF);

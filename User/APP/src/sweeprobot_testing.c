@@ -325,9 +325,9 @@ void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTy
 
         sprintf(dateStr, "\r\n%s:20%d/%02d/%02d %02d:%02d:%02d\r\n", headStr, date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
         f_puts(dateStr, file);
-        
+
         myfree(SRAMIN, dateStr);
-        
+
         cnt = 0;
         do{
             flErr = f_close(file);
@@ -395,7 +395,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
             flErr = f_close(file);
             cnt++;
         }while(flErr != FR_OK && cnt < 10);
-        
+
         return 0;
     }else{
         return -1;
@@ -413,7 +413,7 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
             for(i=ID_PCBTEST_BUTTON_START;i<=ID_PCBTEST_BUTTON_EXIT;i++){
                 SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, i);
             }
-            
+
             /* Test Data Encrypt or Decrypt Process */
             if(SWRB_TestDataFileCrypt(EncryptMode)){
                 MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "\r\n>TestData Encrypting Fault\r\n");
@@ -428,7 +428,7 @@ static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
             }
         }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
             SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-            
+
             /* Test Data Encrypt or Decrypt Process */
             SWRB_TestDataFileCrypt(EncryptMode);
 
@@ -594,14 +594,18 @@ void SweepRobot_PCBTestStartBtnProc(void)
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  ">TEST RESUMED\r\n");
         }else{
             MultiEdit_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "");
-            
+
             SweepRobot_PCBTestCheckboxTextReset();
 
             SWRB_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
-            
-            /* Write Serial Number into flash of DUT */
-            SWRB_TestDUTWriteSN();
-            
+
+            SWRB_ValidTestTaskCntGet();
+
+            if( (SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)) == gSwrbTestValidTaskCntTotal){
+                /* Write Serial Number into flash of DUT When all test task selected*/
+                SWRB_TestDUTWriteSN();
+            }
+
             if(gSwrbTestSDCardInsertState){
                 SWRB_TestDataFileWriteSN();
                 SWRB_TestDataFileWriteDate(">PCB Test Start Time", &rtcDate, &rtcTime);
@@ -614,8 +618,6 @@ void SweepRobot_PCBTestStartBtnProc(void)
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
             myfree(SRAMIN, str);
             Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, 0);
-
-            SWRB_ValidTestTaskCntGet();
         }
 
         SWRB_PCBTestCheckboxDisable();
@@ -736,7 +738,7 @@ void SweepRobot_PCBTestStopBtnProc(void)
         myfree(SRAMIN, str);
 
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "PRESS START TO START TEST\r\n");
-        
+
         for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
         }
@@ -747,7 +749,7 @@ void SweepRobot_PCBTestStopBtnProc(void)
         gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)NULL;
         OS_EXIT_CRITICAL();
 
-        
+
         SweepRobotTest_PCBTestInitProc();
     }
 }
@@ -815,7 +817,7 @@ static void SweepRobot_TestDUTStateReset(void)
 static void SweepRobot_PCBTestCheckboxTextReset(void)
 {
     int i;
-    
+
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL, "WHEEL");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH");
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN, "FAN");
@@ -990,7 +992,7 @@ static void SWRB_PCBTestFinishProc(void)
 
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
-    
+
     if(gSwrbTestSDCardInsertState){
         SWRB_TestDataFileWriteDate(">PCB Test finish time", &rtcDate, &rtcTime);
     }
@@ -1003,11 +1005,11 @@ static void SWRB_PCBTestFinishProc(void)
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
 
     str = "\r\n***TEST FINISHED***\r\n";
-    
+
     if(gSwrbTestSDCardInsertState){
         /* Encrypt Test Data File when set enable */
         SWRB_TestDataFileEncryptoProc(ENABLE);
-        
+
         SWRB_TestDataFileWriteString(str);
     }
 
@@ -1034,7 +1036,7 @@ static void SWRB_ManulTestFinishProc(void)
     if(gSwrbTestSDCardInsertState){
         /* Encrypt Test Data File when set enable */
         SWRB_TestDataFileEncryptoProc(DISABLE);
-        
+
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
         SWRB_TestDataFileWriteDate("Manul Test finish time", &rtcDate, &rtcTime);
@@ -1299,7 +1301,7 @@ static void SweepRobot_ManulStartBtnAutoModeStartProc(void)
     SweepRobot_ManulTestSNDisp();
     SweepRobot_ManulTestDataQuery();
     SweepRobot_ManulTestBatteryVoltDisp();
-    
+
     if(gSwrbTestSDCardInsertState){
         SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
     }
@@ -1610,7 +1612,7 @@ void SweepRobot_ManulBuzzerBtnProc(void)
     OS_CPU_SR cpu_sr;
 
     OS_ENTER_CRITICAL();
-    
+
     aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]++;
 
     switch(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
@@ -1642,7 +1644,7 @@ void SweepRobot_ManulRGBLEDBtnProc(void)
     OS_CPU_SR cpu_sr;
 
     OS_ENTER_CRITICAL();
-    
+
     aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]++;
 
     switch(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
@@ -1677,7 +1679,7 @@ void SweepRobot_ManulRGBLEDBtnProc(void)
 void SweepRobot_ManulRELAYBtnProc(void)
 {
     aSwrbManulTestState[SWRB_TEST_STATE_COLLISION]++;
-    
+
     switch(aSwrbManulTestState[SWRB_TEST_STATE_COLLISION]){
         case 1:
             SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
