@@ -66,6 +66,14 @@ static void SweepRobot_FrontIFRDTestStepMotorISRCB(void)
     }
 }
 
+static void SweepRobot_FrontIFRDTestFinishStepMotorISRCB(void)
+{
+    if( SweepRobotTest_StepMotorModeGet() == STEP_MOTOR_MODE_STOP ){
+        SweepRobotTest_StepMotorPwrOff();
+        STEP_MOTOR_ISR_CB_DEREG();
+    }
+}
+
 void SweepRobot_FrontIFRDTestStateReset(void)
 {
     int i;
@@ -232,15 +240,15 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
     gSwrbFrontIFRDTestStepMotorMoveCnt = 0;
     gSwrbFrontIFRDTestChanCnt = 0;
     printf("SNSR->IFRD=0\r\n");
+
+    STEP_MOTOR_ISR_CB_REG(SweepRobot_FrontIFRDTestFinishStepMotorISRCB);
+    
+    SweepRobotTest_StepMotorGoHome();
     
     Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
                                                      gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
                                                      GUI_BLUE);
-
-    STEP_MOTOR_ISR_CB_DEREG();
-    
-    SweepRobotTest_StepMotorPwrOff();
 
     SWRB_TestDataSaveToFile(FrontIFRD_TestDataSave);
     

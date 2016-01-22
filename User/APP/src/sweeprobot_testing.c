@@ -720,7 +720,7 @@ void SweepRobot_PCBTestStopBtnProc(void)
 
             SWRB_PCBTestWarningDlgHide();
         }
-        
+
         switch(gSwrbTestRuningTaskPrio){
             case SWRB_KEY_TEST_TASK_PRIO:
                 GUI_EndDialog(hWin_SWRB_KEY, 0);
@@ -1077,6 +1077,9 @@ static void SWRB_TestFinishProc(void)
 
     TEST_LED_TASK_CB_DEREG();
 
+    /* Exit Test Mode When Test Finished */
+    printf("T->OFF\r\n");
+
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)NULL;
@@ -1371,7 +1374,7 @@ static void SweepRobot_ManulStartBtnStopProc(void)
         SweepRobot_FrontIFRDTestStateReset();
         SweepRobot_TestHostCtrlStateReset();
         SweepRobot_TestDUTStateReset();
-        
+
         switch(gSwrbTestRuningTaskPrio){
             case SWRB_KEY_TEST_TASK_PRIO:
                 GUI_EndDialog(hWin_SWRB_KEY, 0);

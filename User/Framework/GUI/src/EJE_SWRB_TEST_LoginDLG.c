@@ -56,7 +56,7 @@ static char* gStepMotorLoginPasswd = "054983";
 static char* gSteerMotorLoginPasswd = "832761";
 static char* gRelayCtrlLoginPasswd = "387216";
 static char* gManulTestEnterManulModePasswd = "123456";
-static const char * gSetDlgConfirmPasswd = "123456";
+static const char * gSetTimeConfirmPasswd = "123876";
 
 static char strPasswd[10] = { 0 };
 static u8 strPasswdLen = 0;
@@ -152,7 +152,7 @@ static void Button_OKProc(void)
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
     }else if ( (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET) && (gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME) ){
-        if(!(strcmp(strPasswd,gSetDlgConfirmPasswd))){
+        if(!(strcmp(strPasswd,gSetTimeConfirmPasswd))){
             SWRB_TimeSettingsChangeConfirmProc();
 
             WM_HideWin(hWin_SWRB_LOGIN);

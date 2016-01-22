@@ -155,7 +155,7 @@ static void SweepRobot_CollisionPCBTestProc(void)
 static void SweepRobot_CollisionPCBTestTimeOutProc(void)
 {
     char *str;
-    
+
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
@@ -188,7 +188,7 @@ static void SweepRobot_CollisionManulTestTimeOutProc(void)
 {
     SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
     SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
-    
+
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][0],\
@@ -219,7 +219,7 @@ static void SweepRobot_CollisionTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     gSwrbFrontCollisionTestFinishFlag = 0;
-    
+
     SWRB_TestDataSaveToFile(Collision_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
@@ -266,7 +266,7 @@ static void SweepRobot_CollisionTestDataQuery(enum COLLISION_CHAN chan, int *des
 {
     char *str;
     int i;
-    
+
     for(i=0;i<SWRB_TEST_USART_READ_TIMES;i++){
         printf("CLSN->RD=%d\r\n",chan);
         OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -293,14 +293,14 @@ static void SweepRobot_CollisionTestDataQuery(enum COLLISION_CHAN chan, int *des
 static void SweepRobot_CollisionTestSteerMotorOffDataValidCmp(enum COLLISION_CHAN chan, int *value, u8 *cnt, u8 *flag)
 {
     SweepRobot_CollisionTestDataQuery(chan, value);
-    
+
     if(*value){
         (*cnt)++;
         gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+chan));
     }else{
         gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+chan));
     }
-    
+
     if((*cnt) > 1){
         *flag = 1;
     }
@@ -309,28 +309,26 @@ static void SweepRobot_CollisionTestSteerMotorOffDataValidCmp(enum COLLISION_CHA
 static void SweepRobot_CollisionTestSteerMotorOnDataValidCmp(enum COLLISION_CHAN chan, int *value, u8 *cnt, u8 *flag)
 {
     SweepRobot_CollisionTestDataQuery(chan, value);
-    
+
     if(!(*value)){
         (*cnt)++;
         gSwrbTestStateMap &= ~(1<<(SWRB_TEST_COLLISION_L_POS+chan));
     }else{
         gSwrbTestStateMap |= (1<<(SWRB_TEST_COLLISION_L_POS+chan));
     }
-    
+
     if((*cnt) > 1){
         *flag = 1;
     }
 }
 
-
-
 static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
 {
     if(chan == COLLISION_CHAN_FL || chan == COLLISION_CHAN_R){
-        if(!collision[chan].validFlag){
+        if(!collision[chan].onValidFlag){
             if(!collision[chan].offValidFlag){
                 SweepRobot_CollisionTestSteerMotorOffDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].offValue, &collision[chan].offValidCnt, &collision[chan].offValidFlag);
-                
+
                 if(collision[chan].offValidFlag){
                     if(chan == COLLISION_CHAN_FL){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_FRONT_POS);
@@ -342,8 +340,8 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
                 }
             }else{
                 SweepRobot_CollisionTestSteerMotorOnDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].onValue, &collision[chan].onValidCnt, &collision[chan].onValidFlag);
-                
-                if(collision[chan].validFlag){
+
+                if(collision[chan].onValidFlag){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
@@ -354,8 +352,8 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
                         SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
                     }
                 }
-                
-                if( collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_R].validFlag ){
+
+                if( collision[COLLISION_CHAN_FL].onValidFlag && collision[COLLISION_CHAN_R].onValidFlag ){
                     gSwrbTestTaskRunCnt = 0;
                     gSwrbFrontCollisionTestFinishFlag = 1;
                 }
@@ -367,10 +365,10 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
 static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
 {
     if(chan == COLLISION_CHAN_L || chan == COLLISION_CHAN_FR){
-        if(!collision[chan].validFlag){
+        if(!collision[chan].onValidFlag){
             if(!collision[chan].offValidFlag){
                 SweepRobot_CollisionTestSteerMotorOffDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].offValue, &collision[chan].offValidCnt, &collision[chan].offValidFlag);
-                
+
                 if(collision[chan].offValidFlag){
                     if(chan == COLLISION_CHAN_L){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_SIDE_POS);
@@ -383,8 +381,8 @@ static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
                 }
             }else{
                 SweepRobot_CollisionTestSteerMotorOnDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].onValue, &collision[chan].onValidCnt, &collision[chan].onValidFlag);
-                
-                if(collision[chan].validFlag){
+
+                if(collision[chan].onValidFlag){
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
@@ -412,7 +410,7 @@ static void SweepRobot_CollisionManulTestProc(void)
             SweepRobot_CollisionManulTestSideDataProc((enum COLLISION_CHAN)i);
         }
     }
-    
+
     if( collision[COLLISION_CHAN_FL].validFlag && collision[COLLISION_CHAN_FR].validFlag && \
         collision[COLLISION_CHAN_L].validFlag && collision[COLLISION_CHAN_R].validFlag \
     ){

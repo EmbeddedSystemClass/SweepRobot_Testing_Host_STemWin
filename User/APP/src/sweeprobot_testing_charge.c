@@ -43,8 +43,7 @@ static void SweepRobot_ChargeTestInit(void)
 
     SweepRobot_Charge24VOn();
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
-    printf("CRG->ON=20\r\n");
-
+    printf("CRG->ON=0\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
 

@@ -159,11 +159,10 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_VERSION);
             TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            TEXT_SetText(hItem, "SWRB Fixture Ver:1.0");
+            TEXT_SetText(hItem, "SWRB Fixture Ver:1.1");
             TEXT_SetTextColor(hItem, GUI_BLUE);
             break;
         case WM_PAINT:
-            
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
