@@ -132,6 +132,7 @@ static const GUI_WIDGET_CREATE_INFO _aKeyTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "KEY TEST", ID_PCBTEST_FRAMEWIN_KEY, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "TITLE", ID_PCBTEST_BUTTON_KEY_TITLE, 120, 100, 200, 60, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "KEY TEST", ID_PCBTEST_TEXT_KEY, 68, 17, 308, 65, 0, 0x64, 0 },
+    { PROGBAR_CreateIndirect,   "Progbar", ID_PCBTEST_PROGBAR_KEY, 120, 150, 200, 30, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _aRgbLEDTestDialogCreate[] = {
@@ -238,7 +239,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             MULTIEDIT_SetFont(hItem, GUI_FONT_24_ASCII);
             MULTIEDIT_SetAutoScrollV(hItem,1);
             MULTIEDIT_SetWrapWord(hItem);
-            MULTIEDIT_SetBufferSize(hItem, 2048);
+//            MULTIEDIT_SetBufferSize(hItem, 2048);
             WM_DisableWindow(hItem);
             
             CHECKBOX_SetDefaultSkinClassic();
@@ -268,6 +269,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_PROGBAR_MAIN);
             PROGBAR_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            PROGBAR_SetBarColor(hItem, 0, GUI_BLUE);
 
             WM_HideWin(pMsg->hWin);
             break;
@@ -420,6 +422,7 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
                     }
                     break;
             }
+            break;
         default:
             WM_DefaultProc(pMsg);
             break;
@@ -439,6 +442,7 @@ static void _cbKeyDialog(WM_MESSAGE * pMsg)
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             BUTTON_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetFocussable(hItem, DISABLE);
             Button_Set_BkColor(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, GUI_WHITE);
             Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, "");
             BUTTON_DispPressKeyCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, 36, 13);
@@ -448,6 +452,12 @@ static void _cbKeyDialog(WM_MESSAGE * pMsg)
             TEXT_SetText(hItem, "KEY TEST");
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetTextColor(hItem, GUI_BLACK);
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_PROGBAR_KEY);
+            PROGBAR_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            PROGBAR_SetMinMax(hItem, 0, 3000);
+            PROGBAR_SetBarColor(hItem, 0, GUI_LIGHTRED);
             
             break;
         case WM_PAINT:
@@ -464,7 +474,14 @@ static void _cbKeyDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
+                case ID_PCBTEST_PROGBAR_KEY:
+                    switch(NCode) {
+                        case WM_NOTIFICATION_VALUE_CHANGED:
+                            break;
+                    }
+                    break;
             }
+            break;
         default:
             WM_DefaultProc(pMsg);
             break;
@@ -539,6 +556,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
                     }
                     break;
             }
+            break;
         default:
             WM_DefaultProc(pMsg);
             break;
@@ -605,6 +623,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
                     }
                     break;
             }
+            break;
         default:
             WM_DefaultProc(pMsg);
             break;

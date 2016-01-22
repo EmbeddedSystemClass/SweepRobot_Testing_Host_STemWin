@@ -300,7 +300,6 @@ enum SWRB_TEST_TASK_PRIO{
 #define EMWIN_STK_SIZE                      512
 #define LED_STK_SIZE                        256
 #define SWRB_TEST_CTRL_STK_SIZE             256
-#define SWRB_TEST_EXCEPTION_CHECK_STK_SIZE  256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
 #define SWRB_BRUSH_TEST_STK_SIZE            256
 #define SWRB_FAN_TEST_STK_SIZE              256

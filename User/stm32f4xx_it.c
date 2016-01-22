@@ -88,7 +88,7 @@ void HardFault_Handler(void)
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
-      wait();
+//      wait();
   }
 }
 
