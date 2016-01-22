@@ -720,6 +720,19 @@ void SweepRobot_PCBTestStopBtnProc(void)
 
             SWRB_PCBTestWarningDlgHide();
         }
+        
+        switch(gSwrbTestRuningTaskPrio){
+            case SWRB_KEY_TEST_TASK_PRIO:
+                GUI_EndDialog(hWin_SWRB_KEY, 0);
+                break;
+            case SWRB_BUZZER_TEST_TASK_PRIO:
+                GUI_EndDialog(hWin_SWRB_BUZZER, 0);
+                break;
+            case SWRB_RGB_LED_TEST_TASK_PRIO:
+                GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
+                break;
+            default:break;
+        }
 
         SWRB_PCBTestCheckboxEnable();
 
@@ -1358,6 +1371,19 @@ static void SweepRobot_ManulStartBtnStopProc(void)
         SweepRobot_FrontIFRDTestStateReset();
         SweepRobot_TestHostCtrlStateReset();
         SweepRobot_TestDUTStateReset();
+        
+        switch(gSwrbTestRuningTaskPrio){
+            case SWRB_KEY_TEST_TASK_PRIO:
+                GUI_EndDialog(hWin_SWRB_KEY, 0);
+                break;
+            case SWRB_BUZZER_TEST_TASK_PRIO:
+                GUI_EndDialog(hWin_SWRB_BUZZER, 0);
+                break;
+            case SWRB_RGB_LED_TEST_TASK_PRIO:
+                GUI_EndDialog(hWin_SWRB_RGB_LED, 0);
+                break;
+            default:break;
+        }
     }
 
     BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);

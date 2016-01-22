@@ -12,6 +12,10 @@ static void SWRBTest_CtrlPanelInit(void)
     LED_Init();
     KEY_Init();
     TFTLCD_Init();
+}
+
+static void SWRBTest_DeviceInit(void)
+{
     SweepRobotTest_SteerMotor5VCtrlGPIOInit();
     SweepRobotTest_StepMotorDriverGPIOInit();
     SweepRobot_CollisionTestGPIOInit();
@@ -41,7 +45,7 @@ static int SWRBTest_StorageInit(void)
 
     f_mount(fs[0],"0:",1);
     f_mount(fs[1],"1:",1);
-    
+
     return 0;
 }
 
@@ -57,10 +61,12 @@ int main(void)
         goto MEM_INIT_FAULT;
     }
 
+    SWRBTest_DeviceInit();
+
     OSInit();
     OS_Task_Create();
     OSStart();
-    
+
 MEM_INIT_FAULT:
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
     WM_SetCreateFlags(WM_CF_MEMDEV);
@@ -74,10 +80,10 @@ MEM_INIT_FAULT:
     GUI_SetColor(GUI_DEFAULT_COLOR);
     GUI_SetBkColor(GUI_DEFAULT_BKCOLOR);
     goto INFINITY_LOOP;
-    
+
 INFINITY_LOOP:
     while(1){
-        
+
     }
 
     /* XXX: should never get here */

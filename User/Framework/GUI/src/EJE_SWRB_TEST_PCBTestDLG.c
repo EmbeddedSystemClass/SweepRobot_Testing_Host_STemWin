@@ -139,7 +139,8 @@ static const GUI_WIDGET_CREATE_INFO _aRgbLEDTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "RGB LED TEST", ID_PCBTEST_FRAMEWIN_RGB_LED, 0, 0, 440, 210, 0, 0x64, 0 },
     { BUTTON_CreateIndirect, "OK", ID_PCBTEST_BUTTON_RGB_LED_OK, 60, 100, 120, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "ERROR", ID_PCBTEST_BUTTON_RGB_LED_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "RGB LED TEST", ID_PCBTEST_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "RGB LED?", ID_PCBTEST_BUTTON_RGB_LED_TEXT,  70, 20, 300, 62, 0, 0x64, 0 },
+//    { TEXT_CreateIndirect, "RGB LED TEST", ID_PCBTEST_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _aBuzzerTestDialogCreate[] = {
@@ -508,6 +509,10 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
             Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_ERR, "");
             BUTTON_DispErrorCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_ERR, 28, 14);
         
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_TEXT);
+            Button_Init(hItem);
+            Button_Set_BkColor(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_TEXT, GUI_WHITE);
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_TEXT_RGB_LED);
             TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
             TEXT_SetText(hItem, "RGB LED TEST");
@@ -599,7 +604,6 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
                 case ID_PCBTEST_BUTTON_BUZZER_OK: // Notifications sent by 'BUZZER OK'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             BUZZER_TestStateSet(1);
@@ -612,7 +616,6 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
                 case ID_PCBTEST_BUTTON_BUZZER_ERR: // Notifications sent by 'BUZZER ERROR'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             BUZZER_TestStateSet(0);
