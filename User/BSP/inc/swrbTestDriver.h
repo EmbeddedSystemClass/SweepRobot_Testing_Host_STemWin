@@ -49,6 +49,8 @@ void SweepRobot_KeyTestElectroMagnetCtrlPushPos(void);
 void SweepRobot_KeyTestElectroMagnetCtrlReleasePos(void);
 
 void SweepRobot_IrDATestGPIOInit(void);
+void SweepRobot_IrDATestTxRelayOn(void);
+void SweepRobot_IrDATestTxRelayOff(void);
 void SweepRobot_IrDATestGPIOPINSet(void);
 void SweepRobot_IrDATestGPIOPINReset(void);
 void SweepRobot_IrDACodeTxProc(u8 code);

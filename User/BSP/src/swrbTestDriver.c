@@ -76,8 +76,15 @@
 #define IRDA_TEST_TX_R_PIN                              GPIO_Pin_6
 #define IRDA_TEST_TX_M_PIN                              GPIO_Pin_7
 
+#define IRDA_TEST_TX_RELAY_CTRL_GPIO_PERIPH_ID          RCC_AHB1Periph_GPIOG
+#define IRDA_TEST_TX_RELAY_CTRL_GPIO                    GPIOF
+#define IRDA_TEST_TX_RELAY_CTRL_PIN                     GPIO_Pin_6
+
 #define IRDA_TEST_TX_PIN_SET(pin)                       GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_SET)
 #define IRDA_TEST_TX_PIN_RESET(pin)                     GPIO_WriteBit(IRDA_TEST_TX_GPIO, pin, Bit_RESET)
+
+#define IRDA_TEST_TX_RELAY_ON()                         GPIO_WriteBit(IRDA_TEST_TX_RELAY_CTRL_GPIO, IRDA_TEST_TX_RELAY_CTRL_PIN, Bit_RESET)
+#define IRDA_TEST_TX_RELAY_OFF()                        GPIO_WriteBit(IRDA_TEST_TX_RELAY_CTRL_GPIO, IRDA_TEST_TX_RELAY_CTRL_PIN, Bit_SET)
 
 /* Charge 24V Relay Ctrl GPIO */
 #define CHARGE_TEST_24V_CTRL_GPIO_PERIPH_ID             RCC_AHB1Periph_GPIOC
@@ -472,6 +479,7 @@ void SweepRobot_IrDATestGPIOInit(void)
     GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_AHB1PeriphClockCmd(IRDA_TEST_TX_GPIO_PERIPH_ID, ENABLE);
+    RCC_AHB1PeriphClockCmd(IRDA_TEST_TX_RELAY_CTRL_GPIO_PERIPH_ID, ENABLE);
 
     GPIO_InitStructure.GPIO_Pin = IRDA_TEST_TX_L_PIN |\
                                   IRDA_TEST_TX_R_PIN |\
@@ -481,6 +489,23 @@ void SweepRobot_IrDATestGPIOInit(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(IRDA_TEST_TX_GPIO, &GPIO_InitStructure);
+    
+    GPIO_InitStructure.GPIO_Pin = IRDA_TEST_TX_RELAY_CTRL_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(IRDA_TEST_TX_RELAY_CTRL_GPIO, &GPIO_InitStructure);
+}
+
+void SweepRobot_IrDATestTxRelayOn(void)
+{
+    IRDA_TEST_TX_RELAY_ON();
+}
+
+void SweepRobot_IrDATestTxRelayOff(void)
+{
+    IRDA_TEST_TX_RELAY_OFF();
 }
 
 void SweepRobot_IrDATestGPIOPINSet(void)

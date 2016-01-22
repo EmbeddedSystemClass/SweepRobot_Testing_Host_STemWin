@@ -7,9 +7,9 @@
 #include "usart.h"
 #include "includes.h"
 
-#define SWRB_IRDA_TEST_USART_READ_WAIT_TIME     10
-
+#define SWRB_IRDA_TEST_INIT_WAIT_TIME   200
 #define SWRB_IRDA_TEST_TASK_DLY_TIME    100
+#define SWRB_IRDA_TEST_USART_READ_WAIT_TIME     10
 
 static IRDA_TestTypeDef IrDA[SWRB_IRDA_CHAN_BOUND];
 
@@ -104,8 +104,10 @@ static void SweepRobot_IrDATestInit(void)
     mymemset(USART_RX_BUF, 0, sizeof(char)*USART_RX_LEN);
 
     printf("IRDA->ON\r\n");
+    
+    SweepRobot_IrDATestTxRelayOn();
 
-    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
+    OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_INIT_WAIT_TIME);
 }
 
 static void SweepRobot_IrDATestProc(void)
@@ -146,6 +148,8 @@ static void SweepRobot_IrDATestProc(void)
 
     if(IrDA[0].validFlag && IrDA[1].validFlag && IrDA[2].validFlag && IrDA[3].validFlag && IrDA[4].validFlag){
         gSwrbTestTaskRunCnt = 0;
+        
+        SweepRobot_IrDATestTxRelayOff();
 
 //        printf("IRDA->OFF\r\n");
 //        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
@@ -246,6 +250,8 @@ static void SweepRobot_IrDAManulTestTimeOutProc(void)
 static void SweepRobot_IrDATestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
+    
+    SweepRobot_IrDATestTxRelayOff();
 
 //    printf("IRDA->OFF\r\n");
 //    OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
