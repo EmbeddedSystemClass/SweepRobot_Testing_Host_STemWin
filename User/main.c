@@ -86,6 +86,6 @@ INFINITY_LOOP:
 
     }
 
-    /* XXX: should never get here */
-    return -1;
+//    /* XXX: should never get here */
+//    return -1;
 }

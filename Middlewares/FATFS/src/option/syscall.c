@@ -8,12 +8,12 @@
 
 
 #if _FS_REENTRANT
-/*------------------------------------------------------------------------*/
-/* Create a Synchronization Object
-/*------------------------------------------------------------------------*/
-/* This function is called in f_mount() function to create a new
+//*------------------------------------------------------------------------*/
+//* Create a Synchronization Object
+//*------------------------------------------------------------------------*/
+//* This function is called in f_mount() function to create a new
 //  synchronization object, such as semaphore and mutex. When a 0 is returned,
-*/
+//*/
 
 int ff_cre_syncobj (	/* !=0:Function succeeded, ==0:Could not create due to any error */
 	BYTE vol,			/* Corresponding logical drive being processed */

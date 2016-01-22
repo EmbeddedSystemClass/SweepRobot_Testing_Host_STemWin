@@ -107,7 +107,7 @@ static int slamXPos=SWRB_SLAM_START_X_POS, slamYPos=SWRB_SLAM_START_Y_POS;
 static float slamAngle = SWRB_SLAM_START_ANGLE;
 
 //static SWRB_SLAM_MAP_t gSLAMMap[SWRB_SLAM_MAP_X_AXIS_GRID_NUM][SWRB_SLAM_MAP_Y_AXIS_GRID_NUM] = { 0 };
-static SWRB_SLAM_MAP_t gSLAMMap[1][1];
+//static SWRB_SLAM_MAP_t gSLAMMap[1][1];
 
 static GUI_POINT pPolygonRobot[] = {
     {0,0},
@@ -122,8 +122,8 @@ static short pPolygonRobotArray[4][4][2] = {
     {{10,-5}, {0,0}, {10,5}, {5,0}}         //West
 };
 
-static int gTraceNum = 0;
-static GUI_POINT gPolygonTrace[128];
+//static int gTraceNum = 0;
+//static GUI_POINT gPolygonTrace[128];
 
 /*********************************************************************
 *
@@ -168,6 +168,8 @@ static void SLAM_ButtonStartClickedProc(void)
 
 static void SLAM_ButtonResetClickedProc(void)
 {
+    slamAngle = slamAngle;
+    
     slamXPos = SWRB_SLAM_START_X_POS;
     slamYPos = SWRB_SLAM_START_Y_POS;
     slamAngle = SWRB_SLAM_START_ANGLE;
@@ -214,86 +216,86 @@ static void SLAM_MapPaint(void)
     }
 }
 
-static SWRB_SLAM_MAP_t SLAM_MapGridGet(u16 x, u16 y)
-{
-    int temp;
-    SWRB_SLAM_MAP_t map;
-    u16 gridCoordX, gridCoordY;
-    
-    temp = x;
-    while((temp--)%SWRB_SLAM_MAP_X_AXIS_GRID_SIZE);
-    map.GridStartXpos = temp;
-    
-    temp = x;
-    while((temp++)%SWRB_SLAM_MAP_X_AXIS_GRID_SIZE);
-    map.GridStopXpos = temp;
-    
-    temp = y;
-    while((temp--)%SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE);
-    map.GridStartYpos = temp;
-    
-    temp = y;
-    while((temp++)%SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE);
-    map.GridStopYpos = temp;
-    
-    gridCoordX = map.GridStartXpos/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE;
-    gridCoordY = map.GridStartYpos/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE;
-    
-    gSLAMMap[gridCoordX][gridCoordY].GridStartXpos = map.GridStartXpos;
-    gSLAMMap[gridCoordX][gridCoordY].GridStartYpos = map.GridStartYpos;
-    gSLAMMap[gridCoordX][gridCoordY].GridStopXpos = map.GridStopXpos;
-    gSLAMMap[gridCoordX][gridCoordY].GridStopYpos = map.GridStopYpos;
-    gSLAMMap[gridCoordX][gridCoordY].flag = 1;
-    
-    return map;
-}
+//static SWRB_SLAM_MAP_t SLAM_MapGridGet(u16 x, u16 y)
+//{
+//    int temp;
+//    SWRB_SLAM_MAP_t map;
+//    u16 gridCoordX, gridCoordY;
+//    
+//    temp = x;
+//    while((temp--)%SWRB_SLAM_MAP_X_AXIS_GRID_SIZE);
+//    map.GridStartXpos = temp;
+//    
+//    temp = x;
+//    while((temp++)%SWRB_SLAM_MAP_X_AXIS_GRID_SIZE);
+//    map.GridStopXpos = temp;
+//    
+//    temp = y;
+//    while((temp--)%SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE);
+//    map.GridStartYpos = temp;
+//    
+//    temp = y;
+//    while((temp++)%SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE);
+//    map.GridStopYpos = temp;
+//    
+//    gridCoordX = map.GridStartXpos/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE;
+//    gridCoordY = map.GridStartYpos/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE;
+//    
+//    gSLAMMap[gridCoordX][gridCoordY].GridStartXpos = map.GridStartXpos;
+//    gSLAMMap[gridCoordX][gridCoordY].GridStartYpos = map.GridStartYpos;
+//    gSLAMMap[gridCoordX][gridCoordY].GridStopXpos = map.GridStopXpos;
+//    gSLAMMap[gridCoordX][gridCoordY].GridStopYpos = map.GridStopYpos;
+//    gSLAMMap[gridCoordX][gridCoordY].flag = 1;
+//    
+//    return map;
+//}
 
-static void SLAM_MapGridFlagSet(u16 gridCoordX, u16 gridCoordY, u8 flagState)
-{
-    gSLAMMap[gridCoordX][gridCoordY].flag = flagState;
-}
+//static void SLAM_MapGridFlagSet(u16 gridCoordX, u16 gridCoordY, u8 flagState)
+//{
+//    gSLAMMap[gridCoordX][gridCoordY].flag = flagState;
+//}
 
-static void SLAM_MapOneGridFill(u16 x, u16 y, GUI_COLOR color)
-{
-    SWRB_SLAM_MAP_t map;
-    GUI_COLOR lastColor;
-    
-    map = SLAM_MapGridGet(x,y);
-    
-    lastColor = GUI_GetColor();
-    GUI_SetColor(color);
-    GUI_FillRect(map.GridStartXpos, map.GridStartYpos, map.GridStopXpos, map.GridStopYpos);
-    GUI_SetColor(lastColor);
-}
+//static void SLAM_MapOneGridFill(u16 x, u16 y, GUI_COLOR color)
+//{
+//    SWRB_SLAM_MAP_t map;
+//    GUI_COLOR lastColor;
+//    
+//    map = SLAM_MapGridGet(x,y);
+//    
+//    lastColor = GUI_GetColor();
+//    GUI_SetColor(color);
+//    GUI_FillRect(map.GridStartXpos, map.GridStartYpos, map.GridStopXpos, map.GridStopYpos);
+//    GUI_SetColor(lastColor);
+//}
 
-static void SLAM_MapGridFillStetDraw(GUI_COLOR color)
-{
-    int x,y;
-    u16 gridCoordX, gridCoordY;
-    GUI_COLOR lastColor;
-    
-    for(x=SWRB_SLAM_MAP_X_START_POS;x<=SWRB_SLAM_MAP_X_STOP_POS;x+=SWRB_SLAM_MAP_X_AXIS_GRID_SIZE){
-        gridCoordX = x/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE;
-        for(y=SWRB_SLAM_MAP_Y_START_POS;y<=SWRB_SLAM_MAP_Y_STOP_POS;y+=SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE){
-            gridCoordY = y/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE;
-            
-            if(gSLAMMap[gridCoordX][gridCoordY].flag){
-                lastColor = GUI_GetColor();
-                GUI_SetColor(color);
-                GUI_FillRect(gSLAMMap[gridCoordX][gridCoordY].GridStartXpos,\
-                             gSLAMMap[gridCoordX][gridCoordY].GridStartYpos,\
-                             gSLAMMap[gridCoordX][gridCoordY].GridStopXpos,\
-                             gSLAMMap[gridCoordX][gridCoordY].GridStopYpos);
-                GUI_SetColor(lastColor);
-            }
-        }
-    }
-}
+//static void SLAM_MapGridFillStetDraw(GUI_COLOR color)
+//{
+//    int x,y;
+//    u16 gridCoordX, gridCoordY;
+//    GUI_COLOR lastColor;
+//    
+//    for(x=SWRB_SLAM_MAP_X_START_POS;x<=SWRB_SLAM_MAP_X_STOP_POS;x+=SWRB_SLAM_MAP_X_AXIS_GRID_SIZE){
+//        gridCoordX = x/SWRB_SLAM_MAP_X_AXIS_GRID_SIZE;
+//        for(y=SWRB_SLAM_MAP_Y_START_POS;y<=SWRB_SLAM_MAP_Y_STOP_POS;y+=SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE){
+//            gridCoordY = y/SWRB_SLAM_MAP_Y_AXIS_GRID_SIZE;
+//            
+//            if(gSLAMMap[gridCoordX][gridCoordY].flag){
+//                lastColor = GUI_GetColor();
+//                GUI_SetColor(color);
+//                GUI_FillRect(gSLAMMap[gridCoordX][gridCoordY].GridStartXpos,\
+//                             gSLAMMap[gridCoordX][gridCoordY].GridStartYpos,\
+//                             gSLAMMap[gridCoordX][gridCoordY].GridStopXpos,\
+//                             gSLAMMap[gridCoordX][gridCoordY].GridStopYpos);
+//                GUI_SetColor(lastColor);
+//            }
+//        }
+//    }
+//}
 
-static void SLAM_MapGridPaint(void)
-{
-    SLAM_MapOneGridFill(slamXPos, slamYPos, GUI_GREEN);
-}
+//static void SLAM_MapGridPaint(void)
+//{
+//    SLAM_MapOneGridFill(slamXPos, slamYPos, GUI_GREEN);
+//}
 
 static void SLAM_RobotFollowWallProc(void)
 {
@@ -362,16 +364,16 @@ static void SLAM_RobotPaint(int *x, int *y)
     GUI_FillPolygon(pPolygonRobot, GUI_COUNTOF(pPolygonRobot), *x, *y);
 }
 
-static void SLAM_TracePaint(void)
-{
-    if(gTraceNum < 1024){
-        gPolygonTrace[gTraceNum].x = slamXPos;
-        gPolygonTrace[gTraceNum].y = slamYPos;
-        gTraceNum++;
-        GUI_SetColor(GUI_BLUE);
-        GUI_DrawPolyLine(gPolygonTrace, gTraceNum*2, SWRB_SLAM_START_X_POS, SWRB_SLAM_START_Y_POS);
-    }
-}
+//static void SLAM_TracePaint(void)
+//{
+//    if(gTraceNum < 1024){
+//        gPolygonTrace[gTraceNum].x = slamXPos;
+//        gPolygonTrace[gTraceNum].y = slamYPos;
+//        gTraceNum++;
+//        GUI_SetColor(GUI_BLUE);
+//        GUI_DrawPolyLine(gPolygonTrace, gTraceNum*2, SWRB_SLAM_START_X_POS, SWRB_SLAM_START_Y_POS);
+//    }
+//}
 
 static void SLAM_CoordDisp(void)
 {

@@ -38,21 +38,21 @@ static void SweepRobot_RGBLEDTestInit(void)
     WM_BringToTop(hWin_SWRB_RGB_LED);
 }
 
-static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char *strText, char *strMultiEdit1, char *strMultiEdit2)
-{
-    Text_Set_Color(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, color);
-    Text_Set_Text(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, strText);
-    OSTaskSuspend(gSwrbTestRuningTaskPrio);
-    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-        if(*ledState){
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit1);
-            SWRB_TestDataFileWriteString(strMultiEdit1);
-        }else{
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit2);
-            SWRB_TestDataFileWriteString(strMultiEdit2);
-        }
-    }
-}
+//static void SweepRobot_RGBLEDTestSingleProc(int *ledState, GUI_COLOR color, char *strText, char *strMultiEdit1, char *strMultiEdit2)
+//{
+//    Text_Set_Color(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, color);
+//    Text_Set_Text(hWin_SWRB_RGB_LED, ID_PCBTEST_TEXT_RGB_LED, strText);
+//    OSTaskSuspend(gSwrbTestRuningTaskPrio);
+//    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+//        if(*ledState){
+//            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit1);
+//            SWRB_TestDataFileWriteString(strMultiEdit1);
+//        }else{
+//            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  strMultiEdit2);
+//            SWRB_TestDataFileWriteString(strMultiEdit2);
+//        }
+//    }
+//}
 
 static void SweepRobot_RGBLEDTestSingleProcWithCHN(int *ledState, const GUI_BITMAP *bitmap, char *strMultiEdit1, char *strMultiEdit2)
 {
