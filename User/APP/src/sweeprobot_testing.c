@@ -1564,13 +1564,17 @@ void SweepRobot_ManulWheelBtnProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
         printf("T->ON\r\n");
+        GUI_Delay(1);
         printf("WHL->DIR=1\r\n");
+        GUI_Delay(1);
         printf("LW->SPD=25\r\n");
+        GUI_Delay(1);
         printf("RW->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTBLUE);
     }else{
         printf("LW->SPD=0\r\n");
+        GUI_Delay(1);
         printf("RW->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_GRAY);
@@ -1587,14 +1591,19 @@ void SweepRobot_ManulBrushBtnProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
         printf("T->ON\r\n");
+        GUI_Delay(1);
         printf("LB->SPD=30\r\n");
+        GUI_Delay(1);
         printf("RB->SPD=30\r\n");
+        GUI_Delay(1);
         printf("MB->SPD=40\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTBLUE);
     }else{
         printf("LB->SPD=0\r\n");
+        GUI_Delay(1);
         printf("RB->SPD=0\r\n");
+        GUI_Delay(1);
         printf("MB->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_GRAY);
@@ -1611,6 +1620,7 @@ void SweepRobot_ManulFanBtnProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_FAN]){
         printf("T->ON\r\n");
+        GUI_Delay(1);
         printf("FAN->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTBLUE);
@@ -1647,6 +1657,7 @@ void SweepRobot_ManulBuzzerBtnProc(void)
     switch(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
         case 1:
             printf("T->ON\r\n");
+            GUI_Delay(1);
             printf("BZR->ON=1\r\n");
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTRED);
             break;
@@ -1679,6 +1690,7 @@ void SweepRobot_ManulRGBLEDBtnProc(void)
     switch(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
         case 1:
             printf("T->ON\r\n");
+            GUI_Delay(1);
             printf("RGB->ON=%d\r\n", RGB_LED_RED);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTRED);
             break;

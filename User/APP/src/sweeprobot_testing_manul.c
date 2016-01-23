@@ -497,20 +497,20 @@ static void SweepRobot_ManulTest_PwrStationPwrCmpProc(GUI_COLOR validColor, GUI_
 
 static void SweepRobot_ManulTest_WheelDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 50, SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_BrushDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,50, SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,50, SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,500, SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,50, SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,50, SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,500, SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_FanDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,500, SWRB_MANUL_TEST_DATA_FAN_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5,500, SWRB_MANUL_TEST_DATA_FAN_CUR_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_IFRDDataProc(void)
@@ -518,13 +518,13 @@ static void SweepRobot_ManulTest_IFRDDataProc(void)
     enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_IFRD_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_R_POS;i++){
-        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1000, 3000, i, GUI_LIGHTBLUE, GUI_WHITE);
+        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1000, 3000, i, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     }
     for(i=SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS;i++){
-        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(500, 3500, i, GUI_LIGHTBLUE, GUI_WHITE);
+        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(500, 3500, i, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     }
     for(i=SWRB_MANUL_TEST_DATA_IFRD_B_SL_POS;i<=SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS;i++){
-        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(200, 3800, i, GUI_LIGHTBLUE, GUI_WHITE);
+        SweepRobot_ManulTest_SingleValueMinMaxCmpProc(200, 3800, i, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     }
 }
 
@@ -533,7 +533,7 @@ static void SweepRobot_ManulTest_CollisionDataProc(void)
     enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_COLLISION_L_POS;i<=SWRB_MANUL_TEST_DATA_COLLISION_FR_POS;i++){
-        SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, GUI_LIGHTBLUE, GUI_WHITE);
+        SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     }
 }
 
@@ -542,24 +542,24 @@ static void SweepRobot_ManulTest_WheelFloatDataProc(void)
     enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS;i<=SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_R_POS;i++){
-        SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, GUI_LIGHTBLUE, GUI_WHITE);
+        SweepRobot_ManulTest_SingleValueEqualCmpProc(0, i, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     }
 }
 
 static void SweepRobot_ManulTest_AshTrayDataProc(void)
 {
     SweepRobot_ManulTest_SingleValueEqualCmpProc(0, SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_UniwheelDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_UNIWHEEL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_UNIWHEEL_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_KeyDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_KEY_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_KEY_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_IrDADataProc(void)
@@ -567,26 +567,26 @@ static void SweepRobot_ManulTest_IrDADataProc(void)
     enum SWRB_MANUL_TEST_DATA_POS i;
 
     for(i=SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS;i<=SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS;i++){
-        SweepRobot_ManulTest_SingleIrDAValueCmpProc(i, GUI_LIGHTBLUE, GUI_WHITE);
+        SweepRobot_ManulTest_SingleIrDAValueCmpProc(i, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     }
 }
 
 static void SweepRobot_ManulTest_ChargeDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 200, SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(2800, 3500, SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS, GUI_LIGHTBLUE, GUI_WHITE);
-    SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(5, 200, SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(2800, 3500, SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(1, SWRB_MANUL_TEST_DATA_CHARGE_24V_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTest_PowerStationDataProc(void)
 {
-    SweepRobot_ManulTest_PwrStationCodeCmpProc(GUI_LIGHTBLUE, GUI_LIGHTRED);
-    SweepRobot_ManulTest_PwrStationPwrCmpProc(GUI_LIGHTBLUE, GUI_LIGHTRED);
+    SweepRobot_ManulTest_PwrStationCodeCmpProc(SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
+    SweepRobot_ManulTest_PwrStationPwrCmpProc(SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
 }
 
 static void SweepRobot_ManulTest_InternalVRefDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1400, 1600, SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueMinMaxCmpProc(1400, 1600, SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 
 static void SweepRobot_ManulTestValueValidCmp(void)

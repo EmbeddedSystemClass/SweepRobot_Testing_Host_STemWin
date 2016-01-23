@@ -129,7 +129,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][0],\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][1],\
-                                                               GUI_LIGHTBLUE);
+                                                               SWRB_MANUL_TEST_OK_BK_COLOR);
             }
         }
 
@@ -172,7 +172,7 @@ static void SweepRobot_UniwheelManulTestTimeOutProc(void)
     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][0],\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_UNIWHEEL_POS][1],\
-                                                               GUI_LIGHTRED);
+                                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
 }
 
 static void SweepRobot_UniwheelTestTimeOutProc(void)

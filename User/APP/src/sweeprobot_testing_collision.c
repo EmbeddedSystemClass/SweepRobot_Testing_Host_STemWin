@@ -126,7 +126,7 @@ static void SweepRobot_CollisionPCBTestProc(void)
                         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
-                                                                   GUI_LIGHTBLUE);
+                                                                   SWRB_MANUL_TEST_OK_BK_COLOR);
                     }
                 }
             }
@@ -193,25 +193,25 @@ static void SweepRobot_CollisionManulTestTimeOutProc(void)
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FL_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FL_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FL_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_R_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_R_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_R_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FR_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FR_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FR_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -345,7 +345,7 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
-                                                            GUI_LIGHTBLUE);
+                                                            SWRB_MANUL_TEST_OK_BK_COLOR);
                     if(chan == COLLISION_CHAN_FL){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
                     }else if(chan == COLLISION_CHAN_R){
@@ -386,7 +386,7 @@ static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
                                                             gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
-                                                            GUI_LIGHTBLUE);
+                                                            SWRB_MANUL_TEST_OK_BK_COLOR);
                     if(chan == COLLISION_CHAN_L){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
                     }else if(chan == COLLISION_CHAN_FR){

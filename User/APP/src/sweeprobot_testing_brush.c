@@ -88,7 +88,7 @@ static void SWRB_BrushTestProc(void)
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
-                                                               GUI_LIGHTBLUE);
+                                                               SWRB_MANUL_TEST_OK_BK_COLOR);
                 }
             }
         }
@@ -145,19 +145,19 @@ static void SWRB_BrushManulTestTimeOutProc(void)
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS][0],\
                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS][1],\
-                                               GUI_LIGHTRED);
+                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
 }
 

@@ -90,6 +90,9 @@
 **********************************************************************
 */
 
+#define SWRB_MANUL_TEST_OK_BK_COLOR     GUI_LIGHTGREEN
+#define SWRB_MANUL_TEST_FAULT_BK_COLOR  GUI_RED
+
 /* EJE_SWRB_TEST_StartDLG */
 #if __EJE_SWRB_TEST_START_DLG
 
@@ -799,6 +802,7 @@
     
     enum ID_MANUL_WIDGET{
         ID_MANUL_WINDOW_0 = ID_TESTSEL_BOUND,
+        ID_MANUL_WINDOW_1,
         ID_MANUL_BUTTON_0,
         ID_MANUL_BUTTON_1,
         ID_MANUL_BUTTON_2,
@@ -811,6 +815,7 @@
         ID_MANUL_BUTTON_9,
         ID_MANUL_BUTTON_10,
         ID_MANUL_BUTTON_11,
+        ID_MANUL_BUTTON_12,
         ID_MANUL_LISTVIEW_0,
         ID_MANUL_TEXT_0,
         ID_MANUL_TEXT_1,
@@ -822,6 +827,7 @@
     
     enum ID_MANUL_WINDOW{
         ID_MANUL_WINDOW_MAIN = ID_MANUL_WINDOW_0,
+        ID_MANUL_WINDOW_TEST_STATE_INDICATE,
         ID_MANUL_WINDOW_BOUND,
     };
     
@@ -838,6 +844,7 @@
         ID_MANUL_BUTTON_BUZZER,
         ID_MANUL_BUTTON_RGB_LED,
         ID_MANUL_BUTTON_RELAY,
+        ID_MANUL_BUTTON_TEST_STATE_INDICATE,
         ID_MANUL_BUTTON_BOUND,
     };
     

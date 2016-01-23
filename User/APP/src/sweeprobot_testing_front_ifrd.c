@@ -219,16 +219,16 @@ static void SweepRobot_FrontIFRDTestTxOnProc(void)
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].validCnt++;
             }else{
                 gSwrbFrontIFRDTestStateMap |= (1<<gSwrbFrontIFRDTestChanCnt);
-                SweepRobot_FrontIFRDTestListviewSetColor(GUI_LIGHTRED);
+                SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUL_TEST_FAULT_BK_COLOR);
             }
 
             if(frontIFRD[gSwrbFrontIFRDTestChanCnt].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].validFlag = 1;
-                SweepRobot_FrontIFRDTestListviewSetColor(GUI_LIGHTBLUE);
+                SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUL_TEST_OK_BK_COLOR);
             }
         }else{
             gSwrbFrontIFRDTestStateMap |= 1<<(gSwrbFrontIFRDTestChanCnt);
-            SweepRobot_FrontIFRDTestListviewSetColor(GUI_LIGHTRED);
+            SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUL_TEST_FAULT_BK_COLOR);
         }
     }
     printf("SNSR->IFRD=0\r\n");

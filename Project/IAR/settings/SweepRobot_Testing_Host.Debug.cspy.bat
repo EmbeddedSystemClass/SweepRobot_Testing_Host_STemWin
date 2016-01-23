@@ -19,6 +19,6 @@
 @REM 
 
 
-"D:\tools\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "D:\tools\IAR Systems\Embedded Workbench 7.0\arm\bin\armproc.dll" "D:\tools\IAR Systems\Embedded Workbench 7.0\arm\bin\armstlink.dll"  %1 --plugin "D:\tools\IAR Systems\Embedded Workbench 7.0\arm\bin\armbat.dll" --device_macro "D:\tools\IAR Systems\Embedded Workbench 7.0\arm\config\debugger\ST\Trace_STM32F4xx.dmac" --backend -B "--endian=little" "--cpu=Cortex-M4F" "--fpu=VFPv4" "-p" "D:\tools\IAR Systems\Embedded Workbench 7.0\arm\CONFIG\debugger\ST\STM32F407ZG.ddf" "--drv_verify_download" "--semihosting" "--device=STM32F407ZG" "--stlink_reset_strategy=0,0" "--drv_swo_clock_setup=72000000,0,2000000" 
+"D:\Program Files\IAR_FOR_ARM\common\bin\cspybat" "D:\Program Files\IAR_FOR_ARM\arm\bin\armproc.dll" "D:\Program Files\IAR_FOR_ARM\arm\bin\armsim2.dll"  %1 --plugin "D:\Program Files\IAR_FOR_ARM\arm\bin\armbat.dll" --backend -B "--endian=little" "--cpu=ARM7TDMI" "--fpu=None" "--semihosting" "--multicore_nr_of_cores=1" 
 
 

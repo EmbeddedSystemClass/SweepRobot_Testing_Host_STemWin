@@ -131,7 +131,7 @@ static void SweepRobot_IrDATestProc(void)
                     Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS+i][1],\
-                                                           GUI_LIGHTBLUE);
+                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
                 }
             }
             if(IrDA[i].validFlag){
@@ -219,31 +219,31 @@ static void SweepRobot_IrDAManulTestTimeOutProc(void)
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_B_RxCODE_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_L_RxCODE_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_L_RxCODE_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FL_RxCODE_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FL_RxCODE_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FR_RxCODE_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_FR_RxCODE_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IRDA_R_RxCODE_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
 }
 

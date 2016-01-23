@@ -139,7 +139,7 @@ static void SweepRobot_ChargeTestProc(void)
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
-                                                           GUI_LIGHTBLUE);
+                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -185,7 +185,7 @@ static void SweepRobot_ChargeTestProc(void)
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
-                                                           GUI_LIGHTBLUE);
+                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -241,19 +241,19 @@ static void SweepRobot_ChargeManulTestTimeOutProc(void)
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_24V_MASK){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
-                                                           GUI_LIGHTRED);
+                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
     }
 }
 
