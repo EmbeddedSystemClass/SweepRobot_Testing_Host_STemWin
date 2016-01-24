@@ -383,7 +383,7 @@ void PWR_BackupRegulatorCmd(FunctionalState NewState)
 void PWR_MainRegulatorModeConfig(uint32_t PWR_Regulator_Voltage)
 {
   uint32_t tmpreg = 0;
-	
+    
   /* Check the parameters */
   assert_param(IS_PWR_REGULATOR_VOLTAGE(PWR_Regulator_Voltage));
 

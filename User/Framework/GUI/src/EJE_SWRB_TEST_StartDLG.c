@@ -147,12 +147,19 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_SD_WARNING);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetFont(hItem, GUI_FONT_20B_ASCII);
-            if(gSwrbTestSDCardInsertState){
+//            if(gSwrbTestSDCardInsertState){
+//                TEXT_SetTextColor(hItem, GUI_BLUE);
+//                TEXT_SetText(hItem, "SD Card Inserted");
+//            }else{
+//                TEXT_SetTextColor(hItem, GUI_RED);
+//                TEXT_SetText(hItem, "No SD Card!");
+//            }
+            if(gSwrbTestUDiskInsertState){
                 TEXT_SetTextColor(hItem, GUI_BLUE);
-                TEXT_SetText(hItem, "SD Card Inserted");
+                TEXT_SetText(hItem, "USB Disk Inserted");
             }else{
                 TEXT_SetTextColor(hItem, GUI_RED);
-                TEXT_SetText(hItem, "No SD Card!");
+                TEXT_SetText(hItem, "No USB Disk!");
             }
             WM_BringToTop(hItem);
 

@@ -49,29 +49,29 @@ void GUI_TOUCH_X_ActivateY(void)
 
 int  GUI_TOUCH_X_MeasureX(void) 
 {
-	int32_t xvalue;
-	if((lcddev.id == 0X5510) || (lcddev.id == 0X1963)) //电容屏的触摸值获取(使用NT5510和SSD1963芯片的4.3寸和7寸屏都是电容屏)
-	{
-		tpDev.scan(0);
-		xvalue=tpDev.x[0];
-		return xvalue;
-	}else				//电阻屏
-	{
-		return TP_Read_XOY(0XD0);  //CMD_RDX=0XD0
-	}
+    int32_t xvalue;
+    if((lcddev.id == 0X5510) || (lcddev.id == 0X1963)) //电容屏的触摸值获取(使用NT5510和SSD1963芯片的4.3寸和7寸屏都是电容屏)
+    {
+        tpDev.scan(0);
+        xvalue=tpDev.x[0];
+        return xvalue;
+    }else                //电阻屏
+    {
+        return TP_Read_XOY(0XD0);  //CMD_RDX=0XD0
+    }
 }
 
 int  GUI_TOUCH_X_MeasureY(void) 
-{	
-	int32_t yvalue;
-	if((lcddev.id == 0X5510) || (lcddev.id == 0X1963))//电容屏的触摸值获取(使用NT5510和SSD1963芯片的4.3寸和7寸屏都是电容屏)
-	{
-		tpDev.scan(0);
-		yvalue = tpDev.y[0];
-		return yvalue;
-	}else				//电阻屏
-	{
-		return TP_Read_XOY(0X90);  //CMD_RDX=0XD0
-	}
+{    
+    int32_t yvalue;
+    if((lcddev.id == 0X5510) || (lcddev.id == 0X1963))//电容屏的触摸值获取(使用NT5510和SSD1963芯片的4.3寸和7寸屏都是电容屏)
+    {
+        tpDev.scan(0);
+        yvalue = tpDev.y[0];
+        return yvalue;
+    }else                //电阻屏
+    {
+        return TP_Read_XOY(0X90);  //CMD_RDX=0XD0
+    }
 }
 

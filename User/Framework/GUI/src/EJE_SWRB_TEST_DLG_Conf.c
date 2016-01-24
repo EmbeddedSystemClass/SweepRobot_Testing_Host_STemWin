@@ -446,10 +446,10 @@ void Multiedit_Set_Buffer_Size(int size)
 
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s)
 {
-	WM_HWIN hItem;
+    WM_HWIN hItem;
     
-	hItem = WM_GetDialogItem(hWin, multiEditId);
-	MULTIEDIT_SetText(hItem, s);
+    hItem = WM_GetDialogItem(hWin, multiEditId);
+    MULTIEDIT_SetText(hItem, s);
 }
 
 void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s)

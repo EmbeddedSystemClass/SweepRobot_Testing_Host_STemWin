@@ -5,7 +5,24 @@
 #include "WM.h"
 #include "DIALOG.h"
 
+USBH_HOST  USB_Host;
+USB_OTG_CORE_HANDLE  USB_OTG_Core;
+
 extern GUI_CONST_STORAGE GUI_FONT GUI_FontSDErrCHN;
+
+u8 USB_HOST_User_App(void)
+{
+    while(HCD_IsDeviceConnected(&USB_OTG_Core))
+    {
+        LED1=!LED1;
+        gSwrbTestUDiskInsertState = ENABLE;
+        OSTimeDlyHMSM(0,0,0,200);
+    }
+    gSwrbTestUDiskInsertState = DISABLE;
+    LED1 = 1;
+
+    return 0;
+}
 
 static void SWRBTest_CtrlPanelInit(void)
 {
@@ -45,6 +62,9 @@ static int SWRBTest_StorageInit(void)
 
     f_mount(fs[0],"0:",1);
     f_mount(fs[1],"1:",1);
+    f_mount(fs[2],"2:",1);
+    
+    USBH_Init(&USB_OTG_Core,USB_OTG_FS_CORE_ID,&USB_Host,&USBH_MSC_cb,&USR_Callbacks);
 
     return 0;
 }

@@ -7,13 +7,13 @@
 //SDIO时钟计算公式:SDIO_CK时钟=SDIOCLK/[clkdiv+2];其中,SDIOCLK固定为48Mhz
 //使用DMA模式的时候,传输速率可以到48Mhz,不过如果你的卡不是高速卡,可能也会出错
 //出错就请降低时钟,使用查询模式的话,推荐SDIO_TRANSFER_CLK_DIV设置为3或者更大
-#define SDIO_INIT_CLK_DIV        0x76 		//SDIO初始化频率，最大400Kh
-#define SDIO_TRANSFER_CLK_DIV    0x00		  //SDIO传输频率，最大48Mhz(4bit)。该值太小可能会导致读写文件出错
+#define SDIO_INIT_CLK_DIV        0x76         //SDIO初始化频率，最大400Kh
+#define SDIO_TRANSFER_CLK_DIV    0x00          //SDIO传输频率，最大48Mhz(4bit)。该值太小可能会导致读写文件出错
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //SDIO工作模式定义,通过SD_SetDeviceMode函数设置.
-#define SD_POLLING_MODE    	0  	//查询模式,该模式下,如果读写有问题,建议增大SDIO_TRANSFER_CLK_DIV的设置.
-#define SD_DMA_MODE    		1	//DMA模式,该模式下,SDIO_TRANSFER_CLK_DIV可以设置为1,单如果写入出错的话,可以考虑增大SDIO_TRANSFER_CLK_DIV的值
+#define SD_POLLING_MODE        0      //查询模式,该模式下,如果读写有问题,建议增大SDIO_TRANSFER_CLK_DIV的设置.
+#define SD_DMA_MODE            1    //DMA模式,该模式下,SDIO_TRANSFER_CLK_DIV可以设置为1,单如果写入出错的话,可以考虑增大SDIO_TRANSFER_CLK_DIV的值
 
 typedef enum
 {
@@ -177,10 +177,10 @@ typedef struct
 {
   SD_CSD SD_csd;
   SD_CID SD_cid;
-  long long CardCapacity;  	//SD卡容量,单位:字节,最大支持2^64字节大小的卡.
-  uint32_t CardBlockSize; 		//SD卡块大小
-  uint16_t RCA;					//卡相对地址
-  uint8_t CardType;				//卡类型
+  long long CardCapacity;      //SD卡容量,单位:字节,最大支持2^64字节大小的卡.
+  uint32_t CardBlockSize;         //SD卡块大小
+  uint16_t RCA;                    //卡相对地址
+  uint8_t CardType;                //卡类型
 } SD_CardInfo;
 
 
@@ -361,8 +361,8 @@ SD_Error SD_WriteMultiBlocks(u8 *buf,long long addr,u16 blksize,u32 nblks);
 SD_Error SD_ProcessIRQSrc(void);
 void SD_DMA_Config(u32*mbuf,u32 bufsize,u32 dir);
 
-u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt); 	//读SD卡,fatfs/usb调用
-u8 SD_WriteDisk(u8*buf,u32 sector,u8 cnt);	//写SD卡,fatfs/usb调用
+u8 SD_ReadDisk(u8*buf,u32 sector,u8 cnt);     //读SD卡,fatfs/usb调用
+u8 SD_WriteDisk(u8*buf,u32 sector,u8 cnt);    //写SD卡,fatfs/usb调用
 
 
 #endif

@@ -15,6 +15,8 @@
 #include "w25qxx.h"
 #include "fattester.h"
 
+#include "usbh_usr.h"
+
 #include "DIALOG.h"
 
 #include "sram.h"
@@ -265,6 +267,7 @@ enum SWRB_TEST_TASK_PRIO{
     KEY_TASK_PRIO=3,
     TOUCH_TASK_PRIO,
     EMWIN_TASK_PRIO,
+    USB_HOST_TASK_PRIO,
     SELF_TEST_TASK_PRIO,
     SWRB_TEST_CTRL_TASK_PRIO,
     SWRB_TEST_TASK_PRIO_START_BOUND,//8
@@ -298,6 +301,7 @@ enum SWRB_TEST_TASK_PRIO{
 #endif
 #define RTC_STK_SIZE                        128
 #define EMWIN_STK_SIZE                      512
+#define USB_HOST_STK_SIZE                   256
 #define LED_STK_SIZE                        256
 #define SWRB_TEST_CTRL_STK_SIZE             256
 #define SWRB_WHEEL_TEST_STK_SIZE            256
@@ -342,6 +346,7 @@ extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;
 extern enum SWRB_TEST_SET_SELECT gSwrbTestSetSelectFlag;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 extern FunctionalState gSwrbTestSDCardInsertState;
+extern FunctionalState gSwrbTestUDiskInsertState;
 extern u32 gSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;

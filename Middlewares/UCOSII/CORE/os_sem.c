@@ -172,8 +172,8 @@ OS_EVENT  *OSSemCreate (INT16U cnt)
 //可以调用此函数来删除此信号量
 //注意:只能在任务中删除信号量,不能在中断中删除!!!!!!!!
 //*pevent: 信号量的指针
-//opt:	删除条件选项 OS_DEL_NO_PEND,当等待任务表中已经没有等待任务时才删除信号量
-//									 OS_DEL_ALLWAYS,等待任务中无论是否有等待任务都立即删除信号量
+//opt:    删除条件选项 OS_DEL_NO_PEND,当等待任务表中已经没有等待任务时才删除信号量
+//                                     OS_DEL_ALLWAYS,等待任务中无论是否有等待任务都立即删除信号量
 //*err: 错误信息
 #if OS_SEM_DEL_EN > 0u
 OS_EVENT  *OSSemDel (OS_EVENT  *pevent,
@@ -326,7 +326,7 @@ void  OSSemPend (OS_EVENT  *pevent,
         *perr = OS_ERR_EVENT_TYPE;
         return;
     }
-    if (OSIntNesting > 0u) {                     			/* ISR中,不能使用OSSemPend() See if called from ISR ...                    */
+    if (OSIntNesting > 0u) {                                 /* ISR中,不能使用OSSemPend() See if called from ISR ...                    */
         *perr = OS_ERR_PEND_ISR;                      /* ... can't PEND from an ISR                    */
         return;
     }
@@ -645,4 +645,4 @@ void  OSSemSet (OS_EVENT  *pevent,
 #endif
 
 #endif                                                /* OS_SEM_EN                                     */
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  

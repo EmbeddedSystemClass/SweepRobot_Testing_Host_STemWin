@@ -126,7 +126,7 @@ void  *OSQAccept (OS_EVENT  *pevent,
 //创建一个消息队列,创建消息队列之前首先定义一个指针数组,然后把各个消息数据缓冲区的首地址
 //存入这个数组中,最后在调用函数OSQCreate()来创建消息队列
 //**start:指针数组的地址 为存放消息缓冲区指针数组的地址
-//size:	数组长度
+//size:    数组长度
 OS_EVENT  *OSQCreate (void    **start,
                       INT16U    size)
 {
@@ -772,7 +772,7 @@ INT8U  OSQPostOpt (OS_EVENT  *pevent,
             (void)OS_EventTaskRdy(pevent, pmsg, OS_STAT_Q, OS_STAT_PEND_OK);
         }
         OS_EXIT_CRITICAL();
-        if ((opt & OS_POST_OPT_NO_SCHED) == 0u) {	  /* See if scheduler needs to be invoked          */
+        if ((opt & OS_POST_OPT_NO_SCHED) == 0u) {      /* See if scheduler needs to be invoked          */
             OS_Sched();                               /* Find highest priority task ready to run       */
         }
         return (OS_ERR_NONE);
@@ -909,4 +909,4 @@ void  OS_QInit (void)
 #endif
 }
 #endif                                               /* OS_Q_EN                                        */
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  
