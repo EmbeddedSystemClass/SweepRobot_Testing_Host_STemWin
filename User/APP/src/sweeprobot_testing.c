@@ -11,11 +11,15 @@
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 
 #include "usart.h"
+#include "usbh_usr.h"
 #include "stm32f4xx_it.h"
 #include <stdio.h>
 #include <string.h>
 
 #define SWRB_TEST_ACQUIRED_DATA_LEN_MAX  60
+
+extern USBH_HOST  USB_Host;
+extern USB_OTG_CORE_HANDLE  USB_OTG_Core;
 
 enum CryptoMode{
 
@@ -34,7 +38,8 @@ enum SWRB_TEST_RUN_STATE gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
 enum SWRB_TEST_SET_SELECT gSwrbTestSetSelectFlag = SWRB_TEST_SET_SELECT_SN;
 enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 
-FunctionalState gSwrbTestSDCardInsertState = ENABLE;
+FunctionalState gSwrbTestSDCardInsertState = DISABLE;
+FunctionalState gSwrbTestUDiskInsertState = DISABLE;
 u32 gSwrbTestStateMap = 0;
 u16 gSwrbTestTaskRunCnt = 0;
 int gSwrbTestValidTaskCnt;
@@ -61,6 +66,7 @@ static void Start_Task(void *pdata);
 static void SelfTest_Task(void *pdata);
 #endif
 static void emWin_Maintask(void *pdata);
+static void USB_Host_Task(void *pdata);
 static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
 #ifdef _USE_KEY_BUTTON
@@ -87,6 +93,7 @@ OS_STK KEY_TASK_STK[KEY_STK_SIZE];
 #endif
 OS_STK RTC_TASK_STK[RTC_STK_SIZE];
 OS_STK EMWIN_TASK_STK[EMWIN_STK_SIZE];
+OS_STK USB_HOST_TASK_STK[USB_HOST_STK_SIZE];
 OS_STK LED_TASK_STK[LED_STK_SIZE];
 OS_STK SWRB_TEST_CTRL_TASK_STK[SWRB_TEST_CTRL_STK_SIZE];
 OS_STK SWRB_WHEEL_TEST_TASK_STK[SWRB_WHEEL_TEST_STK_SIZE];
@@ -124,6 +131,7 @@ void Start_Task(void *pdata)
 
     OS_ENTER_CRITICAL();
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWIN_TASK_STK[EMWIN_STK_SIZE-1],EMWIN_TASK_PRIO);
+    OSTaskCreate(USB_Host_Task,(void*)0,(OS_STK*)&USB_HOST_TASK_STK[USB_HOST_STK_SIZE-1],USB_HOST_TASK_PRIO);
 #ifdef _USE_SELF_TESTING
     /* Self Test Task for System self test */
     OSTaskCreate(SelfTest_Task,(void*)0,(OS_STK*)&SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE-1],SELF_TEST_TASK_PRIO);
@@ -218,6 +226,15 @@ void emWin_Maintask(void *pdata)
     }
 }
 
+void USB_Host_Task(void *pdata)
+{
+    while(1)
+    {
+        USBH_Process(&USB_OTG_Core, &USB_Host);
+        OSTimeDlyHMSM(0,0,0,20);
+    }
+}
+
 void Touch_Task(void *pdata)
 {
     TP_Init();
@@ -287,7 +304,7 @@ void Rtc_Task(void *pdata)
 
 void SWRB_TestDataFileWriteString(char *str)
 {
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileOpen(FA_WRITE);
         f_puts(str,file);
         f_close(file);
@@ -298,7 +315,7 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 {
     char *dataStr;
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         dataStr = mymalloc(SRAMIN, sizeof(char)*10);
         mymemset(dataStr, 0, sizeof(char)*10);
         if(CRflag){
@@ -317,7 +334,7 @@ void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTy
     int cnt;
     char *dateStr;
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         dateStr = mymalloc(SRAMIN, sizeof(char)*40);
         *dateStr = 0;
 
@@ -343,7 +360,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
     int fileLength, leftFileLength;
     char *str;
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         fileLength = f_size(file);
 
         if(fileLength>>3){
@@ -606,7 +623,7 @@ void SweepRobot_PCBTestStartBtnProc(void)
                 SWRB_TestDUTWriteSN();
             }
 
-            if(gSwrbTestSDCardInsertState){
+            if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
                 SWRB_TestDataFileWriteSN();
                 SWRB_TestDataFileWriteDate(">PCB Test Start Time", &rtcDate, &rtcTime);
             }
@@ -777,7 +794,7 @@ void SweepRobot_PCBTestExitBtnProc(void)
 
         SWRB_PCBTestCheckboxEnable();
 
-        if(gSwrbTestSDCardInsertState){
+        if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
             f_close(file);
         }
 
@@ -1006,7 +1023,7 @@ static void SWRB_PCBTestFinishProc(void)
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileWriteDate(">PCB Test finish time", &rtcDate, &rtcTime);
     }
 
@@ -1019,7 +1036,7 @@ static void SWRB_PCBTestFinishProc(void)
 
     str = "\r\n***TEST FINISHED***\r\n";
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         /* Encrypt Test Data File when set enable */
         SWRB_TestDataFileEncryptoProc(ENABLE);
 
@@ -1046,7 +1063,7 @@ static void SWRB_ManulTestFinishProc(void)
 {
     SweepRobot_ManulTestCtrlReset();
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         /* Encrypt Test Data File when set enable */
         SWRB_TestDataFileEncryptoProc(DISABLE);
 
@@ -1318,7 +1335,7 @@ static void SweepRobot_ManulStartBtnAutoModeStartProc(void)
     SweepRobot_ManulTestDataQuery();
     SweepRobot_ManulTestBatteryVoltDisp();
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
     }
 

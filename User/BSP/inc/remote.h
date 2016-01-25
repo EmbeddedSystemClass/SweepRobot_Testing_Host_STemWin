@@ -5,11 +5,11 @@
   
 #define RDATA PAin(8)
 
-#define REMOTE_ID 0      		   
+#define REMOTE_ID 0                 
 
 extern u8 RmtCnt;
 
 void Remote_Init(void);
-u8 Remote_Scan(void);	    
+u8 Remote_Scan(void);        
 #endif
 

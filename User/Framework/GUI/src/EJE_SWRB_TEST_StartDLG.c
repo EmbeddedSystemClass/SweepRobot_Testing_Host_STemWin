@@ -57,7 +57,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "SD Warning", ID_START_TEXT_SD_WARNING, 325, 430, 150, 50, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "SD Warning", ID_START_TEXT_STORAGE_WARNING, 325, 430, 150, 50, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
 
@@ -144,15 +144,22 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             Button_Init(hItem);
             WM_HideWin(hItem);
 
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_SD_WARNING);
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_STORAGE_WARNING);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetFont(hItem, GUI_FONT_20B_ASCII);
-            if(gSwrbTestSDCardInsertState){
+//            if(gSwrbTestSDCardInsertState){
+//                TEXT_SetTextColor(hItem, GUI_BLUE);
+//                TEXT_SetText(hItem, "SD Card Inserted");
+//            }else{
+//                TEXT_SetTextColor(hItem, GUI_RED);
+//                TEXT_SetText(hItem, "No SD Card!");
+//            }
+            if(gSwrbTestUDiskInsertState){
                 TEXT_SetTextColor(hItem, GUI_BLUE);
-                TEXT_SetText(hItem, "SD Card Inserted");
+                TEXT_SetText(hItem, "UDisk Inserted");
             }else{
                 TEXT_SetTextColor(hItem, GUI_RED);
-                TEXT_SetText(hItem, "No SD Card!");
+                TEXT_SetText(hItem, "No UDisk");
             }
             WM_BringToTop(hItem);
 

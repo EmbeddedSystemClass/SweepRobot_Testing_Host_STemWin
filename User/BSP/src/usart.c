@@ -18,22 +18,22 @@
 
 struct __FILE
 {
-	int handle;
+    int handle;
 };
 
 FILE __stdout;
 
 int _sys_exit(int x)
 {
-	x = x;
+    x = x;
     return -1;
 }
 
 int fputc(int ch, FILE *f)
 {
-	while((USART1->SR&0X40)==0);
-	USART1->DR = (u8) ch;
-	return ch;
+    while((USART1->SR&0X40)==0);
+    USART1->DR = (u8) ch;
+    return ch;
 }
 #endif
 
@@ -125,19 +125,19 @@ void uart_init(u32 bound){
 
 void USART1_ISR(void)
 {
-	u8 rxValue;
+    u8 rxValue;
 #if SYSTEM_SUPPORT_UCOS
-	OSIntEnter();
+    OSIntEnter();
 #endif
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
-		rxValue =USART_ReceiveData(USART1);
+    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
+        rxValue =USART_ReceiveData(USART1);
 
-		if((USART_RX_STA&0x8000)==0){
-			if(USART_RX_STA&0x4000){
-				if(rxValue!='\n')
-					USART_RX_STA=0;
-				else{
-					USART_RX_STA|=0x8000;
+        if((USART_RX_STA&0x8000)==0){
+            if(USART_RX_STA&0x4000){
+                if(rxValue!='\n')
+                    USART_RX_STA=0;
+                else{
+                    USART_RX_STA|=0x8000;
                     if( (gSwrbTestRuningTaskPrio != SWRB_MANUL_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_IRDA_TEST_TASK_PRIO) ){
                         USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum, USART_RX_STA&USART_CNT_MASK);
 //                        USART_RX_STA = 0;
@@ -146,22 +146,22 @@ void USART1_ISR(void)
                     if(gSwrbTestRuningTaskPrio != NULL){
                         OSTimeDlyResume(gSwrbTestRuningTaskPrio);
                     }
-				}
-			}else{
-				if(rxValue=='\r')
-					USART_RX_STA|=0x4000;
-				else{
-					USART_RX_BUF[USART_RX_STA&USART_CNT_MASK]=rxValue;
-					USART_RX_STA++;
-					if(USART_RX_STA>(USART_RX_LEN-1))
-						USART_RX_STA=0;
-				}
-			}
-		}
+                }
+            }else{
+                if(rxValue=='\r')
+                    USART_RX_STA|=0x4000;
+                else{
+                    USART_RX_BUF[USART_RX_STA&USART_CNT_MASK]=rxValue;
+                    USART_RX_STA++;
+                    if(USART_RX_STA>(USART_RX_LEN-1))
+                        USART_RX_STA=0;
+                }
+            }
+        }
     }
 
 #if SYSTEM_SUPPORT_UCOS
-	OSIntExit();
+    OSIntExit();
 #endif
 }
 

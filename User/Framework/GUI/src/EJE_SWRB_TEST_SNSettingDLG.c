@@ -229,7 +229,11 @@ static void SweepRobotTest_TestDataFileFolderPathGet(char *dest_str)
     *strSNDate = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, strSNDate);
 
-    sprintf(dest_str, "0:/%s%02d%02d", strSNYear, atoi(strSNMonth), atoi(strSNDate));
+    if(gSwrbTestSDCardInsertState){
+        sprintf(dest_str, "0:/%s%02d%02d", strSNYear, atoi(strSNMonth), atoi(strSNDate));
+    }else if(gSwrbTestUDiskInsertState){
+        sprintf(dest_str, "2:/%s%02d%02d", strSNYear, atoi(strSNMonth), atoi(strSNDate));
+    }
 
     myfree(SRAMIN, (void*)strSNYear);
     myfree(SRAMIN, (void*)strSNMonth);
@@ -246,10 +250,18 @@ static FRESULT SweepRobotTest_TestDataFileFolderMkdir(void)
     *strFolderPath = 0;
 
     cnt = 0;
-    do{
-        SweepRobotTest_TestDataFileFolderPathGet(strFolderPath);
-        cnt++;
-    }while((*(strFolderPath) != '0' && *(strFolderPath+1) != ':') && cnt<10);
+
+    if(gSwrbTestSDCardInsertState){
+        do{
+            SweepRobotTest_TestDataFileFolderPathGet(strFolderPath);
+            cnt++;
+        }while((*(strFolderPath) != '0' && *(strFolderPath+1) != ':') && cnt<10);
+    }else if (gSwrbTestUDiskInsertState){
+        do{
+            SweepRobotTest_TestDataFileFolderPathGet(strFolderPath);
+            cnt++;
+        }while((*(strFolderPath) != '2' && *(strFolderPath+1) != ':') && cnt<10);
+    }
 
     if(cnt < 10){
         flErr = f_mkdir(strFolderPath);
@@ -714,7 +726,7 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     int cnt;
     char *strFilePath;
     
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
         *strFilePath = 0;
 
@@ -727,6 +739,10 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
                     SweepRobotTest_TestDataFileFolderMkdir();
                     break;
                 case FR_INVALID_NAME:
+                    SweepRobotTest_TestDataFilePathGet(strFilePath);
+                    flErr = f_open(file, strFilePath, fileOpenMode | FA_OPEN_ALWAYS);
+                    break;
+                case FR_NO_FILE:
                     SweepRobotTest_TestDataFilePathGet(strFilePath);
                     flErr = f_open(file, strFilePath, fileOpenMode | FA_OPEN_ALWAYS);
                     break;
@@ -791,7 +807,7 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
 
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 {
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
         dataSaveProc();
         f_close(file);
@@ -809,7 +825,7 @@ void SWRB_TestDataFileWriteSN(void)
     
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, swrbTestSerialNum);
 
-    if(gSwrbTestSDCardInsertState){
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileOpen(FA_WRITE);    /*|FA_OPEN_ALWAYS*/
         f_printf(file, "%s\r\n", swrbTestSerialNum);
         f_close(file);

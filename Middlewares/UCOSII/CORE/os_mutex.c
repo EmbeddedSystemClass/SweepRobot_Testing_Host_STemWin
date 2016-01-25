@@ -270,8 +270,8 @@ OS_EVENT  *OSMutexCreate (INT8U   prio,
 */
 //删除互斥型信号量
 //*pevent:互斥型信号量指针
-//opt:		删除方式选项
-//*err:		错误类型
+//opt:        删除方式选项
+//*err:        错误类型
 #if OS_MUTEX_DEL_EN > 0u
 OS_EVENT  *OSMutexDel (OS_EVENT  *pevent,
                        INT8U      opt,
@@ -741,4 +741,4 @@ static  void  OSMutex_RdyAtPrio (OS_TCB  *ptcb,
 
 
 #endif                                                     /* OS_MUTEX_EN                              */
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  

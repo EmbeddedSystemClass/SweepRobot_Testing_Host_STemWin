@@ -46,7 +46,7 @@
 #define OS_SCHED_LOCK_EN          1u   /* Include code for OSSchedLock() and OSSchedUnlock()           */
 
 #define OS_TICK_STEP_EN           1u   /* Enable tick stepping feature for uC/OS-View                  */
-#define OS_TICKS_PER_SEC       	1000u  /* 由于使用EMWIN所以此处设置为1000 也就是1ms Set the number of ticks in one second                        */
+#define OS_TICKS_PER_SEC           1000u  /* 由于使用EMWIN所以此处设置为1000 也就是1ms Set the number of ticks in one second                        */
 
 
                                        /* --------------------- TASK STACK SIZE ---------------------- */
@@ -139,4 +139,4 @@
 #define OS_TMR_CFG_TICKS_PER_SEC 10u   /*     Rate at which timer management task runs (Hz)            */
 
 #endif
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  

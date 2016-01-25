@@ -253,7 +253,7 @@ OS_FLAG_GRP  *OSFlagCreate (OS_FLAGS  flags,
         pgrp->OSFlagName     = (INT8U *)(void *)"?";
 #endif
         OS_EXIT_CRITICAL();
-        *perr                = OS_ERR_NONE;  				//返回无错误
+        *perr                = OS_ERR_NONE;                  //返回无错误
     } else {
         OS_EXIT_CRITICAL();
         *perr                = OS_ERR_FLAG_GRP_DEPLETED;  //返回错误
@@ -300,7 +300,7 @@ OS_FLAG_GRP  *OSFlagCreate (OS_FLAGS  flags,
 //删除信号量集
 //*pgrp:待删除的信号量集指针
 //opt:删除选项 OS_DEL_NO_PEND:当没有等待任务的时候删除
-//						 OS_DEL_ALWAYS: 不管有没有等待任务都直接删除
+//                         OS_DEL_ALWAYS: 不管有没有等待任务都直接删除
 #if OS_FLAG_DEL_EN > 0u
 OS_FLAG_GRP  *OSFlagDel (OS_FLAG_GRP  *pgrp,
                          INT8U         opt,
@@ -1237,4 +1237,4 @@ void  OS_FlagUnlink (OS_FLAG_NODE *pnode)
 #endif
 }
 #endif
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  

@@ -376,7 +376,7 @@ typedef  INT8U    OS_FLAGS;
 #endif
 
 #if OS_FLAGS_NBITS == 16u
-typedef  INT16U   OS_FLAGS;   						//信号量集所使用的输入信号量值列表
+typedef  INT16U   OS_FLAGS;                           //信号量集所使用的输入信号量值列表
 #endif
 
 #if OS_FLAGS_NBITS == 32u
@@ -1892,4 +1892,4 @@ void          OSCtxSw                 (void);
 #endif
 
 #endif
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  
