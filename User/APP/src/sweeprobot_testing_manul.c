@@ -548,7 +548,7 @@ static void SweepRobot_ManulTest_WheelFloatDataProc(void)
 
 static void SweepRobot_ManulTest_AshTrayDataProc(void)
 {
-    SweepRobot_ManulTest_SingleValueEqualCmpProc(0, SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS, GUI_LIGHTBLUE, GUI_WHITE);
+    SweepRobot_ManulTest_SingleValueEqualCmpProc(0, SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
     SweepRobot_ManulTest_SingleValueMinMaxCmpProc(50, 3000, SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS, SWRB_MANUL_TEST_OK_BK_COLOR, GUI_WHITE);
 }
 

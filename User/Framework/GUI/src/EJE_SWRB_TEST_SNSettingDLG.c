@@ -725,7 +725,7 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     FRESULT flErr;
     int cnt;
     char *strFilePath;
-    
+
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
         *strFilePath = 0;
@@ -767,44 +767,6 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     return flErr;
 }
 
-/*
-FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
-{
-    FRESULT flErr;
-    char *pathStr;
-    int cnt1,cnt2;
-
-    pathStr = mymalloc(SRAMIN, sizeof(char)*40);
-
-    cnt1 = 0;
-    do{
-        cnt2 = 0;
-        do{
-            *pathStr = 0;
-            SweepRobotTest_TestDataFilePathGet(pathStr);
-            cnt2++;
-        }while(*(pathStr) != '/') && cnt2<10);
-
-        flErr = f_open(file, pathStr, fileOpenMode);
-        if(flErr == FR_INVALID_NAME){
-            flErr = f_open(file, pathStr, fileOpenMode | FA_OPEN_ALWAYS);
-        }
-
-        cnt1++;
-    }while((flErr != FR_OK) && (cnt1 < 10));
-
-    myfree(SRAMIN, pathStr);
-
-    cnt1 = 0;
-    do{
-        flErr = f_lseek(file, file->fsize);
-        cnt1++;
-    }while(flErr!=FR_OK && cnt1<10);
-
-    return flErr;
-}
-*/
-
 void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 {
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
@@ -817,12 +779,12 @@ void SWRB_TestDataSaveToFile(void dataSaveProc(void))
 void SWRB_TestDataFileWriteSN(void)
 {
     char *swrbTestSerialNum;
-    
+
     swrbTestSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
     *swrbTestSerialNum = 0;
-    
+
     ListWheel_TestDataFileSerialNumberGen(swrbTestSerialNum);
-    
+
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, swrbTestSerialNum);
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
@@ -830,7 +792,7 @@ void SWRB_TestDataFileWriteSN(void)
         f_printf(file, "%s\r\n", swrbTestSerialNum);
         f_close(file);
     }
-    
+
     myfree(SRAMIN, swrbTestSerialNum);
 }
 

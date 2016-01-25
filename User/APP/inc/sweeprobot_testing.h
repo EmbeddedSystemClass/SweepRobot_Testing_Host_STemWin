@@ -30,6 +30,11 @@
 #include "swrbTestDriver.h"
 #include "swrbTestStepMotorDriver.h"
 
+enum CryptoMode{
+    DecryptMode,
+    EncryptMode,
+};
+
 enum SWRB_Test_State_Pos{
 
   SWRB_TEST_WHEEL_L_STATE_POS,
@@ -362,6 +367,7 @@ void SWRB_PCBTestWarningDLGSkipProc(void);
 void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag);
 void SWRB_TestDataFileWriteString(char *str);
 void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTypeDef *time);
+int SWRB_TestDataFileCrypt(enum CryptoMode mode);
 
 void SWRB_ValidTestTaskCntGet(void);
 

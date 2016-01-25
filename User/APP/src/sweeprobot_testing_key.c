@@ -42,7 +42,7 @@ static void SweepRobot_KeyTestProc(void)
 {
     u8 i;
     char *str;
-    
+
     SweepRobot_KeyTestProgbarDispProc();
 
     if(!key.validFlag){

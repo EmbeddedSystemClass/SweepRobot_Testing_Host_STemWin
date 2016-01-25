@@ -71,6 +71,16 @@ static void Button_Init(WM_HWIN hItem)
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 }
 
+static void Button_DecryptProc(void)
+{
+    SWRB_TestDataFileCrypt(DecryptMode);
+}
+
+static  void Button_SaveProc(void)
+{
+    
+}
+
 static void Button_ExitProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
@@ -98,14 +108,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     TREEVIEW_SetAutoScrollH(hItem, ENABLE);
     TREEVIEW_SetAutoScrollV(hItem, ENABLE);
     hTreeItemCur = TREEVIEW_GetItem(hItem, 0, TREEVIEW_GET_LAST);
-    hTreeItemNew = TREEVIEW_ITEM_Create(TREEVIEW_ITEM_TYPE_NODE, "0:\\", 0);
-    TREEVIEW_AttachItem(hItem, hTreeItemNew, hTreeItemCur, TREEVIEW_INSERT_BELOW);
-    hTreeItemCur = TREEVIEW_GetItem(hItem, 0, TREEVIEW_GET_LAST);
-    hTreeItemNew = TREEVIEW_ITEM_Create(TREEVIEW_ITEM_TYPE_NODE, "1:\\", 0);
+    hTreeItemNew = TREEVIEW_ITEM_Create(TREEVIEW_ITEM_TYPE_NODE, "2:\\", 0);
     TREEVIEW_AttachItem(hItem, hTreeItemNew, hTreeItemCur, TREEVIEW_INSERT_BELOW);
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_DECRYPTO_MULTIEDIT_MAIN);
-    MULTIEDIT_SetText(hItem, "Multiedit");
+    MULTIEDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+    MULTIEDIT_SetText(hItem, "");
     MULTIEDIT_SetAutoScrollH(hItem, ENABLE);
     MULTIEDIT_SetAutoScrollV(hItem, ENABLE);
 
@@ -156,6 +164,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
+        Button_DecryptProc();
         break;
       }
       break;

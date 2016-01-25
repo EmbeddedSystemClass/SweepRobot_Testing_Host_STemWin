@@ -21,13 +21,6 @@
 extern USBH_HOST  USB_Host;
 extern USB_OTG_CORE_HANDLE  USB_OTG_Core;
 
-enum CryptoMode{
-
-    DecryptMode,
-    EncryptMode,
-};
-static char *gStrEncrypt;
-
 u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
@@ -59,7 +52,7 @@ static u8 gkeyCodeGetFinishFlag = 0;
 static RTC_TimeTypeDef rtcTime;
 static RTC_DateTypeDef rtcDate;
 
-//static WM_MESSAGE *pWmMsg;
+static char *gStrCrypt;
 
 static void Start_Task(void *pdata);
 #ifdef _USE_SELF_TESTING
@@ -76,7 +69,6 @@ static void Rtc_Task(void *pdata);
 static void SWRB_TestCtrlTask(void *pdata);
 static void SweepRobot_PCBTestCheckboxTextReset(void);
 static void SweepRobotTest_PCBTestInitProc(void);
-static int SWRB_TestDataFileCrypt(enum CryptoMode mode);
 static void SWRB_TestFinishProc(void);
 static void SWRB_PCBTestWarningDlgHide(void);
 static void SweepRobot_ManulTestCtrlReset(void);
@@ -231,7 +223,7 @@ void USB_Host_Task(void *pdata)
     while(1)
     {
         USBH_Process(&USB_OTG_Core, &USB_Host);
-        OSTimeDlyHMSM(0,0,0,20);
+        OSTimeDlyHMSM(0,0,0,50);
     }
 }
 
@@ -357,47 +349,47 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
 {
     FRESULT flErr;
     int i,cnt;
-    int fileLength, leftFileLength;
-    char *str;
+    int fileLength;
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+        SWRB_TestDataFileOpen(FA_READ);
         fileLength = f_size(file);
+        flErr = f_close(file);
+
+        if(mode == DecryptMode){
+            MultiEdit_Set_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, "Test Data Decrypting...");
+        }
 
         if(fileLength>>3){
-            leftFileLength = fileLength%8;
-
-            str = mymalloc(SRAMIN, sizeof(char)*(8-leftFileLength));
-            mymemset(str, ' ', sizeof(char)*(8-leftFileLength));
-            SWRB_TestDataFileWriteString(str);
-            myfree(SRAMIN, str);
-
             flErr = SWRB_TestDataFileOpen(FA_READ|FA_WRITE);
-
-            gStrEncrypt = mymalloc(SRAMIN, sizeof(char)*8);
+            
+            gStrCrypt = mymalloc(SRAMIN, sizeof(char)*10);
 
             for(i=0;i<(fileLength>>3);i++){
                 cnt = 0;
                 do{
-                    f_lseek(file, 8*i);
-                    *gStrEncrypt = 0;
-                    flErr = f_read(file, gStrEncrypt, 8, &br);
+                    flErr = f_lseek(file, 8*i);
+                    mymemset(gStrCrypt, 0, 10);
+                    flErr = f_read(file, gStrCrypt, 8, &br);
                     cnt++;
                 }while(flErr!=FR_OK && cnt < 10);
 
                 if(mode == EncryptMode){
-                    SWRB_StrEncrypt(gStrEncrypt);
+                    SWRB_StrEncrypt(gStrCrypt);
+
+                    cnt = 0;
+                    do{
+                        f_lseek(file, 8*i);
+                        flErr = f_write(file, gStrCrypt, 8, &bw);
+
+                        cnt++;
+                    }while(flErr!=FR_OK && cnt<10);
                 }else{
-                    SWRB_StrDecrypt(gStrEncrypt);
+                    SWRB_StrDecrypt(gStrCrypt);
+                    MultiEdit_Add_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, gStrCrypt);
                 }
-
-                cnt = 0;
-                do{
-                    f_lseek(file, 8*i);
-                    flErr = f_write(file, gStrEncrypt, 8, &bw);
-
-                    cnt++;
-                }while(flErr!=FR_OK && cnt<10);
             }
+            myfree(SRAMIN, gStrCrypt);
         }else{
             cnt = 0;
             do{
@@ -406,7 +398,6 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
             }while(flErr != FR_OK && cnt < 10);
             return -1;
         }
-        myfree(SRAMIN, gStrEncrypt);
         cnt = 0;
         do{
             flErr = f_close(file);
@@ -419,7 +410,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
     }
 }
 
-static void SWRB_TestDataFileEncryptoProc(FunctionalState encryptoState)
+static void SWRB_TestDataFileCryptoProc(FunctionalState encryptoState)
 {
     int i;
 
@@ -1038,7 +1029,7 @@ static void SWRB_PCBTestFinishProc(void)
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileEncryptoProc(ENABLE);
+        SWRB_TestDataFileCryptoProc(ENABLE);
 
         SWRB_TestDataFileWriteString(str);
     }
@@ -1053,9 +1044,15 @@ static void SWRB_PCBTestFinishProc(void)
 
     SWRB_ValidTestTaskCntGet();
 
+#ifndef _USE_SN_INC
+    SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
+#else
     if(gSwrbTestValidTaskCnt == SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)){
         SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
     }
+#endif
+    
+    
     gSwrbTestValidTaskCnt = 0;
 }
 
@@ -1065,7 +1062,7 @@ static void SWRB_ManulTestFinishProc(void)
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileEncryptoProc(DISABLE);
+        SWRB_TestDataFileCryptoProc(DISABLE);
 
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
@@ -1581,17 +1578,13 @@ void SweepRobot_ManulWheelBtnProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
         printf("T->ON\r\n");
-        GUI_Delay(1);
         printf("WHL->DIR=1\r\n");
-        GUI_Delay(1);
         printf("LW->SPD=25\r\n");
-        GUI_Delay(1);
         printf("RW->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_LIGHTBLUE);
     }else{
         printf("LW->SPD=0\r\n");
-        GUI_Delay(1);
         printf("RW->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_WHEEL, GUI_GRAY);
@@ -1608,19 +1601,14 @@ void SweepRobot_ManulBrushBtnProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_WHEEL]){
         printf("T->ON\r\n");
-        GUI_Delay(1);
         printf("LB->SPD=30\r\n");
-        GUI_Delay(1);
         printf("RB->SPD=30\r\n");
-        GUI_Delay(1);
         printf("MB->SPD=40\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_LIGHTBLUE);
     }else{
         printf("LB->SPD=0\r\n");
-        GUI_Delay(1);
         printf("RB->SPD=0\r\n");
-        GUI_Delay(1);
         printf("MB->SPD=0\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_WHEEL] = 1;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BRUSH, GUI_GRAY);
@@ -1637,7 +1625,6 @@ void SweepRobot_ManulFanBtnProc(void)
 
     if(aSwrbManulTestState[SWRB_TEST_STATE_FAN]){
         printf("T->ON\r\n");
-        GUI_Delay(1);
         printf("FAN->SPD=25\r\n");
         aSwrbManulTestState[SWRB_TEST_STATE_FAN] = 0;
         Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_FAN, GUI_LIGHTBLUE);
@@ -1674,7 +1661,6 @@ void SweepRobot_ManulBuzzerBtnProc(void)
     switch(aSwrbManulTestState[SWRB_TEST_STATE_BUZZER]){
         case 1:
             printf("T->ON\r\n");
-            GUI_Delay(1);
             printf("BZR->ON=1\r\n");
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_BUZZER, GUI_LIGHTRED);
             break;
@@ -1707,7 +1693,6 @@ void SweepRobot_ManulRGBLEDBtnProc(void)
     switch(aSwrbManulTestState[SWRB_TEST_STATE_RGB_LED]){
         case 1:
             printf("T->ON\r\n");
-            GUI_Delay(1);
             printf("RGB->ON=%d\r\n", RGB_LED_RED);
             Button_Set_BkColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RGB_LED, GUI_LIGHTRED);
             break;
