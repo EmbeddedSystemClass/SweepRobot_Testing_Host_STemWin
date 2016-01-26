@@ -3,7 +3,7 @@
 #include "delay.h"
 #include "usart.h"
 
-#define USB_HOST_PWRCTRL     PAout(15)    //PA15
+#define USB_HOST_PWRCTRL     PAout(15)
 
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 {
@@ -11,14 +11,13 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
     RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_OTG_FS, ENABLE);
-    //GPIOA11,A12…Ë÷√
+
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
-
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
@@ -56,7 +55,7 @@ void  USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev)
 
 void USB_OTG_BSP_uDelay (const uint32_t usec)
 {
-       delay_us(usec);
+    delay_us(usec);
 }
 
 void USB_OTG_BSP_mDelay (const uint32_t msec)

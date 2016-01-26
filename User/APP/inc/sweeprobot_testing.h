@@ -351,6 +351,7 @@ extern enum SWRB_TEST_SET_SELECT gSwrbTestSetSelectFlag;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 extern FunctionalState gSwrbTestSDCardInsertState;
 extern FunctionalState gSwrbTestUDiskInsertState;
+extern FunctionalState gSwrbTestUDiskInsertCmpSkipFlag;
 extern u32 gSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;

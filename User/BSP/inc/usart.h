@@ -12,7 +12,7 @@
 extern char USART_RX_BUF[USART_RX_LEN];
 extern u16 USART_RX_STA;
 
-void uart_init(u32 bound);
+void UART_Init(u32 bound);
 s8 USART_RxArrayToString(char *src_array, char *dest_str);
 s8 USART_RxArrayToNumber(char *src_array, int *dest_num, int arrayLenth);
 char* USART_NumberToString(int *src_num, char *dest_str);

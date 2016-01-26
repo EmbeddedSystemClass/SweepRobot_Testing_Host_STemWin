@@ -50,6 +50,7 @@
 */
 
 static char* gSetDlgLoginPasswd = "123";
+static char* gUdiskInsertCmpSkipPasswd = "456";
 static char* gDecryptDlgLoginPasswd  = "0549832761";
 static char* gSLAMDlgLoginPasswd = "167238";
 static char* gStepMotorLoginPasswd = "054983";
@@ -94,6 +95,18 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 static void Button_Init(WM_HWIN hItem)
 {
     BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+}
+
+static void Login_PasswdClearProc(void)
+{
+    WM_HWIN hItem;
+
+    hItem = WM_GetDialogItem(hWin_SWRB_LOGIN, ID_LOGIN_EDIT_PASSWORD);
+    do{
+        EDIT_AddKey(hItem, '\b');
+        strPasswdLen--;
+        strPasswd[strPasswdLen] = 0;
+    }while(strPasswdLen);
 }
 
 static void Button_OKProc(void)
@@ -148,9 +161,18 @@ static void Button_OKProc(void)
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_RELAY);
+        }else if(!(strcmp(strPasswd,gUdiskInsertCmpSkipPasswd))){
+            if(gSwrbTestUDiskInsertCmpSkipFlag){
+                gSwrbTestUDiskInsertCmpSkipFlag = DISABLE;
+            }else{
+                gSwrbTestUDiskInsertCmpSkipFlag = ENABLE;
+            }
+            WM_HideWin(hWin_SWRB_LOGIN);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
+
+        Login_PasswdClearProc();
     }else if ( (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET) && (gSwrbTestSetSelectFlag == SWRB_TEST_SET_SELECT_TIME) ){
         if(!(strcmp(strPasswd,gSetTimeConfirmPasswd))){
             SWRB_TimeSettingsChangeConfirmProc();
@@ -358,14 +380,6 @@ WM_HWIN CreateLoginDLG(void) {
 
     hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 100, 90);
     return hWin;
-}
-
-void SweepRobotTest_LoginDlgPasswdClear(void)
-{
-    do{
-        strPasswdLen--;
-        strPasswd[strPasswdLen] = 0;
-    }while(strPasswdLen);
 }
 
 /*************************** End of file ****************************/

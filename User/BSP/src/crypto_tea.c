@@ -5,7 +5,7 @@
 static const uint32_t DELTA=0x9e3779b9;
 static const uint32_t TEAKey[4] = {0x95a8882d, 0x9d2cc114, 0x815aa0ce, 0xa1c489f8};
 
-void SWRB_StrEncrypt(char * buffer)
+void SWRB_ByteEncrypt(char * buffer)
 {
     uint32_t datablock[2];
 
@@ -24,7 +24,7 @@ void SWRB_StrEncrypt(char * buffer)
     buffer[7] = (char) ((datablock[1]) & 0xFF);
 }
 
-void SWRB_StrDecrypt(char * buffer)
+void SWRB_ByteDecrypt(char * buffer)
 {
     uint32_t datablock[2];
 

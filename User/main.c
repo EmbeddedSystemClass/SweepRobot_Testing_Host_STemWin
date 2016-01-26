@@ -17,7 +17,7 @@ u8 USH_User_App(void)
     gSwrbTestUDiskInsertState = ENABLE;
     Text_Set_Color(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, GUI_BLUE);
     Text_Set_Text(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, "UDisk Inserted");
-    
+
     while(HCD_IsDeviceConnected(&USB_OTG_Core)){
         LED1=!LED1;
         OSTimeDlyHMSM(0,0,0,200);
@@ -32,6 +32,8 @@ u8 USH_User_App(void)
 
 static void SWRBTest_CtrlPanelInit(void)
 {
+    UART_Init(115200);
+    USER_RTC_Init();
     LED_Init();
     KEY_Init();
     TFTLCD_Init();
@@ -55,6 +57,8 @@ static int SWRBTest_StorageInit(void)
         gSwrbTestSDCardInsertState = ENABLE;
     }
 
+    USBH_Init(&USB_OTG_Core,USB_OTG_FS_CORE_ID,&USB_Host,&USBH_MSC_cb,&USR_Callbacks);
+
     W25QXX_Init();
     FSMC_SRAM_Init();
 
@@ -69,8 +73,6 @@ static int SWRBTest_StorageInit(void)
     f_mount(fs[0],"0:",1);
     f_mount(fs[1],"1:",1);
     f_mount(fs[2],"2:",1);
-    
-    USBH_Init(&USB_OTG_Core,USB_OTG_FS_CORE_ID,&USB_Host,&USBH_MSC_cb,&USR_Callbacks);
 
     return 0;
 }
@@ -79,8 +81,7 @@ int main(void)
 {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     delay_init(168);
-    uart_init(115200);
-    USER_RTC_Init();
+
     SWRBTest_CtrlPanelInit();
 
     if(SWRBTest_StorageInit()){

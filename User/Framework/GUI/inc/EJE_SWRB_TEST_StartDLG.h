@@ -26,6 +26,7 @@
 */
 
 extern WM_HWIN hWin_SWRB_START;
+extern WM_HWIN hWin_SWRB_START_WARNING;
 
 /*********************************************************************
 *
@@ -46,6 +47,7 @@ extern WM_HWIN hWin_SWRB_START;
 */
 
 WM_HWIN CreateEJE_SWRB_TEST_StartDLG(void);
+WM_HWIN CreateEJE_SWRB_TEST_StartWarningDLG(void);
 
 #endif
 /*************************** End of file ****************************/

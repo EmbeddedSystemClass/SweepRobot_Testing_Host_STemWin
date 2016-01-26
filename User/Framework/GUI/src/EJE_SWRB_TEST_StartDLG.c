@@ -34,6 +34,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmDibeaLogo_300x64;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPCBTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPSTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSetCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmInsertUDiskCHN;
 
 /*********************************************************************
 *
@@ -61,6 +62,11 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
 
+static const GUI_WIDGET_CREATE_INFO _aDialogStartWarning[] = {
+    { WINDOW_CreateIndirect, "Window", ID_START_WINDOW_WARNING, 100, 205, 600, 180, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "Please Insert Udisk", ID_START_BUTTON_WARNING_INDICATE, 60, 20, 480, 70, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "OK", ID_START_BUTTON_WARNING_OK, 225, 110, 150, 60, 0, 0x0, 0 },
+};
 /*********************************************************************
 *
 *       Static code
@@ -74,6 +80,11 @@ static void Button_Init(WM_HWIN hItem)
 {
 //    BUTTON_SetSkinClassic(hItem);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_3D);
+}
+
+static void Button_WarningOkProc(void)
+{
+    GUI_EndDialog(hWin_SWRB_START_WARNING, 0);
 }
 
 /*********************************************************************
@@ -237,6 +248,50 @@ static void _cbDialog(WM_MESSAGE * pMsg)
     }
 }
 
+static void _cbStartWarningDialog(WM_MESSAGE * pMsg)
+{
+    WM_HWIN      hItem;
+    int          NCode;
+    int          Id;
+
+    switch (pMsg->MsgId) {
+        case WM_INIT_DIALOG:
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_WARNING_INDICATE);
+            Button_Set_BkColor(pMsg->hWin, ID_START_BUTTON_WARNING_INDICATE, GUI_WHITE);
+            BUTTON_SetSkinClassic(hItem);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
+            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
+//            BUTTON_SetText(hItem, "Please Insert Udisk!");
+            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_WARNING_INDICATE, &_bmInsertUDiskCHN, 164, 19);
+            BUTTON_SetFocussable(hItem, DISABLE);
+        
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_WARNING_OK);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "OK");
+            
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id) {
+                case ID_START_BUTTON_WARNING_OK:
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            Button_WarningOkProc();
+                            break;
+                    }
+                    break;
+            }
+            break;
+        default:
+            WM_DefaultProc(pMsg);
+            break;
+    }
+}
+
 /*********************************************************************
 *
 *       Public data
@@ -245,6 +300,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
 */
 
 WM_HWIN hWin_SWRB_START;
+WM_HWIN hWin_SWRB_START_WARNING;
 
 /*********************************************************************
 *
@@ -265,4 +321,11 @@ WM_HWIN CreateEJE_SWRB_TEST_StartDLG(void)
     return hWin;
 }
 
+WM_HWIN CreateEJE_SWRB_TEST_StartWarningDLG(void)
+{
+    WM_HWIN hWin;
+
+    hWin = GUI_CreateDialogBox(_aDialogStartWarning, GUI_COUNTOF(_aDialogStartWarning), _cbStartWarningDialog, hWin_SWRB_START, 0, 0);
+    return hWin;
+}
 /*************************** End of file ****************************/

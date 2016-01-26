@@ -33,6 +33,7 @@ enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
 
 FunctionalState gSwrbTestSDCardInsertState = DISABLE;
 FunctionalState gSwrbTestUDiskInsertState = DISABLE;
+FunctionalState gSwrbTestUDiskInsertCmpSkipFlag = DISABLE;
 u32 gSwrbTestStateMap = 0;
 u16 gSwrbTestTaskRunCnt = 0;
 u32 gSwrbTestTotalCnt = 0;
@@ -224,7 +225,7 @@ void USB_Host_Task(void *pdata)
     while(1)
     {
         USBH_Process(&USB_OTG_Core, &USB_Host);
-        OSTimeDlyHMSM(0,0,0,50);
+        OSTimeDlyHMSM(0,0,0,20);
     }
 }
 
@@ -363,7 +364,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
 
         if(fileLength>>3){
             flErr = SWRB_TestDataFileOpen(FA_READ|FA_WRITE);
-            
+
             gStrCrypt = mymalloc(SRAMIN, sizeof(char)*10);
 
             for(i=0;i<(fileLength>>3);i++){
@@ -376,7 +377,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
                 }while(flErr!=FR_OK && cnt < 10);
 
                 if(mode == EncryptMode){
-                    SWRB_StrEncrypt(gStrCrypt);
+                    SWRB_ByteEncrypt(gStrCrypt);
 
                     cnt = 0;
                     do{
@@ -386,7 +387,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
                         cnt++;
                     }while(flErr!=FR_OK && cnt<10);
                 }else{
-                    SWRB_StrDecrypt(gStrCrypt);
+                    SWRB_ByteDecrypt(gStrCrypt);
                     MultiEdit_Add_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, gStrCrypt);
                 }
             }
@@ -1051,7 +1052,7 @@ static void SWRB_PCBTestFinishProc(void)
         SWRB_TestCurSNInc();
     }
 #endif
-    
+
     gSwrbTestValidTaskCnt = 0;
 }
 
@@ -1100,6 +1101,10 @@ static void SWRB_TestFinishProc(void)
 
 void SweepRobot_StartDlgPCBBtnClickProc(void)
 {
+#ifdef  _USE_USB_EN_CMP
+    if(gSwrbTestUDiskInsertState || gSwrbTestUDiskInsertCmpSkipFlag){
+#endif
+    
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_PCB;
 
     SWRB_TestCurSNDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
@@ -1111,6 +1116,12 @@ void SweepRobot_StartDlgPCBBtnClickProc(void)
 
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_PCBTEST);
+
+#ifdef  _USE_USB_EN_CMP
+    }else{
+        hWin_SWRB_START_WARNING = CreateEJE_SWRB_TEST_StartWarningDLG();
+    }
+#endif
 }
 
 #ifdef _USE_POWER_STATION_DIALOG
@@ -1126,6 +1137,10 @@ void SweepRobot_StartDlgPowerStationBtnClickPorc(void)
 
 void SweepRobot_StartDlgManulBtnClickProc(void)
 {
+#ifdef  _USE_USB_EN_CMP
+    if(gSwrbTestUDiskInsertState || gSwrbTestUDiskInsertCmpSkipFlag){
+#endif
+
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_MANUL;
 
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
@@ -1138,6 +1153,12 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
 
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_MANUL);
+    
+#ifdef  _USE_USB_EN_CMP
+    }else{
+        hWin_SWRB_START_WARNING = CreateEJE_SWRB_TEST_StartWarningDLG();
+    }
+#endif
 }
 
 void SweepRobot_StartDlgSetBtnClickProc(void)

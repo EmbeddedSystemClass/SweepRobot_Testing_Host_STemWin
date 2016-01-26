@@ -7,13 +7,13 @@
 
 static u8 swrbChargeTestStateMap = 0;
 
-#define SWRB_TEST_CHARGE_CUR_POS            0
-#define SWRB_TEST_CHARGE_VOL_POS            1
-#define SWRB_TEST_CHARGE_24V_POS            2
+#define SWRB_TEST_CHARGE_CUR_POS                0
+#define SWRB_TEST_CHARGE_VOL_POS                1
+#define SWRB_TEST_CHARGE_24V_POS                2
 
-#define SWRB_TEST_FAULT_CHARGE_CUR_MASK     0x01
-#define SWRB_TEST_FAULT_CHARGE_VOL_MASK     0x02
-#define SWRB_TEST_FAULT_CHARGE_24V_MASK     0x04
+#define SWRB_TEST_FAULT_CHARGE_CUR_MASK         0x01
+#define SWRB_TEST_FAULT_CHARGE_VOL_MASK         0x02
+#define SWRB_TEST_FAULT_CHARGE_24V_MASK         0x04
 
 #define SWRB_TEST_CHARGE_CUR_HIGH_THRESHOLD     100
 #define SWRB_TEST_CHARGE_CUR_LOW_THRESHOLD      20
@@ -201,7 +201,7 @@ static void SweepRobot_ChargeTestProc(void)
             str = "CHARGE OK\r\n";
             SWRB_TestDataFileWriteString(str);
 
-    //        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
+//            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
             Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_CHARGE, GUI_BLUE);
             Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE, "CHARGE OK");
             Edit_Clear();

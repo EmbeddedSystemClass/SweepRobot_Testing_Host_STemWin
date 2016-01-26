@@ -43,7 +43,7 @@ static void USART3_ISR(void);
 char USART_RX_BUF[USART_RX_LEN];
 u16 USART_RX_STA=0;
 
-void uart_init(u32 bound){
+void UART_Init(u32 bound){
    //GPIO∂Àø⁄…Ë÷√
   GPIO_InitTypeDef GPIO_InitStructure;
   USART_InitTypeDef USART_InitStructure;
