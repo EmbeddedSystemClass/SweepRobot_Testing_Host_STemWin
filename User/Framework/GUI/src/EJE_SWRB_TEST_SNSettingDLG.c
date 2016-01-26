@@ -651,7 +651,7 @@ void SWRB_ListWheelRTCDateUpdate(WM_HWIN hWin, int idYear, int idMonth, int idDa
     LISTWHEEL_SetSel(hItem, lwItemIndex);
 }
 
-void SWRB_ListWheelSNInc(WM_HWIN hWin)
+void SWRB_TestCurSNInc(void)
 {
     WM_HWIN hItem;
     int     lwItemIndex;
@@ -662,31 +662,31 @@ void SWRB_ListWheelSNInc(WM_HWIN hWin)
     strSN2 = mymalloc(SRAMIN, sizeof(char)*3);
     strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
 
-    ListWheel_GetText(hWin, ID_SNSET_LISTWHEEL_SN3, strSN3);
+    ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, strSN3);
     if(*strSN3 != '9'){
-        hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN3);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3);
         lwItemIndex = LISTWHEEL_GetPos(hItem);
         LISTWHEEL_SetPos(hItem, lwItemIndex+1);
         LISTWHEEL_SetSel(hItem, lwItemIndex+1);
     }else{
-        hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN3);
+        hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3);
         LISTWHEEL_SetPos(hItem, 0);
         LISTWHEEL_SetSel(hItem, 0);
 
-        ListWheel_GetText(hWin, ID_SNSET_LISTWHEEL_SN2, strSN2);
+        ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, strSN2);
         if(*strSN2 != '9'){
-            hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN2);
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2);
             lwItemIndex = LISTWHEEL_GetPos(hItem);
             LISTWHEEL_SetPos(hItem, lwItemIndex+1);
             LISTWHEEL_SetSel(hItem, lwItemIndex+1);
         }else{
-            hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN2);
+            hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2);
             LISTWHEEL_SetPos(hItem, 0);
             LISTWHEEL_SetSel(hItem, 0);
 
-            ListWheel_GetText(hWin, ID_SNSET_LISTWHEEL_SN1, strSN1);
+            ListWheel_GetText(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, strSN1);
             if(*strSN1 != '9'){
-                hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN1);
+                hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1);
                 lwItemIndex = LISTWHEEL_GetPos(hItem);
                 LISTWHEEL_SetPos(hItem, lwItemIndex+1);
                 LISTWHEEL_SetSel(hItem, lwItemIndex+1);
@@ -694,7 +694,7 @@ void SWRB_ListWheelSNInc(WM_HWIN hWin)
                 str = "SerialNumber is larger than 999, return to 0\r\n";
                 SWRB_TestDataFileWriteString(str);
                 MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-                hItem = WM_GetDialogItem(hWin, ID_SNSET_LISTWHEEL_SN1);
+                hItem = WM_GetDialogItem(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1);
                 LISTWHEEL_SetPos(hItem, 0);
                 LISTWHEEL_SetSel(hItem, 0);
             }
@@ -712,7 +712,8 @@ FRESULT SWRB_TestDataFileCreate(void)
     FRESULT flErr;
     char *strFilePath;
 
-    strFilePath = mymalloc(SRAMIN, sizeof(char)*40);
+    strFilePath = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(strFilePath, 0, sizeof(char)*50);
 
     SweepRobotTest_TestDataFileFolderMkdir();
     SweepRobotTest_TestDataFilePathGet(strFilePath);
@@ -859,6 +860,22 @@ void SWRB_TestDataFilePathDisp(WM_HWIN hWin, int id)
     EDIT_SetText(hItem, str);
 
     myfree(SRAMIN, str);
+}
+
+void SWRB_TestCurSNDisp(WM_HWIN hWin, int idEdit)
+{
+    WM_HWIN hItem;
+    char *strSerialNum;
+
+    strSerialNum = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(strSerialNum, 0, sizeof(char)*50);
+
+    ListWheel_TestDataFileSerialNumberGen(strSerialNum);
+
+    hItem = WM_GetDialogItem(hWin, idEdit);
+    EDIT_SetText(hItem, strSerialNum);
+
+    myfree(SRAMIN, strSerialNum);
 }
 
 /*************************** End of file ****************************/

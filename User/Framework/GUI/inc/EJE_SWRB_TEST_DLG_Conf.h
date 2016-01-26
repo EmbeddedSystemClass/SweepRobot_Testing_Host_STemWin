@@ -1212,6 +1212,7 @@ void MultiEdit_Add_Text(WM_HWIN hWin, int multiEditId, char *s);
 void MultiEdit_Set_Text_Color(GUI_COLOR multieditTextColor);
 void WM_Set_Y_Size(WM_HWIN hWin, int id, int ySize);
 void SWRB_TestDataFilePathDisp(WM_HWIN hWin, int id);
+void SWRB_TestCurSNDisp(WM_HWIN hWin, int idEdit);
 void SWRB_WM_EnableWindow(WM_HWIN hWin, int id);
 void SWRB_WM_DisableWindow(WM_HWIN hWin, int id);
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id);

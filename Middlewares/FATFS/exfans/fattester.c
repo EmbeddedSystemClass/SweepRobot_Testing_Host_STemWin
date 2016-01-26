@@ -81,14 +81,7 @@ u8 mf_write(u8*dat,u16 len)
 {
     u8 res;
 
-    printf("\r\nBegin Write file...\r\n");
-    printf("Write data len:%d\r\n",len);
     res=f_write(file,dat,len,&bw);
-    if(res)
-    {
-        printf("Write Error:%d\r\n",res);
-    }else printf("Writed data len:%d\r\n",bw);
-    printf("Write data over.\r\n");
     return res;
 }
 
@@ -270,7 +263,7 @@ u8 mf_unlink(u8 *pname)
     return  f_unlink((const TCHAR *)pname);
 }
 
-//修改文件/目录名字(如果目录不同,还可以移动文件哦!)
+//修改文件/目录名字(如果目录不同,还可以移动文件)
 //oldname:之前的名字
 //newname:新名字
 //返回值:执行结果

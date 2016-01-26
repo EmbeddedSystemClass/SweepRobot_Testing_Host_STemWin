@@ -371,9 +371,9 @@
             <vShortWch>0</vShortWch>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>_USE_ACTUAL_POS_DETECT_KEY, _SHOW_SLAM_DLG,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
+              <Define>USE_USB_OTG_FS,_USE_ACTUAL_POS_DETECT_KEY, _SHOW_SLAM_DLG,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\User;..\..\User\Framework\GUI\inc;..\..\User\APP\inc;..\..\User\Framework\GUI\res\inc</IncludePath>
+              <IncludePath>..\..\User\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\User;..\..\User\Framework\GUI\inc;..\..\User\APP\inc;..\..\User\Framework\GUI\res\inc;..\..\User\APP\udisk\inc;..\..\Libraries\STM32_USB_HOST_Library\Core\inc;..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -413,6 +413,9 @@
         </TargetArmAds>
       </TargetOption>
       <Groups>
+        <Group>
+          <GroupName>Doc</GroupName>
+        </Group>
         <Group>
           <GroupName>Bsp</GroupName>
           <Files>
@@ -643,16 +646,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Doc</GroupName>
-          <Files>
-            <File>
-              <FileName>Prototype of GUI.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Prototype of GUI.txt</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
@@ -721,14 +714,14 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SteerMotorTestDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
-            </File>
-            <File>
               <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1010,7 +1003,72 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MDK_ARM\core</GroupName>
+          <GroupName>Libraries\usb_host\class</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_msc_bot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_bot.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_scsi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_scsi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\core</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_hcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_hcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_stdreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_stdreq.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\driver</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd_int.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\cmsis</GroupName>
           <Files>
             <File>
               <FileName>core_cm4.h</FileName>
@@ -1311,6 +1369,21 @@
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_charge.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User\app\udisk</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usb_bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_usr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usbh_usr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1744,6 +1817,9 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>Doc</GroupName>
+        </Group>
+        <Group>
           <GroupName>Bsp</GroupName>
           <Files>
             <File>
@@ -1879,16 +1955,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Doc</GroupName>
-          <Files>
-            <File>
-              <FileName>Prototype of GUI.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Prototype of GUI.txt</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
@@ -1957,14 +2023,14 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SteerMotorTestDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
-            </File>
-            <File>
               <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2199,7 +2265,72 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MDK_ARM\core</GroupName>
+          <GroupName>Libraries\usb_host\class</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_msc_bot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_bot.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_scsi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_scsi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\core</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_hcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_hcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_stdreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_stdreq.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\driver</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd_int.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\cmsis</GroupName>
           <Files>
             <File>
               <FileName>core_cm4.h</FileName>
@@ -2500,6 +2631,21 @@
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\APP\src\sweeprobot_testing_charge.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User\app\udisk</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usb_bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_usr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usbh_usr.c</FilePath>
             </File>
           </Files>
         </Group>

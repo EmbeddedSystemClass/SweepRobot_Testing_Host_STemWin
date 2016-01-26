@@ -3,11 +3,8 @@
 #include "delay.h"
 #include "usart.h"
 
-//USB主机电源控制口
 #define USB_HOST_PWRCTRL     PAout(15)    //PA15
 
-//USB OTG 底层IO初始化
-//pdev:USB OTG内核结构体指针
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
@@ -33,8 +30,7 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
     GPIO_PinAFConfig(GPIOA,GPIO_PinSource11,GPIO_AF_OTG_FS);
     GPIO_PinAFConfig(GPIOA,GPIO_PinSource12,GPIO_AF_OTG_FS);
 }
-//USB OTG 中断设置,开启USB FS中断
-//pdev:USB OTG内核结构体指针
+
 void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 {
     NVIC_InitTypeDef   NVIC_InitStructure;
@@ -45,32 +41,24 @@ void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
   NVIC_Init(&NVIC_InitStructure);
 
 }
-//USB OTG 中断设置,开启USB FS中断
-//pdev:USB OTG内核结构体指针
+
 void USB_OTG_BSP_DisableInterrupt(void)
 {
 }
 
-//pdev:USB OTG内核结构体指针
-//state:0,断电;1,上电
 void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev, uint8_t state)
 {
 }
 
-//pdev:USB OTG内核结构体指针
 void  USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev)
 {
 }
 
-//USB_OTG us级延时函数
-//usec:要延时的us数.
 void USB_OTG_BSP_uDelay (const uint32_t usec)
 {
        delay_us(usec);
 }
 
-//USB_OTG ms级延时函数
-//msec:要延时的ms数.
 void USB_OTG_BSP_mDelay (const uint32_t msec)
 {
     delay_ms(msec);

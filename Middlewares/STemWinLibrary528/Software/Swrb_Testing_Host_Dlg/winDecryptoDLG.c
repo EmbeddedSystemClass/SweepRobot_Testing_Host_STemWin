@@ -29,13 +29,14 @@
 *
 **********************************************************************
 */
-#define ID_WINDOW_0 (GUI_ID_USER + 0x00)
-#define ID_TREEVIEW_0 (GUI_ID_USER + 0x01)
-#define ID_MULTIEDIT_0 (GUI_ID_USER + 0x02)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x03)
-#define ID_BUTTON_1 (GUI_ID_USER + 0x04)
-#define ID_BUTTON_2 (GUI_ID_USER + 0x05)
-#define ID_BUTTON_3 (GUI_ID_USER + 0x06)
+#define ID_WINDOW_0    (GUI_ID_USER + 0x00)
+#define ID_TREEVIEW_0    (GUI_ID_USER + 0x01)
+#define ID_MULTIEDIT_0    (GUI_ID_USER + 0x02)
+#define ID_BUTTON_0    (GUI_ID_USER + 0x03)
+#define ID_BUTTON_1    (GUI_ID_USER + 0x04)
+#define ID_BUTTON_2    (GUI_ID_USER + 0x05)
+#define ID_BUTTON_3    (GUI_ID_USER + 0x06)
+#define ID_EDIT_0    (GUI_ID_USER + 0x07)
 
 
 // USER START (Optionally insert additional defines)
@@ -58,11 +59,12 @@
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "winDecrypto", ID_WINDOW_0, 0, 0, 800, 480, 0, 0x0, 0 },
   { TREEVIEW_CreateIndirect, "tviewFilesystem", ID_TREEVIEW_0, 0, 0, 260, 480, 0, 0x0, 0 },
-  { MULTIEDIT_CreateIndirect, "mlteditDisplay", ID_MULTIEDIT_0, 260, 0, 440, 480, 0, 0x0, 0 },
+  { MULTIEDIT_CreateIndirect, "mlteditDisplay", ID_MULTIEDIT_0, 259, 0, 441, 450, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnOpen", ID_BUTTON_0, 700, 0, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnDecrypt", ID_BUTTON_1, 700, 120, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnSave", ID_BUTTON_2, 700, 240, 100, 120, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_BUTTON_3, 700, 360, 100, 120, 0, 0x0, 0 },
+  { EDIT_CreateIndirect, "Edit", ID_EDIT_0, 259, 449, 441, 31, 0, 0x64, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -97,10 +99,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TREEVIEW_0);
     hTreeItemCur = TREEVIEW_GetItem(hItem, 0, TREEVIEW_GET_LAST);
-    hTreeItemNew = TREEVIEW_ITEM_Create(TREEVIEW_ITEM_TYPE_NODE, "0:\", 0);
-    TREEVIEW_AttachItem(hItem, hTreeItemNew, hTreeItemCur, TREEVIEW_INSERT_BELOW);
-    hTreeItemCur = TREEVIEW_GetItem(hItem, 0, TREEVIEW_GET_LAST);
-    hTreeItemNew = TREEVIEW_ITEM_Create(TREEVIEW_ITEM_TYPE_NODE, "1:\", 0);
+    hTreeItemNew = TREEVIEW_ITEM_Create(TREEVIEW_ITEM_TYPE_NODE, "2:\", 0);
     TREEVIEW_AttachItem(hItem, hTreeItemNew, hTreeItemCur, TREEVIEW_INSERT_BELOW);
     //
     // Initialization of 'mlteditDisplay'
@@ -131,6 +130,14 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
     BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
     BUTTON_SetText(hItem, "Exit");
+    //
+    // Initialization of 'Edit'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
+    EDIT_SetText(hItem, "SerialNumber:");
+    EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
+    EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
+    EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, 0x00000000);
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -227,6 +234,24 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_EDIT_0: // Notifications sent by 'Edit'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;

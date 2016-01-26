@@ -35,6 +35,7 @@ FunctionalState gSwrbTestSDCardInsertState = DISABLE;
 FunctionalState gSwrbTestUDiskInsertState = DISABLE;
 u32 gSwrbTestStateMap = 0;
 u16 gSwrbTestTaskRunCnt = 0;
+u32 gSwrbTestTotalCnt = 0;
 int gSwrbTestValidTaskCnt;
 int gSwrbTestValidTaskCntTotal;
 int gSwrbTestAcquiredData[SWRB_TEST_ACQUIRED_DATA_LEN_MAX] = {0};
@@ -369,7 +370,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
                 cnt = 0;
                 do{
                     flErr = f_lseek(file, 8*i);
-                    mymemset(gStrCrypt, 0, 10);
+                    mymemset(gStrCrypt, 0, sizeof(char)*10);
                     flErr = f_read(file, gStrCrypt, 8, &br);
                     cnt++;
                 }while(flErr!=FR_OK && cnt < 10);
@@ -605,7 +606,7 @@ void SweepRobot_PCBTestStartBtnProc(void)
 
             SweepRobot_PCBTestCheckboxTextReset();
 
-            SWRB_TestDataFilePathDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
+            SWRB_TestCurSNDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
 
             SWRB_ValidTestTaskCntGet();
 
@@ -1025,12 +1026,11 @@ static void SWRB_PCBTestFinishProc(void)
                     rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
 
-    str = "\r\n***TEST FINISHED***\r\n";
-
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         /* Encrypt Test Data File when set enable */
         SWRB_TestDataFileCryptoProc(ENABLE);
 
+        str = "\r\n****************************************\r\n";
         SWRB_TestDataFileWriteString(str);
     }
 
@@ -1045,13 +1045,12 @@ static void SWRB_PCBTestFinishProc(void)
     SWRB_ValidTestTaskCntGet();
 
 #ifndef _USE_SN_INC
-    SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
+    SWRB_TestCurSNInc();
 #else
     if(gSwrbTestValidTaskCnt == SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)){
-        SWRB_ListWheelSNInc(hWin_SWRB_SNSET);
+        SWRB_TestCurSNInc();
     }
 #endif
-    
     
     gSwrbTestValidTaskCnt = 0;
 }
@@ -1102,6 +1101,8 @@ static void SWRB_TestFinishProc(void)
 void SweepRobot_StartDlgPCBBtnClickProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_PCB;
+
+    SWRB_TestCurSNDisp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_SN);
 
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)(SWRB_TEST_TASK_PRIO_START_BOUND+1);
 

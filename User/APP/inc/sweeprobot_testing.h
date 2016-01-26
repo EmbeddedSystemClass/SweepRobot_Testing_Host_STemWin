@@ -327,6 +327,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_SELF_TEST_TASK_STK_SIZE        256
 #endif
 
+/* TEST TIME DELAY DEFINITION */
 #define SWRB_TEST_USART_READ_TIMES              3
 #define SWRB_TEST_USART_WRITE_WAIT_TIME         3
 #define SWRB_TEST_USART_READ_WAIT_TIME          5
@@ -353,6 +354,7 @@ extern FunctionalState gSwrbTestUDiskInsertState;
 extern u32 gSwrbTestStateMap;
 extern int gSwrbTestAcquiredData[];
 extern u16 gSwrbTestTaskRunCnt;
+extern u32 gSwrbTestTotalCnt;
 extern int gSwrbTestValidTaskCnt;
 extern int gSwrbTestValidTaskCntTotal;
 

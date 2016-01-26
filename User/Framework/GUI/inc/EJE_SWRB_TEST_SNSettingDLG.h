@@ -56,7 +56,7 @@ void SWRB_TestDataFileWriteSN(void);
 void SWRB_TestDUTWriteSN(void);
 void SWRB_ListWheelRTCDateUpdate(WM_HWIN hWin, int idYear, int idMonth, int idDay);
 void SWRB_ListWheelLastItemPosGet(void);
-void SWRB_ListWheelSNInc(WM_HWIN hWin);
+void SWRB_TestCurSNInc(void);
 
 #endif
 /*************************** End of file ****************************/
