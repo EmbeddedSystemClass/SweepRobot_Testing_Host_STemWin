@@ -1,5 +1,8 @@
 /Doc/
 /ref/
+/Middlewares/STemWinLibrary528/Software/
+/Middlewares/STemWinLibrary528/ref/
+/Middlewares/FONTS/src/20151209_CHN.c
 
 *.doc
 *.xlsx

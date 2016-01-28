@@ -6,7 +6,7 @@
 #include "includes.h"
 
 const static u16 aSwrbBrushTestCurLowThreshold[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
-const static u16 aSwrbBrushTestCurHighThreshold[SWRB_BRUSH_CHAN_NUM] = { 100, 100, 1000 };
+const static u16 aSwrbBrushTestCurHighThreshold[SWRB_BRUSH_CHAN_NUM] = { 100, 100, 500 };
 
 static BRUSH_TestTypeDef brush[SWRB_BRUSH_CHAN_NUM];
 
