@@ -127,7 +127,7 @@ void Start_Task(void *pdata)
     OSTaskCreate(emWin_Maintask,(void*)0,(OS_STK*)&EMWIN_TASK_STK[EMWIN_STK_SIZE-1],EMWIN_TASK_PRIO);
     OSTaskCreate(USB_Host_Task,(void*)0,(OS_STK*)&USB_HOST_TASK_STK[USB_HOST_STK_SIZE-1],USB_HOST_TASK_PRIO);
 #ifdef _USE_SELF_TESTING
-    /* Self Test Task for System self test */
+    /* Self Test Task for System self testing */
     OSTaskCreate(SelfTest_Task,(void*)0,(OS_STK*)&SWRB_SELF_TEST_TASK_STK[SWRB_SELF_TEST_TASK_STK_SIZE-1],SELF_TEST_TASK_PRIO);
     OSTaskSuspend(SELF_TEST_TASK_PRIO);
 #endif
@@ -163,9 +163,6 @@ static void emWin_TaskInit(void)
     OS_CPU_SR cpu_sr;
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC,ENABLE);
-
-//    MainTask();
-
     GUI_Init();
 
     GUI_EnableAlpha(ENABLE);
@@ -206,13 +203,15 @@ void emWin_Maintask(void *pdata)
 
     while(1)
     {
-        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET){
-            SWRB_SET_ListwheelSnapPosUpdate();
-            SWRB_SET_EditTextUpdate();
-        }
-
-        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SLAM){
-            WM_InvalidateWindow(hWin_SWRB_SLAM);
+        switch(gSwrbDialogSelectFlag){
+            case SWRB_DIALOG_SELECT_SET:
+                SWRB_SET_ListwheelSnapPosUpdate();
+                SWRB_SET_EditTextUpdate();
+                break;
+            case SWRB_DIALOG_SELECT_SLAM:
+                WM_InvalidateWindow(hWin_SWRB_SLAM);
+                break;
+            default:break;
         }
 
         GUI_Exec();
@@ -281,16 +280,21 @@ void Rtc_Task(void *pdata)
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
 
-        if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
-            SWRB_RTC_TIME_Disp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_DATE, &rtcDate, &rtcTime);
-        else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL)
-            SWRB_RTC_TIME_Disp(hWin_SWRB_MANUL, ID_MANUL_EDIT_DATE, &rtcDate, &rtcTime);
-        else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_NONE)
-            SWRB_RTC_TIME_Disp(hWin_SWRB_START, ID_START_EDIT_DATE, &rtcDate, &rtcTime);
-        else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_SET)
-            SWRB_RTC_TIME_Disp(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_ACTVALUE, &rtcDate, &rtcTime);
-        else
-            ;
+        switch(gSwrbDialogSelectFlag){
+            case SWRB_DIALOG_SELECT_PCB:
+                SWRB_RTC_TIME_Disp(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_DATE, &rtcDate, &rtcTime);
+                break;
+            case SWRB_DIALOG_SELECT_MANUL:
+                SWRB_RTC_TIME_Disp(hWin_SWRB_MANUL, ID_MANUL_EDIT_DATE, &rtcDate, &rtcTime);
+                break;
+            case SWRB_DIALOG_SELECT_NONE:
+                SWRB_RTC_TIME_Disp(hWin_SWRB_START, ID_START_EDIT_DATE, &rtcDate, &rtcTime);
+                break;
+            case SWRB_DIALOG_SELECT_SET:
+                SWRB_RTC_TIME_Disp(hWin_SWRB_TIMESET, ID_TIMESET_EDIT_ACTVALUE, &rtcDate, &rtcTime);
+                break;
+            default:break;
+        }
 
         OSTimeDlyHMSM(0,0,1,0);
     }
@@ -1153,7 +1157,7 @@ void SweepRobot_StartDlgManulBtnClickProc(void)
 
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_MANUL);
-    
+
 #ifdef  _USE_USB_EN_CMP
     }else{
         hWin_SWRB_START_WARNING = CreateEJE_SWRB_TEST_StartWarningDLG();

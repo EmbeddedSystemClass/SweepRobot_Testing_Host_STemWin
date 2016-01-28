@@ -10,6 +10,8 @@ typedef struct{
     int offValue;
     u8 validCnt;
     u8 validFlag;
+    u8 exchangeValidCnt;
+    u8 exchangeValidFlag;
 }IFRD_TestTypeDef;
 
 void SweepRobot_IFRDTestTask(void *pdata);

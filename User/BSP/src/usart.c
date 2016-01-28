@@ -44,7 +44,7 @@ char USART_RX_BUF[USART_RX_LEN];
 u16 USART_RX_STA=0;
 
 void UART_Init(u32 bound){
-   //GPIO端口设置
+
   GPIO_InitTypeDef GPIO_InitStructure;
   USART_InitTypeDef USART_InitStructure;
   NVIC_InitTypeDef NVIC_InitStructure;
@@ -52,13 +52,11 @@ void UART_Init(u32 bound){
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB | RCC_APB1Periph_USART3, ENABLE);
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
 
-  //串口1对应引脚复用映射
   GPIO_PinAFConfig(GPIOA,GPIO_PinSource9,GPIO_AF_USART1);
   GPIO_PinAFConfig(GPIOA,GPIO_PinSource10,GPIO_AF_USART1);
   GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);
   GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
 
-  //USART1端口配置
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -73,7 +71,6 @@ void UART_Init(u32 bound){
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(GPIOB,&GPIO_InitStructure);
 
-   //USART1 初始化设置
   USART_InitStructure.USART_BaudRate = bound;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
@@ -101,7 +98,6 @@ void UART_Init(u32 bound){
 #if EN_USART1_RX
   USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 
-  //Usart1 NVIC 配置
   NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority =3;
@@ -112,7 +108,6 @@ void UART_Init(u32 bound){
 
   USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
 
-  //Usart3 NVIC 配置
   NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority =3;

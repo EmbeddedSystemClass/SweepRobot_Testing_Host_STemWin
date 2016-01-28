@@ -11,14 +11,170 @@ enum SWRB_TEST_IFRD_CHAN{
     SWRB_TEST_IFRD_CHAN_SL,
     SWRB_TEST_IFRD_CHAN_SR,
     SWRB_TEST_IFRD_CHAN_B_FL,
-    SWRB_TEST_IFRD_CHAN_B_SR,
-    SWRB_TEST_IFRD_CHAN_B_SL,
     SWRB_TEST_IFRD_CHAN_B_FR,
+    SWRB_TEST_IFRD_CHAN_B_SL,
+    SWRB_TEST_IFRD_CHAN_B_SR,
 };
 
-static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 1000, 1000, 500, 500, 200, 200, 200, 200 };
+#define SWRB_IFRD_TEST_BOTTOM_EXCHANGE_FAULT_L_MASK     0x10
+#define SWRB_IFRD_TEST_BOTTOM_EXCHANGE_FAULT_R_MASK     0x20
 
+static const u16 SWRB_IFRD_EXCHANGE_FAULT_DETECT_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 0, 0, 0, 0, 2000, 2000, 500, 500 };
+static u8 gSwrbIFRDTestBottomExchangeStateMap = 0;
+
+static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 1000, 1000, 500, 500, 200, 200, 200, 200 };
 static IFRD_TestTypeDef ifrd[SWRB_IFRD_CHAN_NUM];
+
+static void SweepRobot_IFRDTestOffValueQuery(void)
+{
+    int i,j;
+    char *str;
+    
+    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+        if(!ifrd[i].validFlag){
+            if(i>=6){
+                printf("SNSR->BSWC=1\r\n");
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
+            }
+            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                if(i<6){
+                    printf("SNSR->RD=%d\r\n", i+1);
+                }else{
+                    printf("SNSR->RD=%d\r\n", i-1);
+                }
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+                if(usartRxFlag){
+                    ifrd[i].offValue = usartRxNum;
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
+                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+                        str = mymalloc(SRAMIN, sizeof(char)*10);
+                        *str = 0;
+                        sprintf(str, "%d", usartRxNum);
+                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
+                                                str);
+                        myfree(SRAMIN, str);
+                    }
+                    usartRxNum = 0;
+                    usartRxFlag = 0;
+                    USART_RX_STA = 0;
+                    break;
+                }else{
+                    continue;
+                }
+            }
+        }
+    }
+}
+
+static void SweepRobot_IFRDTestOnValueQuery(void)
+{
+    int i,j;
+    char *str;
+    
+    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+        if(!ifrd[i].validFlag){
+            if(i>=6){
+                printf("SNSR->BSWC=1\r\n");
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
+            }
+            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
+                if(i<6){
+                    printf("SNSR->RD=%d\r\n", i+1);
+                }else{
+                    printf("SNSR->RD=%d\r\n", i-1);
+                }
+                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
+                if(usartRxFlag){
+                    ifrd[i].onValue = usartRxNum;
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
+                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+                        str = mymalloc(SRAMIN, sizeof(char)*10);
+                        *str = 0;
+                        sprintf(str, "%d", usartRxNum);
+                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
+                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
+                                                str);
+                        myfree(SRAMIN, str);
+                    }
+                    usartRxNum = 0;
+                    usartRxFlag = 0;
+                    USART_RX_STA = 0;
+                    break;
+                }else{
+                    continue;
+                }
+            }
+        }
+    }
+}
+
+static void SweepRobot_IFRDTestValidCmpProc(void)
+{
+    int i,j;
+    
+    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
+        if(!ifrd[i].validFlag){
+            /* TODO: Add max ifrd minus value display in Manul Test Auto Mode */
+            if(ifrd[i].onValue){
+                if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_VALID_THRESHOLD[i] ){
+                    gSwrbTestStateMap &= ~(1<<(SWRB_TEST_IFRD_FL_POS+i));
+                    ifrd[i].validCnt++;
+                }else{
+                    gSwrbTestStateMap |= (1<<(SWRB_TEST_IFRD_FL_POS+i));
+                }
+
+                if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
+                    ifrd[i].validFlag = 1;
+                    
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+                        if(i < SWRB_TEST_IFRD_CHAN_B_FL){
+                            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                       gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
+                                                                       gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
+                                                                       SWRB_MANUL_TEST_OK_BK_COLOR);
+                        }
+                    }
+                }
+            }else{
+                gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
+            }
+        }
+    }
+
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+        for(i= SWRB_TEST_IFRD_CHAN_B_FL,j=0;i<=SWRB_TEST_IFRD_CHAN_B_FR;i++,j++){
+            gSwrbIFRDTestBottomExchangeStateMap &= ~(1<<(SWRB_TEST_IFRD_CHAN_B_FL+j));
+            ifrd[i].exchangeValidFlag = 1;
+        }
+    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+        for(i= SWRB_TEST_IFRD_CHAN_B_FL,j=0;i<=SWRB_TEST_IFRD_CHAN_B_FR;i++,j++){
+            if(ifrd[i].validFlag){
+                if(!ifrd[i].exchangeValidFlag){
+                    if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_EXCHANGE_FAULT_DETECT_THRESHOLD[i]){
+                        gSwrbIFRDTestBottomExchangeStateMap &= ~(1<<(SWRB_TEST_IFRD_CHAN_B_FL+j));
+                        ifrd[i].exchangeValidCnt++;
+                    }else{
+                        gSwrbIFRDTestBottomExchangeStateMap |= (1<<(SWRB_TEST_IFRD_CHAN_B_FL+j));
+                    }
+
+                    if(ifrd[i].exchangeValidCnt > SWRB_TEST_VALID_COMP_TIMES){
+                        ifrd[i].exchangeValidFlag = 1;
+
+                        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][0],\
+                                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][1],\
+                                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                    }
+                }
+            }
+        }
+    }
+}
 
 static void SweepRobot_IFRDTestInit(void)
 {
@@ -50,177 +206,28 @@ static void SweepRobot_IFRDTestInit(void)
 
 static void SweepRobot_IFRDTestTxOffProc(void)
 {
-    u8 i,j;
-    char *str;
-
-    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        if(!ifrd[i].validFlag){
-            if(i>=6){
-                printf("SNSR->BSWC=1\r\n");
-                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
-            }
-            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                if(i<6){
-                    printf("SNSR->RD=%d\r\n", i+1);
-                }else{
-                    printf("SNSR->RD=%d\r\n", i-1);
-                }
-                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
-                if(usartRxFlag){
-                    ifrd[i].offValue = usartRxNum;
-                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, usartRxNum);
-                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                        str = mymalloc(SRAMIN, sizeof(char)*10);
-                        *str = 0;
-                        sprintf(str, "%d", usartRxNum);
-                        if(5 == i){
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS][1],\
-                                                str);
-                        }else if(7 == i){
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS][1],\
-                                                str);
-                        }else{
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
-                                                    str);
-                        }
-                        myfree(SRAMIN, str);
-                    }
-                    usartRxNum = 0;
-                    usartRxFlag = 0;
-                    USART_RX_STA = 0;
-                    break;
-                }else{
-                    continue;
-                }
-            }
-        }
-    }
+    SweepRobot_IFRDTestOffValueQuery();
+    
     printf("SNSR->IFRD=1\r\n");
     printf("SNSR->BSWC=0\r\n");
 }
 
 static void SweepRobot_IFRDTestTxOnProc(void)
 {
-    u8 i,j;
     char *str;
 
-    for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        if(!ifrd[i].validFlag){
-            if(i>=6){
-                printf("SNSR->BSWC=1\r\n");
-                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
-            }
-            for(j=0;j<SWRB_TEST_USART_READ_TIMES;j++){
-                if(i<6){
-                    printf("SNSR->RD=%d\r\n", i+1);
-                }else{
-                    printf("SNSR->RD=%d\r\n", i-1);
-                }
-                OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
-                if(usartRxFlag){
-                    ifrd[i].onValue = usartRxNum;
-                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
-                        Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_D1+i, usartRxNum);
-                    }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                        str = mymalloc(SRAMIN, sizeof(char)*10);
-                        *str = 0;
-                        sprintf(str, "%d", usartRxNum);
-                        if(5 == i){
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS][1],\
-                                                str);
-                        }else if(7 == i){
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS][1],\
-                                                str);
-                        }else{
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
-                                                    str);
-                        }
-                        myfree(SRAMIN, str);
-                    }
-                    usartRxNum = 0;
-                    usartRxFlag = 0;
-                    USART_RX_STA = 0;
-                    break;
-                }else{
-                    continue;
-                }
-            }
+    SweepRobot_IFRDTestOnValueQuery();
 
-            /* TODO: Add max ifrd minus value display in Manul Test Auto Mode */
-            if(ifrd[i].onValue){
-                if( (ifrd[i].offValue - ifrd[i].onValue) > SWRB_IFRD_VALID_THRESHOLD[i] ){
-                    if(5 == i ){
-                        gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_B_SR_POS));
-                    }else if(7 == i){
-                        gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_B_FR_POS));
-                    }else{
-                        gSwrbTestStateMap &= ~(0<<(SWRB_TEST_IFRD_FL_POS+i));
-                    }
-                    ifrd[i].validCnt++;
-                }else{
-                    if(5 == i ){
-                        gSwrbTestStateMap |= (1<<(SWRB_TEST_IFRD_B_SR_POS));
-                    }else if(7 == i){
-                        gSwrbTestStateMap |= (1<<(SWRB_TEST_IFRD_B_FR_POS));
-                    }else{
-                        gSwrbTestStateMap |= (1<<(SWRB_TEST_IFRD_FL_POS+i));
-                    }
-                }
+    SweepRobot_IFRDTestValidCmpProc();
 
-                if(ifrd[i].validCnt > SWRB_TEST_VALID_COMP_TIMES){
-                    ifrd[i].validFlag = 1;
-
-                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                        if(5 == i){
-                            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_SR_POS][1],\
-                                                SWRB_MANUL_TEST_OK_BK_COLOR);
-                        }else if(7 == i){
-                            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FR_POS][1],\
-                                                SWRB_MANUL_TEST_OK_BK_COLOR);
-                        }else{
-                            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                       gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
-                                                                       gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
-                                                                       SWRB_MANUL_TEST_OK_BK_COLOR);
-                        }
-                    }
-                }
-            }else{
-                if(5 == i ){
-                    gSwrbTestStateMap |= (1<<(SWRB_TEST_IFRD_B_SR_POS));
-                }else if(7 == i){
-                    gSwrbTestStateMap |= (1<<(SWRB_TEST_IFRD_B_FR_POS));
-                }else{
-                    gSwrbTestStateMap |= 1<<(SWRB_TEST_IFRD_FL_POS+i);
-                }
-            }
-        }
-    }
     printf("SNSR->IFRD=0\r\n");
 
     if( ifrd[0].validFlag && ifrd[1].validFlag && ifrd[2].validFlag && ifrd[3].validFlag && \
-        ifrd[4].validFlag && ifrd[5].validFlag && ifrd[6].validFlag && ifrd[7].validFlag
+        ifrd[4].validFlag && ifrd[5].validFlag && ifrd[6].validFlag && ifrd[7].validFlag && \
+        ifrd[SWRB_TEST_IFRD_CHAN_B_FL].exchangeValidFlag && ifrd[SWRB_TEST_IFRD_CHAN_B_FR].exchangeValidFlag \
         ){
         gSwrbTestTaskRunCnt = 0;
-        printf("SNSR->IFRD=0\r\n");
-        OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_WRITE_WAIT_TIME);
+
         printf("SNSR->BSWC=0\r\n");
 
         SWRB_TestDataSaveToFile(IFRD_TestDataSave);
@@ -242,7 +249,7 @@ static void SweepRobot_IFRDTestTxOnProc(void)
     }
 }
 
-static void SweepRobot_IFRDTestTimeOutErrProc(char *str)
+static void SweepRobot_IFRDTestTimeOutErrDisp(char *str)
 {
     SWRB_TestDataFileWriteString(str);
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
@@ -251,28 +258,28 @@ static void SweepRobot_IFRDTestTimeOutErrProc(char *str)
 static void SweepRobot_IFRDPCBTestTimeOutProc(void)
 {
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FL_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_F_L\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_F_L\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FR_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_F_R\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_F_R\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_L_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_S_L\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_S_L\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_R_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_S_R\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_S_R\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_FL\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_FL\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_FR\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_FR\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_SL\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_SL\r\n");
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK){
-        SweepRobot_IFRDTestTimeOutErrProc("ERROR->IFRD_B_SR\r\n");
+        SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_SR\r\n");
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD ERROR");
@@ -282,7 +289,7 @@ static void SweepRobot_IFRDPCBTestTimeOutProc(void)
 
 static void SweepRobot_IFRDManulTestTimeOutProc(void)
 {
-    u8 i;
+    u8 i,j;
 
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
         if(gSwrbTestStateMap & (SWRB_TEST_FAULT_IFRD_FL_MASK<<i)){
@@ -290,6 +297,19 @@ static void SweepRobot_IFRDManulTestTimeOutProc(void)
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
                                                                    SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        }
+    }
+    
+    for(i=SWRB_TEST_IFRD_CHAN_B_FL,j=0;i<SWRB_TEST_IFRD_CHAN_B_FR;i++,j++){
+        if(gSwrbIFRDTestBottomExchangeStateMap & SWRB_IFRD_TEST_BOTTOM_EXCHANGE_FAULT_L_MASK<<i){
+            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
+                                                                   "EX_ERR");
+            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i+2][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i+2][1],\
+                                                                   "EX_ERR");
         }
     }
 }
@@ -349,16 +369,8 @@ void IFRD_TestDataSave(void)
     u8 i;
 
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        if(5==i){
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SR_TxOn_POS] = ifrd[i].onValue;
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_SR_TxOff_POS] = ifrd[i].offValue;
-        }else if(7==i){
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FR_TxOn_POS] = ifrd[i].onValue;
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_B_FR_TxOff_POS] = ifrd[i].offValue;
-        }else{
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
-            gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
-        }
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOn_POS+i] = ifrd[i].onValue;
+        gSwrbTestAcquiredData[SWRB_TEST_DATA_IFRD_FL_TxOff_POS+i] = ifrd[i].offValue;
     }
 
     SWRB_TestDataFileWriteData("IFRD->FL_onValue=", ifrd[0].onValue, 1);
@@ -371,10 +383,10 @@ void IFRD_TestDataSave(void)
     SWRB_TestDataFileWriteData("IFRD->SR_offValue=", ifrd[3].offValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_FL_onValue=", ifrd[4].onValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_FL_offValue=", ifrd[4].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_FR_onValue=", ifrd[7].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_FR_offValue=", ifrd[7].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FR_onValue=", ifrd[5].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_FR_offValue=", ifrd[5].offValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_SL_onValue=", ifrd[6].onValue, 1);
     SWRB_TestDataFileWriteData("IFRD->B_SL_offValue=", ifrd[6].offValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[5].onValue, 1);
-    SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[5].offValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SR_onValue=", ifrd[7].onValue, 1);
+    SWRB_TestDataFileWriteData("IFRD->B_SR_offValue=", ifrd[7].offValue, 1);
 }
