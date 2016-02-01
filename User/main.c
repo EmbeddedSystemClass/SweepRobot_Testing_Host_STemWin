@@ -89,6 +89,8 @@ int main(void)
     }
 
     SWRBTest_DeviceInit();
+    
+    printf("init ok\r\n");
 
     OSInit();
     OS_Task_Create();

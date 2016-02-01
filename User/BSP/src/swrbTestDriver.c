@@ -496,6 +496,8 @@ void SweepRobot_IrDATestGPIOInit(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(IRDA_TEST_TX_RELAY_CTRL_GPIO, &GPIO_InitStructure);
+    
+    SweepRobot_IrDATestTxRelayOff();
 }
 
 void SweepRobot_IrDATestTxRelayOn(void)

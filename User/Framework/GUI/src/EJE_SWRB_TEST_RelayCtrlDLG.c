@@ -47,7 +47,7 @@ enum RELAY_CTRL_CHAN{
     RELAY_CTRL_STEP_MOTOR_24V_CHAN,
     RELAY_CTRL_CHARGE_24V_CHAN,
     RELAY_CTRL_STEER_MOTOR_5V_CHAN,
-    RELAY_CTRL_POWER_STATION_24V_CHAN,
+    RELAY_CTRL_IRDA_BOARD_24V_CHAN,
     RELAY_CTRL_CHAN_BOUND,
 };
 
@@ -123,6 +123,19 @@ void Button_SteerMotor5VRelayCtrlClickProc(void)
         SweepRobotTest_SteerMotor5VCtrlOff();
         Button_Set_BkColor(hWin_SWRB_RELAY, ID_RELAYCTRL_BUTTON_R3, GUI_LIGHTGRAY);
         RelayStateFlag[RELAY_CTRL_STEER_MOTOR_5V_CHAN] = 1;
+    }
+}
+
+void Button_IrDABoard24VRelayCtrlClickProc(void)
+{
+    if(RelayStateFlag[RELAY_CTRL_IRDA_BOARD_24V_CHAN]){
+        SweepRobot_IrDATestTxRelayOn();
+        Button_Set_BkColor(hWin_SWRB_RELAY, ID_RELAYCTRL_BUTTON_R4, GUI_LIGHTBLUE);
+        RelayStateFlag[RELAY_CTRL_IRDA_BOARD_24V_CHAN] = 0;
+    }else{
+        SweepRobot_IrDATestTxRelayOff();
+        Button_Set_BkColor(hWin_SWRB_RELAY, ID_RELAYCTRL_BUTTON_R4, GUI_LIGHTGRAY);
+        RelayStateFlag[RELAY_CTRL_IRDA_BOARD_24V_CHAN] = 1;
     }
 }
 
@@ -222,7 +235,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_RELAYCTRL_BUTTON_R4);
     BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-    BUTTON_SetText(hItem, "PS IRDA 24V");
+    BUTTON_SetText(hItem, "IRDA 24V");
     //
     // Initialization of 'btnRelay5'
     //
@@ -321,6 +334,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
+        Button_IrDABoard24VRelayCtrlClickProc();
         break;
       }
       break;

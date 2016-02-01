@@ -41,7 +41,9 @@ static void SweepRobot_ChargeTestInit(void)
 
     mymemset(&charge, 0, sizeof(charge));
 
+#ifdef _USE_CHARGE_24V
     SweepRobot_Charge24VOn();
+#endif
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     printf("CRG->ON=0\r\n");
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);

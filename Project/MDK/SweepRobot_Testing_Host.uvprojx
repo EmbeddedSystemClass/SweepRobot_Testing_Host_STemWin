@@ -371,7 +371,7 @@
             <vShortWch>0</vShortWch>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>USE_USB_OTG_FS,_USE_ACTUAL_POS_DETECT_KEY, _SHOW_SLAM_DLG,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
+              <Define>_USE_USB_EN_CMP,USE_USB_OTG_FS,_USE_ACTUAL_POS_DETECT_KEY, _SHOW_SLAM_DLG,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\User\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\User;..\..\User\Framework\GUI\inc;..\..\User\APP\inc;..\..\User\Framework\GUI\res\inc;..\..\User\APP\udisk\inc;..\..\Libraries\STM32_USB_HOST_Library\Core\inc;..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc</IncludePath>
             </VariousControls>
