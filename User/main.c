@@ -37,6 +37,7 @@ static void SWRBTest_CtrlPanelInit(void)
     LED_Init();
     KEY_Init();
     TFTLCD_Init();
+    printf("CtrlPanel Init OK\r\n");
 }
 
 static void SWRBTest_DeviceInit(void)
@@ -47,6 +48,8 @@ static void SWRBTest_DeviceInit(void)
     SweepRobot_WheelFloatTestGPIOInit();
     SweepRobot_IrDATestGPIOInit();
     SweepRobot_ChargeTestGPIOInit();
+    
+    printf("Device Init OK\r\n");
 }
 
 static int SWRBTest_StorageInit(void)
@@ -73,6 +76,8 @@ static int SWRBTest_StorageInit(void)
     f_mount(fs[0],"0:",1);
     f_mount(fs[1],"1:",1);
     f_mount(fs[2],"2:",1);
+    
+    printf("Storage Init OK\r\n");
 
     return 0;
 }
@@ -88,9 +93,9 @@ int main(void)
         goto MEM_INIT_FAULT;
     }
 
+    printf("Device Init Start\r\n");
+
     SWRBTest_DeviceInit();
-    
-    printf("init ok\r\n");
 
     OSInit();
     OS_Task_Create();

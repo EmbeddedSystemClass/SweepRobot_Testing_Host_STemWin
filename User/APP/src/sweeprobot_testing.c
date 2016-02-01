@@ -822,7 +822,6 @@ static void SweepRobot_TestHostCtrlStateReset(void)
     SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToDownPos();
-    SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
     SweepRobotTest_StepMotorSetIdle();
 }
 
@@ -1316,7 +1315,6 @@ static void SweepRobot_ManulTestCtrlReset(void)
     SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
     SweepRobot_WheelFloatCtrlMoveToDownPos();
-    SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 }
 
 static void SWRB_ManulTestIndicateButtonToggle()

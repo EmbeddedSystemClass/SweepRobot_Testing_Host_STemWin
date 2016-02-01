@@ -34,7 +34,6 @@ static void SweepRobot_AshTrayTestInit(void)
     mymemset(&ashTrayLvl, 0, sizeof(ashTrayLvl));
 
     printf("SNSR->IFRD=0\r\n");
-//    SweepRobot_AshTrayTestInsCtrlMoveToTestPos();
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 }
@@ -81,8 +80,6 @@ static void SweepRobot_AshTrayInsTestProc(void)
         }
 
         if(ashTrayIns.validFlag){
-            SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
-
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][0],\
@@ -209,7 +206,6 @@ static void SweepRobot_AshTrayTestProc(void)
     if(ashTrayIns.validFlag && ashTrayLvl.validFlag){
         gSwrbTestTaskRunCnt = 0;
         printf("SNSR->IFRD=0\r\n");
-        SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
         SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
 
@@ -266,7 +262,6 @@ static void SweepRobot_AshTrayTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
     printf("SNSR->IFRD=0\r\n");
-    SweepRobot_AshTrayTestInsCtrlMoveToIdlePos();
 
     SWRB_TestDataSaveToFile(ASH_TRAY_TestDataSave);
 

@@ -36,6 +36,7 @@
 #define COLLISION_TEST_RIGHT_STEERING_MOTOR_SIDE_POS    610
 
 /* Wheel Float Steering Motor Control GPIO */
+#ifdef VERSION_1_1
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_PERIPH_ID            RCC_AHB1Periph_GPIOB
 #define WHEEL_FLOAT_TEST_CTRL_GPIO                      GPIOB
 #define WHEEL_FLOAT_TEST_STEER_MOTOR_CTRL_PIN           GPIO_Pin_10             //TIM2_CH3
@@ -43,29 +44,34 @@
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP               GPIO_AF_TIM2
 #define WHEEL_FLOAT_TEST_CTRL_TIM_PERIPH_ID             RCC_APB1Periph_TIM2
 #define WHEEL_FLOAT_TEST_CTRL_TIM                       TIM2
+#elif VERSION_1_2
+#define WHEEL_FLOAT_TEST_CTRL_GPIO_PERIPH_ID            RCC_AHB1Periph_GPIOB
+#define WHEEL_FLOAT_TEST_CTRL_GPIO                      GPIOB
+#define WHEEL_FLOAT_TEST_STEER_MOTOR_CTRL_PIN           GPIO_Pin_6             //TIM4_CH1
+#define WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE              GPIO_PinSource6
+#define WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP               GPIO_AF_TIM4
+#define WHEEL_FLOAT_TEST_CTRL_TIM_PERIPH_ID             RCC_APB1Periph_TIM4
+#define WHEEL_FLOAT_TEST_CTRL_TIM                       TIM4
+#endif
 
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS       280
-#define WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS         435
+#define WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS         750
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS       280
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME 100
 
 /* Ash Tray Steering Motor Control GPIO */
-#define ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID               RCC_AHB1Periph_GPIOB
-#define ASH_TRAY_TEST_CTRL_GPIO                         GPIOB
-#define ASH_TRAY_TEST_CTRL_PIN                          GPIO_Pin_6
-#define ASH_TRAY_TEST_CTRL_PIN_SOURCE                   GPIO_PinSource6
+#define ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID               RCC_AHB1Periph_GPIOA
+#define ASH_TRAY_TEST_CTRL_GPIO                         GPIOA
+#define ASH_TRAY_TEST_CTRL_PIN                          GPIO_Pin_9
+#define ASH_TRAY_TEST_CTRL_PIN_SOURCE                   GPIO_PinSource9
 #define ASH_TRAY_TEST_CTRL_GPIO_AF_PPP                  GPIO_AF_TIM4
 #define ASH_TRAY_TEST_CTRL_TIM_PERIPH_ID                RCC_APB1Periph_TIM4
 #define ASH_TRAY_TEST_CTRL_TIM                          TIM4
 
 /* Key ElectroMagnet Control GPIO */
-#define KEY_TEST_CTRL_GPIO_PERIPH_ID                    RCC_AHB1Periph_GPIOB
-#define KEY_TEST_CTRL_GPIO                              GPIOB
-#define KEY_TEST_CTRL_PIN                               GPIO_Pin_7
-//#define KEY_TEST_CTRL_PIN_SOURCE                        GPIO_PinSource7
-//#define KEY_TEST_CTRL_GPIO_AF_PPP                       GPIO_AF_TIM4
-//#define KEY_TEST_CTRL_TIM_PERIPH_ID                     RCC_APB1Periph_TIM4
-//#define KEY_TEST_CTRL_TIM                               TIM4
+#define KEY_TEST_CTRL_GPIO_PERIPH_ID                    RCC_AHB1Periph_GPIOA
+#define KEY_TEST_CTRL_GPIO                              GPIOA
+#define KEY_TEST_CTRL_PIN                               GPIO_Pin_10
 
 /* IrDA Tx GPIO */
 #define IRDA_TEST_TX_TIM_PERIPH_ID                      RCC_APB1Periph_TIM7
@@ -320,14 +326,13 @@ void SweepRobot_WheelFloatTestGPIOInit(void)
     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-    TIM_OC3Init(WHEEL_FLOAT_TEST_CTRL_TIM, &TIM_OCInitStructure);
-    TIM_OC4Init(WHEEL_FLOAT_TEST_CTRL_TIM, &TIM_OCInitStructure);
+    TIM_OC1Init(WHEEL_FLOAT_TEST_CTRL_TIM, &TIM_OCInitStructure);
 
-    TIM_OC3PreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, TIM_OCPreload_Enable);
+    TIM_OC1PreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, TIM_OCPreload_Enable);
 
     TIM_ARRPreloadConfig(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
+    TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
@@ -336,13 +341,13 @@ void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos)
 {
     switch(pos){
         case STEER_MOTOR_IDLE_POS:
-            TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
+            TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
             break;
         case STEER_MOTOR_UP_POS:
-            TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
+            TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
             break;
         case STEER_MOTOR_DOWN_POS:
-            TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
+            TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
             break;
         default:break;
     }
@@ -350,33 +355,33 @@ void SweepRobot_WheelFloatCtrlSteerMotorPosMove(enum STEER_MOTOR_POS pos)
 
 void SweepRobot_WheelFloatCtrlSteerMotorPosSet(int DutyCycle)
 {
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, DutyCycle);
+    TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, DutyCycle);
 }
 
 void SweepRobot_WheelFloatCtrlMoveToIdlePos(void)
 {
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
+    TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
 
 void SweepRobot_WheelFloatCtrlMoveToUpPos(void)
 {
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
+    TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
 
 void SweepRobot_WheelFloatCtrlMoveToDownPos(void)
 {
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
+    TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_DOWN_POS);
 
     TIM_Cmd(WHEEL_FLOAT_TEST_CTRL_TIM, ENABLE);
 }
 
 void SweepRobot_WheelFloatCtrlShutDown(void)
 {
-    TIM_SetCompare3(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
+    TIM_SetCompare1(WHEEL_FLOAT_TEST_CTRL_TIM, WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS);
 
     OSTimeDlyHMSM(0,0,0,WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME);
 
@@ -386,11 +391,8 @@ void SweepRobot_WheelFloatCtrlShutDown(void)
 /* ASH TRAY TEST GPIO Init */
 void SweepRobot_AshTrayTestGPIOInit(void)
 {
-    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
-    TIM_OCInitTypeDef TIM_OCInitStructure;
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_APB1PeriphClockCmd(ASH_TRAY_TEST_CTRL_TIM_PERIPH_ID, ENABLE);
     RCC_AHB1PeriphClockCmd(ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID, ENABLE);
 
     GPIO_PinAFConfig(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN_SOURCE, ASH_TRAY_TEST_CTRL_GPIO_AF_PPP);
@@ -401,50 +403,6 @@ void SweepRobot_AshTrayTestGPIOInit(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(ASH_TRAY_TEST_CTRL_GPIO, &GPIO_InitStructure);
-
-    TIM_DeInit(ASH_TRAY_TEST_CTRL_TIM);
-
-    TIM_TimeBaseInitStructure.TIM_Period = 20000-1;
-    TIM_TimeBaseInitStructure.TIM_Prescaler = 168-1;
-    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_TimeBaseInit(ASH_TRAY_TEST_CTRL_TIM, &TIM_TimeBaseInitStructure);
-
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-    TIM_OC2Init(ASH_TRAY_TEST_CTRL_TIM, &TIM_OCInitStructure);
-
-    TIM_OC1PreloadConfig(ASH_TRAY_TEST_CTRL_TIM, TIM_OCPreload_Enable);
-
-    TIM_ARRPreloadConfig(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
-
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-}
-
-void SweepRobot_AshTrayTestInsCtrlMoveToTestPos(void)
-{
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 1000);
-
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-}
-
-void SweepRobot_AshTrayTestInsCtrlMoveToIdlePos(void)
-{
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
-
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, ENABLE);
-}
-
-void SweepRobot_AshTrayTestInsCtrlShutDown(void)
-{
-    TIM_SetCompare1(ASH_TRAY_TEST_CTRL_TIM, 300);
-
-    OSTimeDlyHMSM(0,0,0,50);
-
-    TIM_Cmd(ASH_TRAY_TEST_CTRL_TIM, DISABLE);
 }
 
 /* KEY TEST GPIO INIT */

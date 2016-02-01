@@ -40,9 +40,6 @@ void SweepRobot_WheelFloatCtrlMoveToUpPos(void);
 void SweepRobot_WheelFloatCtrlMoveToDownPos(void);
 
 void SweepRobot_AshTrayTestGPIOInit(void);
-void SweepRobot_AshTrayTestInsCtrlMoveToTestPos(void);
-void SweepRobot_AshTrayTestInsCtrlMoveToIdlePos(void);
-void SweepRobot_AshTrayTestInsCtrlShutDown(void);
 
 void SweepRobot_KeyTestGPIOInit(void);
 void SweepRobot_KeyTestElectroMagnetCtrlPushPos(void);

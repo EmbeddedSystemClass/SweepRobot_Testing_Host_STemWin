@@ -5,7 +5,9 @@
 #include "sys.h" 
 
 #define USART_RX_LEN                200
-#define EN_USART1_RX                1
+#define EN_USART_RX                 1
+
+#define STD_USART                   USART3
 
 #define USART_CNT_MASK              0x3FFF
           
