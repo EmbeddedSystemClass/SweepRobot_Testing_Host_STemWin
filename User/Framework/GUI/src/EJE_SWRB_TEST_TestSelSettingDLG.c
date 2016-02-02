@@ -94,7 +94,7 @@ static void Button_SelAllProc(void)
 
     SWRB_TestCheckboxStateSet(1);
 
-    for(id=ID_TESTSEL_BUTTON_WHEEL,i=0;id<=ID_TESTSEL_BUTTON_CHARGE;id++,i++){
+    for(id=ID_TESTSEL_BUTTON_WHEEL,i=0;id<=ID_TESTSEL_BUTTON_KEY;id++,i++){
         Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTBLUE);
     }
 }
@@ -120,7 +120,7 @@ static void Button_SelNoneProc(void)
 
     SWRB_TestCheckboxStateSet(0);
 
-    for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_CHARGE;id++){
+    for(id=ID_TESTSEL_BUTTON_WHEEL;id<=ID_TESTSEL_BUTTON_KEY;id++){
         Button_Set_BkColor(hWin_SWRB_TESTSEL, id, GUI_LIGHTGRAY);
     }
 }
@@ -163,11 +163,11 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "WHEEL FLOAT", ID_TESTSEL_BUTTON_WHEEL_FLOAT, 0, 140, 140, 140, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "ASH TRAY", ID_TESTSEL_BUTTON_ASH_TRAY, 140, 140, 140, 140, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "UNIWHEEL", ID_TESTSEL_BUTTON_UNIWHEEL, 280, 140, 140, 140, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "KEY", ID_TESTSEL_BUTTON_KEY, 420, 140, 140, 140, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "IRDA", ID_TESTSEL_BUTTON_IRDA, 560, 140, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "IRDA", ID_TESTSEL_BUTTON_IRDA, 420, 140, 140, 140, 0, 0x0, 0},
+  { BUTTON_CreateIndirect, "CHARGE", ID_TESTSEL_BUTTON_CHARGE, 560, 140, 140, 140, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "BUZZER", ID_TESTSEL_BUTTON_BUZZER, 0, 280, 140, 140, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "RGB LED", ID_TESTSEL_BUTTON_RGB_LED, 140, 280, 140, 140, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "CHARGE", ID_TESTSEL_BUTTON_CHARGE, 280, 280, 140, 140, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "KEY", ID_TESTSEL_BUTTON_KEY, 280, 280, 140, 140, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST1", ID_TESTSEL_BUTTON_TEST1, 420, 280, 140, 140, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "TEST2", ID_TESTSEL_BUTTON_TEST2, 560, 280, 140, 140, 0, 0x0, 0 },
 //  { BUTTON_CreateIndirect, "FRONT IFRD", ID_TESTSEL_BUTTON_FRONT_IFRD, 0, 315, 140, 105, 0, 0x0, 0 },
@@ -204,7 +204,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     for(i=ID_TESTSEL_BUTTON_0;i<ID_TESTSEL_BUTTON_BOUND;i++){
         hItem = WM_GetDialogItem(pMsg->hWin, i);
         Button_Init(hItem);
-        if( (ID_TESTSEL_BUTTON_WHEEL <= i) && (ID_TESTSEL_BUTTON_CHARGE >= i) ){
+        if( (ID_TESTSEL_BUTTON_WHEEL <= i) && (ID_TESTSEL_BUTTON_KEY >= i) ){
             Button_Set_BkColor(pMsg->hWin, i, GUI_LIGHTBLUE);
         }else if(i<=ID_TESTSEL_BUTTON_RESERVE4){
             if(i%2){

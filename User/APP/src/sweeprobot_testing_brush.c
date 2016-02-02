@@ -201,7 +201,7 @@ void SweepRobot_BrushTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 5){
                 SWRB_BrushTestProc();
             }
-            if(gSwrbTestTaskRunCnt > 50){
+            if(gSwrbTestTaskRunCnt > 100){
                 SWRB_BrushTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

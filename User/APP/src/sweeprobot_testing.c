@@ -1022,22 +1022,22 @@ static void SWRB_PCBTestFinishProc(void)
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileWriteDate(">PCB Test finish time", &rtcDate, &rtcTime);
     }
-
+    
     str = mymalloc(SRAMIN, sizeof(char)*50);
+    *str = 0;
+
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+        str = "\r\n****************************************\r\n";
+        SWRB_TestDataFileWriteString(str);
+
+        /* Encrypt Test Data File when set enable */
+        SWRB_TestDataFileCryptoProc(DISABLE);
+    }
+
     *str = 0;
     sprintf(str, "\r\nTest Finish Time:20%02d/%02d/%02d %02d:%02d:%02d\r\n",\
                     rtcDate.RTC_Year, rtcDate.RTC_Month, rtcDate.RTC_Date,\
                     rtcTime.RTC_Hours, rtcTime.RTC_Minutes, rtcTime.RTC_Seconds);
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
-
-    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
-        /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileCryptoProc(ENABLE);
-
-        str = "\r\n****************************************\r\n";
-        SWRB_TestDataFileWriteString(str);
-    }
-
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
 
     myfree(SRAMIN, str);

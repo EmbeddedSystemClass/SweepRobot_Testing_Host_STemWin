@@ -5,7 +5,7 @@
 
 #define SWRB_WHEEL_FLOAT_CHAN_NUM    2
 
-enum WheelFloagChan{
+enum WheelFloatChan{
     WHEEL_FLOAT_CHAN_L,
     WHEEL_FLOAT_CHAN_R, 
 };
