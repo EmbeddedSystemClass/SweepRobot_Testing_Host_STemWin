@@ -44,11 +44,11 @@
                                       (id == ID_PCBTEST_CHECKBOX_WHEEL_FLOAT)   ||\
                                       (id == ID_PCBTEST_CHECKBOX_ASH_TRAY)      ||\
                                       (id == ID_PCBTEST_CHECKBOX_UNIWHEEL)      ||\
-                                      (id == ID_PCBTEST_CHECKBOX_KEY)           ||\
                                       (id == ID_PCBTEST_CHECKBOX_IRDA)          ||\
+                                      (id == ID_PCBTEST_CHECKBOX_CHARGE)        ||\
                                       (id == ID_PCBTEST_CHECKBOX_BUZZER)        ||\
                                       (id == ID_PCBTEST_CHECKBOX_RGB_LED)       ||\
-                                      (id == ID_PCBTEST_CHECKBOX_CHARGE)\
+                                      (id == ID_PCBTEST_CHECKBOX_KEY)\
                                     )
 
 /*********************************************************************

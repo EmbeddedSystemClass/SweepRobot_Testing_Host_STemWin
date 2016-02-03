@@ -604,6 +604,8 @@ void SweepRobot_PCBTestStartBtnProc(void)
 
     if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE || gSwrbTestMode == SWRB_TEST_MODE_IDLE){
 
+        printf("T->ON\r\n");
+
         if(gSwrbTestMode == SWRB_TEST_MODE_PAUSE){
             MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  ">TEST RESUMED\r\n");
         }else{
@@ -616,7 +618,7 @@ void SweepRobot_PCBTestStartBtnProc(void)
             SWRB_ValidTestTaskCntGet();
 
             if( (SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)) == gSwrbTestValidTaskCntTotal){
-                /* Write Serial Number into flash of DUT When all test task selected*/
+                /* Write Serial Number into the flash of DUT When all test tasks were selected */
                 SWRB_TestDUTWriteSN();
             }
 
@@ -643,8 +645,6 @@ void SweepRobot_PCBTestStartBtnProc(void)
         SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_EXIT);
 //        SWRB_WM_DisableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_SET);
         SWRB_WM_EnableWindow(hWin_SWRB_PCBTEST, ID_PCBTEST_BUTTON_STOP);
-
-        printf("T->ON\r\n");
 
         OS_ENTER_CRITICAL();
         if(gSwrbTestMode == SWRB_TEST_MODE_IDLE){
