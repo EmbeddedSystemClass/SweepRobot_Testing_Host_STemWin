@@ -130,7 +130,7 @@ static void Button_CancelResetCheckBoxStateProc(void)
     u8 i;
 
     for(i=0;i<=SWRB_TEST_TASK_NUM;i++){
-        Checkbox_Set_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL,aSwrbTest_TaskLastState[i]);
+        Checkbox_Set_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i,aSwrbTest_TaskLastState[i]);
         if(aSwrbTest_TaskLastState[i] == 1){
             Button_Set_BkColor(hWin_SWRB_TESTSEL, ID_TESTSEL_BUTTON_WHEEL+i, GUI_LIGHTBLUE);
         }else{
@@ -218,64 +218,64 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
         }
     }
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CONFIRM, "");
     BUTTON_DispConfirmCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_CONFIRM, 18, 43);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_SELALL, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_SELALL, &_bmSelectAllCHN, 18, 43);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_SELNONE, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_SELNONE, &_bmSelectNoneCHN, 2, 43);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CANCEL, "");
     BUTTON_DispCancelCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_CANCEL, 18, 43);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_SNSET, "");
     BUTTON_DispSerialNumCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_SNSET, 14, 18);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_TIMESET, "");
     BUTTON_DispTimeCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_TIMESET, 26, 18);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_TESTSEL, "");
     BUTTON_DispTestSelCHNStr(pMsg->hWin, ID_TESTSEL_BUTTON_TESTSEL, 14, 18);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL, &_bmWheelCHN, 34, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_BRUSH, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_BRUSH, &_bmBrushCHN, 46, 40);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_FAN, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_FAN, &_bmFanCHN, 46, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_IFRD, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_IFRD, &_bmIFRDCHN, 46, 40);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_COLLISION, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_COLLISION, &_bmCollisionCHN, 46, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL_FLOAT, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_WHEEL_FLOAT, &_bmWheelFloatCHN, 34, 55);
 
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_ASH_TRAY, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_ASH_TRAY, &_bmAshTrayCHN, 46, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_UNIWHEEL, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_UNIWHEEL, &_bmUniWheelCHN, 34, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_KEY, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_KEY, &_bmKeyCHN, 46, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_IRDA, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_IRDA, &_bmIrDACHN, 46, 40);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_BUZZER, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_BUZZER, &_bmBuzzerCHN, 34, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_RGB_LED, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_RGB_LED, &_bmRGBLEDCHN, 34, 55);
-    
+
     Button_Set_Text(pMsg->hWin, ID_TESTSEL_BUTTON_CHARGE, "");
     BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_TESTSEL_BUTTON_CHARGE, &_bmChargeCHN, 46, 55);
 
