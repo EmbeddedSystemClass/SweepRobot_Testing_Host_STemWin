@@ -32,7 +32,7 @@ u8 USH_User_App(void)
 
 static void SWRBTest_CtrlPanelInit(void)
 {
-    UART_Init(115200);
+    STD_UART_Init(115200);
     USER_RTC_Init();
     LED_Init();
     KEY_Init();

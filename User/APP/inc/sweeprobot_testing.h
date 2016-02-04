@@ -389,7 +389,7 @@ void SweepRobot_PCBTestStopBtnProc(void);
 void SweepRobot_PCBTestExitBtnProc(void);
 
 void SweepRobot_ManulStartBtnProc(void);
-void SweepRobot_ManulSetEnterManulModeProc(void);
+void SweepRobot_ManulSetBtnEnterManulModeProc(void);
 void SweepRobot_ManulSetBtnProc(void);
 void SweepRobot_ManulResetBtnProc(void);
 void SweepRobot_ManulExitBtnProc(void);
@@ -402,11 +402,5 @@ void SweepRobot_ManulBuzzerBtnProc(void);
 void SweepRobot_ManulRGBLEDBtnProc(void);
 void SweepRobot_ManulRELAYBtnProc(void);
 void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void);
-
-#ifdef _USE_POWER_STATION_DIALOG
-void SweepRobot_PowerStationTestStartProc(void);
-void SweepRobot_PowerStationTestStopProc(void);
-void SweepRobot_PowerStationTestExitProc(void);
-#endif
 
 #endif

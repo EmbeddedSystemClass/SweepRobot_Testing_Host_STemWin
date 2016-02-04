@@ -113,7 +113,7 @@ static void Button_OKProc(void)
 {
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         if(!(strcmp(strPasswd,gManulTestEnterManulModePasswd))){
-            SweepRobot_ManulSetEnterManulModeProc();
+            SweepRobot_ManulSetBtnEnterManulModeProc();
 
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 

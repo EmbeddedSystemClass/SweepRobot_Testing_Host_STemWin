@@ -311,5 +311,7 @@ void ASH_TRAY_TestDataSave(void)
     gSwrbTestAcquiredData[SWRB_TEST_DATA_ASH_TRAY_LVL_VALUE_TxOff_POS] = ashTrayLvl.offValue;
     SWRB_TestDataFileWriteData("ASH_TRAY->INS_Value=", ashTrayIns.value, 1);
     SWRB_TestDataFileWriteData("ASH_TRAY->LVL_onValue=", ashTrayLvl.onValue, 1);
+#ifdef _ASH_TRAY_USE_MINUS_COMPARE
     SWRB_TestDataFileWriteData("ASH_TRAY->LVL_offValue=", ashTrayLvl.offValue, 1);
+#endif
 }
