@@ -693,9 +693,9 @@ SD_Error SD_ReadBlock(u8 *buf,long long addr,u16 blksize)
     }else if(DeviceMode==SD_DMA_MODE)
     {
          TransferError=SD_OK;
-        StopCondition=0;            //单块读,不需要发送停止传输指令
-        TransferEnd=0;                //传输结束标置位，在中断服务置1
-        SDIO->MASK|=(1<<1)|(1<<3)|(1<<8)|(1<<5)|(1<<9);    //配置需要的中断
+         StopCondition=0;            //单块读,不需要发送停止传输指令
+         TransferEnd=0;                //传输结束标置位，在中断服务置1
+         SDIO->MASK|=(1<<1)|(1<<3)|(1<<8)|(1<<5)|(1<<9);    //配置需要的中断
          SDIO->DCTRL|=1<<3;             //SDIO DMA使能
          SD_DMA_Config((u32*)buf,blksize,DMA_DIR_PeripheralToMemory);
          while(((DMA2->LISR&(1<<27))==RESET)&&(TransferEnd==0)&&(TransferError==SD_OK)&&timeout)timeout--;//等待传输完成

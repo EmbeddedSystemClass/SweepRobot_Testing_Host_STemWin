@@ -88,7 +88,7 @@ static const GUI_WIDGET_CREATE_INFO _aPCBTestMainDialogCreate[] = {
     { BUTTON_CreateIndirect, "SET TIME",  ID_PCBTEST_BUTTON_SET_TIME, 600, 180, 100, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STOP",  ID_PCBTEST_BUTTON_STOP, 700, 240, 100, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "EXIT",  ID_PCBTEST_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, " ",  ID_PCBTEST_BUTTON_INDICATE, 420, 407, 30, 30, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, " ",  ID_PCBTEST_BUTTON_INDICATE, 425, 407, 25, 30, 0, 0x0, 0 },
     { CHECKBOX_CreateIndirect,  "cbxWheel",       ID_PCBTEST_CHECKBOX_WHEEL, 460, 17, 210, 25, 0, 0x0, 0 },
     { CHECKBOX_CreateIndirect,  "cbxBrush",       ID_PCBTEST_CHECKBOX_BRUSH, 460, 52, 210, 25, 0, 0x0, 0 },
     { CHECKBOX_CreateIndirect,  "cbxFan",         ID_PCBTEST_CHECKBOX_FAN, 460, 87, 210, 25, 0, 0x0, 0 },
@@ -120,7 +120,7 @@ static const GUI_WIDGET_CREATE_INFO _aPCBTestMainDialogCreate[] = {
     { EDIT_CreateIndirect, "EditD7", ID_PCBTEST_EDIT_D7, 340, 47, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditD8", ID_PCBTEST_EDIT_D8, 395, 47, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditSN", ID_PCBTEST_EDIT_SN, 190, 407, 230, 30, 0, 0x64, 0 },
-    { EDIT_CreateIndirect, "EditDate", ID_PCBTEST_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditDate", ID_PCBTEST_EDIT_DATE, 10, 407, 185, 30, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _aPCBTestWarningDialogCreate[] = {

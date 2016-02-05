@@ -2133,7 +2133,7 @@ int get_ldnumber (        /* Returns logical drive number (-1:invalid drive) */
                 }
             }
 #if _STR_VOLUME_ID
-             else {    /* No numeric drive number, find string drive id */
+            else {    /* No numeric drive number, find string drive id */
                 i = 0; tt++;
                 do {
                     sp = str[i]; tp = *path;

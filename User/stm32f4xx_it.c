@@ -85,10 +85,18 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
+//    u32 *lastPointer = 0;
+//    
+//    __ASM{
+//        lastPointer = lr;
+//    }
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
-//      wait();
+//      __ASM{
+//        BX lastPointer;
+//      }
+      wait();
   }
 }
 

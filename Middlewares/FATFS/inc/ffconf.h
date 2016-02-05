@@ -25,7 +25,7 @@
 /   3: f_lseek() function is removed in addition to 2. */
 
 
-#define    _USE_STRFUNC    2
+#define    _USE_STRFUNC    1
 /* This option switches string functions, f_gets(), f_putc(), f_puts() and
 /  f_printf().
 /
@@ -43,7 +43,7 @@
 /* This option switches f_mkfs() function. (0:Disable or 1:Enable) */
 
 
-#define    _USE_FASTSEEK    1
+#define    _USE_FASTSEEK    0
 /* This option switches fast seek feature. (0:Disable or 1:Enable) */
 
 
@@ -247,7 +247,7 @@
 /  included somewhere in the scope of ff.c. */
 
 
-#define _WORD_ACCESS    0
+#define _WORD_ACCESS    1
 /* The _WORD_ACCESS option is an only platform dependent option. It defines
 /  which access method is used to the word data on the FAT volume.
 /

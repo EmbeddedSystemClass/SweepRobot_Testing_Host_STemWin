@@ -57,7 +57,7 @@ u32 mem_malloc(u8 memx,u32 size)
 {
     signed long offset=0;
     u16 nmemb;
-        u16 cmemb=0;
+    u16 cmemb=0;
     u32 i;
     if(!mallco_dev.memrdy[memx])mallco_dev.init(memx);
     if(size==0)return 0XFFFFFFFF;

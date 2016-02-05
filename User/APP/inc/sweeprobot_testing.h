@@ -30,6 +30,8 @@
 #include "swrbTestDriver.h"
 #include "swrbTestStepMotorDriver.h"
 
+#define SWRB_FIXTURE_VERSION    "SWRB Fixture Ver:1.3"
+
 enum CryptoMode{
     DecryptMode,
     EncryptMode,
@@ -324,7 +326,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_FRONT_IFRD_TASK_STK_SIZE       256
 #define SWRB_SLAM_MONITOR_STK_SIZE          256
 #ifdef _USE_SELF_TESTING
-#define SWRB_SELF_TEST_TASK_STK_SIZE        256
+#define SWRB_SELF_TEST_TASK_STK_SIZE        128
 #endif
 
 /* TEST TIME DELAY DEFINITION */

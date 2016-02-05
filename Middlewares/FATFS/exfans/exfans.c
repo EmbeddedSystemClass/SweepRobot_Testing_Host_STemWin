@@ -27,14 +27,23 @@ u8 *fatbuf;
 u8 exfans_init(void)
 {
     u8 i;
+
     for(i=0;i<_VOLUMES;i++)
     {
-        fs[i]=(FATFS*)mymalloc(SRAMIN,sizeof(FATFS));
+        fs[i]=(FATFS*)mymalloc(SRAMEX,sizeof(FATFS));
+        mymemset(fs[i], 0, sizeof(FATFS));
         if(!fs[i])break;
     }
-    file=(FIL*)mymalloc(SRAMIN,sizeof(FIL));
-    ftemp=(FIL*)mymalloc(SRAMIN,sizeof(FIL));
-    fatbuf=(u8*)mymalloc(SRAMIN,512);
+//    file=(FIL*)mymalloc(SRAMEX,sizeof(FIL));
+//    size = sizeof(FIL);
+//    mymemset(file, 0, sizeof(FIL));
+    /* Use actual sizeof FIL to malloc file to avoid wrong malloc size */
+    file=(FIL*)mymalloc(SRAMEX,1101);
+    mymemset(file, 0, 1101);
+    ftemp=(FIL*)mymalloc(SRAMEX,sizeof(FIL));
+    mymemset(ftemp, 0, sizeof(FIL));
+    fatbuf=(u8*)mymalloc(SRAMEX,4096);
+    mymemset(fatbuf, 0, 4096);
     if(i==_VOLUMES&&file&&ftemp&&fatbuf)return 0;
     else return 1;
 }

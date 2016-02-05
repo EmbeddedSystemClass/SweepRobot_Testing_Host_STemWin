@@ -13,14 +13,14 @@
 #include "malloc.h"
 #include "usbh_usr.h"
 
-#define SD_CARD     0
-#define EX_FLASH    1
 #define USB_DISK    2
+#define EX_FLASH    1
+#define SD_CARD     0
 
-#define FLASH_SECTOR_SIZE     512
+#define FLASH_SECTOR_SIZE       4*1024      //512
 
-u16        FLASH_SECTOR_COUNT=2048*12;
-#define FLASH_BLOCK_SIZE       8
+static const unsigned short FLASH_SECTOR_COUNT=4096;   //=256*16       //2048*12
+static const unsigned short FLASH_BLOCK_SIZE=65535;       //=4*1024*16;   //8
 
 DSTATUS disk_initialize (
     BYTE pdrv                /* Physical drive nmuber (0..) */
@@ -29,12 +29,14 @@ DSTATUS disk_initialize (
     u8 res=0;
     switch(pdrv)
     {
+#ifdef USE_SD_CARD
         case SD_CARD:
             res=SD_Init();
               break;
+#endif
         case EX_FLASH:
-            W25QXX_Init();
-            FLASH_SECTOR_COUNT=2048*12;
+             W25QXX_Init();
+//             FLASH_SECTOR_COUNT=2048*12;
              break;
         case USB_DISK:
               if(USBH_UDISK_Status())return 0;
@@ -64,6 +66,7 @@ DRESULT disk_read (
     if (!count)return RES_PARERR;
     switch(pdrv)
     {
+#ifdef USE_SD_CARD
         case SD_CARD:
             res=SD_ReadDisk(buff,sector,count);
             while(res)
@@ -73,6 +76,7 @@ DRESULT disk_read (
                 //printf("sd rd error:%d\r\n",res);
             }
             break;
+#endif
         case EX_FLASH:
             for(;count>0;count--)
             {
@@ -104,6 +108,7 @@ DRESULT disk_write (
     if (!count)return RES_PARERR;
     switch(pdrv)
     {
+#ifdef USE_SD_CARD
         case SD_CARD:
             res=SD_WriteDisk((u8*)buff,sector,count);
             while(res)
@@ -113,6 +118,7 @@ DRESULT disk_write (
                 //printf("sd wr error:%d\r\n",res);
             }
             break;
+#endif
         case EX_FLASH:
             for(;count>0;count--)
             {
@@ -141,76 +147,80 @@ DRESULT disk_ioctl (
 )
 {
     DRESULT res;
-    if(pdrv==SD_CARD)//SD¿¨
-    {
-        switch(cmd)
-        {
-            case CTRL_SYNC:
-                res = RES_OK;
-                break;
-            case GET_SECTOR_SIZE:
-                *(DWORD*)buff = 512;
-                res = RES_OK;
-                break;
-            case GET_BLOCK_SIZE:
-                *(WORD*)buff = SDCardInfo.CardBlockSize;
-                res = RES_OK;
-                break;
-            case GET_SECTOR_COUNT:
-                *(DWORD*)buff = SDCardInfo.CardCapacity/512;
-                res = RES_OK;
-                break;
-            default:
-                res = RES_PARERR;
-                break;
-        }
-    }else if(pdrv==EX_FLASH)
-    {
-        switch(cmd)
-        {
-            case CTRL_SYNC:
-                res = RES_OK;
-                break;
-            case GET_SECTOR_SIZE:
-                *(WORD*)buff = FLASH_SECTOR_SIZE;
-                res = RES_OK;
-                break;
-            case GET_BLOCK_SIZE:
-                *(WORD*)buff = FLASH_BLOCK_SIZE;
-                res = RES_OK;
-                break;
-            case GET_SECTOR_COUNT:
-                *(DWORD*)buff = FLASH_SECTOR_COUNT;
-                res = RES_OK;
-                break;
-            default:
-                res = RES_PARERR;
-                break;
-        }
-    }else if(pdrv==USB_DISK)
-    {
-        switch(cmd)
-        {
-            case CTRL_SYNC:
-                res = RES_OK;
-                break;
-            case GET_SECTOR_SIZE:
-                *(WORD*)buff=512;
-                res = RES_OK;
-                break;
-            case GET_BLOCK_SIZE:
-                *(WORD*)buff=512;
-                res = RES_OK;
-                break;
-            case GET_SECTOR_COUNT:
-                *(DWORD*)buff=USBH_MSC_Param.MSCapacity;
-                res = RES_OK;
-                break;
-            default:
-                res = RES_PARERR;
-                break;
-        }
-    }else res=RES_ERROR;
+    switch(pdrv){
+#ifdef USE_SD_CARD
+        case SD_CARD:
+            switch(cmd){
+                case CTRL_SYNC:
+                    res = RES_OK;
+                    break;
+                case GET_SECTOR_SIZE:
+                    *(DWORD*)buff = 512;
+                    res = RES_OK;
+                    break;
+                case GET_BLOCK_SIZE:
+                    *(WORD*)buff = SDCardInfo.CardBlockSize;
+                    res = RES_OK;
+                    break;
+                case GET_SECTOR_COUNT:
+                    *(DWORD*)buff = SDCardInfo.CardCapacity/512;
+                    res = RES_OK;
+                    break;
+                default:
+                    res = RES_PARERR;
+                    break;
+            }
+            break;
+#endif
+        case EX_FLASH:
+            switch(cmd){
+                case CTRL_SYNC:
+                    res = RES_OK;
+                    break;
+                case GET_SECTOR_SIZE:
+                    *(WORD*)buff = FLASH_SECTOR_SIZE;
+                    res = RES_OK;
+                    break;
+                case GET_BLOCK_SIZE:
+                    *(WORD*)buff = FLASH_BLOCK_SIZE;
+                    res = RES_OK;
+                    break;
+                case GET_SECTOR_COUNT:
+                    *(DWORD*)buff = FLASH_SECTOR_COUNT;
+                    res = RES_OK;
+                    break;
+                default:
+                    res = RES_PARERR;
+                    break;
+            }
+            break;
+        case USB_DISK:
+            switch(cmd){
+                case CTRL_SYNC:
+                    res = RES_OK;
+                    break;
+                case GET_SECTOR_SIZE:
+                    *(WORD*)buff=4096;
+                    res = RES_OK;
+                    break;
+                case GET_BLOCK_SIZE:
+                    *(WORD*)buff=4096;
+                    res = RES_OK;
+                    break;
+                case GET_SECTOR_COUNT:
+                    *(DWORD*)buff=USBH_MSC_Param.MSCapacity;
+                    res = RES_OK;
+                    break;
+                default:
+                    res = RES_PARERR;
+                    break;
+            }
+            break;
+        default:
+            res=RES_ERROR;
+            break;
+    }
+
     return res;
 }
 #endif

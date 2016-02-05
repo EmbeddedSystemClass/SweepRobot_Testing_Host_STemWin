@@ -158,13 +158,15 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_STORAGE_WARNING);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetFont(hItem, GUI_FONT_20B_ASCII);
-//            if(gSwrbTestSDCardInsertState){
-//                TEXT_SetTextColor(hItem, GUI_BLUE);
-//                TEXT_SetText(hItem, "SD Card Inserted");
-//            }else{
-//                TEXT_SetTextColor(hItem, GUI_RED);
-//                TEXT_SetText(hItem, "No SD Card!");
-//            }
+#ifdef USE_SD_CARD
+            if(gSwrbTestSDCardInsertState){
+                TEXT_SetTextColor(hItem, GUI_BLUE);
+                TEXT_SetText(hItem, "SD Card Inserted");
+            }else{
+                TEXT_SetTextColor(hItem, GUI_RED);
+                TEXT_SetText(hItem, "No SD Card!");
+            }
+#endif
             if(gSwrbTestUDiskInsertState){
                 TEXT_SetTextColor(hItem, GUI_BLUE);
                 TEXT_SetText(hItem, "UDisk Inserted");
@@ -177,7 +179,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_TEXT_VERSION);
             TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-            TEXT_SetText(hItem, "SWRB Fixture Ver:1.1");
+            TEXT_SetText(hItem, SWRB_FIXTURE_VERSION);
             TEXT_SetTextColor(hItem, GUI_BLUE);
             break;
         case WM_PAINT:

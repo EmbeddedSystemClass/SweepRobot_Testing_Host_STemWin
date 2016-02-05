@@ -47,7 +47,7 @@ StepMotorDriver_TypeDef stepMotor;
 static void StepMotorDriver_PWMTimerISR(void);
 static void SweepRobotTest_StepMotorStop(void);
 
-void SweepRobotTest_StepMotorDriverConf(void)
+void SweepRobotTest_StepMotorDriverCfg(void)
 {
     stepMotor.mode = STEP_MOTOR_MODE_STOP;
     stepMotor.dir = STEP_MOTOR_DIR_BACKWARD;
@@ -64,7 +64,7 @@ void SweepRobotTest_StepMotorDriverConf(void)
 void SweepRobotTest_StepMotorDriverReset(void)
 {
     SweepRobotTest_StepMotorPwrOff();
-    SweepRobotTest_StepMotorDriverConf();
+    SweepRobotTest_StepMotorDriverCfg();
     SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
     SweepRobotTest_StepMotorEnStateSet(ENABLE);
 }
@@ -273,7 +273,7 @@ void SweepRobotTest_StepMotorMoveSteps(float speed, u16 steps)
     STEP_MOTOR_TIM_SET_RUN();
 }
 
-void SweepRobotTest_StepMotorModeSetRun(enum STEP_MOTOR_MODE mode)
+void SweepRobotTest_StepMotorModeSetExec(enum STEP_MOTOR_MODE mode)
 {
     if(mode == STEP_MOTOR_MODE_RUN){
         STEP_MOTOR_EN_OUT_DISABLE();
@@ -398,7 +398,7 @@ void SweepRobotTest_StepMotorGoHome(void)
 #else
     SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
 #endif
-    SweepRobotTest_StepMotorModeSetRun(STEP_MOTOR_MODE_RUN);
+    SweepRobotTest_StepMotorModeSetExec(STEP_MOTOR_MODE_RUN);
 }
 
 void SweepRobotTest_StepMotorSetIdle(void)

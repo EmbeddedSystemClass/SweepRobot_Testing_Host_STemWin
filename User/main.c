@@ -51,11 +51,13 @@ static void SWRBTest_DeviceInit(void)
 
 static int SWRBTest_StorageInit(void)
 {
-//    if(SD_Init()){
-//        gSwrbTestSDCardInsertState = DISABLE;
-//    }else{
-//        gSwrbTestSDCardInsertState = ENABLE;
-//    }
+#ifdef USE_SD_CARD
+    if(SD_Init()){
+        gSwrbTestSDCardInsertState = DISABLE;
+    }else{
+        gSwrbTestSDCardInsertState = ENABLE;
+    }
+#endif
 
     USBH_Init(&USB_OTG_Core,USB_OTG_FS_CORE_ID,&USB_Host,&USBH_MSC_cb,&USR_Callbacks);
 
@@ -70,7 +72,9 @@ static int SWRBTest_StorageInit(void)
     mem_init(SRAMEX);
     mem_init(SRAMCCM);
 
+#ifdef USE_SD_CARD
     f_mount(fs[0],"0:",1);
+#endif
     f_mount(fs[1],"1:",1);
     f_mount(fs[2],"2:",1);
 

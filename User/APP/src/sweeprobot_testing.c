@@ -302,16 +302,25 @@ void Rtc_Task(void *pdata)
 
 void SWRB_TestDataFileWriteString(char *str)
 {
+    FRESULT flErr;
+    u8 cnt;
+    
+    flErr = flErr;
+
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
-        SWRB_TestDataFileOpen(FA_WRITE);
         f_puts(str,file);
-        f_close(file);
+        do{
+            flErr = f_sync(file);
+        }while(flErr!=FR_OK && ++cnt<10);
     }
 }
 
 void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
 {
+    FRESULT flErr;
+    u8 cnt;
     char *dataStr;
+    
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         dataStr = mymalloc(SRAMIN, sizeof(char)*10);
@@ -322,6 +331,9 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
             sprintf(dataStr, "%s%d", headstr, data);
         }
         f_puts(dataStr,file);
+        do{
+            flErr = f_sync(file);
+        }while(flErr!=FR_OK && ++cnt<10);
         myfree(SRAMIN, dataStr);
     }
 }
@@ -334,20 +346,14 @@ void SWRB_TestDataFileWriteDate(char *headStr, RTC_DateTypeDef *date, RTC_TimeTy
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         dateStr = mymalloc(SRAMIN, sizeof(char)*40);
-        *dateStr = 0;
-
-        SWRB_TestDataFileOpen(FA_WRITE);
+        mymemset(dateStr, 0, sizeof(char)*40);
 
         sprintf(dateStr, "\r\n%s:20%d/%02d/%02d %02d:%02d:%02d\r\n", headStr, date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
         f_puts(dateStr, file);
-
-        myfree(SRAMIN, dateStr);
-
-        cnt = 0;
         do{
-            flErr = f_close(file);
-            cnt++;
-        }while(flErr != FR_OK && cnt<10);
+            flErr = f_sync(file);
+        }while(flErr!=FR_OK && ++cnt<10);
+        myfree(SRAMIN, dateStr);
     }
 }
 
@@ -358,17 +364,12 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
     int fileLength;
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
-        SWRB_TestDataFileOpen(FA_READ);
-        fileLength = f_size(file);
-        flErr = f_close(file);
-
         if(mode == DecryptMode){
             MultiEdit_Set_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, "Test Data Decrypting...");
         }
 
+        fileLength = f_size(file);
         if(fileLength>>3){
-            flErr = SWRB_TestDataFileOpen(FA_READ|FA_WRITE);
-
             gStrCrypt = mymalloc(SRAMIN, sizeof(char)*10);
 
             for(i=0;i<(fileLength>>3);i++){
@@ -377,8 +378,7 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
                     flErr = f_lseek(file, 8*i);
                     mymemset(gStrCrypt, 0, sizeof(char)*10);
                     flErr = f_read(file, gStrCrypt, 8, &br);
-                    cnt++;
-                }while(flErr!=FR_OK && cnt < 10);
+                }while(flErr!=FR_OK && ++cnt<10);
 
                 if(mode == EncryptMode){
                     SWRB_ByteEncrypt(gStrCrypt);
@@ -387,9 +387,8 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
                     do{
                         f_lseek(file, 8*i);
                         flErr = f_write(file, gStrCrypt, 8, &bw);
-
-                        cnt++;
-                    }while(flErr!=FR_OK && cnt<10);
+                        f_sync(file);
+                    }while(flErr!=FR_OK && ++cnt<10);
                 }else{
                     SWRB_ByteDecrypt(gStrCrypt);
                     MultiEdit_Add_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, gStrCrypt);
@@ -397,19 +396,8 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
             }
             myfree(SRAMIN, gStrCrypt);
         }else{
-            cnt = 0;
-            do{
-                flErr = f_close(file);
-                cnt++;
-            }while(flErr != FR_OK && cnt < 10);
             return -1;
         }
-        cnt = 0;
-        do{
-            flErr = f_close(file);
-            cnt++;
-        }while(flErr != FR_OK && cnt < 10);
-
         return 0;
     }else{
         return -1;
@@ -538,11 +526,11 @@ void SWRB_TestCtrlTask(void *pdata)
     OSTaskCreate(SweepRobot_WheelFloatTestTask,(void*)0,(OS_STK*)&SWRB_WHEEL_FLOAT_TEST_TASK_STK[SWRB_WHEEL_FLOAT_TEST_STK_SIZE-1],SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_AshTrayTestTask,(void*)0,(OS_STK*)&SWRB_ASH_TRAY_TEST_TASK_STK[SWRB_ASH_TRAY_TEST_STK_SIZE-1],SWRB_ASH_TRAY_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_UniWheel_Test_Task,(void*)0,(OS_STK*)&SWRB_UNIWHEEL_TEST_TASK_STK[SWRB_UNIWHEEL_TEST_STK_SIZE-1],SWRB_UNIWHEEL_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_KeyTestTask,(void*)0,(OS_STK*)&SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE-1],SWRB_KEY_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_IrDATestTask,(void*)0,(OS_STK*)&SWRB_IRDA_TEST_TASK_STK[SWRB_IRDA_TEST_STK_SIZE-1],SWRB_IRDA_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_ChargeTestTask,(void*)0,(OS_STK*)&SWRB_CHARGE_TEST_TASK_STK[SWRB_CHARGE_TEST_STK_SIZE-1],SWRB_CHARGE_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_BuzzerTestTask,(void*)0,(OS_STK*)&SWRB_BUZZER_TEST_TASK_STK[SWRB_BUZZER_TEST_STK_SIZE-1],SWRB_BUZZER_TEST_TASK_PRIO);
     OSTaskCreate(SweepRobot_RGBLEDTestTask,(void*)0,(OS_STK*)&SWRB_RGB_LED_TEST_TASK_STK[SWRB_RGB_LED_TEST_STK_SIZE-1],SWRB_RGB_LED_TEST_TASK_PRIO);
-    OSTaskCreate(SweepRobot_ChargeTestTask,(void*)0,(OS_STK*)&SWRB_CHARGE_TEST_TASK_STK[SWRB_CHARGE_TEST_STK_SIZE-1],SWRB_CHARGE_TEST_TASK_PRIO);
+    OSTaskCreate(SweepRobot_KeyTestTask,(void*)0,(OS_STK*)&SWRB_KEY_TEST_TASK_STK[SWRB_KEY_TEST_STK_SIZE-1],SWRB_KEY_TEST_TASK_PRIO);
 
     for(i=SWRB_WHEEL_TEST_TASK_PRIO;i<SWRB_TEST_TASK_PRIO_END_BOUND;i++){
         OSTaskSuspend(i);
@@ -625,6 +613,7 @@ void SweepRobot_PCBTestStartBtnProc(void)
             }
 
             if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+                SWRB_TestDataFileOpen(FA_WRITE|FA_READ);
                 SWRB_TestDataFileWriteSN();
                 SWRB_TestDataFileWriteDate(">PCB Test Start Time", &rtcDate, &rtcTime);
             }
@@ -770,6 +759,10 @@ void SweepRobot_PCBTestStopBtnProc(void)
 
         for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
+        }
+        
+        if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+            f_close(file);
         }
 
         OS_ENTER_CRITICAL();
@@ -1106,6 +1099,10 @@ static void SWRB_TestFinishProc(void)
     printf("T->OFF\r\n");
 
     STD_UART_DISABLE();
+    
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+        f_close(file);
+    }
 
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
@@ -1243,6 +1240,7 @@ static void SweepRobot_ManulStartBtnAutoModeStartProc(void)
     SweepRobot_ManulTestBatteryVoltDisp();
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+        SWRB_TestDataFileOpen(FA_WRITE|FA_READ);
         SWRB_TestDataFileWriteDate("Manul Test Start Time", &rtcDate, &rtcTime);
     }
 
@@ -1326,6 +1324,10 @@ static void SweepRobot_ManulStartBtnStopProc(void)
     SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
     STD_UART_DISABLE();
+    
+    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+        f_close(file);
+    }
 
     OS_ENTER_CRITICAL();
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
