@@ -6,23 +6,23 @@
 #define NULL 0
 #endif
 
-#define SRAMIN     0
-#define SRAMEX     1
-#define SRAMCCM 2
+#define SRAMIN      0
+#define SRAMEX      1
+#define SRAMCCM     2
 
-#define SRAMBANK  3
+#define SRAMBANK    3
 
-#define MEM1_BLOCK_SIZE        32
-#define MEM1_MAX_SIZE        80*1024          //80*1024
-#define MEM1_ALLOC_TABLE_SIZE MEM1_MAX_SIZE/MEM1_BLOCK_SIZE
+#define MEM1_BLOCK_SIZE         32
+#define MEM1_MAX_SIZE           80*1024             //80*1024
+#define MEM1_ALLOC_TABLE_SIZE   MEM1_MAX_SIZE/MEM1_BLOCK_SIZE
 
-#define MEM2_BLOCK_SIZE        32
-#define MEM2_MAX_SIZE        1024*1024*2        //1024*1024*2
-#define MEM2_ALLOC_TABLE_SIZE MEM2_MAX_SIZE/MEM2_BLOCK_SIZE
+#define MEM2_BLOCK_SIZE         32
+#define MEM2_MAX_SIZE           1024*1024*2         //1024*1024*2
+#define MEM2_ALLOC_TABLE_SIZE   MEM2_MAX_SIZE/MEM2_BLOCK_SIZE
 
-#define MEM3_BLOCK_SIZE        32
-#define MEM3_MAX_SIZE        60*1024
-#define MEM3_ALLOC_TABLE_SIZE MEM3_MAX_SIZE/MEM3_BLOCK_SIZE
+#define MEM3_BLOCK_SIZE         32
+#define MEM3_MAX_SIZE           60*1024
+#define MEM3_ALLOC_TABLE_SIZE   MEM3_MAX_SIZE/MEM3_BLOCK_SIZE
 
 struct _m_mallco_dev
 {

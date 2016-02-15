@@ -9,9 +9,9 @@ static UNIWHEEL_TestTypeDef uniwheel;
 
 /* UNIVERSAL_WHEEL_ACTIVE_THRESHOLD */
 #ifdef _UNIWHEEL_USE_MINUS_COMPARE
-    static const int SWRB_UNIWHEEL_MINUS_THRESHOLD = 400;
+    static const int SWRB_UNIWHEEL_MINUS_THRESHOLD = 200;
 #else
-    static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 4000-400;
+    static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 4000-200;
 #endif
 
 static void SweepRobot_UniWheelTestInit(void)
@@ -114,7 +114,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
 #ifdef _UNIWHEEL_USE_MINUS_COMPARE
         if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_MINUS_THRESHOLD){
 #else
-        if(uniwheel.onValue < SWRB_UNIWHEEL_VALID_THRESHOLD){
+        if(0 > uniwheel.onValue && uniwheel.onValue < SWRB_UNIWHEEL_VALID_THRESHOLD){
 #endif
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
             uniwheel.validCnt++;

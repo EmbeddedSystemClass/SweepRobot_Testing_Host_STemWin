@@ -119,8 +119,8 @@ static const GUI_WIDGET_CREATE_INFO _aPCBTestMainDialogCreate[] = {
     { EDIT_CreateIndirect, "EditD6", ID_PCBTEST_EDIT_D6, 285, 47, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditD7", ID_PCBTEST_EDIT_D7, 340, 47, 55, 30, 0, 0x64, 0 },
     { EDIT_CreateIndirect, "EditD8", ID_PCBTEST_EDIT_D8, 395, 47, 55, 30, 0, 0x64, 0 },
-    { EDIT_CreateIndirect, "EditSN", ID_PCBTEST_EDIT_SN, 190, 407, 230, 30, 0, 0x64, 0 },
-    { EDIT_CreateIndirect, "EditDate", ID_PCBTEST_EDIT_DATE, 10, 407, 185, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditSN", ID_PCBTEST_EDIT_SN, 190, 407, 235, 30, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "EditDate", ID_PCBTEST_EDIT_DATE, 10, 407, 180, 30, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _aPCBTestWarningDialogCreate[] = {

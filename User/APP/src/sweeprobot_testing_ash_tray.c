@@ -66,6 +66,7 @@ static void SweepRobot_AshTrayInsTestProc(void)
                 USART_RX_STA = 0;
                 break;
             }else{
+                ashTrayIns.value = 1;
                 continue;
             }
         }

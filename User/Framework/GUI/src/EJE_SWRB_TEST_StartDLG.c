@@ -123,11 +123,6 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_PCB_TEST, &_bmPCBTestCHN, 36, 74);
             Button_Init(hItem);
 
-//            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_POWER_STATION);
-//            BUTTON_SetText(hItem, " ");
-//            BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_POWER_STATION, &_bmPSTestCHN, 19, 28);
-//            Button_Init(hItem);
-
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SET);
             BUTTON_SetText(hItem, "");
             BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
