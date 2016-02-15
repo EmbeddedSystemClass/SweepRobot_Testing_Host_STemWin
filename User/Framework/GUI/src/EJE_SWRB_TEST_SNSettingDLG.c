@@ -322,38 +322,38 @@ static void ListWheel_TestDataFileSerialNumberGen(char *dest_str)
     char *strSNYear,*strSNMonth, *strSNDate;
     char *strSN1, *strSN2, *strSN3;
 
-    strSNYear = mymalloc(SRAMIN, sizeof(char)*6);
+    strSNYear = mymalloc(SRAMEX, sizeof(char)*6);
     *strSNYear = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_YEAR, strSNYear);
 
-    strSNMonth = mymalloc(SRAMIN, sizeof(char)*4);
+    strSNMonth = mymalloc(SRAMEX, sizeof(char)*4);
     *strSNMonth = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_MONTH, strSNMonth);
 
-    strSNDate = mymalloc(SRAMIN, sizeof(char)*4);
+    strSNDate = mymalloc(SRAMEX, sizeof(char)*4);
     *strSNDate = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_DATE, strSNDate);
 
-    strSN1 = mymalloc(SRAMIN, sizeof(char)*3);
+    strSN1 = mymalloc(SRAMEX, sizeof(char)*3);
     *strSN1 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN1, strSN1);
 
-    strSN2 = mymalloc(SRAMIN, sizeof(char)*3);
+    strSN2 = mymalloc(SRAMEX, sizeof(char)*3);
     *strSN2 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN2, strSN2);
 
-    strSN3 = mymalloc(SRAMIN, sizeof(char)*3);
+    strSN3 = mymalloc(SRAMEX, sizeof(char)*3);
     *strSN3 = 0;
     ListWheel_TextGet(hWin_SWRB_SNSET, ID_SNSET_LISTWHEEL_SN3, strSN3);
 
     sprintf(dest_str, "SerialNumber: %s%02d%02d%s%s%s", strSNYear, atoi(strSNMonth), atoi(strSNDate), strSN1, strSN2, strSN3);
 
-    myfree(SRAMIN, (void*)strSNYear);
-    myfree(SRAMIN, (void*)strSNMonth);
-    myfree(SRAMIN, (void*)strSNDate);
-    myfree(SRAMIN, (void*)strSN1);
-    myfree(SRAMIN, (void*)strSN2);
-    myfree(SRAMIN, (void*)strSN3);
+    myfree(SRAMEX, (void*)strSNYear);
+    myfree(SRAMEX, (void*)strSNMonth);
+    myfree(SRAMEX, (void*)strSNDate);
+    myfree(SRAMEX, (void*)strSN1);
+    myfree(SRAMEX, (void*)strSN2);
+    myfree(SRAMEX, (void*)strSN3);
 }
 
 /*********************************************************************
