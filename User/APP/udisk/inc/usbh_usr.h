@@ -55,6 +55,8 @@
   * @{
   */ 
 
+extern USBH_HOST  USB_Host;
+extern USB_OTG_CORE_HANDLE  USB_OTG_Core;
 
 extern  USBH_Usr_cb_TypeDef USR_Callbacks;
 

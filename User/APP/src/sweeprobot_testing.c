@@ -1061,6 +1061,8 @@ static void SWRB_PCBTestFinishProc(void)
 
 static void SWRB_ManulTestFinishProc(void)
 {
+    char *str;
+    
     SweepRobot_ManulTestCtrlReset();
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
@@ -1070,6 +1072,11 @@ static void SWRB_ManulTestFinishProc(void)
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
         SWRB_TestDataFileWriteDate("Manul Test finish time", &rtcDate, &rtcTime);
+        
+        str = mymalloc(SRAMEX, sizeof(char)*50);
+        str = "\r\n****************************************\r\n";
+        SWRB_TestDataFileWriteString(str);
+        myfree(SRAMEX, str);
     }
 
     BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);

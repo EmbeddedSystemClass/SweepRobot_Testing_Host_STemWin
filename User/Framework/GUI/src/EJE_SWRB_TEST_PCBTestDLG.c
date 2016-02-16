@@ -439,6 +439,7 @@ static void _cbKeyDialog(WM_MESSAGE * pMsg)
     
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
+            FRAMEWIN_AddCloseButton(pMsg->hWin, FRAMEWIN_BUTTON_RIGHT, 0);
             
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE);
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
@@ -499,6 +500,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
     
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
+            FRAMEWIN_AddCloseButton(pMsg->hWin, FRAMEWIN_BUTTON_RIGHT, 0);
             
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_OK);
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
@@ -577,10 +579,8 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
     
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
+            FRAMEWIN_AddCloseButton(pMsg->hWin, FRAMEWIN_BUTTON_RIGHT, 0);
 
-            hItem = WM_GetDialogItem(pMsg->hWin,ID_PCBTEST_FRAMEWIN_BUZZER);
-            WM_AttachWindowAt(hItem, hWin_SWRB_PCBTEST, 10, 77);
-        
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_BUZZER_OK);
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_OK, "");

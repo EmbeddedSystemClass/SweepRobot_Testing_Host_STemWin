@@ -3,13 +3,13 @@
 #include "ff.h"
 #include "usart.h"
 
-static u8 AppState;
-extern USB_OTG_CORE_HANDLE  USB_OTG_Core;
+#include "sweeprobot_testing.h"
+#include "EJE_SWRB_TEST_DLG_Conf.h"
 
-void OTG_FS_IRQHandler(void)
-{
-    USBH_OTG_ISR_Handler(&USB_OTG_Core);
-}
+USBH_HOST  USB_Host;
+USB_OTG_CORE_HANDLE  USB_OTG_Core;
+
+static u8 AppState;
 
 USBH_Usr_cb_TypeDef USR_Callbacks=
 {
@@ -53,11 +53,34 @@ const uint8_t MSG_ROOT_CONT[]        = "> Exploring disk flash ...\n";
 const uint8_t MSG_WR_PROTECT[]       = "> The disk is write protected\n";
 const uint8_t MSG_UNREC_ERROR[]      = "> UNRECOVERED ERROR STATE\n";
 
+void OTG_FS_IRQHandler(void)
+{
+    USBH_OTG_ISR_Handler(&USB_OTG_Core);
+}
+
 void USBH_USR_Init(void)
 {
     printf("USB OTG HS MSC Host\r\n");
     printf("> USB Host library started.\r\n");
     printf("  USB Host Library v2.1.0\r\n\r\n");
+}
+
+static u8 USH_User_App(void)
+{
+    gSwrbTestUDiskInsertState = ENABLE;
+    Text_Set_Color(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, GUI_BLUE);
+    Text_Set_Text(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, "UDisk Inserted");
+
+    while(HCD_IsDeviceConnected(&USB_OTG_Core)){
+        LED1=!LED1;
+        OSTimeDlyHMSM(0,0,0,200);
+    }
+    gSwrbTestUDiskInsertState = DISABLE;
+    Text_Set_Color(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, GUI_RED);
+    Text_Set_Text(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, "No UDisk");
+    LED1 = 1;
+
+    return 0;
 }
 
 void USBH_USR_DeviceAttached(void)
@@ -190,8 +213,6 @@ void USBH_USR_UnrecoveredError (void)
 {
     printf("%sr\n", MSG_UNREC_ERROR);
 }
-
-extern USBH_HOST              USB_Host;
 
 u8 USBH_UDISK_Status(void)
 {

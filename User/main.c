@@ -7,28 +7,7 @@
 #include "EJE_SWRB_TEST_DLG_Conf.h"
 #include "usbh_usr.h"
 
-USBH_HOST  USB_Host;
-USB_OTG_CORE_HANDLE  USB_OTG_Core;
-
 extern GUI_CONST_STORAGE GUI_FONT GUI_FontSDErrCHN;
-
-u8 USH_User_App(void)
-{
-    gSwrbTestUDiskInsertState = ENABLE;
-    Text_Set_Color(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, GUI_BLUE);
-    Text_Set_Text(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, "UDisk Inserted");
-
-    while(HCD_IsDeviceConnected(&USB_OTG_Core)){
-        LED1=!LED1;
-        OSTimeDlyHMSM(0,0,0,200);
-    }
-    gSwrbTestUDiskInsertState = DISABLE;
-    Text_Set_Color(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, GUI_RED);
-    Text_Set_Text(hWin_SWRB_START, ID_START_TEXT_STORAGE_WARNING, "No UDisk");
-    LED1 = 1;
-
-    return 0;
-}
 
 static void SWRBTest_CtrlPanelInit(void)
 {
