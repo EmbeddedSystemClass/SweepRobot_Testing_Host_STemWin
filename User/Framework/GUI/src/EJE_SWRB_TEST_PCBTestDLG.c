@@ -239,6 +239,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_MULTIEDIT_MAIN);
             MULTIEDIT_SetText(hItem, "Waiting for Start");
             MULTIEDIT_SetFont(hItem, GUI_FONT_24_ASCII);
+            MULTIEDIT_SetBkColor(hItem, 0, 0xD0FFFF);
             MULTIEDIT_SetAutoScrollV(hItem,1);
             MULTIEDIT_SetWrapWord(hItem);
 //            MULTIEDIT_SetBufferSize(hItem, 2048);

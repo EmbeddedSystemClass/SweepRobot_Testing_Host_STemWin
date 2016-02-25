@@ -42,6 +42,8 @@ static void SweepRobot_ChargeTestInit(void)
     mymemset(&charge, 0, sizeof(charge));
 
 #ifdef _USE_CHARGE_24V
+    SweepRobot_IrDATestTxRelayOn();
+    OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
     SweepRobot_Charge24VOn();
 #endif
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
@@ -196,6 +198,7 @@ static void SweepRobot_ChargeTestProc(void)
         gSwrbTestTaskRunCnt = 0;
         printf("CRG->OFF\r\n");
         SweepRobot_Charge24VOff();
+        SweepRobot_IrDATestTxRelayOff();
 
         SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
 
@@ -264,6 +267,7 @@ static void SweepRobot_ChargeTestTimeOutProc(void)
     gSwrbTestTaskRunCnt = 0;
     printf("CRG->OFF\r\n");
     SweepRobot_Charge24VOff();
+    SweepRobot_IrDATestTxRelayOff();
 
     SWRB_TestDataSaveToFile(CHARGE_TestDataSave);
 

@@ -514,7 +514,6 @@ void SWRB_TestCtrlTask(void *pdata)
     gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 
     SweepRobotTest_PCBTestInitProc();
-    MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "PLEASE PRESS SET TO SET SERIAL NUMBER BEFORE TEST\r\n");
 
     OS_ENTER_CRITICAL();
 
