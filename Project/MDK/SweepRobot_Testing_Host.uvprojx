@@ -371,7 +371,7 @@
             <vShortWch>0</vShortWch>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>VERSION_1_2,  _USE_SELF_TESTING, _USE_CHARGE_24V, _USE_USB_EN_CMP,USE_USB_OTG_FS,_USE_ACTUAL_POS_DETECT_KEY, _SHOW_SLAM_DLG,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
+              <Define>VERSION_1_2, _USE_CHARGE_24V, _USE_USB_EN_CMP,USE_USB_OTG_FS,_USE_ACTUAL_POS_DETECT_KEY, STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\User\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\User;..\..\User\Framework\GUI\inc;..\..\User\APP\inc;..\..\User\Framework\GUI\res\inc;..\..\User\APP\udisk\inc;..\..\Libraries\STM32_USB_HOST_Library\Core\inc;..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc</IncludePath>
             </VariousControls>
@@ -617,6 +617,11 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StartDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_LoginDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_PCBTestDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
@@ -642,39 +647,316 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TestSelSettingDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_LoginDLG.c</FilePath>
-            </File>
-            <File>
               <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_RelayCtrlDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_RelayCtrlDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StepMotorTestDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SteerMotorTestDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SteerMotorTestDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -1926,6 +2208,11 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StartDLG.c</FilePath>
             </File>
             <File>
+              <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_LoginDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>EJE_SWRB_TEST_PCBTestDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
@@ -1949,11 +2236,6 @@
               <FileName>EJE_SWRB_TEST_TestSelSettingDLG.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TestSelSettingDLG.c</FilePath>
-            </File>
-            <File>
-              <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_LoginDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>

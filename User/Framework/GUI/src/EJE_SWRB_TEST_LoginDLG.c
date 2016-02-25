@@ -51,11 +51,21 @@
 
 static char* gSetDlgLoginPasswd = "123";
 static char* gUdiskInsertCmpSkipPasswd = "456";
+#ifdef USE_DECRYPTO
 static char* gDecryptDlgLoginPasswd  = "0549832761";
+#endif
+#ifdef USE_SLAM
 static char* gSLAMDlgLoginPasswd = "167238";
+#endif
+#ifdef USE_STEPMOTOR_CTRL
 static char* gStepMotorLoginPasswd = "054983";
+#endif
+#ifdef USE_STEERMOTOR_CTRL
 static char* gSteerMotorLoginPasswd = "832761";
+#endif
+#ifdef USE_RELAY_CTRL
 static char* gRelayCtrlLoginPasswd = "387216";
+#endif
 static char* gManulTestEnterManulModePasswd = "123456";
 static const char * gSetTimeConfirmPasswd = "123876";
 
@@ -140,27 +150,37 @@ static void Button_OKProc(void)
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_TESTSEL);
+#ifdef USE_DECRYPTO
         }else if(!(strcmp(strPasswd,gDecryptDlgLoginPasswd))){
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_DECRYPTO);
+#endif
+#ifdef USE_SLAM
         }else if(!(strcmp(strPasswd,gSLAMDlgLoginPasswd))){
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_SLAM);
+#endif
+#ifdef USE_STEPMOTOR_CTRL
         }else if(!(strcmp(strPasswd,gStepMotorLoginPasswd))){
             STEP_MOTOR_ISR_CB_REG(StepMotorTest_PosStepCntDisp);
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_STEPMOTOR);
+#endif
+#ifdef USE_STEERMOTOR_CTRL
         }else if(!(strcmp(strPasswd,gSteerMotorLoginPasswd))){
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_STEERMOTOR);
+#endif
+#ifdef USE_RELAY_CTRL
         }else if(!(strcmp(strPasswd,gRelayCtrlLoginPasswd))){
             WM_HideWin(hWin_SWRB_LOGIN);
             WM_HideWin(hWin_SWRB_START);
             WM_ShowWin(hWin_SWRB_RELAY);
+#endif
         }else if(!(strcmp(strPasswd,gUdiskInsertCmpSkipPasswd))){
             if(gSwrbTestUDiskInsertCmpSkipFlag){
                 gSwrbTestUDiskInsertCmpSkipFlag = DISABLE;
@@ -380,6 +400,11 @@ WM_HWIN CreateLoginDLG(void) {
 
     hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, hWin_SWRB_PCBTEST, 100, 90);
     return hWin;
+}
+
+void SweepRobotTest_LoginEditClear(void)
+{
+    Login_PasswdClearProc();
 }
 
 /*************************** End of file ****************************/

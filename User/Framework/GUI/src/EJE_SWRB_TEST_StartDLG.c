@@ -210,6 +210,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
+#ifdef USE_SLAM
                 case ID_START_BUTTON_SLAM: // Notifications sent by 'SLAM'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
@@ -219,6 +220,8 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
+#endif
+#ifdef USE_STEPMOTOR_CTRL
                 case ID_START_BUTTON_STEP_MOTOR: // Notifications sent by 'STEPMOTOR'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
@@ -228,6 +231,8 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
+#endif
+#ifdef USE_DECRYPTO
                 case ID_START_BUTTON_DECRYPTO: // Notifications sent by 'Decrypto'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
@@ -237,6 +242,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
+#endif
             }
             break;
         default:

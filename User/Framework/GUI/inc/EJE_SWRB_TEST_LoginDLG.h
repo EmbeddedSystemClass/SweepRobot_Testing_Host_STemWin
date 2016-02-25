@@ -5,6 +5,6 @@
 #include "DIALOG.h"
 
 WM_HWIN CreateLoginDLG(void);
-void SweepRobotTest_LoginDlgPasswdClear(void);
+void SweepRobotTest_LoginEditClear(void);
 
 #endif

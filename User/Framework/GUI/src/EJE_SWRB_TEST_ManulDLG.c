@@ -105,13 +105,15 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
     { BUTTON_CreateIndirect, "btnRelay", ID_MANUL_BUTTON_RELAY, 440, 400, 60, 65, 0, 0x0, 0 },
     { EDIT_CreateIndirect, "editVolt", ID_MANUL_EDIT_VOLT, 550, 400, 45, 30, 0, 0x64, 0 },
     { PROGBAR_CreateIndirect, "prgbVolt", ID_MANUL_PROGBAR_VOLT, 620, 400, 55, 30, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "textVolt", ID_MANUL_TEXT_VOLT, 590, 400, 30, 30, 0, 0x64, 0 },
+    { TEXT_CreateIndirect, "textVolt", ID_MANUL_TEXT_VOLT, 600, 400, 20, 30, 0, 0x64, 0 },
 };
 
+#ifdef USE_MANUL_TEST_STATE_INDICATE
 static const GUI_WIDGET_CREATE_INFO _aManulTestStateIndicateDialogCreate[] = {
     { WINDOW_CreateIndirect, "winManulTestState", ID_MANUL_WINDOW_TEST_STATE_INDICATE, 0, 0, 500, 360, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "btnManulTestStateIndicate", ID_MANUL_BUTTON_TEST_STATE_INDICATE, 100, 100, 200, 80, 0, 0x0, 0 },
 };
+#endif
 
 /*********************************************************************
 *

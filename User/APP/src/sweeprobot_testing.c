@@ -176,14 +176,26 @@ static void emWin_TaskInit(void)
     hWin_SWRB_TIMESET = CreateTimeSettingDLG();
     hWin_SWRB_TESTSEL = CreateTestSelSettingDLG();
     hWin_SWRB_LOGIN = CreateLoginDLG();
+#ifdef USE_NUMPAD
     hWin_SWRB_NUMPAD = CreateNumPadDLG();
+#endif
+#ifdef USE_DECRYPTO
     hWin_SWRB_DECRYPTO = CreatewinDecryptoDLG();
+#endif
     hWin_SWRB_MANUL = CreateManulTestDLG();
+#ifdef USE_RELAY_CTRL
     hWin_SWRB_RELAY = CreatewinRelayDLG();
+#endif
+#ifdef USE_STEPMOTOR_CTRL
     hWin_SWRB_STEPMOTOR = CreatewinStepMotorDLG();
+#endif
+#ifdef USE_STEERMOTOR_CTRL
     hWin_SWRB_STEERMOTOR = CreatewinSteerMotorDLG();
+#endif
     hWin_SWRB_PCBTEST = CreateEJE_SWRB_TEST_PCBTestDLG();
+#ifdef USE_SLAM
     hWin_SWRB_SLAM = CreateEJE_SWRB_TEST_SLAMDLG();
+#endif
     hWin_SWRB_START = CreateEJE_SWRB_TEST_StartDLG();
 //    hWin_SWRB_WARNING = CreateWarningDLG();
 
@@ -208,9 +220,11 @@ void emWin_Maintask(void *pdata)
                 SWRB_SET_ListwheelSnapPosUpdate();
                 SWRB_SET_EditTextUpdate();
                 break;
+#ifdef USE_SLAM
             case SWRB_DIALOG_SELECT_SLAM:
                 WM_InvalidateWindow(hWin_SWRB_SLAM);
                 break;
+#endif
             default:break;
         }
 
@@ -304,7 +318,7 @@ void SWRB_TestDataFileWriteString(char *str)
 {
     FRESULT flErr;
     u8 cnt;
-    
+
     flErr = flErr;
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
@@ -320,7 +334,7 @@ void SWRB_TestDataFileWriteData(char *headstr, int data, u8 CRflag)
     FRESULT flErr;
     u8 cnt;
     char *dataStr;
-    
+
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         dataStr = mymalloc(SRAMIN, sizeof(char)*10);
@@ -364,9 +378,11 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
     int fileLength;
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
-        if(mode == DecryptMode){
+#ifdef USE_DECRYPTO
+        if(mode == DecryptMode && gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_DECRYPTO){
             MultiEdit_Set_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, "Test Data Decrypting...");
         }
+#endif
 
         fileLength = f_size(file);
         if(fileLength>>3){
@@ -391,7 +407,11 @@ int SWRB_TestDataFileCrypt(enum CryptoMode mode)
                     }while(flErr!=FR_OK && ++cnt<10);
                 }else{
                     SWRB_ByteDecrypt(gStrCrypt);
-                    MultiEdit_Add_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, gStrCrypt);
+#ifdef USE_DECRYPTO
+                    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_DECRYPTO){
+                        MultiEdit_Add_Text(hWin_SWRB_DECRYPTO, ID_DECRYPTO_MULTIEDIT_MAIN, gStrCrypt);
+                    }
+#endif
                 }
             }
             myfree(SRAMIN, gStrCrypt);
@@ -693,7 +713,7 @@ void SweepRobot_PCBTestStartBtnProc(void)
 //}
 
 /* TODO: Add NumPad implemention here*/
-/* FIXME: NumPad Not in use */
+#ifdef USE_NUMPAD
 void SweepRobot_PCBTestNumPadOKProc(void)
 {
     char *str;
@@ -708,6 +728,7 @@ void SweepRobot_PCBTestNumPadOKProc(void)
     WM_BringToTop(hWin_SWRB_PCBTEST);
     WM_BringToTop(hWin_SWRB_LOGIN);
 }
+#endif
 
 void SweepRobot_PCBTestStopBtnProc(void)
 {
@@ -759,7 +780,7 @@ void SweepRobot_PCBTestStopBtnProc(void)
         for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
             Checkbox_Set_Text_Color(i, GUI_BLACK);
         }
-        
+
         if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
             f_close(file);
         }
@@ -1061,7 +1082,7 @@ static void SWRB_PCBTestFinishProc(void)
 static void SWRB_ManulTestFinishProc(void)
 {
     char *str;
-    
+
     SweepRobot_ManulTestCtrlReset();
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
@@ -1071,7 +1092,7 @@ static void SWRB_ManulTestFinishProc(void)
         RTC_GetDate(RTC_Format_BIN, &rtcDate);
         RTC_GetTime(RTC_Format_BIN, &rtcTime);
         SWRB_TestDataFileWriteDate("Manul Test finish time", &rtcDate, &rtcTime);
-        
+
         str = mymalloc(SRAMEX, sizeof(char)*50);
         str = "\r\n****************************************\r\n";
         SWRB_TestDataFileWriteString(str);
@@ -1105,7 +1126,7 @@ static void SWRB_TestFinishProc(void)
     printf("T->OFF\r\n");
 
     STD_UART_DISABLE();
-    
+
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         f_close(file);
     }
@@ -1172,6 +1193,7 @@ void SweepRobot_StartDlgSetBtnClickProc(void)
     WM_BringToTop(hWin_SWRB_LOGIN);
 }
 
+#ifdef USE_SLAM
 void SweepRobot_StartDlgSLAMBtnClickProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_SLAM;
@@ -1181,7 +1203,9 @@ void SweepRobot_StartDlgSLAMBtnClickProc(void)
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_SLAM);
 }
+#endif
 
+#ifdef USE_STEPMOTOR_CTRL
 void SweepRobot_StartDlgStepMotorBtnClickProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_STEP_MOTOR;
@@ -1189,7 +1213,9 @@ void SweepRobot_StartDlgStepMotorBtnClickProc(void)
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_STEPMOTOR);
 }
+#endif
 
+#ifdef USE_DECRYPTO
 void SweepRobot_StartDlgDecryptoBtnClickProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_DECRYPTO;
@@ -1197,6 +1223,7 @@ void SweepRobot_StartDlgDecryptoBtnClickProc(void)
     WM_HideWin(hWin_SWRB_START);
     WM_ShowWin(hWin_SWRB_DECRYPTO);
 }
+#endif
 
 static void SweepRobot_ManulTestCtrlReset(void)
 {
@@ -1330,7 +1357,7 @@ static void SweepRobot_ManulStartBtnStopProc(void)
     SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
 
     STD_UART_DISABLE();
-    
+
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         f_close(file);
     }
@@ -1493,6 +1520,8 @@ void SweepRobot_ManulExitBtnProc(void)
         WM_ShowWin(hWin_SWRB_START);
 
         STD_UART_DISABLE();
+
+        SweepRobotTest_LoginEditClear();
     }
 }
 

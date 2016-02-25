@@ -380,9 +380,13 @@ void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
 void SweepRobot_StartDlgManulBtnClickProc(void);
 void SweepRobot_StartDlgSetBtnClickProc(void);
+#ifdef USE_SLAM
 void SweepRobot_StartDlgSLAMBtnClickProc(void);
+#endif
 void SweepRobot_StartDlgStepMotorBtnClickProc(void);
+#ifdef USE_DECRYPTO
 void SweepRobot_StartDlgDecryptoBtnClickProc(void);
+#endif
 
 void SweepRobot_PCBTestStartBtnProc(void);
 //void SweepRobot_PCBTestLoginProc(void);

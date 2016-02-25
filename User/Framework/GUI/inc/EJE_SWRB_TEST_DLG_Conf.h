@@ -1117,11 +1117,11 @@
     extern WM_HWIN hWin_SWRB_LOGIN;
 #endif
 
-#if __EJE_SWRB_TEST_NUMPAD_DLG
+#if (__EJE_SWRB_TEST_NUMPAD_DLG && defined USE_NUMPAD)
     extern WM_HWIN hWin_SWRB_NUMPAD;
 #endif
 
-#if __EJE_SWRB_TEST_SLAM_DLG
+#if (__EJE_SWRB_TEST_SLAM_DLG && defined USE_SLAM)
     extern WM_HWIN hWin_SWRB_SLAM;
 #endif
 
@@ -1133,19 +1133,19 @@
     extern WM_HWIN hWin_SWRB_MANUL;
 #endif
 
-#if __EJE_SWRB_TEST_STEPMOTOR_DLG
+#if (__EJE_SWRB_TEST_STEPMOTOR_DLG && defined USE_STEPMOTOR_CTRL)
     extern WM_HWIN hWin_SWRB_STEPMOTOR;
 #endif
 
-#if __EJE_SWRB_TEST_STEERMOTOR_DLG
+#if (__EJE_SWRB_TEST_STEERMOTOR_DLG && defined USE_STEERMOTOR_CTRL)
     extern WM_HWIN hWin_SWRB_STEERMOTOR;
 #endif
 
-#if __EJE_SWRB_TEST_RELAYCTRL_DLG
+#if (__EJE_SWRB_TEST_RELAYCTRL_DLG && defined USE_RELAY_CTRL)
     extern WM_HWIN hWin_SWRB_RELAY;
 #endif
 
-#if __EJE_SWRB_TEST_DECRYPTO_DLG
+#if (__EJE_SWRB_TEST_DECRYPTO_DLG && defined USE_DECRYPTO)
     extern WM_HWIN hWin_SWRB_DECRYPTO;
 #endif
 
