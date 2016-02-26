@@ -46,7 +46,7 @@ static u8 aSwrbManulTestState[SWRB_TEST_STATE_BOUND] = { 0 };
 typedef void (*TestCBFunc_t)(void);
 static TestCBFunc_t gLedTaskCB = NULL;
 
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
 static u8 gkeyCode = 0;
 static u8 gkeyCodeGetFinishFlag = 0;
 #endif
@@ -64,7 +64,7 @@ static void emWin_Maintask(void *pdata);
 static void USB_Host_Task(void *pdata);
 static void Touch_Task(void *pdata);
 static void Led_Task(void *pdata);
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
 static void Key_Task(void *pdata);
 #endif
 static void Rtc_Task(void *pdata);
@@ -172,6 +172,9 @@ static void emWin_TaskInit(void)
 
     OS_ENTER_CRITICAL();
 
+#ifdef USE_CONTROL
+    hWin_SWRB_CONTROL = CreatewinCtrlDLG();
+#endif
     hWin_SWRB_SNSET = CreateSNSettingDLG();
     hWin_SWRB_TIMESET = CreateTimeSettingDLG();
     hWin_SWRB_TESTSEL = CreateTestSelSettingDLG();
@@ -273,7 +276,7 @@ void Led_Task(void *pdata)
     }
 }
 
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
 void Key_Task(void *pdata)
 {
     while(1){
@@ -459,7 +462,7 @@ static void SWRB_TestDataFileCryptoProc(FunctionalState encryptoState)
     }
 }
 
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
 static void SWRB_TEST_BUTTON_CTRL_Start(void)
 {
     switch(gSwrbDialogSelectFlag){
@@ -562,14 +565,16 @@ void SWRB_TestCtrlTask(void *pdata)
     OSTaskSuspend(SWRB_FRONT_IFRD_TEST_TASK_PRIO);
 
     OSTaskCreate(Touch_Task,(void*)0,(OS_STK*)&TOUCH_TASK_STK[TOUCH_STK_SIZE-1],TOUCH_TASK_PRIO);
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
     OSTaskCreate(Key_Task,(void*)0,(OS_STK*)&KEY_TASK_STK[KEY_STK_SIZE-1],KEY_TASK_PRIO);
 #endif
 
     OS_EXIT_CRITICAL();
 
+#ifndef USE_KEY_BUTTON
+    OSTaskDel(SWRB_TEST_CTRL_TASK_PRIO);
+#else
     while(1){
-#ifdef _USE_KEY_BUTTON
         if(gkeyCodeGetFinishFlag){
             switch(gkeyCode){
                 /* TEST START/PAUSE/RESUME PRESSED*/
@@ -594,9 +599,9 @@ void SWRB_TestCtrlTask(void *pdata)
             gkeyCode = 0;
             gkeyCodeGetFinishFlag = 0;
         }
-#endif
         OSTimeDlyHMSM(0,0,0,40);
     }
+#endif
 }
 
 static void SWRB_PCBTestIndicateButtonToggle()

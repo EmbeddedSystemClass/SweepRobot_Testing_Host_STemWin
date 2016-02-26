@@ -35,8 +35,10 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmAutoModeCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmManulModeCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPressKeyCHN;
 
+#ifdef USE_NUMPAD
 static WM_HWIN hLastShowWin = 0;
 static int gLastShowId = 0;
+#endif
 static int gIndicateBtnCnt = 0;
 
 void Button_Set_Text(WM_HWIN hWin, int buttonId, char *str)
@@ -517,6 +519,7 @@ void SWRB_RTC_TIME_Disp(WM_HWIN hWin, int id, RTC_DateTypeDef *date, RTC_TimeTyp
     myfree(SRAMIN, str);
 }
 
+#ifdef USE_NUMPAD
 void SWRB_LastCallNumpadEditSave(WM_MESSAGE *pMsg)
 {
     hLastShowWin = pMsg->hWin;
@@ -532,6 +535,7 @@ int SWRB_LastCallNumpadEditIdGet(void)
 {
     return gLastShowId;
 }
+#endif
 
 static void Edit_Update(WM_HWIN hWin, int editStartId, int editStopId, int lwId)
 {

@@ -57,8 +57,10 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 385, 100, 90, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "CONTROL", ID_START_BUTTON_CONTROL, 0, 0, 120, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL_MANUL_MODE, 680, 0, 120, 120, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "SD Warning", ID_START_TEXT_STORAGE_WARNING, 325, 430, 150, 50, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "Storage Warning", ID_START_TEXT_STORAGE_WARNING, 250, 430, 300, 50, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
 };
 
@@ -85,6 +87,33 @@ static void Button_Init(WM_HWIN hItem)
 static void Button_WarningOkProc(void)
 {
     GUI_EndDialog(hWin_SWRB_START_WARNING, 0);
+}
+
+#ifdef USE_CONTROL
+static void Button_ControlProc(void)
+{
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_CONTROL;
+    
+//    STD_UART_RX_DISABLE();
+    STD_UART_ENABLE();
+    
+    WM_HideWin(hWin_SWRB_START);
+    WM_ShowWin(hWin_SWRB_CONTROL);
+}
+#endif
+
+static void Button_ManulManulModeProc(void)
+{
+    gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_MANUL;
+    
+    gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
+    
+    gSwrbTestUDiskInsertCmpSkipFlag = DISABLE;
+    
+    SweepRobot_ManulSetBtnEnterManulModeProc();
+    
+    WM_HideWin(hWin_SWRB_START);
+    WM_ShowWin(hWin_SWRB_MANUL);
 }
 
 /*********************************************************************
@@ -128,6 +157,16 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             BUTTON_Set_Bitmap_Ex(pMsg->hWin, ID_START_BUTTON_SET, &_bmSetCHN, 68, 74);
             Button_Init(hItem);
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_CONTROL);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "CONTROL");
+            Button_Init(hItem);
+            
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_MANUL_MANUL_MODE);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            BUTTON_SetText(hItem, "MANUL");
+            Button_Init(hItem);
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -159,7 +198,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                 TEXT_SetText(hItem, "SD Card Inserted");
             }else{
                 TEXT_SetTextColor(hItem, GUI_RED);
-                TEXT_SetText(hItem, "No SD Card!");
+                TEXT_SetText(hItem, "SD Card not been Inserted");
             }
 #endif
             if(gSwrbTestUDiskInsertState){
@@ -167,7 +206,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                 TEXT_SetText(hItem, "UDisk Inserted");
             }else{
                 TEXT_SetTextColor(hItem, GUI_RED);
-                TEXT_SetText(hItem, "No UDisk");
+                TEXT_SetText(hItem, "UDisk not been inserted");
             }
             WM_BringToTop(hItem);
 
@@ -243,6 +282,26 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     }
                     break;
 #endif
+#ifdef USE_CONTROL
+                case ID_START_BUTTON_CONTROL: // Notifications sent by 'Control'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            Button_ControlProc();
+                            break;
+                    }
+                    break;
+#endif
+                case ID_START_BUTTON_MANUL_MANUL_MODE: // Notifications sent by 'MANUL_MANUL_MODE'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            Button_ManulManulModeProc();
+                            break;
+                    }
+                    break;
             }
             break;
         default:

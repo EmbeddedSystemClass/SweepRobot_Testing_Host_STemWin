@@ -243,6 +243,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             MULTIEDIT_SetAutoScrollV(hItem,1);
             MULTIEDIT_SetWrapWord(hItem);
 //            MULTIEDIT_SetBufferSize(hItem, 2048);
+
             WM_DisableWindow(hItem);
             
             CHECKBOX_SetDefaultSkinClassic();
