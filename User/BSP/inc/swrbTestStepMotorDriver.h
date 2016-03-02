@@ -8,13 +8,12 @@
 #define STEP_MOTOR_DRIVER_PWM_OUT_PIN       GPIO_Pin_6
 #define STEP_MOTOR_DRIVER_DIR_PIN           GPIO_Pin_5
 #define STEP_MOTOR_DRIVER_EN_OUT_PIN        GPIO_Pin_4
+#if (defined USE_USART1 || defined USE_USART3)
+#define STEP_MOTOR_DRIVER_POS_DETECT_PIN    GPIO_Pin_2
 #define STEP_MOTOR_DRIVER_24V_CTRL_PIN      GPIO_Pin_3
-
-/* TODO: Define this macro to use actual position detect key */
-#ifdef _USE_ACTUAL_POS_DETECT_KEY
-    #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_2
-#else
-    #define STEP_MOTOR_DRIVER_POS_DETECT_PIN        GPIO_Pin_0
+#elif USE_USART2
+#define STEP_MOTOR_DRIVER_POS_DETECT_PIN    GPIO_Pin_9
+#define STEP_MOTOR_DRIVER_24V_CTRL_PIN      GPIO_Pin_10
 #endif
 
 #define STEP_MOTOR_DRIVER_PWM_OUT_PIN_SOURCE    GPIO_PinSource6

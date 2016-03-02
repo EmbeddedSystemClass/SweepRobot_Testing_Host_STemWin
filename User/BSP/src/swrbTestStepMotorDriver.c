@@ -98,11 +98,7 @@ void SweepRobotTest_StepMotorDriverGPIOInit(void)
 
     GPIO_InitStructure.GPIO_Pin = STEP_MOTOR_DRIVER_POS_DETECT_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-#ifdef _USE_ACTUAL_POS_DETECT_KEY
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-#else
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
-#endif
     GPIO_Init(STEP_MOTOR_DRIVER_GPIO, &GPIO_InitStructure);
 
     /* SLAVE TIMER INIT */
@@ -150,11 +146,7 @@ void StepMotorDriver_PWMTimerISR(void)
         stepMotor.ctrl.posStepCnt++;
     }
 
-#ifdef _USE_ACTUAL_POS_DETECT_KEY
     if( !STEP_MOTOR_POS_DETECT_SIGN && (stepMotor.dir == STEP_MOTOR_DIR_FORWARD) ){
-#else
-    if( STEP_MOTOR_POS_DETECT_SIGN && (stepMotor.dir == STEP_MOTOR_DIR_BACKWARD) ){
-#endif
         stepMotor.ctrl.runStepCnt = 0;
         stepMotor.ctrl.posStepCnt = 0;
         stepMotor.mode = STEP_MOTOR_MODE_STOP;
@@ -392,12 +384,9 @@ void SweepRobotTest_StepMotorGotoPos(enum STEP_MOTOR_POS pos)
 void SweepRobotTest_StepMotorGoHome(void)
 {
     stepMotor.mode = STEP_MOTOR_MODE_HOMING;
-    
-#ifdef _USE_ACTUAL_POS_DETECT_KEY
+
     SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_FORWARD);
-#else
-    SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
-#endif
+
     SweepRobotTest_StepMotorModeSetExec(STEP_MOTOR_MODE_RUN);
 }
 

@@ -60,18 +60,34 @@
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_STOP_WAIT_TIME 100
 
 /* Ash Tray Steering Motor Control GPIO */
+#ifdef USE_USART1
+#define ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID               RCC_AHB1Periph_GPIOB
+#define ASH_TRAY_TEST_CTRL_GPIO                         GPIOB
+#define ASH_TRAY_TEST_CTRL_PIN                          GPIO_Pin_10
+#elif USE_USART2
+#define ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID               RCC_AHB1Periph_GPIOB
+#define ASH_TRAY_TEST_CTRL_GPIO                         GPIOB
+#define ASH_TRAY_TEST_CTRL_PIN                          GPIO_Pin_10
+#elif USE_USART3
 #define ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID               RCC_AHB1Periph_GPIOA
 #define ASH_TRAY_TEST_CTRL_GPIO                         GPIOA
 #define ASH_TRAY_TEST_CTRL_PIN                          GPIO_Pin_9
-#define ASH_TRAY_TEST_CTRL_PIN_SOURCE                   GPIO_PinSource9
-#define ASH_TRAY_TEST_CTRL_GPIO_AF_PPP                  GPIO_AF_TIM4
-#define ASH_TRAY_TEST_CTRL_TIM_PERIPH_ID                RCC_APB1Periph_TIM4
-#define ASH_TRAY_TEST_CTRL_TIM                          TIM4
+#endif
 
 /* Key ElectroMagnet Control GPIO */
+#ifdef USE_USART1
+#define KEY_TEST_CTRL_GPIO_PERIPH_ID                    RCC_AHB1Periph_GPIOB
+#define KEY_TEST_CTRL_GPIO                              GPIOB
+#define KEY_TEST_CTRL_PIN                               GPIO_Pin_11
+#elif USE_USART2
+#define KEY_TEST_CTRL_GPIO_PERIPH_ID                    RCC_AHB1Periph_GPIOB
+#define KEY_TEST_CTRL_GPIO                              GPIOB
+#define KEY_TEST_CTRL_PIN                               GPIO_Pin_11
+#elif USE_USART3
 #define KEY_TEST_CTRL_GPIO_PERIPH_ID                    RCC_AHB1Periph_GPIOA
 #define KEY_TEST_CTRL_GPIO                              GPIOA
 #define KEY_TEST_CTRL_PIN                               GPIO_Pin_10
+#endif
 
 /* IrDA Tx GPIO */
 #define IRDA_TEST_TX_TIM_PERIPH_ID                      RCC_APB1Periph_TIM7
@@ -394,8 +410,6 @@ void SweepRobot_AshTrayTestGPIOInit(void)
     GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_AHB1PeriphClockCmd(ASH_TRAY_TEST_CTRL_GPIO_PERIPH_ID, ENABLE);
-
-    GPIO_PinAFConfig(ASH_TRAY_TEST_CTRL_GPIO, ASH_TRAY_TEST_CTRL_PIN_SOURCE, ASH_TRAY_TEST_CTRL_GPIO_AF_PPP);
 
     GPIO_InitStructure.GPIO_Pin = ASH_TRAY_TEST_CTRL_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
