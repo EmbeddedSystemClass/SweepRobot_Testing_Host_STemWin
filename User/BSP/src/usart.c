@@ -43,7 +43,7 @@ int fputc(int ch, FILE *f)
 }
 #endif
 
-static void USART3_ISR(void);
+static void STD_USART_ISR(void);
 
 char USART_RX_BUF[USART_RX_LEN];
 u16 USART_RX_STA=0;
@@ -54,18 +54,18 @@ void STD_UART_Init(u32 bound){
   USART_InitTypeDef USART_InitStructure;
   NVIC_InitTypeDef NVIC_InitStructure;
 
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+  STD_USART_GPIO_RCC_ENABLE();
+  STD_USART_RCC_ENABLE();
 
-  GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);
-  GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
+  GPIO_PinAFConfig(STD_USART_GPIO, STD_USART_RX_PIN_SOURCE, STD_USART_AF_PPP);
+  GPIO_PinAFConfig(STD_USART_GPIO, STD_USART_TX_PIN_SOURCE, STD_USART_AF_PPP);
 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+  GPIO_InitStructure.GPIO_Pin = STD_USART_RX_PIN | STD_USART_TX_PIN;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_Init(GPIOB,&GPIO_InitStructure);
+  GPIO_Init(STD_USART_GPIO,&GPIO_InitStructure);
 
   USART_InitStructure.USART_BaudRate = bound;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
@@ -73,26 +73,26 @@ void STD_UART_Init(u32 bound){
   USART_InitStructure.USART_Parity = USART_Parity_No;
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-  USART_Init(USART3, &USART_InitStructure);
+  USART_Init(STD_USART, &USART_InitStructure);
 
-  USART_Cmd(USART3, ENABLE);
+  USART_Cmd(STD_USART, ENABLE);
 
-  USART_ClearFlag(USART3, USART_FLAG_TC);
+  USART_ClearFlag(STD_USART, USART_FLAG_TC);
 
 #if EN_USART_RX
-  USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(STD_USART, USART_IT_RXNE, ENABLE);
 
-  NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannel = STD_USART_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority =3;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-  plat_int_reg_cb(STM32F4xx_INT_USART3, USART3_ISR);
+  plat_int_reg_cb(STD_USART_INT, STD_USART_ISR);
 #endif
 }
 
-void USART3_ISR(void)
+void STD_USART_ISR(void)
 {
     u8 rxValue;
 #if SYSTEM_SUPPORT_UCOS
@@ -139,16 +139,16 @@ void STD_UART_DISABLE(void)
     GPIO_InitTypeDef GPIO_InitStructure;
     
     if(gStdUartState){
-        USART_Cmd(USART3, DISABLE);
+        USART_Cmd(STD_USART, DISABLE);
 
-        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+        GPIO_InitStructure.GPIO_Pin = STD_USART_RX_PIN | STD_USART_TX_PIN;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
         GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-        GPIO_Init(GPIOB,&GPIO_InitStructure);
+        GPIO_Init(STD_USART_GPIO,&GPIO_InitStructure);
 
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, DISABLE);
+        STD_USART_RCC_DISABLE();
 
         gStdUartState = DISABLE;
     }
@@ -159,16 +159,16 @@ void STD_UART_ENABLE(void)
     GPIO_InitTypeDef GPIO_InitStructure;
     
     if(!gStdUartState){
-        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+        STD_USART_RCC_ENABLE();
 
-        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+        GPIO_InitStructure.GPIO_Pin = STD_USART_RX_PIN | STD_USART_TX_PIN;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
         GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-        GPIO_Init(GPIOB,&GPIO_InitStructure);
+        GPIO_Init(STD_USART_GPIO,&GPIO_InitStructure);
 
-        USART_Cmd(USART3, ENABLE);
+        USART_Cmd(STD_USART, ENABLE);
 
         gStdUartState = ENABLE;
     }
