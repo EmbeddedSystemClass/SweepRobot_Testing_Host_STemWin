@@ -222,6 +222,9 @@ u8 USBH_UDISK_Status(void)
 u8 USBH_UDISK_Read(u8* buf,u32 sector,u32 cnt)
 {
     u8 res=1;
+#ifdef USE_USB_RD_RETRY_CNT
+    u32 rtyCnt=0;
+#endif
     
     if(HCD_IsDeviceConnected(&USB_OTG_Core)&&AppState==USH_USR_FS_TEST){
         do{
@@ -231,6 +234,12 @@ u8 USBH_UDISK_Read(u8* buf,u32 sector,u32 cnt)
                 res=1;
                 break;
             }
+#ifdef USE_USB_RD_RETRY_CNT
+            if(++rtyCnt>0x000FFFFF){
+                res=1;
+                break;
+            }
+#endif
         }while(res==USBH_MSC_BUSY);
     }else
         res=1;

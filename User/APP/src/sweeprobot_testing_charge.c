@@ -16,7 +16,7 @@ static u8 swrbChargeTestStateMap = 0;
 #define SWRB_TEST_FAULT_CHARGE_24V_MASK         0x04
 
 #define SWRB_TEST_CHARGE_CUR_HIGH_THRESHOLD     100
-#define SWRB_TEST_CHARGE_CUR_LOW_THRESHOLD      20
+#define SWRB_TEST_CHARGE_CUR_LOW_THRESHOLD      15
 
 #define SWRB_TEST_CHARGE_VOL_HIGH_THRESHOLD     4000
 #define SWRB_TEST_CHARGE_VOL_LOW_THRESHOLD      2000
@@ -97,7 +97,7 @@ static void SweepRobot_ChargeTestProc(void)
                 Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
-                                                           GUI_LIGHTBLUE);
+                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -293,7 +293,6 @@ void SweepRobot_ChargeTestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE)){
             SWRB_NextTestTaskResumePreAct(SWRB_CHARGE_TEST_TASK_PRIO);
         }else{
-
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -305,7 +304,7 @@ void SweepRobot_ChargeTestTask(void *pdata)
             }
 
             if(charge.charge24vState){
-                TimeOutWaitTime = 600;
+                TimeOutWaitTime = 1200;
             }else{
                 TimeOutWaitTime = 100;
             }

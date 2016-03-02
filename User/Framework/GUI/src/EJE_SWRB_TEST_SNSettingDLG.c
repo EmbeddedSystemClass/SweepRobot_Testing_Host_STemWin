@@ -715,8 +715,8 @@ FRESULT SWRB_TestDataFileOpen(u8 fileOpenMode)
     char *strFilePath;
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
-        strFilePath = mymalloc(SRAMEX, sizeof(char)*40);
-        mymemset(strFilePath, 0, sizeof(char)*40);
+        strFilePath = mymalloc(SRAMEX, sizeof(char)*80);
+        mymemset(strFilePath, 0, sizeof(char)*80);
 
         cnt = 0;
         do{

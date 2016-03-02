@@ -57,8 +57,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { BUTTON_CreateIndirect, "SLAM", ID_START_BUTTON_SLAM, 300, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 385, 100, 90, 0, 0x0, 0 },
+#ifdef USE_RMT_CTRL
     { BUTTON_CreateIndirect, "CONTROL", ID_START_BUTTON_CONTROL, 0, 0, 120, 120, 0, 0x0, 0 },
+#endif
+#ifdef USE_MANUL_MANUL_MODE
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL_MANUL_MODE, 680, 0, 120, 120, 0, 0x0, 0 },
+#endif
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Storage Warning", ID_START_TEXT_STORAGE_WARNING, 250, 430, 300, 50, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Text", ID_START_TEXT_VERSION, 600, 430, 200, 50, 0, 0x64, 0 },
@@ -89,7 +93,7 @@ static void Button_WarningOkProc(void)
     GUI_EndDialog(hWin_SWRB_START_WARNING, 0);
 }
 
-#ifdef USE_CONTROL
+#ifdef USE_RMT_CTRL
 static void Button_ControlProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_CONTROL;
@@ -162,11 +166,13 @@ static void _cbDialog(WM_MESSAGE * pMsg)
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "CONTROL");
             Button_Init(hItem);
-            
+
+#ifdef USE_MANUL_MANUL_MODE
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_MANUL_MANUL_MODE);
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
             BUTTON_SetText(hItem, "MANUL");
             Button_Init(hItem);
+#endif
 
             hItem = WM_GetDialogItem(pMsg->hWin, ID_START_BUTTON_SLAM);
             BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -282,7 +288,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     }
                     break;
 #endif
-#ifdef USE_CONTROL
+#ifdef USE_RMT_CTRL
                 case ID_START_BUTTON_CONTROL: // Notifications sent by 'Control'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
@@ -293,6 +299,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                     }
                     break;
 #endif
+#ifdef USE_MANUL_MANUL_MODE
                 case ID_START_BUTTON_MANUL_MANUL_MODE: // Notifications sent by 'MANUL_MANUL_MODE'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
@@ -302,6 +309,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                             break;
                     }
                     break;
+#endif
             }
             break;
         default:

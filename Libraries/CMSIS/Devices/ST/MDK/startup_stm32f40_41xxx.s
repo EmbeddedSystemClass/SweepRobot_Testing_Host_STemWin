@@ -49,7 +49,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x000000D0  ;0x00000200
+Heap_Size       EQU     0x00000100  ;0x00000200
 ;Heap_Size       EQU     0x00000200  ;0x00000200
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3

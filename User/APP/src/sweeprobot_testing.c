@@ -172,7 +172,7 @@ static void emWin_TaskInit(void)
 
     OS_ENTER_CRITICAL();
 
-#ifdef USE_CONTROL
+#ifdef USE_RMT_CTRL
     hWin_SWRB_CONTROL = CreatewinCtrlDLG();
 #endif
     hWin_SWRB_SNSET = CreateSNSettingDLG();
@@ -1046,12 +1046,9 @@ static void SWRB_PCBTestFinishProc(void)
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileWriteDate(">PCB Test finish time", &rtcDate, &rtcTime);
-    }
 
-    str = mymalloc(SRAMIN, sizeof(char)*50);
-    *str = 0;
-
-    if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
+        str = mymalloc(SRAMIN, sizeof(char)*50);
+        mymemset(str, 0, sizeof(char)*50);
         str = "\r\n****************************************\r\n";
         SWRB_TestDataFileWriteString(str);
 
@@ -1089,19 +1086,21 @@ static void SWRB_ManulTestFinishProc(void)
     char *str;
 
     SweepRobot_ManulTestCtrlReset();
+    
+    RTC_GetDate(RTC_Format_BIN, &rtcDate);
+    RTC_GetTime(RTC_Format_BIN, &rtcTime);
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
-        /* Encrypt Test Data File when set enable */
-        SWRB_TestDataFileCryptoProc(DISABLE);
-
-        RTC_GetDate(RTC_Format_BIN, &rtcDate);
-        RTC_GetTime(RTC_Format_BIN, &rtcTime);
         SWRB_TestDataFileWriteDate("Manul Test finish time", &rtcDate, &rtcTime);
 
-        str = mymalloc(SRAMEX, sizeof(char)*50);
+        str = mymalloc(SRAMIN, sizeof(char)*50);
+        mymemset(str, 0, sizeof(char)*50);
         str = "\r\n****************************************\r\n";
         SWRB_TestDataFileWriteString(str);
-        myfree(SRAMEX, str);
+        myfree(SRAMIN, str);
+
+        /* Encrypt Test Data File when set enable */
+        SWRB_TestDataFileCryptoProc(DISABLE);
     }
 
     BUTTON_DispStartCHNStr(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START, 18, 43);
@@ -1136,6 +1135,7 @@ static void SWRB_TestFinishProc(void)
         f_close(file);
     }
 
+    gSwrbTestValidTaskCnt = 0;
     gSwrbTestTaskRunCnt = 0;
     gSwrbTestStateMap = 0;
     gSwrbTestRuningTaskPrio = (enum SWRB_TEST_TASK_PRIO)NULL;
@@ -1267,7 +1267,6 @@ static void SweepRobot_ManulStartBtnAutoModeStartProc(void)
     OS_CPU_SR cpu_sr;
 
     printf("T->ON\r\n");
-    GUI_Delay(1);
 
     SWRB_ValidTestTaskCntGet();
 

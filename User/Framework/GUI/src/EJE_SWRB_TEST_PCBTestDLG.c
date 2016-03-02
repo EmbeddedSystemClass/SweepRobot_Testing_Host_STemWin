@@ -131,9 +131,10 @@ static const GUI_WIDGET_CREATE_INFO _aPCBTestWarningDialogCreate[] = {
 
 static const GUI_WIDGET_CREATE_INFO _aKeyTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "KEY TEST", ID_PCBTEST_FRAMEWIN_KEY, 0, 0, 440, 210, 0, 0x64, 0 },
-    { BUTTON_CreateIndirect, "TITLE", ID_PCBTEST_BUTTON_KEY_TITLE, 120, 100, 200, 60, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "KEY TEST", ID_PCBTEST_TEXT_KEY, 68, 17, 308, 65, 0, 0x64, 0 },
-    { PROGBAR_CreateIndirect,   "Progbar", ID_PCBTEST_PROGBAR_KEY, 120, 150, 200, 30, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "INDICATE", ID_PCBTEST_BUTTON_INDICATE_KEY, 45, 80, 200, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "SKIP", ID_PCBTEST_BUTTON_SKIP_KEY, 295, 115, 120, 60, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "KEY TEST", ID_PCBTEST_TEXT_INDICATE_KEY, 68, 17, 308, 65, 0, 0x64, 0 },
+    { PROGBAR_CreateIndirect, "Progbar", ID_PCBTEST_PROGBAR_KEY, 45, 155, 200, 20, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _aRgbLEDTestDialogCreate[] = {
@@ -178,7 +179,7 @@ static void Checkbox_Init(WM_HWIN hItem)
 *
 *       _cbPCBTestMainDialog
 */
-static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg) 
+static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
 {
     WM_HWIN hItem;
     int     NCode;
@@ -227,7 +228,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
             BUTTON_DispExitCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_EXIT, 18, 43);
             BUTTON_SetBkColor(hItem, BUTTON_CI_UNPRESSED, GUI_LIGHTGREEN);
             BUTTON_SetBkColor(hItem, BUTTON_CI_PRESSED, GUI_LIGHTGREEN);
-            
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_INDICATE);
             WM_BringToTop(hItem);
             BUTTON_SetSkinClassic(hItem);
@@ -245,7 +246,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
 //            MULTIEDIT_SetBufferSize(hItem, 2048);
 
             WM_DisableWindow(hItem);
-            
+
             CHECKBOX_SetDefaultSkinClassic();
             for(i=ID_PCBTEST_CHECKBOX_WHEEL;i<ID_PCBTEST_CHECKBOX_BOUND;i++){
                 hItem = WM_GetDialogItem(pMsg->hWin, i);
@@ -280,7 +281,7 @@ static void _cbPCBTestMainDialog(WM_MESSAGE * pMsg)
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
             NCode = pMsg->Data.v;
-            
+
             if(IS_PCBTEST_CHECKBOX_ID(Id)){
                 switch(NCode){
                     case WM_NOTIFICATION_VALUE_CHANGED:
@@ -381,10 +382,10 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
     WM_HWIN hItem;
     int     NCode;
     int     Id;
-    
+
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
-            
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_WARNING_RETEST);
             BUTTON_SetSkinClassic(hItem);
             BUTTON_SetFocussable(hItem, DISABLE);
@@ -392,7 +393,7 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
             BUTTON_SetTextAlign(hItem, GUI_TA_HCENTER|GUI_TA_VCENTER);
             BUTTON_SetText(hItem, "");
             BUTTON_DispReTestCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_WARNING_RETEST, 94, 14);
-            
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_WARNING_SKIP);
             BUTTON_SetSkinClassic(hItem);
             BUTTON_SetFocussable(hItem, DISABLE);
@@ -400,7 +401,7 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
             BUTTON_SetTextAlign(hItem, GUI_TA_HCENTER|GUI_TA_VCENTER);
             BUTTON_SetText(hItem, "");
             BUTTON_DispSkipCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_WARNING_SKIP, 94, 14);
-            
+
 //            WM_HideWin(pMsg->hWin);
             break;
         case WM_NOTIFY_PARENT:
@@ -438,32 +439,38 @@ static void _cbKeyDialog(WM_MESSAGE * pMsg)
     WM_HWIN hItem;
     int     NCode;
     int     Id;
-    
+
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
             FRAMEWIN_AddCloseButton(pMsg->hWin, FRAMEWIN_BUTTON_RIGHT, 0);
-            
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE);
+
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_INDICATE_KEY);
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             BUTTON_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
             BUTTON_SetFocussable(hItem, DISABLE);
-            Button_Set_BkColor(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, GUI_WHITE);
-            Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, "");
-            BUTTON_DispPressKeyCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_KEY_TITLE, 36, 13);
-        
-            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_TEXT_KEY);
+            Button_Set_BkColor(pMsg->hWin, ID_PCBTEST_BUTTON_INDICATE_KEY, GUI_WHITE);
+            Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_INDICATE_KEY, "");
+            BUTTON_DispPressKeyCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_INDICATE_KEY, 36, 13);
+
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_SKIP_KEY);
+            BUTTON_SetSkinClassic(hItem);
+            BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
+            WIDGET_SetEffect(hItem, &WIDGET_Effect_3D);
+            BUTTON_SetText(hItem, "Skip");
+
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_TEXT_INDICATE_KEY);
             TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
             TEXT_SetText(hItem, "KEY TEST");
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetTextColor(hItem, GUI_BLACK);
-        
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_PROGBAR_KEY);
             PROGBAR_SetSkinClassic(hItem);
             WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
             PROGBAR_SetMinMax(hItem, 0, 3000);
             PROGBAR_SetBarColor(hItem, 0, GUI_LIGHTRED);
-            
+
             break;
         case WM_PAINT:
             break;
@@ -471,11 +478,20 @@ static void _cbKeyDialog(WM_MESSAGE * pMsg)
             Id    = WM_GetId(pMsg->hWinSrc);
             NCode = pMsg->Data.v;
             switch(Id) {
-                case ID_PCBTEST_BUTTON_KEY_TITLE: // Notifications sent by 'KEY TITLE'
+                case ID_PCBTEST_BUTTON_INDICATE_KEY: // Notifications sent by 'KEY TITLE'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
+                            break;
+                    }
+                    break;
+                case ID_PCBTEST_BUTTON_SKIP_KEY: // Notifications sent by 'KEY SKIP'
+                    switch(NCode) {
+                        case WM_NOTIFICATION_CLICKED:
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            gSwrbTestTaskRunCnt = 2990;
                             break;
                     }
                     break;
@@ -499,11 +515,11 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
     int     NCode;
     int     Id;
     u8      state;
-    
+
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
             FRAMEWIN_AddCloseButton(pMsg->hWin, FRAMEWIN_BUTTON_RIGHT, 0);
-            
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_OK);
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_OK, "");
@@ -513,7 +529,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_ERR, "");
             BUTTON_DispErrorCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_ERR, 28, 14);
-        
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_TEXT);
             Button_Init(hItem);
             Button_Set_BkColor(pMsg->hWin, ID_PCBTEST_BUTTON_RGB_LED_TEXT, GUI_WHITE);
@@ -523,7 +539,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
             TEXT_SetText(hItem, "RGB LED TEST");
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetTextColor(hItem, GUI_RED);
-            
+
             break;
         case WM_PAINT:
             break;
@@ -534,7 +550,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
                 case ID_PCBTEST_BUTTON_RGB_LED_OK: // Notifications sent by 'RGB LED OK'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             state = RGB_LED_TestValidCntGet();
@@ -551,7 +567,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
                 case ID_PCBTEST_BUTTON_RGB_LED_ERR: // Notifications sent by 'RGB LED ERR'
                     switch(NCode) {
                         case WM_NOTIFICATION_CLICKED:
-                            
+
                             break;
                         case WM_NOTIFICATION_RELEASED:
                             state = RGB_LED_TestValidCntGet();
@@ -578,7 +594,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
     WM_HWIN hItem;
     int     NCode;
     int     Id;
-    
+
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
             FRAMEWIN_AddCloseButton(pMsg->hWin, FRAMEWIN_BUTTON_RIGHT, 0);
@@ -592,13 +608,13 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
 //            BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
             Button_Set_Text(pMsg->hWin, ID_PCBTEST_BUTTON_BUZZER_ERR, "");
             BUTTON_DispErrorCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_BUZZER_ERR, 28, 14);
-        
+
             hItem = WM_GetDialogItem(pMsg->hWin, ID_PCBTEST_TEXT_BUZZER);
             TEXT_SetFont(hItem, GUI_FONT_32_ASCII);
             TEXT_SetText(hItem, "BUZZER TEST");
             TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
             TEXT_SetTextColor(hItem, GUI_BLACK);
-        
+
             break;
         case WM_NOTIFY_PARENT:
             Id    = WM_GetId(pMsg->hWinSrc);
@@ -679,7 +695,7 @@ WM_HWIN CreateWarningDLG(void)
 WM_HWIN CreateKEY_TestDLG(void)
 {
     WM_HWIN hWin;
-    
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
