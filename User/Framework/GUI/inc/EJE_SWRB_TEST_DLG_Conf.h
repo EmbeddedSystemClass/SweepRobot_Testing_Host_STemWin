@@ -1305,7 +1305,7 @@ void Checkbox_Set_TextAlign(int checkboxId, int align);
 void Checkbox_Set_Back_Color(int checkboxId, GUI_COLOR checkboxbkcolor);
 void Checkbox_Set_Box_Back_Color(WM_HWIN hWin, int checkboxId, GUI_COLOR boxBkColor, int Index);
 void Listview_Set_Item_Text(WM_HWIN hWin, int id, uint16_t column, uint16_t row, char *str);
-void Listview_Set_Item_TextColor(WM_HWIN hWin, int id, uint16_t colunm, uint16_t row, GUI_COLOR color);
+void Listview_Set_Item_TextColor(WM_HWIN hWin, int id, uint16_t column, uint16_t row, GUI_COLOR color);
 void Listview_Set_Text_Color(WM_HWIN hWin, int id, GUI_COLOR color);
 void Listview_Set_Item_BkColor(WM_HWIN hWin, int id, int column, int row, GUI_COLOR color);
 void Listview_Set_Item_BkColor_withCoord(WM_HWIN hWin, int id, u8 aCoord[][2],enum SWRB_MANUL_TEST_DATA_POS pos, GUI_COLOR color);

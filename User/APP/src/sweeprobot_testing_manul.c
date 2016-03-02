@@ -201,7 +201,11 @@ void SweepRobot_ManulTestBatteryVoltDisp(void)
     double volt = 0;
 
     if(atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])){
+#ifdef USE_INT_VREF
         volt = atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])/atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_INTERNAL_REFVOL_POS])*1.2f*6;
+#else
+        volt = atof(aSwrbTestData[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS])/4096*3.3f*6;
+#endif
         Edit_Set_FloatValue(hWin_SWRB_MANUL, ID_MANUL_EDIT_VOLT, volt);
 
         voltPercent = (int)(((volt - SWRB_BATTERY_LOW_BOUND) / (SWRB_BATTERY_HIGH_BOUND - SWRB_BATTERY_LOW_BOUND))*100);

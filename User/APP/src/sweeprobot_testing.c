@@ -937,10 +937,10 @@ void SWRB_ValidTestTaskCntGet(void)
 void SWRB_TestInitCommonAct(u8 taskPrio)
 {
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][0], \
                                                      gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][1], \
-                                                     GUI_RED);
+                                                     GUI_LIGHTRED);
     }
 }
 
@@ -963,10 +963,10 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
     Progbar_Set_Percent();
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][0], \
-                                                     gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][1], \
-                                                     GUI_BLUE);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+                                                   gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][0], \
+                                                   gSwrbManulTestListviewDispItemCoord[taskPrio-(SWRB_TEST_TASK_PRIO_START_BOUND+1)][1], \
+                                                   GUI_LIGHTBLUE);
     }
 
     if(gSwrbTestValidTaskCnt){
@@ -983,7 +983,6 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
         OSTaskResume(SELF_TEST_TASK_PRIO);
 #endif
         OS_EXIT_CRITICAL();
-
     }
 }
 

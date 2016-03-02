@@ -31,6 +31,7 @@
 
 #define SWRB_MANUL_LISTVIEW_ROW_NUM   17
 
+/* characters for listview header */
 extern GUI_CONST_STORAGE GUI_BITMAP _bmTestNameCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmLeftCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmFrontLeftCHN;
@@ -41,6 +42,23 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomLeftCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomFrontLeftCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomFrontRightCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmBottomRightCHN;
+
+/* characters for listview item */
+extern GUI_CONST_STORAGE GUI_BITMAP _bmWheelCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBrushCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmFanCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmIFRDCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmCollisionCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmWheelFloatCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmAshTrayCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmUniWheelCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmIRDACHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmChargeCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmBuzzerCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmRGBLEDCHN_18;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmKeyCHN_18;
+//extern GUI_CONST_STORAGE GUI_BITMAP _bmPWRSTATIONCHN_18;
+//extern GUI_CONST_STORAGE GUI_BITMAP _bmSerialNUMCHN_18;
 
 /*********************************************************************
 *
@@ -59,26 +77,48 @@ static const char *aButton_InitText[][1] = {
     {"RELAY"},
 };
 
+//static const char *aListview_RowInitText[][10] = {
+///* item,left,frontLeft,middle,frontRight,right,bottomLeft,bottomFLeft,bottomFRight,bottomRight */
+//    {"WHEEL","0","","","","0"},
+//    {"BRUSH","0","","0","","0"},
+//    {"FAN","","","0","",""},
+//    {"IFRD","0","0","","0","0","0","0","0","0"},
+//    {"FRT IFRD","0","0","0","0","","0","0","0","0"},
+//    {"COLLISION","0","0","","0","0"},
+//    {"WHL_FLOAT","0","","","","0"},
+//    {"ASH_TRAY","0","0"},
+//    {"UNIWHEEL","0"},
+//    {"IRDA","0","0","","0","0","0"},
+//    {"CHARGE","0","0","0"},
+//    {"BUZZER","OFF"},
+//    {"RGB_LED","R","G","B"},
+//    {"KEY","0"},
+//    {"POWER","LL","LS","M","RS","RL","LB","RB","24V"},
+//    {"INT_VREF","0"},
+//    {"SNUM","0","0","0","0"},
+//};
+
 static const char *aListview_RowInitText[][10] = {
 /* item,left,frontLeft,middle,frontRight,right,bottomLeft,bottomFLeft,bottomFRight,bottomRight */
-    {"WHEEL","0","","","","0"},
-    {"BRUSH","0","","0","","0"},
-    {"FAN","","","0","",""},
-    {"IFRD","0","0","","0","0","0","0","0","0"},
-    {"FRT IFRD","0","0","0","0","","0","0","0","0"},
-    {"COLLISION","0","0","","0","0"},
-    {"WHL_FLOAT","0","","","","0"},
-    {"ASH_TRAY","0","0"},
-    {"UNIWHEEL","0"},
-    {"IRDA","0","0","","0","0","0"},
-    {"CHARGE","0","0","0"},
-    {"BUZZER","OFF"},
-    {"RGB_LED","R","G","B"},
-    {"KEY","0"},
-    {"POWER","LL","LS","M","RS","RL","LB","RB","24V"},
-    {"INT_VREF","0"},
-    {"SNUM","0","0","0","0"},
+    {"","0","","","","0"},
+    {"","0","","0","","0"},
+    {"","","","0","",""},
+    {"","0","0","","0","0","0","0","0","0"},
+    {"","0","0","0","0","","0","0","0","0"},
+    {"","0","0","","0","0"},
+    {"","0","","","","0"},
+    {"","0","0"},
+    {"","0"},
+    {"","0","0","","0","0","0"},
+    {"","0","0","0"},
+    {"","OFF"},
+    {"","R","G","B"},
+    {"","0"},
+    {"","LL","LS","M","RS","RL","LB","RB","24V"},
+    {"","0"},
+    {"","0","0","0","0"},
 };
+
 
 //static u8 aListview_RowFlag[SWRB_MANUL_LISTVIEW_ROW_NUM] = { 0 };
 
@@ -156,10 +196,23 @@ static void Listview_Init(WM_HWIN hItem)
     for(i=0;i<SWRB_MANUL_LISTVIEW_ROW_NUM;i++){
         LISTVIEW_AddRow(hItem, aListview_RowInitText[i]);
     }
+    
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL, 19, 0, &_bmWheelCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH, 7, 0, &_bmBrushCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_FAN, 31, 0, &_bmFanCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD, 7, 0, &_bmIFRDCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION, 31, 0, &_bmCollisionCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL_FLOAT, 19, 0, &_bmWheelFloatCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_ASH_TRAY, 31, 0, &_bmAshTrayCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_UNIWHEEL, 19, 0, &_bmUniWheelCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA, 7, 0, &_bmIRDACHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE, 31, 0, &_bmChargeCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER, 19, 0, &_bmBuzzerCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED, 19, 0, &_bmRGBLEDCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_KEY, 31, 0, &_bmKeyCHN_18);
 
     hHeader = LISTVIEW_GetHeader(hItem);
     HEADER_SetFont(hHeader, GUI_FONT_COMIC18B_ASCII);
-//    HEADER_SetSkinClassic(hHeader);
     HEADER_SetBitmapEx(hHeader, 0, &_bmTestNameCHN, 0, 0);
     HEADER_SetBitmapEx(hHeader, 1, &_bmLeftCHN, 0, 0);
     HEADER_SetBitmapEx(hHeader, 2, &_bmFrontLeftCHN, 0, 0);
