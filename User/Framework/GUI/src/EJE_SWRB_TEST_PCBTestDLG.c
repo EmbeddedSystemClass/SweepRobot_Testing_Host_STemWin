@@ -401,6 +401,7 @@ static void _cbPCBTestWarningDialog(WM_MESSAGE * pMsg)
             BUTTON_SetTextAlign(hItem, GUI_TA_HCENTER|GUI_TA_VCENTER);
             BUTTON_SetText(hItem, "");
             BUTTON_DispSkipCHNStr(pMsg->hWin, ID_PCBTEST_BUTTON_WARNING_SKIP, 94, 14);
+            WM_HideWin(hItem);
 
 //            WM_HideWin(pMsg->hWin);
             break;

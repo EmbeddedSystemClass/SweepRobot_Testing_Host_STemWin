@@ -960,7 +960,7 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
 
     gSwrbTestValidTaskCnt--;
 
-    Progbar_Set_Percent();
+    Progbar_PCBTest_Set_Percent();
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
@@ -1390,41 +1390,41 @@ static void SweepRobot_ManulTestAutoModeValidTaskStateDisp(void)
 
     for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
         if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL+i)){
-            Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                          gSwrbManulTestListviewDispItemCoord[i][0],\
                                                          gSwrbManulTestListviewDispItemCoord[i][1],\
-                                                         GUI_BLUE);
+                                                         GUI_LIGHTBLUE);
         }else{
-            Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                          gSwrbManulTestListviewDispItemCoord[i][0],\
                                                          gSwrbManulTestListviewDispItemCoord[i][1],\
                                                          GUI_LIGHTGRAY);
         }
     }
 
-    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM,\
                                                  SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM,\
-                                                 GUI_BLUE);
+                                                 GUI_LIGHTBLUE);
 
     if(Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0],\
                                                  gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1],\
-                                                 GUI_BLUE);
+                                                 GUI_LIGHTBLUE);
     }else{
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0],\
                                                  gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1],\
                                                  GUI_LIGHTGRAY);
     }
 
-    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  gSwrbManulTestListviewDispItemPowerStationCoord[0][0],\
                                                  gSwrbManulTestListviewDispItemPowerStationCoord[0][1],\
                                                  GUI_LIGHTGRAY);
 
-    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM,\
                                                  SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF,\
                                                  GUI_LIGHTGRAY);
@@ -1435,27 +1435,27 @@ static void SweepRobot_ManulTestManulModeTaskStateReset(void)
     int i;
 
     for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemCoord[i][0],\
                                                      gSwrbManulTestListviewDispItemCoord[i][1],\
-                                                     GUI_BLACK);
+                                                     GUI_WHITE);
     }
 
-    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0],\
                                                  gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1],\
-                                                 GUI_BLACK);
+                                                 GUI_WHITE);
 
-    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                  gSwrbManulTestListviewDispItemPowerStationCoord[0][0],\
                                                  gSwrbManulTestListviewDispItemPowerStationCoord[0][1],\
-                                                 GUI_BLACK);
+                                                 GUI_WHITE);
 
     for(i=0;i<2;i++){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemSystemCoord[i][0],\
                                                      gSwrbManulTestListviewDispItemSystemCoord[i][1],\
-                                                     GUI_BLACK);
+                                                     GUI_WHITE);
     }
 }
 
@@ -1698,7 +1698,7 @@ void SweepRobot_ManulRELAYBtnProc(void)
             case 2:
                 SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
                 SweepRobot_CollisionRelayCtrlOn(COLLISION_CHAN_FL);
-                Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "fL ON");
+                Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "FL ON");
                 Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_LIGHTYELLOW);
                 break;
             case 3:
@@ -1716,6 +1716,7 @@ void SweepRobot_ManulRELAYBtnProc(void)
             case 5:
                 SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
                 aSwrbManulTestState[SWRB_TEST_STATE_COLLISION] = 0;
+                Button_Set_Text(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, "RELAY");
                 Button_Set_TextColor(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RELAY, GUI_GRAY);
                 break;
             default:break;

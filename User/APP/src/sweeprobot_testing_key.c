@@ -171,6 +171,10 @@ void SweepRobot_KeyTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 1){
                 SweepRobot_KeyTestProc();
             }
+            
+//            if(gSwrbTestTaskRunCnt > 150){
+//                SWRB_WM_ShowWidget(hWin_SWRB_KEY, ID_PCBTEST_BUTTON_SKIP_KEY);
+//            }
 
             if(gSwrbTestTaskRunCnt > SWRB_KEY_MANUL_TEST_WAIT_TIME_MS){
                 SweepRobot_KeyTestTimeOutProc();

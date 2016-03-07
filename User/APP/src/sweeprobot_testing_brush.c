@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_BRUSH_TEST_TIME_OUT_CNT 100
+
 const static u16 aSwrbBrushTestCurLowThreshold[SWRB_BRUSH_CHAN_NUM] = { 5, 5, 50 };
 const static u16 aSwrbBrushTestCurHighThreshold[SWRB_BRUSH_CHAN_NUM] = { 100, 100, 500 };
 
@@ -185,12 +187,18 @@ void SWRB_BrushTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_BrushTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_BRUSH_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_BrushTestTask(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH)){
             SWRB_NextTestTaskResumePreAct(SWRB_BRUSH_TEST_TASK_PRIO);
         }else{
+            SWRB_BrushTestProgDisp();
             gSwrbTestTaskRunCnt++;
             
             Checkbox_Set_Box_Back_Color(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, GUI_GREEN, CHECKBOX_CI_ENABLED);
@@ -201,7 +209,7 @@ void SweepRobot_BrushTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 5){
                 SWRB_BrushTestProc();
             }
-            if(gSwrbTestTaskRunCnt > 100){
+            if(gSwrbTestTaskRunCnt > SWRB_BRUSH_TEST_TIME_OUT_CNT){
                 SWRB_BrushTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

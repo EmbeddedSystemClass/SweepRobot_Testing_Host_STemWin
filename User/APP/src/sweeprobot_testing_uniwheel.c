@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_UNIWHEEL_TEST_TIME_OUT_CNT     20
+
 static UNIWHEEL_TestTypeDef uniwheel;
 
 /* UNIVERSAL_WHEEL_ACTIVE_THRESHOLD */
@@ -114,7 +116,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
 #ifdef _UNIWHEEL_USE_MINUS_COMPARE
         if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_MINUS_THRESHOLD){
 #else
-        if(0 > uniwheel.onValue && uniwheel.onValue < SWRB_UNIWHEEL_VALID_THRESHOLD){
+        if(0 < uniwheel.onValue && uniwheel.onValue < SWRB_UNIWHEEL_VALID_THRESHOLD){
 #endif
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
             uniwheel.validCnt++;
@@ -195,12 +197,18 @@ static void SweepRobot_UniwheelTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_UniWheelTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_UNIWHEEL_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_UniWheel_Test_Task(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_UNIWHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_UNIWHEEL_TEST_TASK_PRIO);
         }else{
+            SWRB_UniWheelTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -219,7 +227,7 @@ void SweepRobot_UniWheel_Test_Task(void *pdata)
             }
 #endif
 
-            if(gSwrbTestTaskRunCnt > 20){
+            if(gSwrbTestTaskRunCnt > SWRB_UNIWHEEL_TEST_TIME_OUT_CNT){
                 SweepRobot_UniwheelTestTimeOutProc();
             }
 

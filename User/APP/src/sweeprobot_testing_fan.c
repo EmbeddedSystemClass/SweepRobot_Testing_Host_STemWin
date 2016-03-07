@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_FAN_TEST_TIME_OUT_CNT  200
+
 const static int SWRB_TEST_FAN_CUR_LOW_THRESHOLD = 20;
 const static int SWRB_TEST_FAN_CUR_HIGH_THRESHOLD = 500;
 
@@ -145,6 +147,11 @@ static void SweepRobot_FanTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_FanTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_FAN_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_FanTestTask(void *pdata)
 {
     while(1){
@@ -152,6 +159,7 @@ void SweepRobot_FanTestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_FAN)){
             SWRB_NextTestTaskResumePreAct(SWRB_FAN_TEST_TASK_PRIO);
         }else{
+            SWRB_FanTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -162,7 +170,7 @@ void SweepRobot_FanTestTask(void *pdata)
                 SweepRobot_FanTestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 200){
+            if(gSwrbTestTaskRunCnt > SWRB_FAN_TEST_TIME_OUT_CNT){
                 SweepRobot_FanTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

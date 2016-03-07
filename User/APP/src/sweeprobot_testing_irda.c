@@ -7,6 +7,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_IRDA_TEST_TIME_OUT_CNT     5
+
 #define SWRB_IRDA_TEST_INIT_WAIT_TIME   200
 #define SWRB_IRDA_TEST_TASK_DLY_TIME    100
 #define SWRB_IRDA_TEST_USART_READ_WAIT_TIME     10
@@ -267,6 +269,11 @@ static void SweepRobot_IrDATestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_IRDATestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_IRDA_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_IrDATestTask(void *pdata)
 {
     while(1){
@@ -274,6 +281,7 @@ void SweepRobot_IrDATestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA)){
             SWRB_NextTestTaskResumePreAct(SWRB_IRDA_TEST_TASK_PRIO);
         }else{
+            SWRB_IRDATestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -284,7 +292,7 @@ void SweepRobot_IrDATestTask(void *pdata)
                 SweepRobot_IrDATestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 5){
+            if(gSwrbTestTaskRunCnt > SWRB_IRDA_TEST_TIME_OUT_CNT){
                 SweepRobot_IrDATestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_IRDA_TEST_TASK_DLY_TIME);

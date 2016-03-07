@@ -211,9 +211,14 @@ void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue)
     PROGBAR_SetValue(hItem, progbarValue);
 }
 
-void Progbar_Set_Percent(void)
+void Progbar_PCBTest_Set_Percent(void)
 {
     Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, ( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal) )*100 );
+}
+
+void Progbar_ManulTest_Set_Percent(float taskRunCnt, float taskTimeOutCnt)
+{
+    Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_PROG, ( (float)taskRunCnt / (float)(taskTimeOutCnt) )*100 );
 }
 
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
@@ -507,6 +512,22 @@ void SWRB_WM_DisableWindow(WM_HWIN hWin, int id)
     
     hItem = WM_GetDialogItem(hWin, id);
     WM_DisableWindow(hItem);
+}
+
+void SWRB_WM_ShowWidget(WM_HWIN hWin, int id)
+{
+    WM_HWIN hItem;
+
+    hItem = WM_GetDialogItem(hWin, id);
+    WM_ShowWin(hItem);
+}
+
+void SWRB_WM_HideWidget(WM_HWIN hWin, int id)
+{
+    WM_HWIN hItem;
+
+    hItem = WM_GetDialogItem(hWin, id);
+    WM_HideWin(hItem);
 }
 
 void SWRB_RTC_TIME_Disp(WM_HWIN hWin, int id, RTC_DateTypeDef *date, RTC_TimeTypeDef *time)

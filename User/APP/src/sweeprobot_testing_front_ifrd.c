@@ -94,15 +94,15 @@ static void SweepRobot_FrontIFRDTestInit(void)
     gSwrbTestRuningTaskPrio = SWRB_FRONT_IFRD_TEST_TASK_PRIO;
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][0], \
                                                      gSwrbManulTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][1], \
-                                                     GUI_BLUE);
+                                                     GUI_LIGHTBLUE);
 
-        Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
                                                      gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
-                                                     GUI_RED);
+                                                     GUI_LIGHTRED);
     }
 
     str = "\r\n>>>FRONT IFRD TEST<<<\r\n";
@@ -241,10 +241,10 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
 
     SweepRobotTest_StepMotorGoHome();
 
-    Listview_Set_Item_TextColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
                                                      gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
                                                      gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
-                                                     GUI_BLUE);
+                                                     GUI_LIGHTBLUE);
 
     SWRB_TestDataSaveToFile(FrontIFRD_TestDataSave);
 
@@ -254,12 +254,19 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
     OSTaskSuspend(OS_PRIO_SELF);
 }
 
+static void SWRB_FrontIFRDTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbFrontIFRDTestStepMotorMoveCnt, SWRB_FRONT_IFRD_CHAN_NUM);
+}
+
 void SweepRobot_FrontIFRDTestTask(void *pdata)
 {
     while(1){
 //        if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
 //            SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
 //        }else{
+        
+            SWRB_FrontIFRDTestProgDisp();
             if(gSwrbTestTaskRunCnt == 0){
                 SweepRobot_FrontIFRDTestInit();
             }

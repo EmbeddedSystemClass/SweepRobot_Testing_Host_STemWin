@@ -257,7 +257,13 @@ void SweepRobot_ManulTestDataReset(void)
         aSwrbTestPowerStationValidFlag[i] = 0;
     }
 
+    for(i=0;i<SWRB_TEST_STATE_BOUND;i++){
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispItemCoord[i][0],gSwrbManulTestListviewDispItemCoord[i][1], GUI_WHITE);
+    }
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], GUI_WHITE);
+
     SweepRobot_ManulTest_CtrlBtnStateArrayReset();
+    Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_PROG, 0);
     voltPercent = 0;
     lastVoltPercent = 0;
     VoltCnt = 0;
@@ -655,10 +661,10 @@ static void SweepRobot_ManulTestProc(void)
     }
 }
 
-static void SweepRobot_ManulTestTimeOutProc(void)
-{
+//static void SweepRobot_ManulTestTimeOutProc(void)
+//{
 
-}
+//}
 
 void SweepRobot_ManulTestTask(void *pdata)
 {
@@ -673,9 +679,9 @@ void SweepRobot_ManulTestTask(void *pdata)
             SweepRobot_ManulTestProc();
         }
 
-        if(gSwrbTestTaskRunCnt > 65530){
-            SweepRobot_ManulTestTimeOutProc();
-        }
+//        if(gSwrbTestTaskRunCnt > 65530){
+//            SweepRobot_ManulTestTimeOutProc();
+//        }
 
         OSTimeDlyHMSM(0,0,0,SWRB_MANUL_TEST_TASK_OSTIMEDLY_TIME_MS);
     }

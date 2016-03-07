@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_COLLISION_TEST_TIME_OUT_CNT   20
+
 #define COLLISION_TEST_RELAY_SWITCH_WAIT_TIME_MS   5
 #define COLLISION_TEST_STEER_MOTOR_MOVE_WAIT_TIME_MS    500
 
@@ -426,6 +428,11 @@ static void SweepRobot_CollisionManulTestProc(void)
     }
 }
 
+static void SWRB_CollisionTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_COLLISION_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_CollisionTestTask(void *pdata)
 {
     gSwrbFrontCollisionTestFinishFlag = 0;
@@ -435,6 +442,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_COLLISION)){
             SWRB_NextTestTaskResumePreAct(SWRB_COLLISION_TEST_TASK_PRIO);
         }else{
+            SWRB_CollisionTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
@@ -447,7 +455,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
                     SweepRobot_CollisionPCBTestProc();
                 }
 
-                if(gSwrbTestTaskRunCnt > 20){
+                if(gSwrbTestTaskRunCnt > SWRB_COLLISION_TEST_TIME_OUT_CNT){
                     SweepRobot_CollisionTestTimeOutProc();
                 }
             }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -460,7 +468,7 @@ void SweepRobot_CollisionTestTask(void *pdata)
                     SweepRobot_CollisionManulTestProc();
                 }
 
-                if(gSwrbTestTaskRunCnt > 20){
+                if(gSwrbTestTaskRunCnt > SWRB_COLLISION_TEST_TIME_OUT_CNT){
                     if(gSwrbFrontCollisionTestFinishFlag){
                         SweepRobot_CollisionTestTimeOutProc();
                     }else{

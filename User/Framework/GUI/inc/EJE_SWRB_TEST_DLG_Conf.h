@@ -843,6 +843,7 @@
         ID_MANUL_EDIT_0,
         ID_MANUL_EDIT_1,
         ID_MANUL_PROGBAR_0,
+        ID_MANUL_PROGBAR_1,
         ID_MANUL_BOUND,
     };
 
@@ -888,6 +889,7 @@
 
     enum ID_MANUL_PROGBAR{
         ID_MANUL_PROGBAR_VOLT = ID_MANUL_PROGBAR_0,
+        ID_MANUL_PROGBAR_PROG = ID_MANUL_PROGBAR_1,
         ID_MANUL_PROGBAR_BOUND,
     };
 #endif
@@ -1286,7 +1288,8 @@ void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispPressKeyCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue);
-void Progbar_Set_Percent(void);
+void Progbar_PCBTest_Set_Percent(void);
+void Progbar_ManulTest_Set_Percent(float taskRunCnt, float taskTimeOutCnt);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue);
 void Edit_Set_FloatValue(WM_HWIN hWin, int editId, float editValue);
@@ -1319,6 +1322,8 @@ void SWRB_TestDataFilePathDisp(WM_HWIN hWin, int id);
 void SWRB_TestCurSNDisp(WM_HWIN hWin, int idEdit);
 void SWRB_WM_EnableWindow(WM_HWIN hWin, int id);
 void SWRB_WM_DisableWindow(WM_HWIN hWin, int id);
+void SWRB_WM_ShowWidget(WM_HWIN hWin, int id);
+void SWRB_WM_HideWidget(WM_HWIN hWin, int id);
 void SWRB_TestCheckboxStateGet(WM_HWIN hWin, int id);
 void SWRB_TestCheckboxStateSet(u8 stateNum);
 void SWRB_PCBTestCheckboxEnable(void);

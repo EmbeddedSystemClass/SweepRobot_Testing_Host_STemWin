@@ -7,6 +7,8 @@
 #include "includes.h"
 #include "timer.h"
 
+#define SWRB_WHEEL_TEST_TIME_OUT_CNT    20
+
 const static int aSwrbWheelTestSpeedLowThreshold[SWRB_WHEEL_CHAN_NUM] = { 0, 0 };
 const static int aSwrbWheelTestSpeedHighThreshold[SWRB_WHEEL_CHAN_NUM] = { 50, 50 };
 
@@ -182,12 +184,18 @@ static void SWRB_WheelTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_WheelTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_WHEEL_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_WheelTestTask(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL)){
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_TEST_TASK_PRIO);
         }else{
+            SWRB_WheelTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -198,7 +206,7 @@ void SweepRobot_WheelTestTask(void *pdata)
                 SWRB_WheelTestProc();
             }
 
-            if(20 < gSwrbTestTaskRunCnt){
+            if(SWRB_WHEEL_TEST_TIME_OUT_CNT < gSwrbTestTaskRunCnt){
                 SWRB_WheelTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

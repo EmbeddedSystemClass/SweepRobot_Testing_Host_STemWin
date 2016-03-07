@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_WHEEL_FLOAT_TEST_TIME_OUT_CNT      50
+
 #define WHEEL_FLOAT_TEST_INIT_WAIT_TIME_SEC     1
 #define WHEEL_FLOAT_TEST_MOVE_WAIT_TIME_MS      500
 
@@ -244,6 +246,11 @@ static void SweepRobot_WheelFloatTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_WheelFloatTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_WHEEL_FLOAT_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_WheelFloatTestTask(void *pdata)
 {
     while(1){
@@ -251,7 +258,7 @@ void SweepRobot_WheelFloatTestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_WHEEL_FLOAT)){
             SWRB_NextTestTaskResumePreAct(SWRB_WHEEL_FLOAT_TEST_TASK_PRIO);
         }else{
-
+            SWRB_WheelFloatTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -262,7 +269,7 @@ void SweepRobot_WheelFloatTestTask(void *pdata)
                 SweepRobot_WheelFloatTestProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 50){
+            if(gSwrbTestTaskRunCnt > SWRB_WHEEL_FLOAT_TEST_TIME_OUT_CNT){
                 SweepRobot_WheelFloatTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

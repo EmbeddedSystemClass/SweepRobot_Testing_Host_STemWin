@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_ASH_TRAY_TEST_TIME_OUT_CNT     20
+
 #ifdef _ASH_TRAY_USE_MINUS_COMPARE
     const static int SWRB_ASH_TRAY_LVL_VALID_MINUS_THRESHOLD = 400;
 #else
@@ -279,6 +281,11 @@ static void SweepRobot_AshTrayTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_AshTrayTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_ASH_TRAY_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_AshTrayTestTask(void *pdata)
 {
 
@@ -289,6 +296,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_ASH_TRAY)){
             SWRB_NextTestTaskResumePreAct(SWRB_ASH_TRAY_TEST_TASK_PRIO);
         }else{
+            SWRB_AshTrayTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -297,7 +305,7 @@ void SweepRobot_AshTrayTestTask(void *pdata)
 
             SweepRobot_AshTrayTestProc();
 
-            if(gSwrbTestTaskRunCnt > 20){
+            if(gSwrbTestTaskRunCnt > SWRB_ASH_TRAY_TEST_TIME_OUT_CNT){
                 SweepRobot_AshTrayTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);

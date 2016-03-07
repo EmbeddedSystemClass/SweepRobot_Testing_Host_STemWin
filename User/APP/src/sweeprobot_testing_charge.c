@@ -6,6 +6,7 @@
 #include "includes.h"
 
 static u8 swrbChargeTestStateMap = 0;
+static float gSwrbChargeTestTimeOutCnt = 1200;
 
 #define SWRB_TEST_CHARGE_CUR_POS                0
 #define SWRB_TEST_CHARGE_VOL_POS                1
@@ -284,6 +285,11 @@ static void SweepRobot_ChargeTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_ChargeTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, gSwrbChargeTestTimeOutCnt);
+}
+
 void SweepRobot_ChargeTestTask(void *pdata)
 {
     u16 TimeOutWaitTime;
@@ -293,6 +299,7 @@ void SweepRobot_ChargeTestTask(void *pdata)
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_CHARGE)){
             SWRB_NextTestTaskResumePreAct(SWRB_CHARGE_TEST_TASK_PRIO);
         }else{
+            SWRB_ChargeTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -308,6 +315,8 @@ void SweepRobot_ChargeTestTask(void *pdata)
             }else{
                 TimeOutWaitTime = 100;
             }
+
+            gSwrbChargeTestTimeOutCnt = TimeOutWaitTime;
 
             if(gSwrbTestTaskRunCnt > TimeOutWaitTime){
                 SweepRobot_ChargeTestTimeOutProc();

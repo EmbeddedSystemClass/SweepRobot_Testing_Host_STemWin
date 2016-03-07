@@ -5,6 +5,8 @@
 #include "usart.h"
 #include "includes.h"
 
+#define SWRB_IFRD_TEST_TIME_OUT_CNT                     20
+
 enum SWRB_TEST_IFRD_CHAN{
     SWRB_TEST_IFRD_CHAN_FL,
     SWRB_TEST_IFRD_CHAN_FR,
@@ -338,12 +340,18 @@ static void SweepRobot_IFRDTestTimeOutProc(void)
 #endif
 }
 
+static void SWRB_IFRDTestProgDisp(void)
+{
+    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_IFRD_TEST_TIME_OUT_CNT);
+}
+
 void SweepRobot_IFRDTestTask(void *pdata)
 {
     while(1){
         if(!Checkbox_Get_State(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD)){
             SWRB_NextTestTaskResumePreAct(SWRB_IFRD_TEST_TASK_PRIO);
         }else{
+            SWRB_IFRDTestProgDisp();
             gSwrbTestTaskRunCnt++;
 
             if(gSwrbTestTaskRunCnt == 1){
@@ -356,7 +364,7 @@ void SweepRobot_IFRDTestTask(void *pdata)
                 SweepRobot_IFRDTestTxOnProc();
             }
 
-            if(gSwrbTestTaskRunCnt > 20){
+            if(gSwrbTestTaskRunCnt > SWRB_IFRD_TEST_TIME_OUT_CNT){
                 SweepRobot_IFRDTestTimeOutProc();
             }
             OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_OSTIMEDLY_TIME_MS);
