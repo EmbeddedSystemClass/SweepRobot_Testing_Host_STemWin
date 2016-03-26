@@ -13,7 +13,7 @@ static UNIWHEEL_TestTypeDef uniwheel;
 #ifdef _UNIWHEEL_USE_MINUS_COMPARE
     static const int SWRB_UNIWHEEL_MINUS_THRESHOLD = 200;
 #else
-    static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 4000-200;
+    static const int SWRB_UNIWHEEL_VALID_THRESHOLD = 3800;
 #endif
 
 static void SweepRobot_UniWheelTestInit(void)
@@ -116,7 +116,7 @@ static void SweepRobot_UniWheelTestTxOnProc(void)
 #ifdef _UNIWHEEL_USE_MINUS_COMPARE
         if(uniwheel.offValue - uniwheel.onValue > SWRB_UNIWHEEL_MINUS_THRESHOLD){
 #else
-        if(0 < uniwheel.onValue && uniwheel.onValue < SWRB_UNIWHEEL_VALID_THRESHOLD){
+        if(uniwheel.onValue && (uniwheel.onValue<SWRB_UNIWHEEL_VALID_THRESHOLD)){
 #endif
             gSwrbTestStateMap &= ~( (u32)1<<SWRB_TEST_UNIWHEEL_POS);
             uniwheel.validCnt++;
@@ -199,7 +199,9 @@ static void SweepRobot_UniwheelTestTimeOutProc(void)
 
 static void SWRB_UniWheelTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_UNIWHEEL_TEST_TIME_OUT_CNT);
+    if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
+        Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_UNIWHEEL_TEST_TIME_OUT_CNT);
+    }
 }
 
 void SweepRobot_UniWheel_Test_Task(void *pdata)
