@@ -6,15 +6,15 @@
 #include "delay.h"
 
 /* Collision Relay Control GPIO */
-#define COLLISION_SIDE_TEST_CTRL_GPIO_PERIPH_ID         RCC_AHB1Periph_GPIOE
-#define COLLISION_SIDE_TEST_CTRL_GPIO                   GPIOE
-#define COLLISION_SIDE_TEST_CTRL_L_PIN                  GPIO_Pin_3
-#define COLLISION_SIDE_TEST_CTRL_R_PIN                  GPIO_Pin_4
+#define COLLISION_SIDE_TEST_CTRL_GPIO_PERIPH_ID         RCC_AHB1Periph_GPIOD
+#define COLLISION_SIDE_TEST_CTRL_GPIO                   GPIOD
+#define COLLISION_SIDE_TEST_CTRL_L_PIN                  GPIO_Pin_6
+#define COLLISION_SIDE_TEST_CTRL_R_PIN                  GPIO_Pin_7
 
-#define COLLISION_FRONT_TEST_CTRL_GPIO_PERIPH_ID        RCC_AHB1Periph_GPIOD
-#define COLLISION_FRONT_TEST_CTRL_GPIO                  GPIOD
-#define COLLISION_FRONT_TEST_CTRL_L_PIN                 GPIO_Pin_6
-#define COLLISION_FRONT_TEST_CTRL_R_PIN                 GPIO_Pin_7
+#define COLLISION_FRONT_TEST_CTRL_GPIO_PERIPH_ID        RCC_AHB1Periph_GPIOE
+#define COLLISION_FRONT_TEST_CTRL_GPIO                  GPIOE
+#define COLLISION_FRONT_TEST_CTRL_L_PIN                 GPIO_Pin_3
+#define COLLISION_FRONT_TEST_CTRL_R_PIN                 GPIO_Pin_4
 
 /* Collision Steering Motor Control GPIO */
 #define COLLISION_TEST_STEER_MOTOR_CTRL_GPIO_PERIPH_ID  RCC_AHB1Periph_GPIOE
