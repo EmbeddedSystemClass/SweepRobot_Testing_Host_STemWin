@@ -36,15 +36,6 @@
 #define COLLISION_TEST_RIGHT_STEERING_MOTOR_SIDE_POS    540
 
 /* Wheel Float Steering Motor Control GPIO */
-#ifdef VERSION_1_1
-#define WHEEL_FLOAT_TEST_CTRL_GPIO_PERIPH_ID            RCC_AHB1Periph_GPIOB
-#define WHEEL_FLOAT_TEST_CTRL_GPIO                      GPIOB
-#define WHEEL_FLOAT_TEST_STEER_MOTOR_CTRL_PIN           GPIO_Pin_10             //TIM2_CH3
-#define WHEEL_FLOAT_TSET_CTRL_L_PIN_SOURCE              GPIO_PinSource10
-#define WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP               GPIO_AF_TIM2
-#define WHEEL_FLOAT_TEST_CTRL_TIM_PERIPH_ID             RCC_APB1Periph_TIM2
-#define WHEEL_FLOAT_TEST_CTRL_TIM                       TIM2
-#elif VERSION_1_2
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_PERIPH_ID            RCC_AHB1Periph_GPIOB
 #define WHEEL_FLOAT_TEST_CTRL_GPIO                      GPIOB
 #define WHEEL_FLOAT_TEST_STEER_MOTOR_CTRL_PIN           GPIO_Pin_6             //TIM4_CH1
@@ -52,7 +43,6 @@
 #define WHEEL_FLOAT_TEST_CTRL_GPIO_AF_PPP               GPIO_AF_TIM4
 #define WHEEL_FLOAT_TEST_CTRL_TIM_PERIPH_ID             RCC_APB1Periph_TIM4
 #define WHEEL_FLOAT_TEST_CTRL_TIM                       TIM4
-#endif
 
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_IDLE_POS       280
 #define WHEEL_FLOAT_TEST_STEERING_ENGINE_UP_POS         750
