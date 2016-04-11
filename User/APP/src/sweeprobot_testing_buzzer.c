@@ -108,7 +108,11 @@ static void SweepRobot_BuzzerTestErrProc(void)
     SWRB_TestDataSaveToFile(BUZZER_TestDataSave);
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "K1\r\n";
+#else
         str = "ERROR->BUZZER\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
 
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);

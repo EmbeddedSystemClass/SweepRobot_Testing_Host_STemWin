@@ -131,14 +131,22 @@ static void SWRB_WheelPCBTestTimeOutProc(void)
     SWRB_TestDataSaveToFile(Wheel_TestDataSave);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
-            str = "ERROR->LEFT WHEEL\r\n";
-            SWRB_TestDataFileWriteString(str);
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+#ifdef  USE_ERROR_CODE_DISP
+        str = "A1\r\n";
+#else
+        str = "ERROR->LEFT WHEEL\r\n";
+#endif
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
-            str = "ERROR->RIGHT WHEEL\r\n";
-            SWRB_TestDataFileWriteString(str);
-            MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+#ifdef  USE_ERROR_CODE_DISP
+        str = "A2\r\n";
+#else
+        str = "ERROR->RIGHT WHEEL\r\n";
+#endif
+        SWRB_TestDataFileWriteString(str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
 
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_WHEEL, GUI_RED);

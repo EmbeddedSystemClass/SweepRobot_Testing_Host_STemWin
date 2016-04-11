@@ -231,12 +231,20 @@ static void SweepRobot_AshTrayPCBTestTimeOutProc(void)
     char *str;
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK){
-        str = "ERROR->ASH TRAY INS\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "G1\r\n";
+#else
+        str = "ERROR->ASH_TRAY_INS\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK){
-        str = "ERROR->ASH TRAY LVL\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "G2\r\n";
+#else
+        str = "ERROR->ASH_FLOW_LVL\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }

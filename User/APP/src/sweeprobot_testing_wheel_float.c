@@ -196,12 +196,20 @@ static void SweepRobot_WheelFloatPCBTestTimeOutProc(void)
     char *str;
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
-        str = "ERROR->WHEEL FLOAT L\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "F1\r\n";
+#else
+        str = "ERROR->WHEEL_FLOAT_L\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
-        str = "ERROR->WHEEL FLOAT R\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "F2\r\n";
+#else
+        str = "ERROR->WHEEL_FLOAT_R\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }

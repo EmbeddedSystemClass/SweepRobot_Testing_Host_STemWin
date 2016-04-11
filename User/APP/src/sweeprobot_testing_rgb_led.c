@@ -91,17 +91,29 @@ static void SweepRobot_RGBLEDTestProc(void)
     rgb_led.validCnt = 1;
     printf("RGB->ON=%d\r\n", RGB_LED_RED);
 //    SweepRobot_RGBLEDTestSingleProc(&rgb_led.r_state, GUI_DARKRED, "IS RED LED OK?", ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
-    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.r_state, &_bmREDLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->RED LED\r\n");
+#ifdef  USE_ERROR_CODE_DISP
+    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.r_state, &_bmREDLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "L1\r\n");
+#else
+    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.r_state, &_bmREDLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->LED_RED\r\n");
+#endif
     SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.r_state, SWRB_MANUL_TEST_DATA_RGB_LED_RED_POS, SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
     rgb_led.validCnt = 2;
     printf("RGB->ON=%d\r\n", RGB_LED_GREEN);
 //    SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_DARKGREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
-    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.g_state, &_bmGREENLEDCHECKCHN, ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
+#ifdef  USE_ERROR_CODE_DISP
+    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.g_state, &_bmGREENLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "L2\r\n");
+#else
+    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.g_state, &_bmGREENLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->LED_GREEN\r\n");
+#endif
     SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.g_state, SWRB_MANUL_TEST_DATA_RGB_LED_GREEN_POS, SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
     rgb_led.validCnt = 3;
     printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
 //    SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_DARKBLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
-    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.b_state, &_bmBLUELEDCHECKCHN, ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
+#ifdef  USE_ERROR_CODE_DISP
+    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.b_state, &_bmBLUELEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "L3\r\n");
+#else
+    SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.b_state, &_bmBLUELEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->LED_BLUE\r\n");
+#endif
     SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.b_state, SWRB_MANUL_TEST_DATA_RGB_LED_BLUE_POS, SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
 
     if(rgb_led.r_state && rgb_led.g_state && rgb_led.b_state){

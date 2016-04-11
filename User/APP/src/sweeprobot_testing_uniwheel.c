@@ -160,7 +160,11 @@ static void SweepRobot_UniwheelPCBTestTimeOutProc(void)
 {
     char *str;
 
+#ifdef  USE_ERROR_CODE_DISP
+    str = "H1\r\n";
+#else
     str = "ERROR->UNIWHEEL\r\n";
+#endif
     SWRB_TestDataFileWriteString(str);
 
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);

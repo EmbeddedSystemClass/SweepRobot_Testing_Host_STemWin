@@ -161,22 +161,38 @@ static void SweepRobot_CollisionPCBTestTimeOutProc(void)
     SweepRobot_CollisionRelayCtrlOff(COLLISION_CHAN_ALL);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "E1\r\n";
+#else
         str = "ERROR->COLLISION_L\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FL_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "E2\r\n";
+#else
         str = "ERROR->COLLISION_FL\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_R_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "E3\r\n";
+#else
         str = "ERROR->COLLISION_R\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FR_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "E4\r\n";
+#else
         str = "ERROR->COLLISION_FR\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }

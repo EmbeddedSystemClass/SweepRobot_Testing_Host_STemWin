@@ -109,8 +109,12 @@ static void SweepRobot_FanPCBTestTimeOutProc(void)
 {
     char *str;
 
+#ifdef  USE_ERROR_CODE_DISP
+    str = "C1\r\n";
+#else
     str = "ERROR->FAN\r\n";
-    SWRB_TestDataFileWriteString(str);
+#endif
+    SWRB_TestDataFileWriteString("ERROR->FAN\r\n");
 
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_FAN, GUI_RED);

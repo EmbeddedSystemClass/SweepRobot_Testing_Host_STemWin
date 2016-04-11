@@ -179,27 +179,47 @@ static void SweepRobot_IrDAPCBTestTimeOutProc(void)
     char *str;
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "I1\r\n";
+#else
         str = "ERROR->IRDA_B\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "I2\r\n";
+#else
         str = "ERROR->IRDA_L\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "I3\r\n";
+#else
         str = "ERROR->IRDA_FL\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "I4\r\n";
+#else
         str = "ERROR->IRDA_FR\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "I5\r\n";
+#else
         str = "ERROR->IRDA_R\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }

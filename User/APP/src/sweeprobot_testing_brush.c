@@ -121,19 +121,31 @@ static void SWRB_BrushPCBTestTimeOutProc(void)
     char *str;
     
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "B1\r\n";
+#else
         str = "ERROR->LBRUSH\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "B2\r\n";
+#else
         str = "ERROR->RBRUSH\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "ERROR->RBRUSH\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        str = "B3\r\n";
+#else
         str = "ERROR->MBRUSH\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
-        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  "ERROR->MBRUSH\r\n");
+        MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_BRUSH, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BRUSH, "BRUSH ERROR");

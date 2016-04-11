@@ -82,7 +82,7 @@ static void SweepRobot_ManulTestManulModeTaskStateReset(void);
 
 OS_STK START_TASK_STK[START_STK_SIZE];
 OS_STK TOUCH_TASK_STK[TOUCH_STK_SIZE];
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
 OS_STK KEY_TASK_STK[KEY_STK_SIZE];
 #endif
 OS_STK RTC_TASK_STK[RTC_STK_SIZE];
@@ -472,7 +472,7 @@ static void SWRB_TEST_BUTTON_CTRL_Start(void)
             SweepRobot_PCBTestStartBtnProc();
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-
+            SweepRobot_ManulStartBtnProc();
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -487,7 +487,6 @@ static void SWRB_TEST_BUTTON_CTRL_Set(void)
         case SWRB_DIALOG_SELECT_PCB:
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             ;

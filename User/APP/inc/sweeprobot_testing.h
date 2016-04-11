@@ -301,7 +301,7 @@ enum SWRB_TEST_TASK_PRIO{
 
 #define START_STK_SIZE                      128
 #define TOUCH_STK_SIZE                      128
-#ifdef _USE_KEY_BUTTON
+#ifdef USE_KEY_BUTTON
 #define KEY_STK_SIZE                        128
 #endif
 #define RTC_STK_SIZE                        128

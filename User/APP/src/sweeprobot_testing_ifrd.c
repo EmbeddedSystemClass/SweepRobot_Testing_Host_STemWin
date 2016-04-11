@@ -260,28 +260,60 @@ static void SweepRobot_IFRDTestTimeOutErrDisp(char *str)
 static void SweepRobot_IFRDPCBTestTimeOutProc(void)
 {
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FL_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D1\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_F_L\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_FR_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D2\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_F_R\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_L_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D3\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_S_L\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_R_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D4\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_S_R\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FL_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D5\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_FL\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_FR_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D6\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_FR\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SL_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D7\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_SL\r\n");
+#endif
     }
     if( gSwrbTestStateMap & SWRB_TEST_FAULT_IFRD_B_SR_MASK){
+#ifdef  USE_ERROR_CODE_DISP
+        SweepRobot_IFRDTestTimeOutErrDisp("D8\r\n");
+#else
         SweepRobot_IFRDTestTimeOutErrDisp("ERROR->IFRD_B_SR\r\n");
+#endif
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IFRD, GUI_RED);
     Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IFRD, "IFRD ERROR");

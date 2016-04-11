@@ -222,17 +222,29 @@ static void SweepRobot_ChargePCBTestTimeOutProc(void)
     char *str;
 
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
-        str = "ERROR->CHARGE CUR\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "J1\r\n";
+#else
+        str = "ERROR->CHARGE_CUR\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, str);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK){
-        str = "ERROR->CHARGE VOL\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "J2\r\n";
+#else
+        str = "ERROR->CHARGE_VOL\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_24V_MASK){
-        str = "ERROR->CHARGE 24V\r\n";
+#ifdef  USE_ERROR_CODE_DISP
+        str = "J3\r\n";
+#else
+        str = "ERROR->CHARGE_24V_DETECT\r\n";
+#endif
         SWRB_TestDataFileWriteString(str);
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
