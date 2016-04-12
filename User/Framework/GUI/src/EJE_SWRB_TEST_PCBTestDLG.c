@@ -139,16 +139,16 @@ static const GUI_WIDGET_CREATE_INFO _aKeyTestDialogCreate[] = {
 
 static const GUI_WIDGET_CREATE_INFO _aRgbLEDTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "RGB LED TEST", ID_PCBTEST_FRAMEWIN_RGB_LED, 0, 0, 440, 210, 0, 0x64, 0 },
-    { BUTTON_CreateIndirect, "OK", ID_PCBTEST_BUTTON_RGB_LED_OK, 60, 100, 120, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "ERROR", ID_PCBTEST_BUTTON_RGB_LED_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "OK", ID_PCBTEST_BUTTON_RGB_LED_OK, 260, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "ERROR", ID_PCBTEST_BUTTON_RGB_LED_ERR,  60, 100, 120, 60, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "RGB LED?", ID_PCBTEST_BUTTON_RGB_LED_TEXT,  70, 20, 300, 62, 0, 0x64, 0 },
 //    { TEXT_CreateIndirect, "RGB LED TEST", ID_PCBTEST_TEXT_RGB_LED, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
 static const GUI_WIDGET_CREATE_INFO _aBuzzerTestDialogCreate[] = {
     { FRAMEWIN_CreateIndirect, "BUZZER TEST", ID_PCBTEST_FRAMEWIN_BUZZER, 0, 0, 440, 210, 0, 0x64, 0 },
-    { BUTTON_CreateIndirect, "OK", ID_PCBTEST_BUTTON_BUZZER_OK, 60, 100, 120, 60, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "ERROR", ID_PCBTEST_BUTTON_BUZZER_ERR,  260, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "OK", ID_PCBTEST_BUTTON_BUZZER_OK, 260, 100, 120, 60, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "ERROR", ID_PCBTEST_BUTTON_BUZZER_ERR,  60, 100, 120, 60, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "BUZZER TEST", ID_PCBTEST_TEXT_BUZZER, 68, 17, 308, 65, 0, 0x64, 0 },
 };
 
@@ -515,7 +515,6 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
     WM_HWIN hItem;
     int     NCode;
     int     Id;
-    u8      state;
 
     switch(pMsg->MsgId){
         case WM_INIT_DIALOG:
@@ -554,14 +553,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
 
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            state = RGB_LED_TestValidCntGet();
-                            RGB_LED_TestRgbStateSet(state, 1);
-                            if(state == 3){
-                                WM_HideWin(pMsg->hWin);
-                                SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-                                SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
-                            }
-                            OSTaskResume(gSwrbTestRuningTaskPrio);
+                            Swrb_LedTestDialogOKBtnProc();
                             break;
                     }
                     break;
@@ -571,14 +563,7 @@ static void _cbRgbLedDialog(WM_MESSAGE * pMsg)
 
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            state = RGB_LED_TestValidCntGet();
-                            RGB_LED_TestRgbStateSet(state, 0);
-                            if(state == 3){
-                                WM_HideWin(pMsg->hWin);
-                                SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-                                SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
-                            }
-                            OSTaskResume(gSwrbTestRuningTaskPrio);
+                            Swrb_LedTestDialogErrBtnProc();
                             break;
                     }
                     break;
@@ -626,10 +611,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            BUZZER_TestStateSet(1);
-                            BUZZER_TestValidFlagSet(1);
-                            SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-                            WM_HideWin(hWin_SWRB_BUZZER);
+                            Swrb_BuzzerTestDialogOKBtnProc();
                             break;
                     }
                     break;
@@ -638,10 +620,7 @@ static void _cbBuzzerDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            BUZZER_TestStateSet(0);
-                            BUZZER_TestValidFlagSet(1);
-                            SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-                            WM_HideWin(hWin_SWRB_BUZZER);
+                            Swrb_BuzzerTestDialogErrBtnProc();
                             break;
                     }
                     break;
@@ -697,6 +676,8 @@ WM_HWIN CreateKEY_TestDLG(void)
 {
     WM_HWIN hWin;
 
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_KEY;
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -710,6 +691,8 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 {
     WM_HWIN hWin;
 
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_RGB;
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -722,6 +705,9 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
 WM_HWIN CreateBUZZER_TestDLG(void)
 {
     WM_HWIN hWin;
+
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_BUZZER;
+
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -729,6 +715,56 @@ WM_HWIN CreateBUZZER_TestDLG(void)
         SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
     }
     return hWin;
+}
+
+void Swrb_LedTestDialogOKBtnProc(void)
+{
+    u8 state;
+
+    state = RGB_LED_TestValidCntGet();
+    RGB_LED_TestRgbStateSet(state, 1);
+    if(state == 3){
+        gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
+        WM_HideWin(hWin_SWRB_RGB_LED);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+    }
+    OSTaskResume(gSwrbTestRuningTaskPrio);
+}
+
+void Swrb_LedTestDialogErrBtnProc(void)
+{
+    u8 state;
+
+    state = RGB_LED_TestValidCntGet();
+    RGB_LED_TestRgbStateSet(state, 0);
+    if(state == 3){
+        gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
+        WM_HideWin(hWin_SWRB_RGB_LED);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+    }
+    OSTaskResume(gSwrbTestRuningTaskPrio);
+}
+
+void Swrb_BuzzerTestDialogOKBtnProc(void)
+{
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
+
+    BUZZER_TestStateSet(1);
+    BUZZER_TestValidFlagSet(1);
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+    WM_HideWin(hWin_SWRB_BUZZER);
+}
+
+void Swrb_BuzzerTestDialogErrBtnProc(void)
+{
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
+
+    BUZZER_TestStateSet(0);
+    BUZZER_TestValidFlagSet(1);
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+    WM_HideWin(hWin_SWRB_BUZZER);
 }
 
 /*************************** End of file ****************************/

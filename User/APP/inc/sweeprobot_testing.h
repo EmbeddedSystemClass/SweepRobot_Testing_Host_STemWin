@@ -30,7 +30,13 @@
 #include "swrbTestDriver.h"
 #include "swrbTestStepMotorDriver.h"
 
+#if defined VERSION_1_2
+#define SWRB_FIXTURE_VERSION    "SWRB Fixture Ver:1.2"
+#elif defined VERSION_1_3
 #define SWRB_FIXTURE_VERSION    "SWRB Fixture Ver:1.3"
+#else
+#define SWRB_FIXTURE_VERSION    "SWRB Fixture Ver:Err"
+#endif
 
 enum CryptoMode{
     DecryptMode,
@@ -100,7 +106,6 @@ enum SWRB_TEST_STATE{
 };
 
 enum SWRB_DIALOG_SELECT{
-
     SWRB_DIALOG_SELECT_NONE,
     SWRB_DIALOG_SELECT_PCB,
     SWRB_DIALOG_SELECT_POWER_STATION,
@@ -110,6 +115,15 @@ enum SWRB_DIALOG_SELECT{
     SWRB_DIALOG_SELECT_STEP_MOTOR,
     SWRB_DIALOG_SELECT_DECRYPTO,
     SWRB_DIALOG_SELECT_CONTROL,
+    SWRB_DIALOG_SELECT_BOUND,
+};
+
+enum SWRB_TEST_SUB_DIALOG{
+    SWRB_TEST_SUB_DIALOG_NONE,
+    SWRB_TEST_SUB_DIALOG_RGB,
+    SWRB_TEST_SUB_DIALOG_BUZZER,
+    SWRB_TEST_SUB_DIALOG_KEY,
+    SWRB_TEST_SUB_DIALOG_BOUND,
 };
 
 enum SWRB_TEST_SET_SELECT{
@@ -346,6 +360,7 @@ extern u8 usartRxFlag;
 extern int usartRxNum;
 
 extern enum SWRB_DIALOG_SELECT gSwrbDialogSelectFlag;
+extern enum SWRB_TEST_SUB_DIALOG gSwrbTestSubDialogSelectFlag;
 extern enum SWRB_TEST_MODE gSwrbTestMode;
 extern enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode;
 extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;

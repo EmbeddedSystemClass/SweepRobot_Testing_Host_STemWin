@@ -58,7 +58,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
     { BUTTON_CreateIndirect, "STEP MOTOR", ID_START_BUTTON_STEP_MOTOR, 400, 385, 100, 90, 0, 0x0, 0 },
     { BUTTON_CreateIndirect, "Decrypto", ID_START_BUTTON_DECRYPTO, 500, 385, 100, 90, 0, 0x0, 0 },
 #ifdef USE_RMT_CTRL
-    { BUTTON_CreateIndirect, "CONTROL", ID_START_BUTTON_CONTROL, 0, 0, 120, 120, 0, 0x0, 0 },
+//    { BUTTON_CreateIndirect, "CONTROL", ID_START_BUTTON_CONTROL, 0, 0, 120, 120, 0, 0x0, 0 },
 #endif
 #ifdef USE_MANUL_MANUL_MODE
     { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL_MANUL_MODE, 680, 0, 120, 120, 0, 0x0, 0 },

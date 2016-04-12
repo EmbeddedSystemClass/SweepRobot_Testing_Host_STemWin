@@ -52,16 +52,16 @@
 static char* gSetDlgLoginPasswd = "123";
 static char* gUdiskInsertCmpSkipPasswd = "456";
 #ifdef USE_DECRYPTO
-static char* gDecryptDlgLoginPasswd  = "0549832761";
+static char* gDecryptDlgLoginPasswd  = "**********";        //"0549832761"
 #endif
 #ifdef USE_SLAM
-static char* gSLAMDlgLoginPasswd = "167238";
+static char* gSLAMDlgLoginPasswd = "******";                //"167238"
 #endif
 #ifdef USE_STEPMOTOR_CTRL
-static char* gStepMotorLoginPasswd = "054983";
+static char* gStepMotorLoginPasswd = "******";              //"054983"
 #endif
 #ifdef USE_STEERMOTOR_CTRL
-static char* gSteerMotorLoginPasswd = "832761";
+static char* gSteerMotorLoginPasswd = "******";             //"832761"
 #endif
 #ifdef USE_RELAY_CTRL
 static char* gRelayCtrlLoginPasswd = "387216";

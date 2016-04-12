@@ -21,7 +21,7 @@ enum SWRB_TEST_IFRD_CHAN{
 #define SWRB_IFRD_TEST_BOTTOM_EXCHANGE_FAULT_L_MASK     0x10
 #define SWRB_IFRD_TEST_BOTTOM_EXCHANGE_FAULT_R_MASK     0x20
 
-static const u16 SWRB_IFRD_EXCHANGE_FAULT_DETECT_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 0, 0, 0, 0, 1500, 1500, 300, 300 };
+static const u16 SWRB_IFRD_EXCHANGE_FAULT_DETECT_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 0, 0, 0, 0, 1000, 1000, 300, 300 };
 static u8 gSwrbIFRDTestBottomExchangeStateMap = 0;
 
 static const u16 SWRB_IFRD_VALID_THRESHOLD[SWRB_IFRD_CHAN_NUM] = { 1000, 1000, 500, 500, 200, 200, 200, 200 };
@@ -168,9 +168,13 @@ static void SweepRobot_IFRDTestValidCmpProc(void)
                         ifrd[i].exchangeValidFlag = 1;
 
                         Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][0],\
-                                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][1],\
-                                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][1],\
+                                                                   SWRB_MANUL_TEST_OK_BK_COLOR);
+                        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j+2][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j+2][1],\
+                                                                   SWRB_MANUL_TEST_OK_BK_COLOR);
                     }
                 }
             }
@@ -326,7 +330,7 @@ static void SweepRobot_IFRDManulTestTimeOutProc(void)
     u8 i,j;
 
     for(i=0;i<SWRB_IFRD_CHAN_NUM;i++){
-        if(gSwrbTestStateMap & (SWRB_TEST_FAULT_IFRD_FL_MASK<<i)){
+        if(gSwrbTestStateMap & (SWRB_TEST_FAULT_IFRD_FL_MASK<<i) && (i!=0) && (i!=1) ){
             Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
                                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
@@ -337,12 +341,12 @@ static void SweepRobot_IFRDManulTestTimeOutProc(void)
     for(i=SWRB_TEST_IFRD_CHAN_B_FL,j=0;i<SWRB_TEST_IFRD_CHAN_B_FR;i++,j++){
         if(gSwrbIFRDTestBottomExchangeStateMap & SWRB_IFRD_TEST_BOTTOM_EXCHANGE_FAULT_L_MASK<<i){
             Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][0],\
-                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i][1],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j][1],\
                                                                    "EX_ERR");
             Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i+2][0],\
-                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_FL_POS+i+2][1],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j+2][0],\
+                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_IFRD_B_FL_POS+j+2][1],\
                                                                    "EX_ERR");
         }
     }
