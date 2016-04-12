@@ -29,6 +29,8 @@
 *
 **********************************************************************
 */
+
+
 /*********************************************************************
 *
 *       CreateEJE_SWRB_TEST_PCBTestDLG
@@ -38,6 +40,11 @@ extern WM_HWIN CreateKEY_TestDLG(void);
 extern WM_HWIN CreateRGB_LED_TestDLG(void);
 extern WM_HWIN CreateBUZZER_TestDLG(void);
 extern WM_HWIN CreateWarningDLG(void);
+
+void Swrb_LedTestDialogOKBtnProc(void);
+void Swrb_LedTestDialogErrBtnProc(void);
+void Swrb_BuzzerTestDialogOKBtnProc(void);
+void Swrb_BuzzerTestDialogErrBtnProc(void);
 
 #endif
 /*************************** End of file ****************************/

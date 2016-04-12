@@ -51,6 +51,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "btnStop", ID_STEPMOTOR_BUTTON_STOP, 650, 160, 150, 160, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnForward", ID_STEPMOTOR_BUTTON_FORWARD, 60, 70, 150, 150, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnBackward", ID_STEPMOTOR_BUTTON_BACKWARD, 60, 230, 150, 150, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "btnPwr", ID_STEPMOTOR_BUTTON_POWER, 60, 390, 85, 60, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnEnable", ID_STEPMOTOR_BUTTON_ENABLE, 220, 70, 150, 150, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnDisable", ID_STEPMOTOR_BUTTON_DISABLE, 220, 230, 150, 150, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "btnExit", ID_STEPMOTOR_BUTTON_EXIT, 650, 320, 150, 160, 0, 0x0, 0 },
@@ -76,7 +77,7 @@ static void Button_RunProc(void)
 //    SweepRobotTest_StepMotorModeSet(STEP_MOTOR_MODE_RUN);
     SweepRobotTest_StepMotorMoveSteps(stepmotorSpeed, stepmotorSteps);
 //    OSTaskResume(SWRB_STEPMOTOR_TASK_PRIO);
-    
+
 }
 
 static void Button_StopProc(void)
@@ -94,6 +95,16 @@ static void Button_BackwardProc(void)
     SweepRobotTest_StepMotorDirSet(STEP_MOTOR_DIR_BACKWARD);
 }
 
+static void Button_PwrOnOffProc(void)
+{
+    if(SweepRobotTest_StepMotorPwrStateGet()){
+        SweepRobotTest_StepMotorPwrOff();
+    }
+    else{
+        SweepRobotTest_StepMotorPwrOn();
+    }
+}
+
 static void Button_EnableProc(void)
 {
     SweepRobotTest_StepMotorEnStateSet(ENABLE);
@@ -107,11 +118,11 @@ static void Button_DisableProc(void)
 static void Button_ExitProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
-    
+
     SweepRobotTest_StepMotorEnStateSet(ENABLE);
-    
+
     STEP_MOTOR_ISR_CB_DEREG();
-    
+
     WM_HideWin(hWin_SWRB_STEPMOTOR);
     WM_ShowWin(hWin_SWRB_START);
 }
@@ -144,23 +155,27 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_STOP);
     BUTTON_SetText(hItem, "STOP");
     BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
-  
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_EXIT);
     BUTTON_SetText(hItem, "EXIT");
     BUTTON_SetFont(hItem, GUI_FONT_32_ASCII);
-  
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_FORWARD);
     BUTTON_SetText(hItem, "FORWARD");
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_BACKWARD);
     BUTTON_SetText(hItem, "BACKWARD");
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    
+
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_POWER);
+    BUTTON_SetText(hItem, "PwrOn");
+    BUTTON_SetFont(hItem, GUI_FONT_16B_ASCII);
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_ENABLE);
     BUTTON_SetText(hItem, "ENABLE");
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_BUTTON_DISABLE);
     BUTTON_SetText(hItem, "DISABLE");
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
@@ -170,26 +185,26 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
     EDIT_SetDecMode(hItem, 0, 0, 100, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     EDIT_SetValue(hItem, 0);
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_EDIT_STEPS);
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
     EDIT_SetDecMode(hItem, 0, 0, 16000, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     EDIT_SetValue(hItem, 0);
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_SPEED);
     SLIDER_SetRange(hItem, 1, 50);
     SLIDER_SetNumTicks(hItem, 10);
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_SLIDER_STEPS);
     SLIDER_SetRange(hItem, 100, 16000);
     SLIDER_SetNumTicks(hItem, 16);
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_TEXT_SPEED);
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
     TEXT_SetText(hItem, "Speed");
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEPMOTOR_TEXT_STEPS);
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
@@ -204,7 +219,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
     TEXT_SetText(hItem, "Pos");
-    
+
     WM_HideWin(pMsg->hWin);
     break;
   case WM_NOTIFY_PARENT:
@@ -244,6 +259,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
                     break;
                 case WM_NOTIFICATION_RELEASED:
                     Button_BackwardProc();
+                    break;
+            }
+            break;
+        case ID_STEPMOTOR_BUTTON_POWER: // Notifications sent by 'btnPwr'
+            switch(NCode) {
+                case WM_NOTIFICATION_CLICKED:
+                    break;
+                case WM_NOTIFICATION_RELEASED:
+                    Button_PwrOnOffProc();
                     break;
             }
             break;
@@ -337,9 +361,9 @@ void StepMotorTest_PosStepCntDisp(void)
 {
     enum STEP_MOTOR_MODE mode;
     int32_t posStepCnt;
-    
+
     mode = SweepRobotTest_StepMotorModeGet();
-    
+
     if(mode == STEP_MOTOR_MODE_STOP){
         posStepCnt = SweepRobotTest_StepMotorPosStepCntGet();
         Edit_Set_Value(hWin_SWRB_STEPMOTOR, ID_STEPMOTOR_EDIT_POS, posStepCnt);

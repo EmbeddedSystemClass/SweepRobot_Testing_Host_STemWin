@@ -25,6 +25,7 @@ u8 usartRxFlag = 0;
 int usartRxNum = 0;
 
 enum SWRB_DIALOG_SELECT gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
+enum SWRB_TEST_SUB_DIALOG gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
 enum SWRB_TEST_MODE gSwrbTestMode = SWRB_TEST_MODE_IDLE;
 enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode = SWRB_TEST_MANUL_SUB_MODE_AUTO;
 enum SWRB_TEST_RUN_STATE gSwrbTestRunState = SWRB_TEST_RUN_STATE_NORMAL;
@@ -469,10 +470,32 @@ static void SWRB_TEST_BUTTON_CTRL_Start(void)
         case SWRB_DIALOG_SELECT_NONE:
             break;
         case SWRB_DIALOG_SELECT_PCB:
-            SweepRobot_PCBTestStartBtnProc();
+            if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_RGB){
+                Swrb_LedTestDialogOKBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_BUZZER){
+                Swrb_BuzzerTestDialogOKBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_KEY){
+
+            }
+            else if( (gSwrbTestRuningTaskPrio != SWRB_BUZZER_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_RGB_LED_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_KEY_TEST_TASK_PRIO) ){
+                SweepRobot_PCBTestStartBtnProc();
+            }
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-            SweepRobot_ManulStartBtnProc();
+            if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_RGB){
+                Swrb_LedTestDialogOKBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_BUZZER){
+                Swrb_BuzzerTestDialogOKBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_KEY){
+
+            }
+            else if( (gSwrbTestRuningTaskPrio != SWRB_BUZZER_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_RGB_LED_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_KEY_TEST_TASK_PRIO) ){
+                SweepRobot_ManulStartBtnProc();
+            }
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -501,10 +524,32 @@ static void SWRB_TEST_BUTTON_CTRL_Stop(void)
             SweepRobot_StartDlgPCBBtnClickProc();
             break;
         case SWRB_DIALOG_SELECT_PCB:
-            SweepRobot_PCBTestStopBtnProc();
+            if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_RGB){
+                Swrb_LedTestDialogErrBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_BUZZER){
+                Swrb_BuzzerTestDialogErrBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_KEY){
+
+            }
+            else if( (gSwrbTestRuningTaskPrio != SWRB_BUZZER_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_RGB_LED_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_KEY_TEST_TASK_PRIO) ){
+                SweepRobot_PCBTestStopBtnProc();
+            }
             break;
         case SWRB_DIALOG_SELECT_MANUL:
+            if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_RGB){
+                Swrb_LedTestDialogErrBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_BUZZER){
+                Swrb_BuzzerTestDialogErrBtnProc();
+            }
+            else if(gSwrbTestSubDialogSelectFlag == SWRB_TEST_SUB_DIALOG_KEY){
 
+            }
+            else if( (gSwrbTestRuningTaskPrio != SWRB_BUZZER_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_RGB_LED_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_KEY_TEST_TASK_PRIO) ){
+                SweepRobot_ManulResetBtnProc();
+            }
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -520,7 +565,6 @@ static void SWRB_TEST_BUTTON_CTRL_Exit(void)
             SweepRobot_PCBTestExitBtnProc();
             break;
         case SWRB_DIALOG_SELECT_MANUL:
-
             break;
         case SWRB_DIALOG_SELECT_SLAM:
             break;
@@ -578,7 +622,6 @@ void SWRB_TestCtrlTask(void *pdata)
             switch(gkeyCode){
                 /* TEST START/PAUSE/RESUME PRESSED*/
                 case 1:
-                    SWRB_TEST_BUTTON_CTRL_Start();
                     break;
                 /* TEST SET PRESSED */
                 case 2:
@@ -586,11 +629,16 @@ void SWRB_TestCtrlTask(void *pdata)
                     break;
                 /* TEST STOP PRESSED */
                 case 3:
-                    SWRB_TEST_BUTTON_CTRL_Stop();
                     break;
                 /* TEST EXIT PRESSED */
                 case 4:
                     SWRB_TEST_BUTTON_CTRL_Exit();
+                    break;
+                case 5:
+                    SWRB_TEST_BUTTON_CTRL_Start();
+                    break;
+                case 6:
+                    SWRB_TEST_BUTTON_CTRL_Stop();
                     break;
                 default:
                     break;
@@ -630,10 +678,12 @@ void SweepRobot_PCBTestStartBtnProc(void)
 
             SWRB_ValidTestTaskCntGet();
 
+#ifdef USE_DUT_WR_SN
+            /* Write Serial Number into the flash of DUT When all test tasks were selected */
             if( (SWRB_TEST_TASK_PRIO_END_BOUND - (SWRB_TEST_TASK_PRIO_START_BOUND+1)) == gSwrbTestValidTaskCntTotal){
-                /* Write Serial Number into the flash of DUT When all test tasks were selected */
                 SWRB_TestDUTWriteSN();
             }
+#endif
 
             if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
                 SWRB_TestDataFileOpen(FA_WRITE|FA_READ);
@@ -685,25 +735,25 @@ void SweepRobot_PCBTestStartBtnProc(void)
         OS_EXIT_CRITICAL();
 
         printf("CRG->OFF\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("LW->SPD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("RW->SPD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("LB->SPD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("RB->SPD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("MB->SPD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("FAN->SPD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("SNSR->IFRD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("IRDA->OFF\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("SNSR->BSWC=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
 
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "PRESS RESUME TO RESUME TEST\r\n");
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN, "TEST PAUSED\r\n");
@@ -1041,12 +1091,13 @@ static void SWRB_PCBTestFinishProc(void)
 
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
+    
+    str = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(str, 0, sizeof(char)*50);
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileWriteDate(">PCB Test finish time", &rtcDate, &rtcTime);
 
-        str = mymalloc(SRAMIN, sizeof(char)*50);
-        mymemset(str, 0, sizeof(char)*50);
         str = "\r\n****************************************\r\n";
         SWRB_TestDataFileWriteString(str);
 
@@ -1084,7 +1135,7 @@ static void SWRB_ManulTestFinishProc(void)
     char *str;
 
     SweepRobot_ManulTestCtrlReset();
-    
+
     RTC_GetDate(RTC_Format_BIN, &rtcDate);
     RTC_GetTime(RTC_Format_BIN, &rtcTime);
 
@@ -1246,13 +1297,13 @@ static void SweepRobot_ManulStartBtnManulModeStartProc(void)
     OS_CPU_SR cpu_sr;
 
     printf("T->ON\r\n");
-    GUI_Delay(1);
+//    GUI_Delay(1);
     printf("SNSR->IFRD=1\r\n");
-    GUI_Delay(1);
+//    GUI_Delay(1);
     printf("IRDA->ON\r\n");
-    GUI_Delay(1);
+//    GUI_Delay(1);
 
-    SweepRobot_ManulTestSNDisp();
+//    SweepRobot_ManulTestSNDisp();
 
     OS_ENTER_CRITICAL();
     gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
@@ -1270,9 +1321,11 @@ static void SweepRobot_ManulStartBtnAutoModeStartProc(void)
 
     SweepRobot_ManulTestDataReset();
     SweepRobot_ManulTestGuiReset();
+#ifdef USE_DUT_WR_SN
     SweepRobot_ManulTestSNDisp();
     SweepRobot_ManulTestDataQuery();
     SweepRobot_ManulTestBatteryVoltDisp();
+#endif
 
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileOpen(FA_WRITE|FA_READ);
@@ -1325,9 +1378,9 @@ static void SweepRobot_ManulStartBtnStopProc(void)
 
     if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_MANUL){
         printf("SNSR->IFRD=0\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("IRDA->OFF\r\n");
-        GUI_Delay(1);
+//        GUI_Delay(1);
         printf("IRDA->ERS\r\n");
     }else if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO){
         SweepRobot_FrontIFRDTestStateReset();

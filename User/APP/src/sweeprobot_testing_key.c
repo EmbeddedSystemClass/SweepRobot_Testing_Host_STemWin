@@ -31,7 +31,7 @@ static void SweepRobot_KeyTestInit(void)
     SWRB_TestInitCommonAct(gSwrbTestRuningTaskPrio);
 
     mymemset(&key, 0, sizeof(key));
-    
+
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TASK_INIT_WAIT_TIME_MS);
 
     hWin_SWRB_KEY = CreateKEY_TestDLG();
@@ -77,6 +77,8 @@ static void SweepRobot_KeyTestProc(void)
         }
 
         if(key.validFlag){
+            gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
+
             SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
@@ -138,6 +140,9 @@ static void SweepRobot_KeyManulTestTimeOutProc(void)
 static void SweepRobot_KeyTestTimeOutProc(void)
 {
     gSwrbTestTaskRunCnt = 0;
+
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
+
     SweepRobot_KeyTestElectroMagnetCtrlReleasePos();
 
     SWRB_TestDataSaveToFile(KEY_TestDataSave);
@@ -175,7 +180,7 @@ void SweepRobot_KeyTestTask(void *pdata)
             if(gSwrbTestTaskRunCnt > 1){
                 SweepRobot_KeyTestProc();
             }
-            
+
 //            if(gSwrbTestTaskRunCnt > 150){
 //                SWRB_WM_ShowWidget(hWin_SWRB_KEY, ID_PCBTEST_BUTTON_SKIP_KEY);
 //            }
