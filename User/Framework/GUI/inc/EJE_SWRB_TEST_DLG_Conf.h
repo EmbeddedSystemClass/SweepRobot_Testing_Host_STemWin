@@ -18,7 +18,7 @@
 #define __EJE_SWRB_TEST_LOGIN_DLG           1
 #define __EJE_SWRB_TEST_NUMPAD_DLG          1
 #define __EJE_SWRB_TEST_SLAM_DLG            1
-#define __EJE_SWRB_TEST_MANUL_DLG           1
+#define __EJE_SWRB_TEST_MANUAL_DLG           1
 #define __EJE_SWRB_TEST_STEPMOTOR_DLG       1
 #define __EJE_SWRB_TEST_STEERMOTOR_DLG      1
 #define __EJE_SWRB_TEST_RELAYCTRL_DLG       1
@@ -65,8 +65,8 @@
     #include "EJE_SWRB_TEST_SLAMDLG.h"
 #endif
 
-#if __EJE_SWRB_TEST_MANUL_DLG
-    #include "EJE_SWRB_TEST_ManulDLG.h"
+#if __EJE_SWRB_TEST_MANUAL_DLG
+    #include "EJE_SWRB_TEST_ManualDLG.h"
 #endif
 
 #if __EJE_SWRB_TEST_STEPMOTOR_DLG
@@ -99,8 +99,8 @@
 **********************************************************************
 */
 
-#define SWRB_MANUL_TEST_OK_BK_COLOR     GUI_LIGHTGREEN
-#define SWRB_MANUL_TEST_FAULT_BK_COLOR  GUI_RED
+#define SWRB_MANUAL_TEST_OK_BK_COLOR     GUI_LIGHTGREEN
+#define SWRB_MANUAL_TEST_FAULT_BK_COLOR  GUI_RED
 
 /* EJE_SWRB_TEST_StartDLG */
 #if __EJE_SWRB_TEST_START_DLG
@@ -819,85 +819,85 @@
     };
 #endif
 
-#if __EJE_SWRB_TEST_MANUL_DLG
+#if __EJE_SWRB_TEST_MANUAL_DLG
 
-    enum ID_MANUL_WIDGET{
-        ID_MANUL_WINDOW_0 = ID_TESTSEL_BOUND,
-        ID_MANUL_WINDOW_1,
-        ID_MANUL_BUTTON_0,
-        ID_MANUL_BUTTON_1,
-        ID_MANUL_BUTTON_2,
-        ID_MANUL_BUTTON_3,
-        ID_MANUL_BUTTON_4,
-        ID_MANUL_BUTTON_5,
-        ID_MANUL_BUTTON_6,
-        ID_MANUL_BUTTON_7,
-        ID_MANUL_BUTTON_8,
-        ID_MANUL_BUTTON_9,
-        ID_MANUL_BUTTON_10,
-        ID_MANUL_BUTTON_11,
-        ID_MANUL_BUTTON_12,
-        ID_MANUL_LISTVIEW_0,
-        ID_MANUL_TEXT_0,
-        ID_MANUL_TEXT_1,
-        ID_MANUL_EDIT_0,
-        ID_MANUL_EDIT_1,
-        ID_MANUL_PROGBAR_0,
-        ID_MANUL_PROGBAR_1,
-        ID_MANUL_BOUND,
+    enum ID_MANUAL_WIDGET{
+        ID_MANUAL_WINDOW_0 = ID_TESTSEL_BOUND,
+        ID_MANUAL_WINDOW_1,
+        ID_MANUAL_BUTTON_0,
+        ID_MANUAL_BUTTON_1,
+        ID_MANUAL_BUTTON_2,
+        ID_MANUAL_BUTTON_3,
+        ID_MANUAL_BUTTON_4,
+        ID_MANUAL_BUTTON_5,
+        ID_MANUAL_BUTTON_6,
+        ID_MANUAL_BUTTON_7,
+        ID_MANUAL_BUTTON_8,
+        ID_MANUAL_BUTTON_9,
+        ID_MANUAL_BUTTON_10,
+        ID_MANUAL_BUTTON_11,
+        ID_MANUAL_BUTTON_12,
+        ID_MANUAL_LISTVIEW_0,
+        ID_MANUAL_TEXT_0,
+        ID_MANUAL_TEXT_1,
+        ID_MANUAL_EDIT_0,
+        ID_MANUAL_EDIT_1,
+        ID_MANUAL_PROGBAR_0,
+        ID_MANUAL_PROGBAR_1,
+        ID_MANUAL_BOUND,
     };
 
-    enum ID_MANUL_WINDOW{
-        ID_MANUL_WINDOW_MAIN = ID_MANUL_WINDOW_0,
-        ID_MANUL_WINDOW_TEST_STATE_INDICATE,
-        ID_MANUL_WINDOW_BOUND,
+    enum ID_MANUAL_WINDOW{
+        ID_MANUAL_WINDOW_MAIN = ID_MANUAL_WINDOW_0,
+        ID_MANUAL_WINDOW_TEST_STATE_INDICATE,
+        ID_MANUAL_WINDOW_BOUND,
     };
 
-    enum ID_MANUL_BUTTON{
-        ID_MANUL_BUTTON_START = ID_MANUL_BUTTON_0,
-        ID_MANUL_BUTTON_SET,
-        ID_MANUL_BUTTON_RESET,
-        ID_MANUL_BUTTON_EXIT,
-        ID_MANUL_BUTTON_INDICATE,
-        ID_MANUL_BUTTON_WHEEL,
-        ID_MANUL_BUTTON_BRUSH,
-        ID_MANUL_BUTTON_FAN,
-        ID_MANUL_BUTTON_IFRD,
-        ID_MANUL_BUTTON_BUZZER,
-        ID_MANUL_BUTTON_RGB_LED,
-        ID_MANUL_BUTTON_RELAY,
-        ID_MANUL_BUTTON_TEST_STATE_INDICATE,
-        ID_MANUL_BUTTON_BOUND,
+    enum ID_MANUAL_BUTTON{
+        ID_MANUAL_BUTTON_START = ID_MANUAL_BUTTON_0,
+        ID_MANUAL_BUTTON_SET,
+        ID_MANUAL_BUTTON_RESET,
+        ID_MANUAL_BUTTON_EXIT,
+        ID_MANUAL_BUTTON_INDICATE,
+        ID_MANUAL_BUTTON_WHEEL,
+        ID_MANUAL_BUTTON_BRUSH,
+        ID_MANUAL_BUTTON_FAN,
+        ID_MANUAL_BUTTON_IFRD,
+        ID_MANUAL_BUTTON_BUZZER,
+        ID_MANUAL_BUTTON_RGB_LED,
+        ID_MANUAL_BUTTON_RELAY,
+        ID_MANUAL_BUTTON_TEST_STATE_INDICATE,
+        ID_MANUAL_BUTTON_BOUND,
     };
 
-    enum ID_MANUL_LISTVIEW{
-        ID_MANUL_LISTVIEW_MAIN = ID_MANUL_LISTVIEW_0,
-        ID_MANUL_LISTVIEW_BOUND,
+    enum ID_MANUAL_LISTVIEW{
+        ID_MANUAL_LISTVIEW_MAIN = ID_MANUAL_LISTVIEW_0,
+        ID_MANUAL_LISTVIEW_BOUND,
     };
 
-    enum ID_MANUL_TEXT{
-        ID_MANUL_TEXT_TITLE = ID_MANUL_TEXT_0,
-        ID_MANUL_TEXT_VOLT,
-        ID_MANUL_TEXT_BOUND,
+    enum ID_MANUAL_TEXT{
+        ID_MANUAL_TEXT_TITLE = ID_MANUAL_TEXT_0,
+        ID_MANUAL_TEXT_VOLT,
+        ID_MANUAL_TEXT_BOUND,
     };
 
-    enum ID_MANUL_EDIT{
-        ID_MANUL_EDIT_DATE = ID_MANUL_EDIT_0,
-        ID_MANUL_EDIT_VOLT,
-        ID_MANUL_EDIT_BOUND,
+    enum ID_MANUAL_EDIT{
+        ID_MANUAL_EDIT_DATE = ID_MANUAL_EDIT_0,
+        ID_MANUAL_EDIT_VOLT,
+        ID_MANUAL_EDIT_BOUND,
     };
 
-    enum ID_MANUL_PROGBAR{
-        ID_MANUL_PROGBAR_VOLT = ID_MANUL_PROGBAR_0,
-        ID_MANUL_PROGBAR_PROG = ID_MANUL_PROGBAR_1,
-        ID_MANUL_PROGBAR_BOUND,
+    enum ID_MANUAL_PROGBAR{
+        ID_MANUAL_PROGBAR_VOLT = ID_MANUAL_PROGBAR_0,
+        ID_MANUAL_PROGBAR_PROG = ID_MANUAL_PROGBAR_1,
+        ID_MANUAL_PROGBAR_BOUND,
     };
 #endif
 
 #if __EJE_SWRB_TEST_STEPMOTOR_DLG
 
     enum ID_STEPMOTOR_WIDGET{
-        ID_STEPMOTOR_WINDOW_0 = ID_MANUL_BOUND,
+        ID_STEPMOTOR_WINDOW_0 = ID_MANUAL_BOUND,
         ID_STEPMOTOR_BUTTON_0,
         ID_STEPMOTOR_BUTTON_1,
         ID_STEPMOTOR_BUTTON_2,
@@ -1225,8 +1225,8 @@
     extern WM_HWIN hWin_SWRB_TESTSEL;
 #endif
 
-#if __EJE_SWRB_TEST_MANUL_DLG
-    extern WM_HWIN hWin_SWRB_MANUL;
+#if __EJE_SWRB_TEST_MANUAL_DLG
+    extern WM_HWIN hWin_SWRB_MANUAL;
 #endif
 
 #if (__EJE_SWRB_TEST_STEPMOTOR_DLG && defined USE_STEPMOTOR_CTRL)
@@ -1287,11 +1287,11 @@ void BUTTON_DispReTestCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispSkipCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispDeleteCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
-void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
+void BUTTON_DispManualModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void BUTTON_DispPressKeyCHNStr(WM_HWIN hWin, int buttonId, int x, int y);
 void Progbar_Set_Value(WM_HWIN hWin, int id, int progbarValue);
 void Progbar_PCBTest_Set_Percent(void);
-void Progbar_ManulTest_Set_Percent(float taskRunCnt, float taskTimeOutCnt);
+void Progbar_ManualTest_Set_Percent(float taskRunCnt, float taskTimeOutCnt);
 void Edit_Set_Text(WM_HWIN hWin, int editId, char *str);
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue);
 void Edit_Set_FloatValue(WM_HWIN hWin, int editId, float editValue);
@@ -1313,7 +1313,7 @@ void Listview_Set_Item_Text(WM_HWIN hWin, int id, uint16_t column, uint16_t row,
 void Listview_Set_Item_TextColor(WM_HWIN hWin, int id, uint16_t column, uint16_t row, GUI_COLOR color);
 void Listview_Set_Text_Color(WM_HWIN hWin, int id, GUI_COLOR color);
 void Listview_Set_Item_BkColor(WM_HWIN hWin, int id, int column, int row, GUI_COLOR color);
-void Listview_Set_Item_BkColor_withCoord(WM_HWIN hWin, int id, u8 aCoord[][2],enum SWRB_MANUL_TEST_DATA_POS pos, GUI_COLOR color);
+void Listview_Set_Item_BkColor_withCoord(WM_HWIN hWin, int id, u8 aCoord[][2],enum SWRB_MANUAL_TEST_DATA_POS pos, GUI_COLOR color);
 void ListWheel_AddNumString(WM_HWIN hItem, int startStringNum, int endStringNum);
 void Multiedit_Set_Buffer_Size(int size);
 void MultiEdit_Set_Text(WM_HWIN hWin, int multiEditId, char *s);

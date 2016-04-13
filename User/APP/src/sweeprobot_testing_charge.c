@@ -67,9 +67,9 @@ static void SweepRobot_ChargeTestProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
+                    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_CUR_POS][0],\
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_CUR_POS][1],\
                                             str);
                     myfree(SRAMIN, str);
                 }
@@ -93,10 +93,10 @@ static void SweepRobot_ChargeTestProc(void)
             charge.curValidFlag = 1;
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
-                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_CUR_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_CUR_POS][1],\
+                                                           SWRB_MANUAL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -113,9 +113,9 @@ static void SweepRobot_ChargeTestProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
+                    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_VOL_POS][0],\
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_VOL_POS][1],\
                                             str);
                     myfree(SRAMIN, str);
                 }
@@ -139,10 +139,10 @@ static void SweepRobot_ChargeTestProc(void)
             charge.volValidFlag = 1;
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
-                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_VOL_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_VOL_POS][1],\
+                                                           SWRB_MANUAL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -159,9 +159,9 @@ static void SweepRobot_ChargeTestProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
+                    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_24V_POS][0],\
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_24V_POS][1],\
                                             str);
                     myfree(SRAMIN, str);
                 }
@@ -185,10 +185,10 @@ static void SweepRobot_ChargeTestProc(void)
             charge.charge24vValidFlag = 1;
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
-                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_24V_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_24V_POS][1],\
+                                                           SWRB_MANUAL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -251,25 +251,25 @@ static void SweepRobot_ChargePCBTestTimeOutProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_ChargeManulTestTimeOutProc(void)
+static void SweepRobot_ChargeManualTestTimeOutProc(void)
 {
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_CUR_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_CUR_POS][1],\
-                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_CUR_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_CUR_POS][1],\
+                                                           SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_VOL_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_VOL_POS][1],\
-                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_VOL_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_VOL_POS][1],\
+                                                           SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(swrbChargeTestStateMap & SWRB_TEST_FAULT_CHARGE_24V_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_CHARGE_24V_POS][1],\
-                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_24V_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_CHARGE_24V_POS][1],\
+                                                           SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -285,7 +285,7 @@ static void SweepRobot_ChargeTestTimeOutProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_ChargePCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_ChargeManulTestTimeOutProc();
+        SweepRobot_ChargeManualTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -297,7 +297,7 @@ static void SweepRobot_ChargeTestTimeOutProc(void)
 
 static void SWRB_ChargeTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, gSwrbChargeTestTimeOutCnt);
+    Progbar_ManualTest_Set_Percent(gSwrbTestTaskRunCnt, gSwrbChargeTestTimeOutCnt);
 }
 
 void SweepRobot_ChargeTestTask(void *pdata)

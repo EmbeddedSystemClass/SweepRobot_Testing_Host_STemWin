@@ -69,18 +69,18 @@ static void SweepRobot_RGBLEDTestSingleProcWithCHN(int *ledState, const GUI_BITM
     }
 }
 
-static void SweepRobot_RGBLEDManulTestSingleProc(int *ledState, enum SWRB_MANUL_TEST_DATA_RGB_LED_POS pos, GUI_COLOR okColor, GUI_COLOR errColor)
+static void SweepRobot_RGBLEDManualTestSingleProc(int *ledState, enum SWRB_MANUAL_TEST_DATA_RGB_LED_POS pos, GUI_COLOR okColor, GUI_COLOR errColor)
 {
     if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
         if(*ledState){
-            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                gSwrbManualTestListviewDispDataRGBLEDCoord[pos][0],\
+                                                                gSwrbManualTestListviewDispDataRGBLEDCoord[pos][1],\
                                                                 okColor);
         }else{
-            Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][0],\
-                                                                gSwrbManulTestListviewDispDataRGBLEDCoord[pos][1],\
+            Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                gSwrbManualTestListviewDispDataRGBLEDCoord[pos][0],\
+                                                                gSwrbManualTestListviewDispDataRGBLEDCoord[pos][1],\
                                                                 errColor);
         }
     }
@@ -96,7 +96,7 @@ static void SweepRobot_RGBLEDTestProc(void)
 #else
     SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.r_state, &_bmREDLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->LED_RED\r\n");
 #endif
-    SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.r_state, SWRB_MANUL_TEST_DATA_RGB_LED_RED_POS, SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
+    SweepRobot_RGBLEDManualTestSingleProc(&rgb_led.r_state, SWRB_MANUAL_TEST_DATA_RGB_LED_RED_POS, SWRB_MANUAL_TEST_OK_BK_COLOR, SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     rgb_led.validCnt = 2;
     printf("RGB->ON=%d\r\n", RGB_LED_GREEN);
 //    SweepRobot_RGBLEDTestSingleProc(&rgb_led.g_state, GUI_DARKGREEN, "IS GREEN LED OK?", ""/*"GREEN LED OK\r\n"*/, "ERROR->GREEN LED\r\n");
@@ -105,7 +105,7 @@ static void SweepRobot_RGBLEDTestProc(void)
 #else
     SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.g_state, &_bmGREENLEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->LED_GREEN\r\n");
 #endif
-    SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.g_state, SWRB_MANUL_TEST_DATA_RGB_LED_GREEN_POS, SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
+    SweepRobot_RGBLEDManualTestSingleProc(&rgb_led.g_state, SWRB_MANUAL_TEST_DATA_RGB_LED_GREEN_POS, SWRB_MANUAL_TEST_OK_BK_COLOR, SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     rgb_led.validCnt = 3;
     printf("RGB->ON=%d\r\n", RGB_LED_BLUE);
 //    SweepRobot_RGBLEDTestSingleProc(&rgb_led.b_state, GUI_DARKBLUE, "IS BLUE LED OK?", ""/*"BLUE LED OK\r\n"*/, "ERROR->BLUE LED\r\n");
@@ -114,7 +114,7 @@ static void SweepRobot_RGBLEDTestProc(void)
 #else
     SweepRobot_RGBLEDTestSingleProcWithCHN(&rgb_led.b_state, &_bmBLUELEDCHECKCHN, ""/*"RED LED OK\r\n"*/, "ERROR->LED_BLUE\r\n");
 #endif
-    SweepRobot_RGBLEDManulTestSingleProc(&rgb_led.b_state, SWRB_MANUL_TEST_DATA_RGB_LED_BLUE_POS, SWRB_MANUL_TEST_OK_BK_COLOR, SWRB_MANUL_TEST_FAULT_BK_COLOR);
+    SweepRobot_RGBLEDManualTestSingleProc(&rgb_led.b_state, SWRB_MANUAL_TEST_DATA_RGB_LED_BLUE_POS, SWRB_MANUAL_TEST_OK_BK_COLOR, SWRB_MANUAL_TEST_FAULT_BK_COLOR);
 
     if(rgb_led.r_state && rgb_led.g_state && rgb_led.b_state){
         SweepRobot_RGBLEDTestOKProc();

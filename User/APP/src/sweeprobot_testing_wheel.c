@@ -68,9 +68,9 @@ static void SWRB_WheelTestProc(void)
                         str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
-                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
+                        Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
+                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
                                                 str);
                         myfree(SRAMIN, str);
                     }
@@ -95,10 +95,10 @@ static void SWRB_WheelTestProc(void)
                 printf("WHL->OFF=%d\r\n",i);
 
                 if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
-                                                               SWRB_MANUL_TEST_OK_BK_COLOR);
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_L_SPEED_POS+i][0],\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_L_SPEED_POS+i][1],\
+                                                               SWRB_MANUAL_TEST_OK_BK_COLOR);
                 }
             }
         }
@@ -155,19 +155,19 @@ static void SWRB_WheelPCBTestTimeOutProc(void)
     Edit_Clear();
 }
 
-static void SWRB_WheelManulTestTimeOutProc(void)
+static void SWRB_WheelManualTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_L_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS][0],\
-                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_L_SPEED_POS][1],\
-                                                   SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                   gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_L_SPEED_POS][0],\
+                                                   gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_L_SPEED_POS][1],\
+                                                   SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_R_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS][0],\
-                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_R_SPEED_POS][1],\
-                                                   SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                   gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_R_SPEED_POS][0],\
+                                                   gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_R_SPEED_POS][1],\
+                                                   SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -181,7 +181,7 @@ static void SWRB_WheelTestTimeOutProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SWRB_WheelPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SWRB_WheelManulTestTimeOutProc();
+        SWRB_WheelManualTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -194,7 +194,7 @@ static void SWRB_WheelTestTimeOutProc(void)
 
 static void SWRB_WheelTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_WHEEL_TEST_TIME_OUT_CNT);
+    Progbar_ManualTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_WHEEL_TEST_TIME_OUT_CNT);
 }
 
 void SweepRobot_WheelTestTask(void *pdata)
