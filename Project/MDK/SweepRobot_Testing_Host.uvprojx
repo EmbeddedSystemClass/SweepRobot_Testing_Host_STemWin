@@ -627,9 +627,9 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_ManualDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManualDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
@@ -2129,9 +2129,9 @@
               <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
             </File>
             <File>
-              <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_ManualDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManualDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
