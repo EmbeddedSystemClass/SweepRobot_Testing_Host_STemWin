@@ -86,7 +86,11 @@ static void SweepRobot_IrDATestInit(void)
     SWRB_TestDataFileWriteString(str);
     
     MultiEdit_Set_Text_Color(GUI_BLACK);
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+    MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+=======
     MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
 
     OSTimeDlyHMSM(0,0,0,SWRB_TEST_TEST_TASK_INIT_WAIT_TIME_MS);
     
@@ -94,7 +98,11 @@ static void SweepRobot_IrDATestInit(void)
         IrDA[i].code = 0;
         IrDA[i].validCnt = 0;
         IrDA[i].validFlag = 0;
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        Edit_Set_Value(ID_MAIN_EDIT_U1+i, 0);
+=======
         Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
     }
 }
 
@@ -118,9 +126,14 @@ static void SweepRobot_IrDATestProc(void)
                 printf("IRDA->READ\r\n");
                 OSTimeDlyHMSM(0,0,0,SWRB_TEST_USART_READ_WAIT_TIME);
                 if(usartRxFlag){
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+                    IrDA[j].code = usartRxNum;
+                    Edit_Set_Value(ID_MAIN_EDIT_U1+j, IrDA[j].code);
+=======
                     IrDA[i].code = usartRxNum;
                     Edit_Set_HexMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 255);
                     Edit_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, IrDA[i].code);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
                     usartRxNum = 0;
                     usartRxFlag = 0;
                     USART_RX_STA = 0;
@@ -131,8 +144,14 @@ static void SweepRobot_IrDATestProc(void)
                 }
             }
 
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+            if(IrDA[j].code == 0x40 || IrDA[j].code == 0x41 || IrDA[j].code == 0x42 || IrDA[j].code == 0x43 ||\
+               IrDA[j].code == 0x44 || IrDA[j].code == 0x45 || IrDA[j].code == 0x46){
+                IrDA[j].validCnt++;
+=======
             if(IS_IRDA_CODE(IrDA[i].code)){
                 IrDA[i].validCnt++;
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
             }else{
                 IrDA[i].validCnt = 0;
             }
@@ -158,12 +177,18 @@ static void SweepRobot_IrDATestProc(void)
         str = "IRDA OK\r\n";
         SWRB_TestDataFileWriteString(str);
         
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+        Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IRDA, GUI_BLUE);
+        Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA OK");
+=======
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
         Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_BLUE);
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_IRDA, "IRDA OK");
         for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
             Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
         }
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
         Edit_Clear();
 
         SWRB_NextTestTaskResumePostAct(SWRB_IRDA_TEST_TASK_PRIO);
@@ -184,26 +209,48 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_B_MSAK){
         str = "ERROR->IRDA_B\r\n";
         SWRB_TestDataFileWriteString(str);
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+=======
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_L_MSAK){
         str = "ERROR->IRDA_L\r\n";
         SWRB_TestDataFileWriteString(str);
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+=======
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FL_MSAK){
         str = "ERROR->IRDA_FL\r\n";
         SWRB_TestDataFileWriteString(str);
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+=======
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_FR_MSAK){
         str = "ERROR->IRDA_FR\r\n";
         SWRB_TestDataFileWriteString(str);
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+=======
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_IRDA_R_MSAK){
         str = "ERROR->IRDA_R\r\n";
         SWRB_TestDataFileWriteString(str);
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN,  str);
+    }
+    Checkbox_Set_Text_Color(ID_MAIN_CHECKBOX_IRDA, GUI_RED);
+    Checkbox_Set_Text(hWin_SWRB_MAIN, ID_MAIN_CHECKBOX_IRDA, "IRDA ERROR");
+=======
         MultiEdit_Add_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_MULTIEDIT_MAIN,  str);
     }
     Checkbox_Set_Text_Color(ID_PCBTEST_CHECKBOX_IRDA, GUI_RED);
@@ -211,6 +258,7 @@ static void SweepRobot_IrDATestOverTimeProc(void)
     for(i=0;i<SWRB_IRDA_CHAN_NUM;i++){
         Edit_Set_DecMode(hWin_SWRB_PCBTEST, ID_PCBTEST_EDIT_U1+i, 0, 0, 65536, 0, GUI_EDIT_SUPPRESS_LEADING_ZEROES);
     }
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
     Edit_Clear();
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -227,7 +275,11 @@ void SweepRobot_IrDATestTask(void *pdata)
 
     while(1){
         
+<<<<<<< HEAD:Project/APP/src/sweeprobot_testing_irda.c
+        if(!Checkbox_Get_State(ID_MAIN_CHECKBOX_IRDA)){
+=======
         if(!Checkbox_Get_State(ID_PCBTEST_CHECKBOX_IRDA)){
+>>>>>>> release:User/APP/src/bkp/sweeprobot_testing_irda.c
             SWRB_NextTestTaskResumePreAct(SWRB_IRDA_TEST_TASK_PRIO);
         }else{
             gSwrbTestTaskRunCnt++;

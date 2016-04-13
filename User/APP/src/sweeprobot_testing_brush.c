@@ -61,9 +61,9 @@ static void SWRB_BrushTestProc(void)
                         str = mymalloc(SRAMIN, sizeof(char)*10);
                         *str = 0;
                         sprintf(str, "%d", usartRxNum);
-                        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
-                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
+                        Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
+                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
                                                 str);
                         myfree(SRAMIN, str);
                     }
@@ -87,10 +87,10 @@ static void SWRB_BrushTestProc(void)
                 printf("BRS->OFF=%d\r\n",i);
                 
                 if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
-                                                               SWRB_MANUL_TEST_OK_BK_COLOR);
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_L_CUR_POS+i][0],\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_L_CUR_POS+i][1],\
+                                                               SWRB_MANUAL_TEST_OK_BK_COLOR);
                 }
             }
         }
@@ -153,25 +153,25 @@ static void SWRB_BrushPCBTestTimeOutProc(void)
     Edit_Clear();   
 }
 
-static void SWRB_BrushManulTestTimeOutProc(void)
+static void SWRB_BrushManualTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_L_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_L_CUR_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_L_CUR_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_L_CUR_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_R_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_R_CUR_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_R_CUR_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_R_CUR_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_BRUSH_M_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BRUSH_M_CUR_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_M_CUR_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BRUSH_M_CUR_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -189,7 +189,7 @@ void SWRB_BrushTestTimeOutProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SWRB_BrushPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SWRB_BrushManulTestTimeOutProc();
+        SWRB_BrushManualTestTimeOutProc();
     }
     
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -201,7 +201,7 @@ void SWRB_BrushTestTimeOutProc(void)
 
 static void SWRB_BrushTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_BRUSH_TEST_TIME_OUT_CNT);
+    Progbar_ManualTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_BRUSH_TEST_TIME_OUT_CNT);
 }
 
 void SweepRobot_BrushTestTask(void *pdata)

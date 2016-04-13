@@ -261,7 +261,7 @@ GUI_CONST_STORAGE GUI_BITMAP _bmRobotTestCHN = {
   &_PalCHNText          /* Pointer to palette */
 };
 
-static GUI_CONST_STORAGE unsigned char acManulTestStr[] = { /* code Manul Test */
+static GUI_CONST_STORAGE unsigned char acManualTestStr[] = { /* code Manual Test */
   ________,________,________,________,      ________,________,________,________,      ________,________,________,________,      ________,________,________,________,
   ________,________,________,________,      ________,________,________,________,      ________,________,________,________,      ________,________,________,________,
   ________,________,________,________,      ________,________,____X___,________,      ________,________,________,________,      ________,________,________,________,
@@ -297,12 +297,12 @@ static GUI_CONST_STORAGE unsigned char acManulTestStr[] = { /* code Manul Test *
   ________,________,________,________,      ________,________,________,________,      ________,________,________,________,      ________,________,________,________
 };
 
-GUI_CONST_STORAGE GUI_BITMAP _bmManulTestCHN = {
+GUI_CONST_STORAGE GUI_BITMAP _bmManualTestCHN = {
   128,                  /* XSize */
   33,                   /* YSize */
   16,                   /* BytesPerLine */
   1,                    /* BitsPerPixel */
-  acManulTestStr,       /* Pointer to picture data (indices) */
+  acManualTestStr,       /* Pointer to picture data (indices) */
   &_PalCHNText          /* Pointer to palette */
 };
 
@@ -1077,7 +1077,7 @@ GUI_CONST_STORAGE GUI_BITMAP _bmAutoModeCHN = {
 };
 
 //\u624b\u52a8
-static GUI_CONST_STORAGE unsigned char acManulModeStr[] = {
+static GUI_CONST_STORAGE unsigned char acManualModeStr[] = {
   ________,________,________,________,      ________,________,________,________,
   ________,________,________,________,      ________,________,________,________,
   ________,________,________,________,      ________,________,____X___,________,
@@ -1113,12 +1113,12 @@ static GUI_CONST_STORAGE unsigned char acManulModeStr[] = {
   ________,________,________,________,      ________,________,________,________
 };
 
-GUI_CONST_STORAGE GUI_BITMAP _bmManulModeCHN = {
+GUI_CONST_STORAGE GUI_BITMAP _bmManualModeCHN = {
   64,              /* XSize */
   33,               /* YSize */
   8,                /* BytesPerLine */
   1,                /* BitsPerPixel */
-  acManulModeStr,     /* Pointer to picture data (indices) */
+  acManualModeStr,     /* Pointer to picture data (indices) */
   &_PalCHNText      /* Pointer to palette */
 };
 

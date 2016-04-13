@@ -107,7 +107,7 @@ void STD_USART_ISR(void)
                     USART_RX_STA=0;
                 else{
                     USART_RX_STA|=0x8000;
-                    if( (gSwrbTestRuningTaskPrio != SWRB_MANUL_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_IRDA_TEST_TASK_PRIO) ){
+                    if( (gSwrbTestRuningTaskPrio != SWRB_MANUAL_TEST_TASK_PRIO) && (gSwrbTestRuningTaskPrio != SWRB_IRDA_TEST_TASK_PRIO) ){
                         USART_RxArrayToNumber(USART_RX_BUF, &usartRxNum, USART_RX_STA&USART_CNT_MASK);
 //                        USART_RX_STA = 0;
                     }

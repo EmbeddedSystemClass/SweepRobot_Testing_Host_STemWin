@@ -106,7 +106,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     }
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEERMOTOR_SLIDER_LCOLLISION);
-    SLIDER_SetRange(hItem, 550, 2500);
+    SLIDER_SetRange(hItem, 300, 2500);
     SLIDER_SetNumTicks(hItem, 10);
     
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEERMOTOR_SLIDER_MWHEELFLOAT);
@@ -114,7 +114,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     SLIDER_SetNumTicks(hItem, 10);
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEERMOTOR_SLIDER_RCOLLISION);
-    SLIDER_SetRange(hItem, 550, 2500);
+    SLIDER_SetRange(hItem, 300, 2500);
     SLIDER_SetNumTicks(hItem, 10);
 
     hItem = WM_GetDialogItem(pMsg->hWin, ID_STEERMOTOR_EDIT_LCOLLISION);

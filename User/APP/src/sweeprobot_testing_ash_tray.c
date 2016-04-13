@@ -57,9 +57,9 @@ static void SweepRobot_AshTrayInsTestProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][0],\
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][1],\
+                    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_INS_POS][0],\
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_INS_POS][1],\
                                             str);
                     myfree(SRAMIN, str);
                 }
@@ -84,10 +84,10 @@ static void SweepRobot_AshTrayInsTestProc(void)
 
         if(ashTrayIns.validFlag){
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][1],\
-                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_INS_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_INS_POS][1],\
+                                                           SWRB_MANUAL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -111,9 +111,9 @@ static void SweepRobot_AshTrayLvlTestTxOffProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
+                    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
                                             str);
                     myfree(SRAMIN, str);
                 }
@@ -147,9 +147,9 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
                     str = mymalloc(SRAMIN, sizeof(char)*10);
                     *str = 0;
                     sprintf(str, "%d", usartRxNum);
-                    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
-                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
+                    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
+                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
                                             str);
                     myfree(SRAMIN, str);
                 }
@@ -178,10 +178,10 @@ static void SweepRobot_AshTrayLvlTestTxOnProc(void)
             ashTrayLvl.validFlag = 1;
 
             if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
-                                                           SWRB_MANUL_TEST_OK_BK_COLOR);
+                Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
+                                                           SWRB_MANUAL_TEST_OK_BK_COLOR);
             }
         }
     }
@@ -253,19 +253,19 @@ static void SweepRobot_AshTrayPCBTestTimeOutProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_AshTrayManulTestTimeOutProc(void)
+static void SweepRobot_AshTrayManualTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_INS_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_INS_POS][1],\
-                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_INS_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_INS_POS][1],\
+                                                           SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_ASH_TRAY_LVL_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
-                                                           gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
-                                                           SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][0],\
+                                                           gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_ASH_TRAY_LVL_POS][1],\
+                                                           SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -279,7 +279,7 @@ static void SweepRobot_AshTrayTestTimeOutProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_AshTrayPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_AshTrayManulTestTimeOutProc();
+        SweepRobot_AshTrayManualTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -291,7 +291,7 @@ static void SweepRobot_AshTrayTestTimeOutProc(void)
 
 static void SWRB_AshTrayTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_ASH_TRAY_TEST_TIME_OUT_CNT);
+    Progbar_ManualTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_ASH_TRAY_TEST_TIME_OUT_CNT);
 }
 
 void SweepRobot_AshTrayTestTask(void *pdata)

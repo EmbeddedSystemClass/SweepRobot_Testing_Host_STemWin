@@ -681,8 +681,8 @@ WM_HWIN CreateKEY_TestDLG(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_MANUL, 180, 135);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        hWin = GUI_CreateDialogBox(_aKeyTestDialogCreate, GUI_COUNTOF(_aKeyTestDialogCreate), _cbKeyDialog, hWin_SWRB_MANUAL, 180, 135);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
     }
     return hWin;
 }
@@ -696,8 +696,8 @@ WM_HWIN CreateRGB_LED_TestDLG(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_MANUL, 180, 135);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        hWin = GUI_CreateDialogBox(_aRgbLEDTestDialogCreate, GUI_COUNTOF(_aRgbLEDTestDialogCreate), _cbRgbLedDialog, hWin_SWRB_MANUAL, 180, 135);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
     }
     return hWin;
 }
@@ -711,8 +711,8 @@ WM_HWIN CreateBUZZER_TestDLG(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB)
         hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_PCBTEST, 180, 135);
     else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_MANUL, 180, 135);
-        SWRB_WM_DisableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+        hWin = GUI_CreateDialogBox(_aBuzzerTestDialogCreate, GUI_COUNTOF(_aBuzzerTestDialogCreate), _cbBuzzerDialog, hWin_SWRB_MANUAL, 180, 135);
+        SWRB_WM_DisableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
     }
     return hWin;
 }
@@ -726,8 +726,8 @@ void Swrb_LedTestDialogOKBtnProc(void)
     if(state == 3){
         gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
         WM_HideWin(hWin_SWRB_RGB_LED);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_RESET);
     }
     OSTaskResume(gSwrbTestRuningTaskPrio);
 }
@@ -741,8 +741,8 @@ void Swrb_LedTestDialogErrBtnProc(void)
     if(state == 3){
         gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
         WM_HideWin(hWin_SWRB_RGB_LED);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_RESET);
     }
     OSTaskResume(gSwrbTestRuningTaskPrio);
 }
@@ -753,7 +753,7 @@ void Swrb_BuzzerTestDialogOKBtnProc(void)
 
     BUZZER_TestStateSet(1);
     BUZZER_TestValidFlagSet(1);
-    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
     WM_HideWin(hWin_SWRB_BUZZER);
 }
 
@@ -763,7 +763,7 @@ void Swrb_BuzzerTestDialogErrBtnProc(void)
 
     BUZZER_TestStateSet(0);
     BUZZER_TestValidFlagSet(1);
-    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
+    SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
     WM_HideWin(hWin_SWRB_BUZZER);
 }
 

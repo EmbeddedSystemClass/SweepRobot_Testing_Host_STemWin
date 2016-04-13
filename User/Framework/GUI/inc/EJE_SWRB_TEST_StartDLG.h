@@ -41,6 +41,8 @@ extern WM_HWIN hWin_SWRB_START_WARNING;
 *
 **********************************************************************
 */
+void Swrb_StartDlgWarningOKBtnProc(void);
+
 /*********************************************************************
 *
 *       CreateEJE_SWRB_TEST_StartDLG

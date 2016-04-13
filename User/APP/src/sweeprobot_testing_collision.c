@@ -59,9 +59,9 @@ static void SweepRobot_CollisionPCBTestProc(void)
                             str = mymalloc(SRAMIN, sizeof(char)*10);
                             *str = 0;
                             sprintf(str, "%d", usartRxNum);
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
+                            Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                    gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+i][0],\
+                                                    gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+i][1],\
                                                     str);
                             myfree(SRAMIN, str);
                         }
@@ -98,9 +98,9 @@ static void SweepRobot_CollisionPCBTestProc(void)
                             str = mymalloc(SRAMIN, sizeof(char)*10);
                             *str = 0;
                             sprintf(str, "%d", usartRxNum);
-                            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
-                                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
+                            Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                    gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+i][0],\
+                                                    gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+i][1],\
                                                     str);
                             myfree(SRAMIN, str);
                         }
@@ -125,10 +125,10 @@ static void SweepRobot_CollisionPCBTestProc(void)
                     collision[i].validFlag = 1;
 
                     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][0],\
-                                                                   gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+i][1],\
-                                                                   SWRB_MANUL_TEST_OK_BK_COLOR);
+                        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                   gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+i][0],\
+                                                                   gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+i][1],\
+                                                                   SWRB_MANUAL_TEST_OK_BK_COLOR);
                     }
                 }
             }
@@ -202,34 +202,34 @@ static void SweepRobot_CollisionPCBTestTimeOutProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_CollisionManulTestTimeOutProc(void)
+static void SweepRobot_CollisionManualTestTimeOutProc(void)
 {
     SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
     SweepRobot_CollisionCtrlRightSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
 
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_L_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FL_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FL_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FL_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_FL_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_FL_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_R_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_R_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_R_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_R_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_R_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_COLLISION_FR_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FR_POS][0],\
-                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_FR_POS][1],\
-                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_FR_POS][0],\
+                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_FR_POS][1],\
+                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -243,7 +243,7 @@ static void SweepRobot_CollisionTestTimeOutProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_CollisionPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_CollisionManulTestTimeOutProc();
+        SweepRobot_CollisionManualTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -253,7 +253,7 @@ static void SweepRobot_CollisionTestTimeOutProc(void)
 #endif
 }
 
-static void SweepRobot_CollisionManulTestInit(void)
+static void SweepRobot_CollisionManualTestInit(void)
 {
     u8 i;
     char *str;
@@ -293,9 +293,9 @@ static void SweepRobot_CollisionTestDataQuery(enum COLLISION_CHAN chan, int *des
             str = mymalloc(SRAMIN, sizeof(char)*10);
             *str = 0;
             sprintf(str, "%d", usartRxNum);
-            Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
-                                    gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
+            Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                    gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+chan][0],\
+                                    gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+chan][1],\
                                     str);
             myfree(SRAMIN, str);
             usartRxNum = 0;
@@ -340,7 +340,7 @@ static void SweepRobot_CollisionTestSteerMotorOnDataValidCmp(enum COLLISION_CHAN
     }
 }
 
-static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
+static void SweepRobot_CollisionManualTestFrontDataProc(enum COLLISION_CHAN chan)
 {
     if(chan == COLLISION_CHAN_FL || chan == COLLISION_CHAN_R){
         if(!collision[chan].onValidFlag){
@@ -360,10 +360,10 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
                 SweepRobot_CollisionTestSteerMotorOnDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].onValue, &collision[chan].onValidCnt, &collision[chan].onValidFlag);
 
                 if(collision[chan].onValidFlag){
-                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
-                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
-                                                            SWRB_MANUL_TEST_OK_BK_COLOR);
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+chan][0],\
+                                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+chan][1],\
+                                                            SWRB_MANUAL_TEST_OK_BK_COLOR);
                     if(chan == COLLISION_CHAN_FL){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
                     }else if(chan == COLLISION_CHAN_R){
@@ -380,7 +380,7 @@ static void SweepRobot_CollisionManulTestFrontDataProc(enum COLLISION_CHAN chan)
     }
 }
 
-static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
+static void SweepRobot_CollisionManualTestSideDataProc(enum COLLISION_CHAN chan)
 {
     if(chan == COLLISION_CHAN_L || chan == COLLISION_CHAN_FR){
         if(!collision[chan].onValidFlag){
@@ -401,10 +401,10 @@ static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
                 SweepRobot_CollisionTestSteerMotorOnDataValidCmp((enum COLLISION_CHAN)chan, &collision[chan].onValue, &collision[chan].onValidCnt, &collision[chan].onValidFlag);
 
                 if(collision[chan].onValidFlag){
-                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][0],\
-                                                            gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_COLLISION_L_POS+chan][1],\
-                                                            SWRB_MANUL_TEST_OK_BK_COLOR);
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+chan][0],\
+                                                            gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_COLLISION_L_POS+chan][1],\
+                                                            SWRB_MANUAL_TEST_OK_BK_COLOR);
                     if(chan == COLLISION_CHAN_L){
                         SweepRobot_CollisionCtrlLeftSteerMotorPosMove(STEER_MOTOR_IDLE_POS);
                     }else if(chan == COLLISION_CHAN_FR){
@@ -416,16 +416,16 @@ static void SweepRobot_CollisionManulTestSideDataProc(enum COLLISION_CHAN chan)
     }
 }
 
-static void SweepRobot_CollisionManulTestProc(void)
+static void SweepRobot_CollisionManualTestProc(void)
 {
     u8 i;
     char *str;
 
     for(i=0;i<SWRB_COLLISION_CHAN_NUM;i++){
         if(!gSwrbFrontCollisionTestFinishFlag){
-            SweepRobot_CollisionManulTestFrontDataProc((enum COLLISION_CHAN)i);
+            SweepRobot_CollisionManualTestFrontDataProc((enum COLLISION_CHAN)i);
         }else{
-            SweepRobot_CollisionManulTestSideDataProc((enum COLLISION_CHAN)i);
+            SweepRobot_CollisionManualTestSideDataProc((enum COLLISION_CHAN)i);
         }
     }
 
@@ -446,7 +446,7 @@ static void SweepRobot_CollisionManulTestProc(void)
 
 static void SWRB_CollisionTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_COLLISION_TEST_TIME_OUT_CNT);
+    Progbar_ManualTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_COLLISION_TEST_TIME_OUT_CNT);
 }
 
 void SweepRobot_CollisionTestTask(void *pdata)
@@ -475,13 +475,13 @@ void SweepRobot_CollisionTestTask(void *pdata)
                     SweepRobot_CollisionTestTimeOutProc();
                 }
             }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                /* Manul Test Collision Test Proc */
+                /* Manual Test Collision Test Proc */
                 if(gSwrbTestTaskRunCnt == 1){
-                    SweepRobot_CollisionManulTestInit();
+                    SweepRobot_CollisionManualTestInit();
                 }
 
                 if(gSwrbTestTaskRunCnt > 1){
-                    SweepRobot_CollisionManulTestProc();
+                    SweepRobot_CollisionManualTestProc();
                 }
 
                 if(gSwrbTestTaskRunCnt > SWRB_COLLISION_TEST_TIME_OUT_CNT){

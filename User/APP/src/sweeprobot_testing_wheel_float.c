@@ -54,9 +54,9 @@ static void SweepRobot_WheelFloatTestDownPosRxDataProc(enum WheelFloatChan chan)
                 str = mymalloc(SRAMIN, sizeof(char)*10);
                 *str = 0;
                 sprintf(str, "%d", usartRxNum);
-                Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
-                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
+                Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                        gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
+                                        gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
                                         str);
                 myfree(SRAMIN, str);
             }
@@ -115,9 +115,9 @@ static void SweepRobot_WheelFloatTestUpPosRxDataProc(enum WheelFloatChan chan)
                 str = mymalloc(SRAMIN, sizeof(char)*10);
                 *str = 0;
                 sprintf(str, "%d", usartRxNum);
-                Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
-                                        gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
+                Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                        gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
+                                        gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
                                         str);
                 myfree(SRAMIN, str);
             }
@@ -150,10 +150,10 @@ static void SweepRobot_WheelFloatTestUpPosProc(void)
                 wheelFloat[i].validFlag = 1;
 
                 if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-                    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
-                                                               SWRB_MANUL_TEST_OK_BK_COLOR);
+                    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS+i][0],\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS+i][1],\
+                                                               SWRB_MANUAL_TEST_OK_BK_COLOR);
                 }
             }
         }
@@ -218,19 +218,19 @@ static void SweepRobot_WheelFloatPCBTestTimeOutProc(void)
     Edit_Clear();
 }
 
-static void SweepRobot_WheelFloatManulTestTimeOutProc(void)
+static void SweepRobot_WheelFloatManualTestTimeOutProc(void)
 {
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_L_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS][0],\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_L_POS][1],\
-                                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS][0],\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_L_POS][1],\
+                                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
     if(gSwrbTestStateMap & SWRB_TEST_FAULT_WHEEL_FLOAT_R_MASK){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_R_POS][0],\
-                                                               gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_WHEEL_FLOAT_R_POS][1],\
-                                                               SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_R_POS][0],\
+                                                               gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_WHEEL_FLOAT_R_POS][1],\
+                                                               SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 }
 
@@ -244,7 +244,7 @@ static void SweepRobot_WheelFloatTestTimeOutProc(void)
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_PCB){
         SweepRobot_WheelFloatPCBTestTimeOutProc();
     }else if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        SweepRobot_WheelFloatManulTestTimeOutProc();
+        SweepRobot_WheelFloatManualTestTimeOutProc();
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR
@@ -256,7 +256,7 @@ static void SweepRobot_WheelFloatTestTimeOutProc(void)
 
 static void SWRB_WheelFloatTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_WHEEL_FLOAT_TEST_TIME_OUT_CNT);
+    Progbar_ManualTest_Set_Percent(gSwrbTestTaskRunCnt, SWRB_WHEEL_FLOAT_TEST_TIME_OUT_CNT);
 }
 
 void SweepRobot_WheelFloatTestTask(void *pdata)

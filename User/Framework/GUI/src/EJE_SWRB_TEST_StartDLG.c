@@ -61,7 +61,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogStart[] = {
 //    { BUTTON_CreateIndirect, "CONTROL", ID_START_BUTTON_CONTROL, 0, 0, 120, 120, 0, 0x0, 0 },
 #endif
 #ifdef USE_MANUL_MANUL_MODE
-    { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL_MANUL_MODE, 680, 0, 120, 120, 0, 0x0, 0 },
+//    { BUTTON_CreateIndirect, "MANUL", ID_START_BUTTON_MANUL_MANUL_MODE, 680, 0, 120, 120, 0, 0x0, 0 },
 #endif
     { BUTTON_CreateIndirect, "", ID_START_BUTTON_TITLE, 175, 100, 450, 60, 0, 0x0, 0 },
     { TEXT_CreateIndirect, "Storage Warning", ID_START_TEXT_STORAGE_WARNING, 250, 430, 300, 50, 0, 0x0, 0 },
@@ -90,6 +90,7 @@ static void Button_Init(WM_HWIN hItem)
 
 static void Button_WarningOkProc(void)
 {
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_NONE;
     GUI_EndDialog(hWin_SWRB_START_WARNING, 0);
 }
 
@@ -106,18 +107,18 @@ static void Button_ControlProc(void)
 }
 #endif
 
-static void Button_ManulManulModeProc(void)
+static void Button_ManualManualModeProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_MANUL;
     
-    gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
+    gSwrbTestRuningTaskPrio = SWRB_MANUAL_TEST_TASK_PRIO;
     
     gSwrbTestUDiskInsertCmpSkipFlag = DISABLE;
     
-    SweepRobot_ManulSetBtnEnterManulModeProc();
+    SweepRobot_ManualSetBtnEnterManualModeProc();
     
     WM_HideWin(hWin_SWRB_START);
-    WM_ShowWin(hWin_SWRB_MANUL);
+    WM_ShowWin(hWin_SWRB_MANUAL);
 }
 
 /*********************************************************************
@@ -242,7 +243,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            SweepRobot_StartDlgManulBtnClickProc();
+                            SweepRobot_StartDlgManualBtnClickProc();
                             break;
                     }
                     break;
@@ -305,7 +306,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            Button_ManulManulModeProc();
+                            Button_ManualManualModeProc();
                             break;
                     }
                     break;
@@ -379,6 +380,11 @@ WM_HWIN hWin_SWRB_START_WARNING;
 **********************************************************************
 */
 
+void Swrb_StartDlgWarningOKBtnProc(void)
+{
+    Button_WarningOkProc();
+}
+
 /*********************************************************************
 *
 *       CreateWindow
@@ -394,6 +400,8 @@ WM_HWIN CreateEJE_SWRB_TEST_StartDLG(void)
 WM_HWIN CreateEJE_SWRB_TEST_StartWarningDLG(void)
 {
     WM_HWIN hWin;
+
+    gSwrbTestSubDialogSelectFlag = SWRB_TEST_SUB_DIALOG_WARNING;
 
     hWin = GUI_CreateDialogBox(_aDialogStartWarning, GUI_COUNTOF(_aDialogStartWarning), _cbStartWarningDialog, hWin_SWRB_START, 0, 0);
     return hWin;

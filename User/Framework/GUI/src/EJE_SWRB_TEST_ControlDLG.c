@@ -69,10 +69,10 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 static void Button_EXITProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
-    
+
 //    STD_UART_RX_ENABLE();
     STD_UART_DISABLE();
-    
+
     WM_HideWin(hWin_SWRB_CONTROL);
     WM_ShowWin(hWin_SWRB_START);
 }
@@ -134,7 +134,7 @@ static void Button_ONOFFProc(void)
 
 static void Button_MODEProc(void)
 {
-    
+
     switch(gModeSwitchCnt){
         case 0:
             printf("CTRL->MSG=175\r\n");    //0xAF,REMOTE_CMD_MODE_AUTO
@@ -260,7 +260,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CONTROL_BUTTON_MODE);
     BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
     BUTTON_SetText(hItem, "MODE AUTO");
-    
+
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CONTROL_BUTTON_MODE2);
     BUTTON_SetFont(hItem, GUI_FONT_20_ASCII);
     BUTTON_SetText(hItem, "MODE2");
@@ -270,7 +270,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_CONTROL_BUTTON_SPOT);
     BUTTON_SetFont(hItem, GUI_FONT_24_ASCII);
     BUTTON_SetText(hItem, "SPOT");
-    
+
     WM_HideWin(pMsg->hWin);
     break;
   case WM_NOTIFY_PARENT:
@@ -386,7 +386,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-          
+
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -402,7 +402,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-          
+
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -418,7 +418,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-          
+
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -434,7 +434,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-          
+
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;

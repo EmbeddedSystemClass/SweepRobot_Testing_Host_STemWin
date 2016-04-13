@@ -64,9 +64,9 @@ static char* gStepMotorLoginPasswd = "******";              //"054983"
 static char* gSteerMotorLoginPasswd = "******";             //"832761"
 #endif
 #ifdef USE_RELAY_CTRL
-static char* gRelayCtrlLoginPasswd = "387216";
+static char* gRelayCtrlLoginPasswd = "387216";              //"387216"
 #endif
-static char* gManulTestEnterManulModePasswd = "123456";
+static char* gManualTestEnterManualModePasswd = "123456";
 static const char * gSetTimeConfirmPasswd = "123876";
 
 static char strPasswd[10] = { 0 };
@@ -122,13 +122,13 @@ static void Login_PasswdClearProc(void)
 static void Button_OKProc(void)
 {
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        if(!(strcmp(strPasswd,gManulTestEnterManulModePasswd))){
-            SweepRobot_ManulSetBtnEnterManulModeProc();
+        if(!(strcmp(strPasswd,gManualTestEnterManualModePasswd))){
+            SweepRobot_ManualSetBtnEnterManualModeProc();
 
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTGRAY);
 
             WM_HideWin(hWin_SWRB_LOGIN);
-            WM_ShowWin(hWin_SWRB_MANUL);
+            WM_ShowWin(hWin_SWRB_MANUAL);
         }else{
             FRAMEWIN_SetClientColor(hWin_SWRB_LOGIN, GUI_LIGHTRED);
         }
@@ -210,13 +210,13 @@ static void Button_CancelProc(void)
 {
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
 
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_START);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_SET);
-        SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_EXIT);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_START);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_SET);
+        SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_EXIT);
 
         WM_HideWin(hWin_SWRB_LOGIN);
-        WM_ShowWin(hWin_SWRB_MANUL);
-        WM_BringToTop(hWin_SWRB_MANUL);
+        WM_ShowWin(hWin_SWRB_MANUAL);
+        WM_BringToTop(hWin_SWRB_MANUAL);
     }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_NONE){
         gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_NONE;
 
