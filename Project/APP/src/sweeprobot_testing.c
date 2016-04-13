@@ -669,7 +669,7 @@ void SWRB_NextTestTaskResumePostAct(u8 taskPrio)
                 hItem = WM_GetDialogItem(hWin_SWRB_MAIN, i);
                 WM_EnableWindow(hItem);
             }
-            
+             
             if(flErr == FR_OK){
                 MultiEdit_Add_Text(hWin_SWRB_MAIN, ID_MAIN_MULTIEDIT_MAIN, "\r\n***TestData Encrypting Finished*****\r\n");
             }else{

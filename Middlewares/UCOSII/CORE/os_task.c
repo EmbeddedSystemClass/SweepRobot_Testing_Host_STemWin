@@ -870,8 +870,6 @@ INT8U  OSTaskStkChk (INT8U         prio,
     OS_CPU_SR  cpu_sr = 0u;
 #endif
 
-
-
 #if OS_ARG_CHK_EN > 0u
     if (prio > OS_LOWEST_PRIO) {                       /* Make sure task priority is valid             */
         if (prio != OS_PRIO_SELF) {
@@ -1260,4 +1258,4 @@ void  OS_TaskStkClr (OS_STK  *pbos,
 }
 
 #endif
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  

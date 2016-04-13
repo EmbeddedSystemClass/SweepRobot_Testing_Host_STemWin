@@ -135,60 +135,60 @@ typedef struct {
  打点函数
 */
 static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, int PixelIndex) {
-	LCD_Fast_DrawPoint(x,y,PixelIndex); //调用ILI93xx.c文件中的快速打点函数
-//	if(lcddev.id == 0x9341 || lcddev.id == 0x5310)
-//	{
-//		//设置X坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd;
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x&0XFF);
-//		
-//		//设置y坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd;
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y&0XFF);
-//	}else if(lcddev.id == 0X6804)
-//	{
-//		if(lcddev.id == 1)x=lcddev.width-1-x; //横屏时处理
-//		//设置X坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd;
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x&0XFF);
-//		
-//		//设置y坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd;
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y&0XFF);
-//	}else if(lcddev.id == 0X5510) 
-//	{
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; //设置X坐标高八位
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x>>8); //x地址地高八位
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; //设置X坐标低八位
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x&0XFF);//x地址低八位
-//		
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; //设置y坐标高八位
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y>>8); //y地址地高八位
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; //设置y坐标低八位
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y&0XFF);//y地址低八位
-//	}else //其他屏幕
-//	{
-//		if(lcddev.dir == 1)x=lcddev.width-1-x;  //横屏其实就是调转X,Y坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = x; 
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = y; 
-//	}
-//	*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd; //写颜色值
-//	*(__IO uint16_t *)(UCGUI_LCD_DATA) = PixelIndex;//向LCD的gram写入颜色值
+    LCD_Fast_DrawPoint(x,y,PixelIndex); //调用ILI93xx.c文件中的快速打点函数
+//    if(lcddev.id == 0x9341 || lcddev.id == 0x5310)
+//    {
+//        //设置X坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd;
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x&0XFF);
+//        
+//        //设置y坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd;
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y&0XFF);
+//    }else if(lcddev.id == 0X6804)
+//    {
+//        if(lcddev.id == 1)x=lcddev.width-1-x; //横屏时处理
+//        //设置X坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd;
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x&0XFF);
+//        
+//        //设置y坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd;
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y&0XFF);
+//    }else if(lcddev.id == 0X5510) 
+//    {
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; //设置X坐标高八位
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x>>8); //x地址地高八位
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; //设置X坐标低八位
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x&0XFF);//x地址低八位
+//        
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; //设置y坐标高八位
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y>>8); //y地址地高八位
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; //设置y坐标低八位
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y&0XFF);//y地址低八位
+//    }else //其他屏幕
+//    {
+//        if(lcddev.dir == 1)x=lcddev.width-1-x;  //横屏其实就是调转X,Y坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = x; 
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = y; 
+//    }
+//    *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd; //写颜色值
+//    *(__IO uint16_t *)(UCGUI_LCD_DATA) = PixelIndex;//向LCD的gram写入颜色值
 }
 
 
 /*********************************************************************
 *
-	读点函数
+    读点函数
 */
 static unsigned int _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
-	unsigned int PixelIndex;
+    unsigned int PixelIndex;
     #if (LCD_MIRROR_X == 1) || (LCD_MIRROR_Y == 1) || (LCD_SWAP_XY == 1)
       int xPhys, yPhys;
 
@@ -202,14 +202,14 @@ static unsigned int _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
     GUI_USE_PARA(x);
     GUI_USE_PARA(y);
     {
-			PixelIndex = LCD_ReadPoint(x,y);
+            PixelIndex = LCD_ReadPoint(x,y);
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
       #undef yPhys
     #endif
   return PixelIndex;
-	
+    
 }
 /*********************************************************************
 *
@@ -229,113 +229,113 @@ static void _XorPixel(GUI_DEVICE * pDevice, int x, int y) {
 *       _FillRect
 */
 static void _FillRect(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1) {
-	
-	LCD_Fill(x0,y0,x1,y1,LCD_COLORINDEX);
-//	u32 n;
-//	if(lcddev.id == 0X9341 || lcddev.id == 0X5310 ||lcddev.id == 0X6804) //6804横屏不支持！！！！
-//	{
-//		//设置窗口大小,X轴坐标的起始和终止坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1>>8);  
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1&0XFF);
-//		
-//		//设置窗口大小,Y轴的起始和终止坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1&0XFF);
-//		
-//		//设置开始坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
-//		
-//		n=(u32)(y1-y0+1)*(x1-x0+1);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd;  //写入颜色值
-//		while(n--)
-//		{
-//			*(__IO uint16_t *)(UCGUI_LCD_DATA) = LCD_COLORINDEX;//向LCD的gram写入颜色值
-//		}
-//		
-//		//恢复窗口大小
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);  
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width>>8);  
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width&0XFF);
-//		
-//		//恢复窗口大小
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height&0XFF);
-//		
-//	}else if(lcddev.id == 0X5510)
-//	{
-//		//设置窗口大小,X轴坐标的起始和终止坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+2; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+3; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1&0XFF);
-//		
-//		//设置窗口大小,Y轴的起始和终止坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+2; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+3;
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1&0XFF);
-//			
-//		//设置开始坐标
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
-//		
-//		n=(u32)(y1-y0+1)*(x1-x0+1);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd;  //写入颜色值
-//		while(n--)
-//		{
-//			*(__IO uint16_t *)(UCGUI_LCD_DATA) = LCD_COLORINDEX;//向LCD的gram写入颜色值
-//		}
-//		
-//		//恢复窗口大小
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);  
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+2; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width>>8);  //0X31F = 800
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+3; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width&0XFF);
-//		
-//		//恢复窗口大小
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+2; 
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height>>8);  //0X1DF = 480
-//		*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+3;
-//		*(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height&0XFF);
-//	}
+    
+    LCD_Fill(x0,y0,x1,y1,LCD_COLORINDEX);
+//    u32 n;
+//    if(lcddev.id == 0X9341 || lcddev.id == 0X5310 ||lcddev.id == 0X6804) //6804横屏不支持！！！！
+//    {
+//        //设置窗口大小,X轴坐标的起始和终止坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1>>8);  
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1&0XFF);
+//        
+//        //设置窗口大小,Y轴的起始和终止坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1&0XFF);
+//        
+//        //设置开始坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
+//        
+//        n=(u32)(y1-y0+1)*(x1-x0+1);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd;  //写入颜色值
+//        while(n--)
+//        {
+//            *(__IO uint16_t *)(UCGUI_LCD_DATA) = LCD_COLORINDEX;//向LCD的gram写入颜色值
+//        }
+//        
+//        //恢复窗口大小
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);  
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width>>8);  
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width&0XFF);
+//        
+//        //恢复窗口大小
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height&0XFF);
+//        
+//    }else if(lcddev.id == 0X5510)
+//    {
+//        //设置窗口大小,X轴坐标的起始和终止坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+2; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+3; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x1&0XFF);
+//        
+//        //设置窗口大小,Y轴的起始和终止坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+2; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+3;
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y1&0XFF);
+//            
+//        //设置开始坐标
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0>>8); 
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (x0&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0>>8);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (y0&0XFF);
+//        
+//        n=(u32)(y1-y0+1)*(x1-x0+1);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd;  //写入颜色值
+//        while(n--)
+//        {
+//            *(__IO uint16_t *)(UCGUI_LCD_DATA) = LCD_COLORINDEX;//向LCD的gram写入颜色值
+//        }
+//        
+//        //恢复窗口大小
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);  
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+1; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+2; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width>>8);  //0X31F = 800
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setxcmd+3; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.width&0XFF);
+//        
+//        //恢复窗口大小
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00>>8);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+1; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (0X00&0XFF);
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+2; 
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height>>8);  //0X1DF = 480
+//        *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.setycmd+3;
+//        *(__IO uint16_t *)(UCGUI_LCD_DATA) = (lcddev.height&0XFF);
+//    }
 }
 
 
@@ -591,13 +591,13 @@ static void  _DrawBitLine8BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_U
 *   Only required for 16bpp color depth of target. Should be removed otherwise.
 */
 static void _DrawBitLine16BPP(GUI_DEVICE * pDevice, int x, int y, U16 const GUI_UNI_PTR * p, int xsize) {
-	
-	LCD_PIXELINDEX pixel;
-	LCD_SetCursor(x,y);
-	*(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd;  //写入颜色值
-	for (;xsize > 0; xsize--, x++, p++) 
-	{
-		pixel = *p;
+    
+    LCD_PIXELINDEX pixel;
+    LCD_SetCursor(x,y);
+    *(__IO uint16_t *)(UCGUI_LCD_CMD)  = lcddev.wramcmd;  //写入颜色值
+    for (;xsize > 0; xsize--, x++, p++) 
+    {
+        pixel = *p;
         *(__IO uint16_t *)(UCGUI_LCD_DATA) =pixel;
     }
 }

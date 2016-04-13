@@ -34,19 +34,19 @@
 #define OS_EVENT_MULTI_EN         0u   /* Include code for OSEventPendMulti()                          */
 #define OS_EVENT_NAME_EN          1u   /* Enable names for Sem, Mutex, Mbox and Q                      */
 
-#define OS_LOWEST_PRIO           63u   /*系统最低优先级 Defines the lowest priority that can be assigned ...         */
+#define OS_LOWEST_PRIO            63u   /*系统最低优先级 Defines the lowest priority that can be assigned ...         */
                                        /* ... MUST NEVER be higher than 254!                           */
 
-#define OS_MAX_EVENTS             10u   /*系统最大事件数 Max. number of event control blocks in your application      */
+#define OS_MAX_EVENTS             10u  /*系统最大事件数 Max. number of event control blocks in your application      */
 #define OS_MAX_FLAGS              5u   /*系统最大的信号量集数Max. number of Event Flag Groups    in your application      */
 #define OS_MAX_MEM_PART           0u   /* Max. number of memory partitions                             */
 #define OS_MAX_QS                 5u   /* Max. number of queue control blocks in your application      */
-#define OS_MAX_TASKS             26u   /* Max. number of tasks in your application, MUST be >= 2       */
+#define OS_MAX_TASKS              30u   /* Max. number of tasks in your application, MUST be >= 2       */
 
 #define OS_SCHED_LOCK_EN          1u   /* Include code for OSSchedLock() and OSSchedUnlock()           */
 
 #define OS_TICK_STEP_EN           1u   /* Enable tick stepping feature for uC/OS-View                  */
-#define OS_TICKS_PER_SEC       	1000u  /* 由于使用EMWIN所以此处设置为1000 也就是1ms Set the number of ticks in one second                        */
+#define OS_TICKS_PER_SEC          1000u   /* 由于使用EMWIN所以此处设置为1000 也就是1ms Set the number of ticks in one second                        */
 
 
                                        /* --------------------- TASK STACK SIZE ---------------------- */
@@ -56,7 +56,7 @@
 
 
                                        /* --------------------- TASK MANAGEMENT ---------------------- */
-#define OS_TASK_CHANGE_PRIO_EN    1u   /*     Include code for OSTaskChangePrio()                      */
+#define OS_TASK_CHANGE_PRIO_EN    0u   /*     Include code for OSTaskChangePrio()                      */
 #define OS_TASK_CREATE_EN         1u   /*     Include code for OSTaskCreate()                          */
 #define OS_TASK_CREATE_EXT_EN     1u   /*     Include code for OSTaskCreateExt()                       */
 #define OS_TASK_DEL_EN            1u   /*     Include code for OSTaskDel()                             */
@@ -71,13 +71,13 @@
 
 
                                        /* ----------------------- EVENT FLAGS ------------------------ */
-#define OS_FLAG_EN                1u   /* Enable (1) or Disable (0) code generation for EVENT FLAGS    */
+#define OS_FLAG_EN                0u   /* Enable (1) or Disable (0) code generation for EVENT FLAGS    */
 #define OS_FLAG_ACCEPT_EN         1u   /*     Include code for OSFlagAccept()                          */
 #define OS_FLAG_DEL_EN            1u   /*     Include code for OSFlagDel()                             */
 #define OS_FLAG_NAME_EN           1u   /*     Enable names for event flag group                        */
 #define OS_FLAG_QUERY_EN          1u   /*     Include code for OSFlagQuery()                           */
 #define OS_FLAG_WAIT_CLR_EN       1u   /* Include code for Wait on Clear EVENT FLAGS                   */
-#define OS_FLAGS_NBITS           16u   /* 信号列表 信号量集中使用 默认16位 Size in #bits of OS_FLAGS data type (8, 16 or 32)            */
+#define OS_FLAGS_NBITS            16u   /* 信号列表 信号量集中使用 默认16位 Size in #bits of OS_FLAGS data type (8, 16 or 32)            */
 
 
                                        /* -------------------- MESSAGE MAILBOXES --------------------- */
@@ -97,14 +97,14 @@
 
 
                                        /* ---------------- MUTUAL EXCLUSION SEMAPHORES --------------- */
-#define OS_MUTEX_EN               1u   /* Enable (1) or Disable (0) code generation for MUTEX          */
+#define OS_MUTEX_EN               0u   /* Enable (1) or Disable (0) code generation for MUTEX          */
 #define OS_MUTEX_ACCEPT_EN        1u   /*     Include code for OSMutexAccept()                         */
 #define OS_MUTEX_DEL_EN           1u   /*     Include code for OSMutexDel()                            */
 #define OS_MUTEX_QUERY_EN         1u   /*     Include code for OSMutexQuery()                          */
 
 
                                        /* ---------------------- MESSAGE QUEUES ---------------------- */
-#define OS_Q_EN                   1u   /* Enable (1) or Disable (0) code generation for QUEUES         */
+#define OS_Q_EN                   0u   /* Enable (1) or Disable (0) code generation for QUEUES         */
 #define OS_Q_ACCEPT_EN            1u   /*     Include code for OSQAccept()                             */
 #define OS_Q_DEL_EN               1u   /*     Include code for OSQDel()                                */
 #define OS_Q_FLUSH_EN             1u   /*     Include code for OSQFlush()                              */
@@ -139,4 +139,4 @@
 #define OS_TMR_CFG_TICKS_PER_SEC 10u   /*     Rate at which timer management task runs (Hz)            */
 
 #endif
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+                                                                                                                                                                                                                                                                                                                                                                                                                  

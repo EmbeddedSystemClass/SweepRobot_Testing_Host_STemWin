@@ -48,7 +48,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>..\OBJ\</OutputDirectory>
-          <OutputName>Template</OutputName>
+          <OutputName>SweepRobotTestHost</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -178,7 +178,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -354,7 +354,7 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>1</OneElfS>
+            <OneElfS>0</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -371,9 +371,9 @@
             <vShortWch>0</vShortWch>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>SWRB_TEST_TASK_RUN_OBO,STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
+              <Define>VERSION_1_3, USE_ERROR_CODE_DISP, USE_KEY_BUTTON, USE_USART3, USE_USB_RD_RETRY_CNT, USE_STEERMOTOR_CTRL, USE_STEPMOTOR_CTRL, USE_RELAY_CTRL, USE_MANUL_MANUL_MODE, USE_RMT_CTRL, _USE_USB_EN_CMP,USE_USB_OTG_FS,_USE_ACTUAL_POS_DETECT_KEY, STM32F40_41xxx,USE_STDPERIPH_DRIVER,__FPU_PRESENT = 1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\Project;..\Framework\GUI\inc;..\APP\inc;..\Framework\GUI\res\inc</IncludePath>
+              <IncludePath>..\..\User\BSP\inc;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Lib\ARM;..\..\Middlewares\STemWinLibrary528\inc;..\..\Middlewares\STemWinLibrary528\Config;..\..\Middlewares\STemWinLibrary528\EMWIN_DEMO\inc;..\..\Middlewares\FATFS\inc;..\..\Middlewares\FONTS\inc;..\..\Middlewares\UCOSII\CONFIG;..\..\Middlewares\UCOSII\CORE;..\..\Middlewares\UCOSII\PORT;..\..\Libraries\CMSIS\Devices\ST;..\..\Libraries\STM32F4xx_Ext\inc;..\..\User;..\..\User\Framework\GUI\inc;..\..\User\APP\inc;..\..\User\Framework\GUI\res\inc;..\..\User\APP\udisk\inc;..\..\Libraries\STM32_USB_HOST_Library\Core\inc;..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,112 +414,187 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>Doc</GroupName>
+        </Group>
+        <Group>
           <GroupName>Bsp</GroupName>
           <Files>
             <File>
               <FileName>24cxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\24cxx.c</FilePath>
+              <FilePath>..\..\User\BSP\src\24cxx.c</FilePath>
             </File>
             <File>
               <FileName>crypto_tea.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\crypto_tea.c</FilePath>
+              <FilePath>..\..\User\BSP\src\crypto_tea.c</FilePath>
             </File>
             <File>
               <FileName>ctiic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ctiic.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ctiic.c</FilePath>
             </File>
             <File>
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\delay.c</FilePath>
+              <FilePath>..\..\User\BSP\src\delay.c</FilePath>
             </File>
             <File>
               <FileName>ft5206.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ft5206.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ft5206.c</FilePath>
             </File>
             <File>
               <FileName>gt9147.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\gt9147.c</FilePath>
+              <FilePath>..\..\User\BSP\src\gt9147.c</FilePath>
             </File>
             <File>
               <FileName>ILI93xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ILI93xx.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ILI93xx.c</FilePath>
             </File>
             <File>
               <FileName>key.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\key.c</FilePath>
+              <FilePath>..\..\User\BSP\src\key.c</FilePath>
             </File>
             <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\led.c</FilePath>
+              <FilePath>..\..\User\BSP\src\led.c</FilePath>
             </File>
             <File>
               <FileName>malloc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\malloc.c</FilePath>
+              <FilePath>..\..\User\BSP\src\malloc.c</FilePath>
             </File>
             <File>
               <FileName>myiic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\myiic.c</FilePath>
+              <FilePath>..\..\User\BSP\src\myiic.c</FilePath>
             </File>
             <File>
               <FileName>ott2001a.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ott2001a.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ott2001a.c</FilePath>
+            </File>
+            <File>
+              <FileName>remote.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\remote.c</FilePath>
             </File>
             <File>
               <FileName>rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\rtc.c</FilePath>
+              <FilePath>..\..\User\BSP\src\rtc.c</FilePath>
             </File>
             <File>
               <FileName>sdio_sdcard.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\sdio_sdcard.c</FilePath>
+              <FilePath>..\..\User\BSP\src\sdio_sdcard.c</FilePath>
             </File>
             <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\spi.c</FilePath>
+              <FilePath>..\..\User\BSP\src\spi.c</FilePath>
             </File>
             <File>
               <FileName>sram.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\sram.c</FilePath>
+              <FilePath>..\..\User\BSP\src\sram.c</FilePath>
             </File>
             <File>
               <FileName>sys.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\sys.c</FilePath>
+              <FilePath>..\..\User\BSP\src\sys.c</FilePath>
             </File>
             <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\timer.c</FilePath>
+              <FilePath>..\..\User\BSP\src\timer.c</FilePath>
             </File>
             <File>
               <FileName>touch.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\touch.c</FilePath>
+              <FilePath>..\..\User\BSP\src\touch.c</FilePath>
             </File>
             <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\usart.c</FilePath>
+              <FilePath>..\..\User\BSP\src\usart.c</FilePath>
             </File>
             <File>
               <FileName>w25qxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\w25qxx.c</FilePath>
+              <FilePath>..\..\User\BSP\src\w25qxx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Bsp\swrbtest</GroupName>
+          <Files>
+            <File>
+              <FileName>swrbTestDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>swrbTestSteerMotorDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestSteerMotorDriver.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>swrbTestStepMotorDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestStepMotorDriver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -527,29 +602,354 @@
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
-              <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_DLG_Conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\User\Framework\GUI\inc\EJE_SWRB_TEST_DLG_Conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_DLG_Conf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DLG_Conf.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_StartDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StartDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_LoginDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_PCBTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_TestSelSettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TestSelSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_ControlDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ControlDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_RelayCtrlDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_RelayCtrlDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StepMotorTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SteerMotorTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SteerMotorTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Freamwork\res</GroupName>
+          <GroupName>Freamwork\gui\res</GroupName>
           <Files>
             <File>
-              <FileName>eje_logo.c</FileName>
+              <FileName>eje_logo_char.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\res\src\eje_logo.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_logo_char.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>DibeaLogo_300x64.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\DibeaLogo_300x64.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Songti32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Songti32.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Yahei30.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Yahei30.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Songti24.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Songti24.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Songti18.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Songti18.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>4</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -749,7 +1149,72 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MDK_ARM\core</GroupName>
+          <GroupName>Libraries\usb_host\class</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_msc_bot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_bot.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_scsi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_scsi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\core</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_hcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_hcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_stdreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_stdreq.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\driver</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd_int.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\cmsis</GroupName>
           <Files>
             <File>
               <FileName>core_cm4.h</FileName>
@@ -815,6 +1280,11 @@
               <FileName>mytext.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FONTS\src\mytext.c</FilePath>
+            </File>
+            <File>
+              <FileName>SDErrCHN.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FONTS\src\SDErrCHN.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -954,77 +1424,112 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>User/app</GroupName>
+          <GroupName>User\app\slam</GroupName>
+          <Files>
+            <File>
+              <FileName>sweeprobot_slam_monitor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_slam_monitor.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User\app\test</GroupName>
           <Files>
             <File>
               <FileName>sweeprobot_testing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_manul.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_wheel.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_wheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_brush.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_brush.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_brush.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_fan.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_fan.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_fan.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ifrd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_front_ifrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_front_ifrd.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_collision.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_collision.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_collision.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel_float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ash_tray.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_uniwheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_key.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_irda.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_irda.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_buzzer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_buzzer.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_rgb_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_irda.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_charge.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_charge.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_rgb_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_key.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User\app\udisk</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usb_bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_usr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usbh_usr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1034,17 +1539,17 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
+              <FilePath>..\..\User\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\stm32f4xx_it.c</FilePath>
+              <FilePath>..\..\User\stm32f4xx_it.c</FilePath>
             </File>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\system_stm32f4xx.c</FilePath>
+              <FilePath>..\..\User\system_stm32f4xx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1458,112 +1963,140 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>Doc</GroupName>
+        </Group>
+        <Group>
           <GroupName>Bsp</GroupName>
           <Files>
             <File>
               <FileName>24cxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\24cxx.c</FilePath>
+              <FilePath>..\..\User\BSP\src\24cxx.c</FilePath>
             </File>
             <File>
               <FileName>crypto_tea.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\crypto_tea.c</FilePath>
+              <FilePath>..\..\User\BSP\src\crypto_tea.c</FilePath>
             </File>
             <File>
               <FileName>ctiic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ctiic.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ctiic.c</FilePath>
             </File>
             <File>
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\delay.c</FilePath>
+              <FilePath>..\..\User\BSP\src\delay.c</FilePath>
             </File>
             <File>
               <FileName>ft5206.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ft5206.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ft5206.c</FilePath>
             </File>
             <File>
               <FileName>gt9147.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\gt9147.c</FilePath>
+              <FilePath>..\..\User\BSP\src\gt9147.c</FilePath>
             </File>
             <File>
               <FileName>ILI93xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ILI93xx.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ILI93xx.c</FilePath>
             </File>
             <File>
               <FileName>key.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\key.c</FilePath>
+              <FilePath>..\..\User\BSP\src\key.c</FilePath>
             </File>
             <File>
               <FileName>led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\led.c</FilePath>
+              <FilePath>..\..\User\BSP\src\led.c</FilePath>
             </File>
             <File>
               <FileName>malloc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\malloc.c</FilePath>
+              <FilePath>..\..\User\BSP\src\malloc.c</FilePath>
             </File>
             <File>
               <FileName>myiic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\myiic.c</FilePath>
+              <FilePath>..\..\User\BSP\src\myiic.c</FilePath>
             </File>
             <File>
               <FileName>ott2001a.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\ott2001a.c</FilePath>
+              <FilePath>..\..\User\BSP\src\ott2001a.c</FilePath>
+            </File>
+            <File>
+              <FileName>remote.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\remote.c</FilePath>
             </File>
             <File>
               <FileName>rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\rtc.c</FilePath>
+              <FilePath>..\..\User\BSP\src\rtc.c</FilePath>
             </File>
             <File>
               <FileName>sdio_sdcard.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\sdio_sdcard.c</FilePath>
+              <FilePath>..\..\User\BSP\src\sdio_sdcard.c</FilePath>
             </File>
             <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\spi.c</FilePath>
+              <FilePath>..\..\User\BSP\src\spi.c</FilePath>
             </File>
             <File>
               <FileName>sram.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\sram.c</FilePath>
+              <FilePath>..\..\User\BSP\src\sram.c</FilePath>
             </File>
             <File>
               <FileName>sys.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\sys.c</FilePath>
+              <FilePath>..\..\User\BSP\src\sys.c</FilePath>
             </File>
             <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\timer.c</FilePath>
+              <FilePath>..\..\User\BSP\src\timer.c</FilePath>
             </File>
             <File>
               <FileName>touch.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\touch.c</FilePath>
+              <FilePath>..\..\User\BSP\src\touch.c</FilePath>
             </File>
             <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\usart.c</FilePath>
+              <FilePath>..\..\User\BSP\src\usart.c</FilePath>
             </File>
             <File>
               <FileName>w25qxx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\src\w25qxx.c</FilePath>
+              <FilePath>..\..\User\BSP\src\w25qxx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Bsp\swrbtest</GroupName>
+          <Files>
+            <File>
+              <FileName>swrbTestDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>swrbTestSteerMotorDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestSteerMotorDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>swrbTestStepMotorDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\src\swrbTestStepMotorDriver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1571,29 +2104,119 @@
           <GroupName>Freamwork\gui</GroupName>
           <Files>
             <File>
-              <FileName>EJE_SWRB_TEST_MainDLG.c</FileName>
+              <FileName>EJE_SWRB_TEST_DLG_Conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\User\Framework\GUI\inc\EJE_SWRB_TEST_DLG_Conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_DLG_Conf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_MainDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DLG_Conf.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_StartDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StartDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_LoginDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_LoginDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_PCBTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_PCBTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_ManulDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ManulDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_SNSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SNSettingDLG.c</FilePath>
             </File>
             <File>
               <FileName>EJE_SWRB_TEST_TimeSettingDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TimeSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_TestSelSettingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_TestSelSettingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_ControlDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_ControlDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_RelayCtrlDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_RelayCtrlDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_StepMotorTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_StepMotorTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SteerMotorTestDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SteerMotorTestDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_DecryptoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_DecryptoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_SLAMDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_SLAMDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>EJE_SWRB_TEST_NumPadDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\src\EJE_SWRB_TEST_NumPadDLG.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Freamwork\res</GroupName>
+          <GroupName>Freamwork\gui\res</GroupName>
           <Files>
             <File>
-              <FileName>eje_logo.c</FileName>
+              <FileName>eje_logo_char.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Framework\GUI\res\src\eje_logo.c</FilePath>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_logo_char.c</FilePath>
+            </File>
+            <File>
+              <FileName>DibeaLogo_300x64.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\DibeaLogo_300x64.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Songti32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Songti32.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Yahei30.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Yahei30.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Songti24.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Songti24.c</FilePath>
+            </File>
+            <File>
+              <FileName>eje_CHNFont_Songti18.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Framework\GUI\res\src\eje_CHNFont_Songti18.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1793,7 +2416,72 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MDK_ARM\core</GroupName>
+          <GroupName>Libraries\usb_host\class</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_msc_bot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_bot.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_msc_scsi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\src\usbh_msc_scsi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\core</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_hcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_hcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_stdreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_HOST_Library\Core\src\usbh_stdreq.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\usb_host\driver</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\STM32_USB_OTG_Driver\src\usb_hcd_int.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Libraries\cmsis</GroupName>
           <Files>
             <File>
               <FileName>core_cm4.h</FileName>
@@ -1859,6 +2547,11 @@
               <FileName>mytext.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FONTS\src\mytext.c</FilePath>
+            </File>
+            <File>
+              <FileName>SDErrCHN.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FONTS\src\SDErrCHN.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1998,77 +2691,112 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>User/app</GroupName>
+          <GroupName>User\app\slam</GroupName>
+          <Files>
+            <File>
+              <FileName>sweeprobot_slam_monitor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_slam_monitor.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User\app\test</GroupName>
           <Files>
             <File>
               <FileName>sweeprobot_testing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_manul.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_wheel.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_wheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_brush.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_brush.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_brush.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_fan.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_fan.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_fan.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ifrd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_ifrd.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_front_ifrd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_front_ifrd.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_collision.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_collision.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_collision.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel_float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_wheel_float.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_ash_tray.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_ash_tray.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_uniwheel.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_key.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_uniwheel.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_irda.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_irda.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_buzzer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_buzzer.c</FilePath>
-            </File>
-            <File>
-              <FileName>sweeprobot_testing_rgb_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_irda.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_charge.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\src\sweeprobot_testing_charge.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_charge.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_rgb_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_rgb_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>sweeprobot_testing_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_key.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>User\app\udisk</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usb_bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_usr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\APP\udisk\src\usbh_usr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2078,17 +2806,17 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\main.c</FilePath>
+              <FilePath>..\..\User\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\stm32f4xx_it.c</FilePath>
+              <FilePath>..\..\User\stm32f4xx_it.c</FilePath>
             </File>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\system_stm32f4xx.c</FilePath>
+              <FilePath>..\..\User\system_stm32f4xx.c</FilePath>
             </File>
           </Files>
         </Group>
