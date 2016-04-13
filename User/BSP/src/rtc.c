@@ -42,16 +42,6 @@ ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)
 #ifdef __ENABLE_RTC_CALIB
 static void MY_RTC_Calibration(void)
 {
-<<<<<<< HEAD:Project/BSP/src/rtc.c
-    char *str;
-    
-    str = mymalloc(SRAMIN, sizeof(char)*30);
-    sprintf(str,"%d/%d/%d %d:%d:%d", date->RTC_Year, date->RTC_Month, date->RTC_Date, time->RTC_Hours, time->RTC_Minutes, time->RTC_Seconds);
-    if(gSwrbTestMode == SWRB_TEST_MODE_SET){
-        Edit_Set_Text(hWin_SWRB_TIMESETTING, ID_TIMESET_EDIT_ACTVALUE, str);
-    }else{
-        Edit_Set_Text(hWin_SWRB_MAIN, ID_MAIN_EDIT_DATE, str);
-=======
     ErrorStatus rtcErrorStat;
 
     rtcErrorStat = RTC_SmoothCalibConfig(RTC_SmoothCalibPeriod_32sec, RTC_SmoothCalibPlusPulses_Reset, 0x0000);
@@ -59,7 +49,6 @@ static void MY_RTC_Calibration(void)
     if(rtcErrorStat == ERROR){
         printf("RTC Calibration Error!\r\n");
         while(1);
->>>>>>> release:User/BSP/src/rtc.c
     }
 }
 #endif

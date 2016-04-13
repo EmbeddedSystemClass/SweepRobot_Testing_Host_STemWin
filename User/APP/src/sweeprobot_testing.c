@@ -1106,6 +1106,9 @@ static void SWRB_PCBTestFinishProc(void)
     str = mymalloc(SRAMIN, sizeof(char)*50);
     mymemset(str, 0, sizeof(char)*50);
 
+    str = mymalloc(SRAMIN, sizeof(char)*50);
+    mymemset(str, 0, sizeof(char)*50);
+
     if(gSwrbTestSDCardInsertState || gSwrbTestUDiskInsertState){
         SWRB_TestDataFileWriteDate(">PCB Test finish time", &rtcDate, &rtcTime);
 
