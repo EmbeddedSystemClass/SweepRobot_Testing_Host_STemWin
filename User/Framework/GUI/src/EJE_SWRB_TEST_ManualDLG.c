@@ -129,32 +129,32 @@ static const char *aListview_RowInitText[][10] = {
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-    { WINDOW_CreateIndirect, "winSWRBManulTest", ID_MANUL_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
-    { LISTVIEW_CreateIndirect, "lstviewSWRBTest", ID_MANUL_LISTVIEW_MAIN, 20, 10, 660, 375, 0, 0x0, 0 },
-//    { TEXT_CreateIndirect, "textTitle", ID_MANUL_TEXT_TITLE, 20, 10, 655, 60, 0, 0x64, 0 },
-    { EDIT_CreateIndirect, "editDate", ID_MANUL_EDIT_DATE, 510, 435, 170, 30, 0, 0x64, 0 },
-    { BUTTON_CreateIndirect, "btnStart", ID_MANUL_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnSet", ID_MANUL_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnReset", ID_MANUL_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnExit", ID_MANUL_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnIndicate", ID_MANUL_BUTTON_INDICATE, 510, 400, 30, 30, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnWheel", ID_MANUL_BUTTON_WHEEL, 20, 400, 60, 65, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnBrush", ID_MANUL_BUTTON_BRUSH, 90, 400, 60, 65, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnFan", ID_MANUL_BUTTON_FAN, 160, 400, 60, 65, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnIFRD", ID_MANUL_BUTTON_IFRD, 230, 400, 60, 65, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnBuzzer", ID_MANUL_BUTTON_BUZZER, 300, 400, 60, 65, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnRGB", ID_MANUL_BUTTON_RGB_LED, 370, 400, 60, 65, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnRelay", ID_MANUL_BUTTON_RELAY, 440, 400, 60, 65, 0, 0x0, 0 },
-    { EDIT_CreateIndirect, "editVolt", ID_MANUL_EDIT_VOLT, 550, 400, 45, 30, 0, 0x64, 0 },
-    { PROGBAR_CreateIndirect, "prgbVolt", ID_MANUL_PROGBAR_VOLT, 620, 400, 55, 30, 0, 0x0, 0 },
-    { PROGBAR_CreateIndirect, "prgbProg", ID_MANUL_PROGBAR_PROG, 20, 385, 660, 10, 0, 0x0, 0 },
-    { TEXT_CreateIndirect, "textVolt", ID_MANUL_TEXT_VOLT, 600, 400, 20, 30, 0, 0x64, 0 },
+    { WINDOW_CreateIndirect, "winSWRBManualTest", ID_MANUAL_WINDOW_MAIN, 0, 0, 800, 480, 0, 0x0, 0 },
+    { LISTVIEW_CreateIndirect, "lstviewSWRBTest", ID_MANUAL_LISTVIEW_MAIN, 20, 10, 660, 375, 0, 0x0, 0 },
+//    { TEXT_CreateIndirect, "textTitle", ID_MANUAL_TEXT_TITLE, 20, 10, 655, 60, 0, 0x64, 0 },
+    { EDIT_CreateIndirect, "editDate", ID_MANUAL_EDIT_DATE, 510, 435, 170, 30, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "btnStart", ID_MANUAL_BUTTON_START, 700, 0, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnSet", ID_MANUAL_BUTTON_SET, 700, 120, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnReset", ID_MANUAL_BUTTON_RESET, 700, 240, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnExit", ID_MANUAL_BUTTON_EXIT, 700, 360, 100, 120, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnIndicate", ID_MANUAL_BUTTON_INDICATE, 510, 400, 30, 30, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnWheel", ID_MANUAL_BUTTON_WHEEL, 20, 400, 60, 65, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnBrush", ID_MANUAL_BUTTON_BRUSH, 90, 400, 60, 65, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnFan", ID_MANUAL_BUTTON_FAN, 160, 400, 60, 65, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnIFRD", ID_MANUAL_BUTTON_IFRD, 230, 400, 60, 65, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnBuzzer", ID_MANUAL_BUTTON_BUZZER, 300, 400, 60, 65, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnRGB", ID_MANUAL_BUTTON_RGB_LED, 370, 400, 60, 65, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnRelay", ID_MANUAL_BUTTON_RELAY, 440, 400, 60, 65, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "editVolt", ID_MANUAL_EDIT_VOLT, 550, 400, 45, 30, 0, 0x64, 0 },
+    { PROGBAR_CreateIndirect, "prgbVolt", ID_MANUAL_PROGBAR_VOLT, 620, 400, 55, 30, 0, 0x0, 0 },
+    { PROGBAR_CreateIndirect, "prgbProg", ID_MANUAL_PROGBAR_PROG, 20, 385, 660, 10, 0, 0x0, 0 },
+    { TEXT_CreateIndirect, "textVolt", ID_MANUAL_TEXT_VOLT, 600, 400, 20, 30, 0, 0x64, 0 },
 };
 
 #ifdef USE_MANUL_TEST_STATE_INDICATE
-static const GUI_WIDGET_CREATE_INFO _aManulTestStateIndicateDialogCreate[] = {
-    { WINDOW_CreateIndirect, "winManulTestState", ID_MANUL_WINDOW_TEST_STATE_INDICATE, 0, 0, 500, 360, 0, 0x0, 0 },
-    { BUTTON_CreateIndirect, "btnManulTestStateIndicate", ID_MANUL_BUTTON_TEST_STATE_INDICATE, 100, 100, 200, 80, 0, 0x0, 0 },
+static const GUI_WIDGET_CREATE_INFO _aManualTestStateIndicateDialogCreate[] = {
+    { WINDOW_CreateIndirect, "winManualTestState", ID_MANUAL_WINDOW_TEST_STATE_INDICATE, 0, 0, 500, 360, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "btnManualTestStateIndicate", ID_MANUAL_BUTTON_TEST_STATE_INDICATE, 100, 100, 200, 80, 0, 0x0, 0 },
 };
 #endif
 
@@ -200,23 +200,23 @@ static void Listview_Init(WM_HWIN hItem)
         LISTVIEW_AddRow(hItem, aListview_RowInitText[i]);
     }
 
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL, 19, 0, &_bmWheelCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_BRUSH, 7, 0, &_bmBrushCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_FAN, 31, 0, &_bmFanCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_IFRD, 7, 0, &_bmIFRDCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_FRONT_IFRD, 19, 0, &_bmFrontIFRDCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_COLLISION, 31, 0, &_bmCollisionCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_WHEEL_FLOAT, 19, 0, &_bmWheelFloatCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_ASH_TRAY, 31, 0, &_bmAshTrayCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_UNIWHEEL, 19, 0, &_bmUniWheelCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_IRDA, 7, 0, &_bmIRDACHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_CHARGE, 31, 0, &_bmChargeCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_BUZZER, 19, 0, &_bmBuzzerCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_RGB_LED, 19, 0, &_bmRGBLEDCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_KEY, 31, 0, &_bmKeyCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_POWER_STATION, 19, 0, &_bmPwrStationCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_INT_VREF, 7, 0, &_bmIntVrefCHN_18);
-    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUL_TEST_LISTVIEW_ROW_SNUM, 19, 0, &_bmSerialNumCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_WHEEL, 19, 0, &_bmWheelCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_BRUSH, 7, 0, &_bmBrushCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_FAN, 31, 0, &_bmFanCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_IFRD, 7, 0, &_bmIFRDCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_FRONT_IFRD, 19, 0, &_bmFrontIFRDCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_COLLISION, 31, 0, &_bmCollisionCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_WHEEL_FLOAT, 19, 0, &_bmWheelFloatCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_ASH_TRAY, 31, 0, &_bmAshTrayCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_UNIWHEEL, 19, 0, &_bmUniWheelCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_IRDA, 7, 0, &_bmIRDACHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_CHARGE, 31, 0, &_bmChargeCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_BUZZER, 19, 0, &_bmBuzzerCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_RGB_LED, 19, 0, &_bmRGBLEDCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_KEY, 31, 0, &_bmKeyCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_POWER_STATION, 19, 0, &_bmPwrStationCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_INT_VREF, 7, 0, &_bmIntVrefCHN_18);
+    LISTVIEW_SetItemBitmap(hItem, SWRB_MANUAL_TEST_LISTVIEW_COLUMN_ITEM, SWRB_MANUAL_TEST_LISTVIEW_ROW_SNUM, 19, 0, &_bmSerialNumCHN_18);
 
     hHeader = LISTVIEW_GetHeader(hItem);
     HEADER_SetFont(hHeader, GUI_FONT_COMIC18B_ASCII);
@@ -250,23 +250,23 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_LISTVIEW_MAIN);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_LISTVIEW_MAIN);
     Listview_Init(hItem);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_TEXT_TITLE);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_TEXT_TITLE);
     TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     TEXT_SetTextColor(hItem, 0x00CB8872);
-    TEXT_SetText(hItem, "SWRB Manul Test");
+    TEXT_SetText(hItem, "SWRB Manual Test");
     TEXT_SetFont(hItem, GUI_FONT_32B_ASCII);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_EDIT_DATE);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_EDIT_DATE);
     EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
     EDIT_SetText(hItem, "");
     EDIT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
     EDIT_SetTextColor(hItem, EDIT_CI_ENABLED, GUI_BLUE);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_EDIT_VOLT);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_EDIT_VOLT);
     EDIT_SetFont(hItem, GUI_FONT_20_ASCII);
     EDIT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
     EDIT_SetMaxLen(hItem, 5);
@@ -274,45 +274,45 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     EDIT_SetFloatValue(hItem, 0);
     WIDGET_SetEffect(hItem, &WIDGET_Effect_None);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_TEXT_VOLT);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_TEXT_VOLT);
     TEXT_SetFont(hItem, GUI_FONT_20_ASCII);
     TEXT_SetText(hItem, "V");
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_START);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_BUTTON_START);
     Button_Init(hItem);
-    BUTTON_DispStartCHNStr(pMsg->hWin, ID_MANUL_BUTTON_START, 18, 43);
-    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_START, GUI_LIGHTBLUE);
+    BUTTON_DispStartCHNStr(pMsg->hWin, ID_MANUAL_BUTTON_START, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUAL_BUTTON_START, GUI_LIGHTBLUE);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_SET);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_BUTTON_SET);
     Button_Init(hItem);
-    if(gSwrbTestManulSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO)
-        BUTTON_DispAutoModeCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+    if(gSwrbTestManualSubMode == SWRB_TEST_MANUL_SUB_MODE_AUTO)
+        BUTTON_DispAutoModeCHNStr(pMsg->hWin, ID_MANUAL_BUTTON_SET, 18, 43);
     else{
-        BUTTON_DispManulModeCHNStr(pMsg->hWin, ID_MANUL_BUTTON_SET, 18, 43);
+        BUTTON_DispManualModeCHNStr(pMsg->hWin, ID_MANUAL_BUTTON_SET, 18, 43);
     }
-    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_SET, GUI_LIGHTGREEN);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUAL_BUTTON_SET, GUI_LIGHTGREEN);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_RESET);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_BUTTON_RESET);
     Button_Init(hItem);
-    BUTTON_DispResetCHNStr(pMsg->hWin, ID_MANUL_BUTTON_RESET, 18, 43);
-    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_RESET, GUI_LIGHTRED);
+    BUTTON_DispResetCHNStr(pMsg->hWin, ID_MANUAL_BUTTON_RESET, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUAL_BUTTON_RESET, GUI_LIGHTRED);
     WM_DisableWindow(hItem);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_EXIT);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_BUTTON_EXIT);
     Button_Init(hItem);
-    BUTTON_DispExitCHNStr(pMsg->hWin, ID_MANUL_BUTTON_EXIT, 18, 43);
-    Button_Set_BkColor(pMsg->hWin, ID_MANUL_BUTTON_EXIT, GUI_LIGHTGREEN);
+    BUTTON_DispExitCHNStr(pMsg->hWin, ID_MANUAL_BUTTON_EXIT, 18, 43);
+    Button_Set_BkColor(pMsg->hWin, ID_MANUAL_BUTTON_EXIT, GUI_LIGHTGREEN);
 
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUL_BUTTON_INDICATE);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_MANUAL_BUTTON_INDICATE);
     Button_Init(hItem);
     BUTTON_SetText(hItem, "");
 
-    for(Id=ID_MANUL_BUTTON_WHEEL;Id<ID_MANUL_BUTTON_BOUND;Id++){
+    for(Id=ID_MANUAL_BUTTON_WHEEL;Id<ID_MANUAL_BUTTON_BOUND;Id++){
         hItem = WM_GetDialogItem(pMsg->hWin, Id);
         Button_Init(hItem);
         BUTTON_SetFont(hItem, GUI_FONT_16_ASCII);
-        BUTTON_SetText(hItem, aButton_InitText[Id-ID_MANUL_BUTTON_WHEEL][0]);
+        BUTTON_SetText(hItem, aButton_InitText[Id-ID_MANUAL_BUTTON_WHEEL][0]);
         WM_DisableWindow(hItem);
     }
 
@@ -325,43 +325,43 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
     switch(Id) {
-    case ID_MANUL_BUTTON_START: // Notifications sent by 'btnStart'
+    case ID_MANUAL_BUTTON_START: // Notifications sent by 'btnStart'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulStartBtnProc();
+        SweepRobot_ManualStartBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_SET: // Notifications sent by 'btnSet'
+    case ID_MANUAL_BUTTON_SET: // Notifications sent by 'btnSet'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulSetBtnProc();
+        SweepRobot_ManualSetBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_RESET: // Notifications sent by 'btnReset'
+    case ID_MANUAL_BUTTON_RESET: // Notifications sent by 'btnReset'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulResetBtnProc();
+        SweepRobot_ManualResetBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_EXIT: // Notifications sent by 'btnExit'
+    case ID_MANUAL_BUTTON_EXIT: // Notifications sent by 'btnExit'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulExitBtnProc();
+        SweepRobot_ManualExitBtnProc();
         break;
       }
       break;
-    case ID_MANUL_LISTVIEW_MAIN: // Notifications sent by 'lstviewSWRBTest'
+    case ID_MANUAL_LISTVIEW_MAIN: // Notifications sent by 'lstviewSWRBTest'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
@@ -371,7 +371,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       }
       break;
-    case ID_MANUL_EDIT_DATE: // Notifications sent by 'editDate'
+    case ID_MANUAL_EDIT_DATE: // Notifications sent by 'editDate'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
@@ -381,7 +381,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       }
       break;
-    case ID_MANUL_BUTTON_INDICATE: // Notifications sent by 'btnIndicate'
+    case ID_MANUAL_BUTTON_INDICATE: // Notifications sent by 'btnIndicate'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
@@ -389,66 +389,66 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       }
       break;
-    case ID_MANUL_BUTTON_WHEEL: // Notifications sent by 'btnWheel'
+    case ID_MANUAL_BUTTON_WHEEL: // Notifications sent by 'btnWheel'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulWheelBtnProc();
+        SweepRobot_ManualWheelBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_BRUSH: // Notifications sent by 'btnBrush'
+    case ID_MANUAL_BUTTON_BRUSH: // Notifications sent by 'btnBrush'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulBrushBtnProc();
+        SweepRobot_ManualBrushBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_FAN: // Notifications sent by 'btnFan'
+    case ID_MANUAL_BUTTON_FAN: // Notifications sent by 'btnFan'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulFanBtnProc();
+        SweepRobot_ManualFanBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_IFRD: // Notifications sent by 'btnIFRD'
+    case ID_MANUAL_BUTTON_IFRD: // Notifications sent by 'btnIFRD'
         switch(NCode) {
           case WM_NOTIFICATION_CLICKED:
             break;
           case WM_NOTIFICATION_RELEASED:
-            SweepRobot_ManulIFRDBtnProc();
+            SweepRobot_ManualIFRDBtnProc();
             break;
         }
         break;
-    case ID_MANUL_BUTTON_BUZZER: // Notifications sent by 'btnBuzzer'
+    case ID_MANUAL_BUTTON_BUZZER: // Notifications sent by 'btnBuzzer'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulBuzzerBtnProc();
+        SweepRobot_ManualBuzzerBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_RGB_LED: // Notifications sent by 'btnRgbLed'
+    case ID_MANUAL_BUTTON_RGB_LED: // Notifications sent by 'btnRgbLed'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulRGBLEDBtnProc();
+        SweepRobot_ManualRGBLEDBtnProc();
         break;
       }
       break;
-    case ID_MANUL_BUTTON_RELAY: // Notifications sent by 'btnRelay'
+    case ID_MANUAL_BUTTON_RELAY: // Notifications sent by 'btnRelay'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         break;
       case WM_NOTIFICATION_RELEASED:
-        SweepRobot_ManulRELAYBtnProc();
+        SweepRobot_ManualRELAYBtnProc();
         break;
       }
       break;
@@ -466,7 +466,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 **********************************************************************
 */
-WM_HWIN hWin_SWRB_MANUL;
+WM_HWIN hWin_SWRB_MANUAL;
 
 /*********************************************************************
 *
@@ -476,9 +476,9 @@ WM_HWIN hWin_SWRB_MANUL;
 */
 /*********************************************************************
 *
-*       CreateManulTestDLG
+*       CreateManualTestDLG
 */
-WM_HWIN CreateManulTestDLG(void)
+WM_HWIN CreateManualTestDLG(void)
 {
   WM_HWIN hWin;
 

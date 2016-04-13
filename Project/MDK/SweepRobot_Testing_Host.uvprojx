@@ -1442,9 +1442,9 @@
               <FilePath>..\..\User\APP\src\sweeprobot_testing.c</FilePath>
             </File>
             <File>
-              <FileName>sweeprobot_testing_manul.c</FileName>
+              <FileName>sweeprobot_testing_manual.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_manual.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel.c</FileName>
@@ -2709,9 +2709,9 @@
               <FilePath>..\..\User\APP\src\sweeprobot_testing.c</FilePath>
             </File>
             <File>
-              <FileName>sweeprobot_testing_manul.c</FileName>
+              <FileName>sweeprobot_testing_manual.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\User\APP\src\sweeprobot_testing_manul.c</FilePath>
+              <FilePath>..\..\User\APP\src\sweeprobot_testing_manual.c</FilePath>
             </File>
             <File>
               <FileName>sweeprobot_testing_wheel.c</FileName>

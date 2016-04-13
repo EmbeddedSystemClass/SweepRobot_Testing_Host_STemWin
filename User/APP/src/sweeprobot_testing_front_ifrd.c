@@ -45,17 +45,17 @@ static void SweepRobot_FrontIFRDTestFinishProc(void);
 
 static void SweepRobot_FrontIFRDTestListviewSetStr(char *str)
 {
-    Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                            gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
+    Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                            gSwrbManualTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
+                                                            gSwrbManualTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
                                                             str);
 }
 
 static void SweepRobot_FrontIFRDTestListviewSetColor(GUI_COLOR color)
 {
-    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
-                                                                   gSwrbManulTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                   gSwrbManualTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][0],\
+                                                                   gSwrbManualTestListviewDispDataFrontIFRDCoord[gSwrbFrontIFRDTestChanCnt][1],\
                                                                    color);
 }
 
@@ -94,14 +94,14 @@ static void SweepRobot_FrontIFRDTestInit(void)
     gSwrbTestRuningTaskPrio = SWRB_FRONT_IFRD_TEST_TASK_PRIO;
 
     if(gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][0], \
-                                                     gSwrbManulTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][1], \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                     gSwrbManualTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][0], \
+                                                     gSwrbManualTestListviewDispItemCoord[SWRB_TEST_STATE_IFRD][1], \
                                                      GUI_LIGHTBLUE);
 
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
-                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                     gSwrbManualTestListviewDispItemFrontIFRDCoord[0][0], \
+                                                     gSwrbManualTestListviewDispItemFrontIFRDCoord[0][1], \
                                                      GUI_LIGHTRED);
     }
 
@@ -215,16 +215,16 @@ static void SweepRobot_FrontIFRDTestTxOnProc(void)
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].validCnt++;
             }else{
                 gSwrbFrontIFRDTestStateMap |= (1<<gSwrbFrontIFRDTestChanCnt);
-                SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUL_TEST_FAULT_BK_COLOR);
+                SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUAL_TEST_FAULT_BK_COLOR);
             }
 
             if(frontIFRD[gSwrbFrontIFRDTestChanCnt].validCnt > SWRB_TEST_VALID_COMP_TIMES){
                 frontIFRD[gSwrbFrontIFRDTestChanCnt].validFlag = 1;
-                SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUL_TEST_OK_BK_COLOR);
+                SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUAL_TEST_OK_BK_COLOR);
             }
         }else{
             gSwrbFrontIFRDTestStateMap |= 1<<(gSwrbFrontIFRDTestChanCnt);
-            SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUL_TEST_FAULT_BK_COLOR);
+            SweepRobot_FrontIFRDTestListviewSetColor(SWRB_MANUAL_TEST_FAULT_BK_COLOR);
         }
     }
     printf("SNSR->IFRD=0\r\n");
@@ -241,14 +241,14 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
 
     SweepRobotTest_StepMotorGoHome();
 
-    Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN, \
-                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][0], \
-                                                     gSwrbManulTestListviewDispItemFrontIFRDCoord[0][1], \
+    Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN, \
+                                                     gSwrbManualTestListviewDispItemFrontIFRDCoord[0][0], \
+                                                     gSwrbManualTestListviewDispItemFrontIFRDCoord[0][1], \
                                                      GUI_LIGHTBLUE);
 
     SWRB_TestDataSaveToFile(FrontIFRD_TestDataSave);
 
-//    SWRB_WM_EnableWindow(hWin_SWRB_MANUL, ID_MANUL_BUTTON_RESET);
+//    SWRB_WM_EnableWindow(hWin_SWRB_MANUAL, ID_MANUAL_BUTTON_RESET);
 
     OSTaskResume(SWRB_IFRD_TEST_TASK_PRIO);
     OSTaskSuspend(OS_PRIO_SELF);
@@ -256,7 +256,7 @@ static void SweepRobot_FrontIFRDTestFinishProc(void)
 
 static void SWRB_FrontIFRDTestProgDisp(void)
 {
-    Progbar_ManulTest_Set_Percent(gSwrbFrontIFRDTestStepMotorMoveCnt, SWRB_FRONT_IFRD_CHAN_NUM);
+    Progbar_ManualTest_Set_Percent(gSwrbFrontIFRDTestStepMotorMoveCnt, SWRB_FRONT_IFRD_CHAN_NUM);
 }
 
 void SweepRobot_FrontIFRDTestTask(void *pdata)

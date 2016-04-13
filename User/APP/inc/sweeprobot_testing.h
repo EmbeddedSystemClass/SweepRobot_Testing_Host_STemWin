@@ -315,7 +315,7 @@ enum SWRB_TEST_TASK_PRIO{
     SWRB_RGB_LED_TEST_TASK_PRIO,
     SWRB_KEY_TEST_TASK_PRIO,
     SWRB_TEST_TASK_PRIO_END_BOUND,//22
-    SWRB_MANUL_TEST_TASK_PRIO,
+    SWRB_MANUAL_TEST_TASK_PRIO,
     SWRB_FRONT_IFRD_TEST_TASK_PRIO,
     SWRB_SLAM_MONITOR_TASK_PRIO,
     RTC_TASK_PRIO,
@@ -347,7 +347,7 @@ enum SWRB_TEST_TASK_PRIO{
 #define SWRB_BUZZER_TEST_STK_SIZE           256
 #define SWRB_RGB_LED_TEST_STK_SIZE          256
 #define SWRB_CHARGE_TEST_STK_SIZE           256
-#define SWRB_MANUL_TEST_STK_SIZE            256
+#define SWRB_MANUAL_TEST_STK_SIZE            256
 #define SWRB_FRONT_IFRD_TASK_STK_SIZE       256
 #define SWRB_SLAM_MONITOR_STK_SIZE          256
 #ifdef _USE_SELF_TESTING
@@ -373,7 +373,7 @@ extern int usartRxNum;
 extern enum SWRB_DIALOG_SELECT gSwrbDialogSelectFlag;
 extern enum SWRB_TEST_SUB_DIALOG gSwrbTestSubDialogSelectFlag;
 extern enum SWRB_TEST_MODE gSwrbTestMode;
-extern enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManulSubMode;
+extern enum SWRB_TEST_MANUL_SUB_MODE gSwrbTestManualSubMode;
 extern enum SWRB_TEST_RUN_STATE gSwrbTestRunState;
 extern enum SWRB_TEST_SET_SELECT gSwrbTestSetSelectFlag;
 extern enum SWRB_TEST_TASK_PRIO gSwrbTestRuningTaskPrio;
@@ -404,7 +404,7 @@ void SWRB_ValidTestTaskCntGet(void);
 
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);
-void SweepRobot_StartDlgManulBtnClickProc(void);
+void SweepRobot_StartDlgManualBtnClickProc(void);
 void SweepRobot_StartDlgSetBtnClickProc(void);
 #ifdef USE_SLAM
 void SweepRobot_StartDlgSLAMBtnClickProc(void);
@@ -420,20 +420,20 @@ void SweepRobot_PCBTestNumPadOKProc(void);
 void SweepRobot_PCBTestStopBtnProc(void);
 void SweepRobot_PCBTestExitBtnProc(void);
 
-void SweepRobot_ManulStartBtnProc(void);
-void SweepRobot_ManulSetBtnEnterManulModeProc(void);
-void SweepRobot_ManulSetBtnProc(void);
-void SweepRobot_ManulResetBtnProc(void);
-void SweepRobot_ManulExitBtnProc(void);
+void SweepRobot_ManualStartBtnProc(void);
+void SweepRobot_ManualSetBtnEnterManualModeProc(void);
+void SweepRobot_ManualSetBtnProc(void);
+void SweepRobot_ManualResetBtnProc(void);
+void SweepRobot_ManualExitBtnProc(void);
 
-void SweepRobot_ManulWheelBtnProc(void);
-void SweepRobot_ManulBrushBtnProc(void);
-void SweepRobot_ManulFanBtnProc(void);
-void SweepRobot_ManulIFRDBtnProc(void);
-void SweepRobot_ManulBuzzerBtnProc(void);
-void SweepRobot_ManulRGBLEDBtnProc(void);
-void SweepRobot_ManulRELAYBtnProc(void);
-void SweepRobot_ManulTest_CtrlBtnStateArrayReset(void);
+void SweepRobot_ManualWheelBtnProc(void);
+void SweepRobot_ManualBrushBtnProc(void);
+void SweepRobot_ManualFanBtnProc(void);
+void SweepRobot_ManualIFRDBtnProc(void);
+void SweepRobot_ManualBuzzerBtnProc(void);
+void SweepRobot_ManualRGBLEDBtnProc(void);
+void SweepRobot_ManualRELAYBtnProc(void);
+void SweepRobot_ManualTest_CtrlBtnStateArrayReset(void);
 
 void SweepRobot_StartDlgPCBBtnClickProc(void);
 void SweepRobot_StartDlgPowerStationBtnClickPorc(void);

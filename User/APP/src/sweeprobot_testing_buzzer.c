@@ -84,14 +84,14 @@ static void SweepRobot_BuzzerTestOKProc(void)
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER OK");
         Edit_Clear();
     }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
+        Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][1],\
                                                                 "OK");
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
-                                                                SWRB_MANUL_TEST_OK_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][1],\
+                                                                SWRB_MANUAL_TEST_OK_BK_COLOR);
     }
 
     SWRB_NextTestTaskResumePostAct(SWRB_BUZZER_TEST_TASK_PRIO);
@@ -120,14 +120,14 @@ static void SweepRobot_BuzzerTestErrProc(void)
         Checkbox_Set_Text(hWin_SWRB_PCBTEST, ID_PCBTEST_CHECKBOX_BUZZER, "BUZZER ERROR");
         Edit_Clear();
     }else if (gSwrbDialogSelectFlag == SWRB_DIALOG_SELECT_MANUL){
-        Listview_Set_Item_Text(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
+        Listview_Set_Item_Text(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][1],\
                                                                 "ERR");
-        Listview_Set_Item_BkColor(hWin_SWRB_MANUL, ID_MANUL_LISTVIEW_MAIN,\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][0],\
-                                                                gSwrbManulTestListviewDispDataCoord[SWRB_MANUL_TEST_DATA_BUZZER_POS][1],\
-                                                                SWRB_MANUL_TEST_FAULT_BK_COLOR);
+        Listview_Set_Item_BkColor(hWin_SWRB_MANUAL, ID_MANUAL_LISTVIEW_MAIN,\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][0],\
+                                                                gSwrbManualTestListviewDispDataCoord[SWRB_MANUAL_TEST_DATA_BUZZER_POS][1],\
+                                                                SWRB_MANUAL_TEST_FAULT_BK_COLOR);
     }
 
 #ifdef _TASK_WAIT_WHEN_ERROR

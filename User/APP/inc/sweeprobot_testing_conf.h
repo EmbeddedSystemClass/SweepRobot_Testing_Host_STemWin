@@ -1,7 +1,7 @@
 #ifndef __SWEEPROBOT_TESTING_CONF_H
 #define __SWEEPROBOT_TESTING_CONF_H
 
-#include "sweeprobot_testing_manul.h"
+#include "sweeprobot_testing_manual.h"
 
 #include "sweeprobot_testing_wheel.h"
 #include "sweeprobot_testing_brush.h"

@@ -107,18 +107,18 @@ static void Button_ControlProc(void)
 }
 #endif
 
-static void Button_ManulManulModeProc(void)
+static void Button_ManualManualModeProc(void)
 {
     gSwrbDialogSelectFlag = SWRB_DIALOG_SELECT_MANUL;
     
-    gSwrbTestRuningTaskPrio = SWRB_MANUL_TEST_TASK_PRIO;
+    gSwrbTestRuningTaskPrio = SWRB_MANUAL_TEST_TASK_PRIO;
     
     gSwrbTestUDiskInsertCmpSkipFlag = DISABLE;
     
-    SweepRobot_ManulSetBtnEnterManulModeProc();
+    SweepRobot_ManualSetBtnEnterManualModeProc();
     
     WM_HideWin(hWin_SWRB_START);
-    WM_ShowWin(hWin_SWRB_MANUL);
+    WM_ShowWin(hWin_SWRB_MANUAL);
 }
 
 /*********************************************************************
@@ -243,7 +243,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            SweepRobot_StartDlgManulBtnClickProc();
+                            SweepRobot_StartDlgManualBtnClickProc();
                             break;
                     }
                     break;
@@ -306,7 +306,7 @@ static void _cbDialog(WM_MESSAGE * pMsg)
                         case WM_NOTIFICATION_CLICKED:
                             break;
                         case WM_NOTIFICATION_RELEASED:
-                            Button_ManulManulModeProc();
+                            Button_ManualManualModeProc();
                             break;
                     }
                     break;

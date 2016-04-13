@@ -32,7 +32,7 @@ extern GUI_CONST_STORAGE GUI_BITMAP _bmReTestCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmSkipCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmDeleteCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmAutoModeCHN;
-extern GUI_CONST_STORAGE GUI_BITMAP _bmManulModeCHN;
+extern GUI_CONST_STORAGE GUI_BITMAP _bmManualModeCHN;
 extern GUI_CONST_STORAGE GUI_BITMAP _bmPressKeyCHN;
 
 #ifdef USE_NUMPAD
@@ -194,9 +194,9 @@ void BUTTON_DispAutoModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
     BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmAutoModeCHN, x, y);
 }
 
-void BUTTON_DispManulModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
+void BUTTON_DispManualModeCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
 {
-    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmManulModeCHN, x, y);
+    BUTTON_Set_Bitmap_Ex(hWin, buttonId, &_bmManualModeCHN, x, y);
 }
 
 void BUTTON_DispPressKeyCHNStr(WM_HWIN hWin, int buttonId, int x, int y)
@@ -216,9 +216,9 @@ void Progbar_PCBTest_Set_Percent(void)
     Progbar_Set_Value(hWin_SWRB_PCBTEST, ID_PCBTEST_PROGBAR_MAIN, ( (float)(gSwrbTestValidTaskCntTotal-gSwrbTestValidTaskCnt) / (float)(gSwrbTestValidTaskCntTotal) )*100 );
 }
 
-void Progbar_ManulTest_Set_Percent(float taskRunCnt, float taskTimeOutCnt)
+void Progbar_ManualTest_Set_Percent(float taskRunCnt, float taskTimeOutCnt)
 {
-    Progbar_Set_Value(hWin_SWRB_MANUL, ID_MANUL_PROGBAR_PROG, ( (float)taskRunCnt / (float)(taskTimeOutCnt) )*100 );
+    Progbar_Set_Value(hWin_SWRB_MANUAL, ID_MANUAL_PROGBAR_PROG, ( (float)taskRunCnt / (float)(taskTimeOutCnt) )*100 );
 }
 
 void Edit_Set_Value(WM_HWIN hWin, int editId, long editValue)
